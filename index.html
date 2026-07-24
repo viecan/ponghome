@@ -549,6 +549,137 @@
     padding:56px 24px 100px;
   }
 
+  /* ============ PING PONG RALLY ANIMATION (Learn tab, before Chapter 1) ============ */
+  .pc-anim-card{
+    background:var(--paper-card);
+    border:1px solid var(--line-light);
+    border-radius:22px;
+    padding:22px 22px 26px;
+    margin-bottom:28px;
+    box-shadow:0 4px 14px rgba(10,42,47,0.05);
+  }
+  .pc-table-scene{
+    position:relative;
+    height:200px;
+    border-radius:16px;
+    overflow:hidden;
+    background:
+      linear-gradient(180deg, rgba(0,240,200,0.08), transparent 45%),
+      var(--bg-deep);
+    border:1px solid rgba(0,240,200,0.18);
+  }
+  .pc-table-baseline{
+    position:absolute;
+    left:8%; right:8%; top:58%;
+    height:1.5px;
+    background:rgba(255,255,255,0.14);
+    border-radius:2px;
+  }
+  .pc-net{
+    position:absolute;
+    left:50%; top:26%; bottom:36%;
+    width:3px;
+    transform:translateX(-50%);
+    background:repeating-linear-gradient(180deg, rgba(0,240,200,0.55) 0 4px, transparent 4px 9px);
+    border-radius:2px;
+  }
+  .pc-paddle{
+    position:absolute;
+    top:52%;
+    width:26px; height:60px;
+    margin-top:-42px;
+    transform-origin:bottom center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .pc-paddle-left{left:3%; animation:pcPaddleLeftHit 3.2s ease-in-out infinite;}
+  .pc-paddle-right{right:3%; animation:pcPaddleRightHit 3.2s ease-in-out infinite;}
+  .pc-paddle-blade{
+    width:26px; height:34px;
+    border-radius:50% 50% 46% 46% / 60% 60% 40% 40%;
+  }
+  .pc-paddle-left .pc-paddle-blade{background:var(--mint); box-shadow:0 0 14px rgba(0,240,200,0.4);}
+  .pc-paddle-right .pc-paddle-blade{background:var(--p2, #FFB020); box-shadow:0 0 14px rgba(255,176,32,0.35);}
+  .pc-paddle-handle{
+    width:7px; height:20px;
+    border-radius:4px;
+    margin-top:1px;
+  }
+  .pc-paddle-left .pc-paddle-handle{background:var(--mint-dim);}
+  .pc-paddle-right .pc-paddle-handle{background:var(--p2-dim, #D9930E);}
+
+  .pc-ball-shadow{
+    position:absolute;
+    top:60%;
+    width:16px; height:5px;
+    margin-left:-8px;
+    border-radius:50%;
+    background:rgba(0,0,0,0.4);
+    filter:blur(1px);
+    animation:pcBallShadow 3.2s cubic-bezier(.45,.05,.55,.95) infinite;
+  }
+  .pc-ball{
+    position:absolute;
+    width:12px; height:12px;
+    margin-left:-6px; margin-top:-6px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 0 8px rgba(255,255,255,0.75), 0 0 2px #fff;
+    animation:pcBallFly 3.2s cubic-bezier(.45,.05,.55,.95) infinite;
+  }
+
+  @keyframes pcBallFly{
+    0%   {left:6%;  top:52%; transform:scale(1);}
+    9%   {left:16%; top:20%; transform:scale(1);}
+    20%  {left:34%; top:8%;  transform:scale(1);}
+    32%  {left:56%; top:26%; transform:scale(1);}
+    38%  {left:66%; top:50%; transform:scale(1.15,0.8);}
+    44%  {left:72%; top:32%; transform:scale(1);}
+    50%  {left:94%; top:52%; transform:scale(1);}
+    59%  {left:84%; top:20%; transform:scale(1);}
+    70%  {left:66%; top:8%;  transform:scale(1);}
+    82%  {left:44%; top:26%; transform:scale(1);}
+    88%  {left:34%; top:50%; transform:scale(1.15,0.8);}
+    94%  {left:28%; top:32%; transform:scale(1);}
+    100% {left:6%;  top:52%; transform:scale(1);}
+  }
+  @keyframes pcBallShadow{
+    0%   {left:6%;  opacity:0.32;}
+    9%   {left:16%; opacity:0.14;}
+    20%  {left:34%; opacity:0.05;}
+    32%  {left:56%; opacity:0.14;}
+    38%  {left:66%; opacity:0.36;}
+    44%  {left:72%; opacity:0.18;}
+    50%  {left:94%; opacity:0.32;}
+    59%  {left:84%; opacity:0.14;}
+    70%  {left:66%; opacity:0.05;}
+    82%  {left:44%; opacity:0.14;}
+    88%  {left:34%; opacity:0.36;}
+    94%  {left:28%; opacity:0.18;}
+    100% {left:6%;  opacity:0.32;}
+  }
+  @keyframes pcPaddleLeftHit{
+    0%{transform:rotate(-18deg);}
+    6%{transform:rotate(0deg);}
+    94%{transform:rotate(0deg);}
+    100%{transform:rotate(-18deg);}
+  }
+  @keyframes pcPaddleRightHit{
+    0%,44%{transform:rotate(0deg);}
+    50%{transform:rotate(18deg);}
+    56%,100%{transform:rotate(0deg);}
+  }
+
+  @media (max-width:480px){
+    .pc-table-scene{height:160px;}
+    .pc-paddle{height:46px; margin-top:-32px;}
+    .pc-paddle-blade{width:20px; height:26px;}
+    .pc-paddle-handle{width:6px; height:14px;}
+    .pc-ball{width:10px; height:10px; margin-left:-5px; margin-top:-5px;}
+    .pc-ball-shadow{width:13px; margin-left:-6.5px;}
+  }
+
   details.chapter{
     background:var(--paper-card);
     border:1px solid var(--line-light);
@@ -1236,7 +1367,7 @@
      PADDLE CALL — scoreboard tab styles
      ========================================================= */
 
-  :root{
+  #pcApp{
     --bg-deep:#0E3B42;
     --bg-deeper:#082A30;
     --bg-card:#123F47;
@@ -1828,6 +1959,13 @@
     .score-digit.bump, .glow.flash, .mic-btn.listening::before, .dot-pulse, .game-label.deuce{
       animation:none !important;
     }
+    .pc-ball, .pc-ball-shadow, .pc-paddle-left, .pc-paddle-right{
+      animation:none !important;
+    }
+    .pc-ball{left:50%; top:35%;}
+    .pc-ball-shadow{left:50%; opacity:0.2;}
+    .pc-paddle-left{left:3%;}
+    .pc-paddle-right{right:3%;}
   }
 
 </style>
@@ -2045,6 +2183,25 @@
   </header>
 
   <div class="chapters-wrap">
+
+    <div class="pc-anim-card">
+      <div class="pc-table-scene" aria-hidden="true">
+        <div class="pc-net"></div>
+        <div class="pc-table-baseline"></div>
+
+        <div class="pc-paddle pc-paddle-left">
+          <div class="pc-paddle-blade"></div>
+          <div class="pc-paddle-handle"></div>
+        </div>
+        <div class="pc-paddle pc-paddle-right">
+          <div class="pc-paddle-blade"></div>
+          <div class="pc-paddle-handle"></div>
+        </div>
+
+        <div class="pc-ball-shadow"></div>
+        <div class="pc-ball"></div>
+      </div>
+    </div>
 
     <!-- CHAPTER 1 -->
     <details class="chapter" open>
