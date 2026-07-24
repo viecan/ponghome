@@ -347,36 +347,47 @@
 
   .section-title{
     font-size:clamp(1.8rem, 3.4vw, 2.6rem);
-    max-width:640px;
-    margin-bottom:20px;
+    max-width:720px;
+    margin-bottom:18px;
   }
 
   .service-grid{
     display:grid;
-    grid-template-columns:1.1fr 1fr;
-    gap:56px;
-    align-items:center;
-    margin-top:44px;
+    grid-template-columns:minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap:clamp(28px, 3.2vw, 44px);
+    align-items:start;
+    margin-top:36px;
+  }
+  .service-copy{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
   }
   .service-copy p{
-    font-size:1.05rem;
+    font-size:1.02rem;
     line-height:1.75;
     color:var(--ink-soft);
-    margin-bottom:18px;
+    margin:0;
   }
   .feature-list{
     list-style:none;
     padding:0;
-    margin:34px 0 0;
+    margin:12px 0 0;
     display:grid;
-    gap:16px;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:14px 16px;
   }
   .feature-list li{
     display:flex;
     align-items:flex-start;
-    gap:14px;
-    font-size:0.98rem;
+    gap:12px;
+    font-size:0.95rem;
     line-height:1.5;
+    background:rgba(14,59,66,0.03);
+    border:1px solid rgba(10,42,47,0.06);
+    border-radius:14px;
+    padding:12px 14px;
+    min-height:100%;
   }
   .feature-list .ico{
     flex:0 0 auto;
@@ -393,12 +404,13 @@
 
   .service-card{
     background:var(--bg-deep);
-    border-radius:26px;
-    padding:38px;
+    border-radius:24px;
+    padding:32px 28px;
     color:#fff;
     box-shadow:var(--shadow);
     position:relative;
     overflow:hidden;
+    align-self:start;
   }
   .service-card::after{
     content:"";
@@ -421,6 +433,7 @@
 
   @media (max-width:860px){
     .service-grid{grid-template-columns:1fr;}
+    .feature-list{grid-template-columns:1fr;}
   }
 
   /* ============ COACHES ============ */
@@ -2002,7 +2015,7 @@
     <div class="hero-inner">
       <span class="hero-eyebrow">Toronto · New York City</span>
       <h1>On-demand<br><span class="white">table tennis</span><br>coaching</h1>
-      <p class="lead">We offer personalized table tennis coaching tailored to your skill level and goals. Whether you’re a beginner looking to build a strong foundation, a recreational player who simply wants to stay active and improve, or an advanced player preparing for tournaments, our coaches can help you take your game to the next level. We come to you at a time and location that works for you, focusing on technique, footwork, and match strategy to help you improve faster and play with more confidence. </p>
+      <p class="lead">Whether you’re a beginner looking to build a strong foundation, a recreational player who simply wants to stay active and improve, or an advanced player preparing for tournaments, our Pong Home coaches can help you take your game to the next level. We come to you at a time and location that works for you, focusing on technique, footwork, and match strategy to help you improve faster and play with more confidence. </p>
       <div class="hero-actions">
         <a class="btn-primary" href="https://wa.me/14372441309" target="_blank" rel="noopener">
           Contact us →
@@ -2031,13 +2044,14 @@
   <section class="section section-light">
     <div class="section-inner">
       <span class="kicker">What we offer</span>
-      <h2 class="section-title">Coaching built around your game, in your space.</h2>
+      <h2 class="section-title">Coaching tailored to your game, at your convenience.</h2>
 
       <div class="service-grid">
         <div class="service-copy">
-          <p>We offer table tennis coaching with personalized training tailored to your skill level and goals. Our coaches come to your location and work with you on technique, footwork, and match strategy in a comfortable and familiar environment.</p>
-          <p>With flexible scheduling and one-on-one or small group sessions, we make high-quality coaching convenient and accessible for players of all ages.</p>
-          <p>Whether you want to learn the fundamentals, improve consistency, or develop match strategies, we're here to help you enjoy the game and improve step by step.</p>
+          <p>We offer personalized table tennis coaching tailored to your skill level, goals, and playing style. Our coaches come to your location, providing one on one training in a comfortable and familiar environment, with a focus on technique, footwork, and match strategy.</p>
+          <p>With flexible scheduling and one-on-one or small group sessions, we make high quality coaching convenient and accessible for players of all ages and skill levels.</p>
+          <p>Whether you’re learning the fundamentals, looking to improve consistency, or developing your match strategy, we’re here to help you enjoy the game, build confidence, and improve step by step.</p>
+          <p>For high profile clients, celebrities, and anyone who values privacy, our private, in home coaching provides a discreet and personalized training experience, allowing you to focus on your game in a comfortable and private environment.</p>
 
           <ul class="feature-list">
             <li><span class="ico"><span class="dot"></span></span> Coaches travel to your location — no club membership needed</li>
@@ -2049,7 +2063,7 @@
 
         <div class="service-card">
           <h3>Ready to play?</h3>
-          <p>Message us with your city, your level, and what you'd like to work on. We'll match you with the right coach and get a session on the calendar.</p>
+          <p>Message us with your location, your availability, and what you'd like to work on. We'll match you with the right coach and get a session on the calendar.</p>
           <br>
           <a class="btn-primary" href="https://wa.me/14372441309" target="_blank" rel="noopener">Message us →</a>
         </div>
@@ -2060,7 +2074,7 @@
   <section class="section section-deep">
     <div class="section-inner">
       <span class="kicker">Our coaches</span>
-      <h2 class="section-title" style="color:#fff;">Train with Elite Players, Competitive Athletes & National Champions</h2>
+      <h2 class="section-title" style="color:#fff;">Train with advanced players, national-level athletes</h2>
 
       <div class="city-group">
         <div class="city-head">
@@ -2074,7 +2088,7 @@
               <span class="coach-name">Vince N.</span>
               <span class="coach-price tbd">Captain</span>
             </div>
-            <p class="coach-role">Team captain</p>
+            <p class="coach-role">Captain</p>
           </div>
 
           <div class="coach-card">
@@ -2158,7 +2172,7 @@
 
   <section class="footer-cta">
     <h2>Let's get you on the table<span class="dot"></span></h2>
-    <p>Message us to book a session or learn more about coaching in Toronto and New York City.</p>
+    <p>Message us to book your first session!</p>
     <a class="btn-primary" href="https://wa.me/14372441309" target="_blank" rel="noopener">Contact us →</a>
 
     <div class="social-row" style="justify-content:center; margin-top:30px;">
@@ -2646,12 +2660,12 @@
   <section id="screen-setup" class="screen active">
     <div class="pc-setup-card">
       <span class="eyebrow">Voice-Scored Table Tennis</span>
-      <h1 class="pc-title">Paddle Call</h1>
+      <h1 class="pc-title">Scoreboard</h1>
       <p class="tagline">Call the score. It keeps the count.</p>
 
       <div class="pc-field-block">
         <label for="p1NameInput">Player 1</label>
-        <input type="text" id="p1NameInput" class="name-input" maxlength="16" placeholder="Viet">
+        <input type="text" id="p1NameInput" class="name-input" maxlength="16" placeholder="Vince">
       </div>
       <div class="pc-field-block">
         <label for="p2NameInput">Player 2</label>
@@ -2832,7 +2846,7 @@
 </section>
 
 <footer class="site-footer">
-  Pong Home — On-demand table tennis coaching in Toronto &amp; New York City. <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a>
+  Pong Home | On-demand table tennis coaching <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a>
 </footer>
 
 <script>
