@@ -22,6 +22,7 @@
     --line-dark:rgba(255,255,255,0.14);
     --line-light:rgba(10,42,47,0.12);
     --shadow: 0 18px 40px rgba(4,26,30,0.18);
+    --nav-h: 64px;
   }
 
   *{box-sizing:border-box;}
@@ -179,8 +180,47 @@
   }
 
   @media (max-width:720px){
-    .nav-inner{flex-wrap:wrap; padding:14px 18px;}
+    .nav-inner{
+      flex-wrap:wrap;
+      padding:12px 16px;
+      gap:10px;
+      justify-content:center;
+    }
+    .nav-logo{
+      order:1;
+      font-size:1.1rem;
+    }
+    .nav-right{
+      order:2;
+      gap:8px;
+    }
+    .social-btn{width:34px; height:34px;}
+    .social-btn svg{width:15px; height:15px;}
     .nav-cta{display:none;}
+    .nav-tabs{
+      order:3;
+      flex-basis:100%;
+      width:100%;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:6px;
+      background:transparent;
+      border:none;
+      padding:0;
+    }
+    .nav-tab{
+      flex:0 0 auto;
+      font-size:0.8rem;
+      padding:8px 14px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid var(--line-dark);
+    }
+    .nav-tab.active{
+      border-color:var(--mint);
+    }
+  }
+  @media (max-width:380px){
+    .nav-tab{font-size:0.74rem; padding:7px 11px;}
   }
 
   /* ============ TAB PANELS ============ */
@@ -1183,7 +1223,8 @@
   #scoreboard.tab-panel.active{
     display:flex;
     flex-direction:column;
-    height:calc(100vh - 63px);
+    height:calc(100vh - var(--nav-h, 64px));
+    height:calc(100dvh - var(--nav-h, 64px));
   }
   .scoreboard-frame-wrap{
     flex:1;
@@ -2641,6 +2682,23 @@
   const tabLinks = document.querySelectorAll('[data-tab-link]');
   const panels = document.querySelectorAll('.tab-panel');
   const navTabs = document.querySelectorAll('.nav-tab');
+  const siteNavEl = document.querySelector('.site-nav');
+
+  function updateNavHeightVar(){
+    if (!siteNavEl) return;
+    const h = Math.ceil(siteNavEl.getBoundingClientRect().height);
+    if (h > 0) document.documentElement.style.setProperty('--nav-h', h + 'px');
+  }
+  updateNavHeightVar();
+  window.addEventListener('resize', updateNavHeightVar);
+  window.addEventListener('orientationchange', () => setTimeout(updateNavHeightVar, 150));
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', updateNavHeightVar);
+  }
+  if (document.fonts && document.fonts.ready) {
+    // nav width (and thus wrap height) can shift once the brand font finishes loading
+    document.fonts.ready.then(updateNavHeightVar).catch(()=>{});
+  }
 
   function activateTab(name){
     panels.forEach(p => p.classList.toggle('active', p.id === name));
@@ -2651,6 +2709,7 @@
     });
     window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
     document.dispatchEvent(new CustomEvent('pc:site-tab-changed', {detail:{active: name === 'scoreboard'}}));
+    updateNavHeightVar();
   }
 
   tabLinks.forEach(link => {
