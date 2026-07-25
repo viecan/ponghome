@@ -2759,6 +2759,7 @@
     </div>
 
     <div class="listening-pill" id="listeningPill" hidden><span class="dot-pulse"></span>Listening</div>
+    <div class="listening-pill" id="remotePill" hidden><span class="dot-pulse"></span>Remote armed</div>
 
     <div class="court" id="court">
       <div class="half half-p1" id="halfP1" tabindex="0" role="button" aria-label="Add point">
@@ -2852,6 +2853,15 @@
           </div>
         </div>
         <p class="voice-unsupported-note" id="setVoiceUnsupportedNote" hidden style="margin-top:16px; margin-bottom:0;">This browser doesn't support voice recognition. You can still score every point with the tap buttons.</p>
+      </div>
+
+      <div class="settings-section">
+        <h3>Bluetooth Remote</h3>
+        <div class="pc-field-block toggle-row">
+          <label for="remoteToggle" style="margin:0;">AB Shutter3 Remote</label>
+          <button type="button" id="remoteToggle" class="toggle-switch" role="switch" aria-checked="false"><span class="knob"></span></button>
+        </div>
+        <p class="voice-unsupported-note" id="remoteStatusNote" style="margin-top:10px; margin-bottom:0;">Off. Turn on, then use your remote: 1 click scores Player 1, 2 quick clicks score Player 2. Keep this tab open and the screen unlocked while scoring.</p>
       </div>
 
       <div class="settings-section">
@@ -3939,6 +3949,9 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
   const tallyP1 = document.getElementById('tallyP1');
   const tallyP2 = document.getElementById('tallyP2');
   const listeningPill = document.getElementById('listeningPill');
+  const remoteToggle = document.getElementById('remoteToggle');
+  const remotePill = document.getElementById('remotePill');
+  const remoteStatusNote = document.getElementById('remoteStatusNote');
 
   const halfP1 = document.getElementById('halfP1');
   const halfP2 = document.getElementById('halfP2');
@@ -4085,6 +4098,78 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
   }
   wireHalf(halfP1, 0);
   wireHalf(halfP2, 1);
+
+  /* ---------- AB Shutter3 / Bluetooth remote support ----------
+     iOS Safari never sends a keydown/keyup event for physical volume
+     button presses, so a Bluetooth "shutter" remote (which just pretends
+     to press volume-up) can't be caught with a normal key listener.
+     What Safari DOES do is keep a <video>/<audio> element's .volume
+     property in sync with the hardware volume and fire 'volumechange'
+     on it. We use a silent, looping, muted-by-default clip purely as a
+     volume sensor: park it at the midpoint, and every time the hardware
+     volume changes we count that as one remote click, then snap the
+     sensor back to the midpoint so the next click (up or down, it
+     doesn't matter which) can be detected the same way. */
+  const REMOTE_MID_VOLUME = 0.5;
+  const REMOTE_DOUBLE_TAP_MS = 550;
+  const remoteSensor = document.createElement('audio');
+  remoteSensor.loop = true;
+  remoteSensor.setAttribute('playsinline', '');
+  remoteSensor.setAttribute('aria-hidden', 'true');
+  remoteSensor.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+  remoteSensor.style.display = 'none';
+  document.body.appendChild(remoteSensor);
+
+  let remoteArmed = false;
+  let remoteIgnoreNextChange = false;
+  let remoteTapCount = 0;
+  let remoteTapTimer = null;
+
+  function remoteRegisterClick(){
+    remoteTapCount++;
+    clearTimeout(remoteTapTimer);
+    remoteTapTimer = setTimeout(()=>{
+      const clicks = remoteTapCount;
+      remoteTapCount = 0;
+      if (!state || state.matchComplete || overlayOpen()) return;
+      if (clicks === 1) applyPoint(0);
+      else applyPoint(1); // 2+ quick clicks -> player 2
+    }, REMOTE_DOUBLE_TAP_MS);
+  }
+
+  remoteSensor.addEventListener('volumechange', ()=>{
+    if (remoteIgnoreNextChange){ remoteIgnoreNextChange = false; return; }
+    if (!remoteArmed) return;
+    remoteRegisterClick();
+    remoteIgnoreNextChange = true;
+    remoteSensor.volume = REMOTE_MID_VOLUME;
+  });
+
+  function setRemoteArmed(on){
+    remoteArmed = on;
+    if (remoteToggle){
+      remoteToggle.classList.toggle('active', on);
+      remoteToggle.setAttribute('aria-checked', on ? 'true' : 'false');
+    }
+    if (remotePill) remotePill.hidden = !on;
+    if (remoteStatusNote){
+      remoteStatusNote.textContent = on
+        ? 'Armed. 1 click on the remote scores Player 1, 2 quick clicks score Player 2. Keep this tab open and unlocked.'
+        : 'Off. Turn on, then use your remote: 1 click scores Player 1, 2 quick clicks score Player 2. Keep this tab open and the screen unlocked while scoring.';
+    }
+    if (on){
+      remoteSensor.volume = REMOTE_MID_VOLUME;
+      remoteSensor.play().catch(()=>{ /* needs a user gesture on iOS; the toggle tap itself provides it */ });
+    } else {
+      remoteSensor.pause();
+      remoteTapCount = 0;
+      clearTimeout(remoteTapTimer);
+    }
+  }
+
+  if (remoteToggle){
+    remoteToggle.addEventListener('click', ()=> setRemoteArmed(!remoteArmed));
+  }
 
   function overlayOpen(){
     return overlayGameComplete.classList.contains('show') ||
