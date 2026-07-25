@@ -2866,6 +2866,7 @@
           <button type="button" id="remoteToggle" class="toggle-switch" role="switch" aria-checked="false"><span class="knob"></span></button>
         </div>
         <p class="voice-unsupported-note" id="remoteStatusNote" style="margin-top:10px; margin-bottom:0;">Off. Turn on, then use your remote: 1 click scores Player 1, 2 quick clicks score Player 2. Keep this tab open and the screen unlocked while scoring.</p>
+        <p class="voice-unsupported-note" id="remoteDebugNote" style="margin-top:8px; margin-bottom:0; font-family:'JetBrains Mono',monospace; font-size:0.65rem; opacity:0.75;"></p>
       </div>
 
       <div class="settings-section">
@@ -3956,6 +3957,7 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
   const remoteToggle = document.getElementById('remoteToggle');
   const remotePill = document.getElementById('remotePill');
   const remoteStatusNote = document.getElementById('remoteStatusNote');
+  const remoteDebugNote = document.getElementById('remoteDebugNote');
 
   const halfP1 = document.getElementById('halfP1');
   const halfP2 = document.getElementById('halfP2');
@@ -4129,6 +4131,16 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
   let remoteTapCount = 0;
   let remoteTapTimer = null;
   let remoteClicksSeen = 0;
+  let remoteVolumeChangeEvents = 0;
+  let remoteLastEventTime = null;
+
+  function updateRemoteDebug(){
+    if (!remoteDebugNote) return;
+    if (!remoteArmed){ remoteDebugNote.textContent = ''; return; }
+    const since = remoteLastEventTime ? ((Date.now() - remoteLastEventTime) / 1000).toFixed(1) + 's ago' : 'none yet';
+    remoteDebugNote.textContent = 'debug — playing:' + (!remoteSensor.paused) + ' readyState:' + remoteSensor.readyState + ' vol:' + remoteSensor.volume.toFixed(2) + ' volumechange-events:' + remoteVolumeChangeEvents + ' last:' + since;
+  }
+  let remoteDebugTimer = null;
 
   function remoteFlashPill(text){
     if (!remotePill) return;
@@ -4160,6 +4172,9 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
   }
 
   remoteSensor.addEventListener('volumechange', ()=>{
+    remoteVolumeChangeEvents++;
+    remoteLastEventTime = Date.now();
+    updateRemoteDebug();
     if (remoteIgnoreNextChange){ remoteIgnoreNextChange = false; return; }
     if (!remoteArmed) return;
     remoteRegisterClick();
@@ -4188,16 +4203,23 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
       remoteResetPillLabel();
     }
     if (on){
+      remoteVolumeChangeEvents = 0;
+      remoteLastEventTime = null;
       remoteSensor.volume = REMOTE_MID_VOLUME;
       remoteSensor.play().then(()=>{
         if (remoteStatusNote) remoteStatusNote.textContent = 'Armed. 1 click on the remote scores Player 1, 2 quick clicks score Player 2. Keep this tab open and unlocked.';
       }).catch((err)=>{
         if (remoteStatusNote) remoteStatusNote.textContent = 'Couldn\'t start the remote sensor (' + (err && err.name || 'unknown error') + '). Try turning this on again — it needs a direct tap to start on iOS.';
       });
+      clearInterval(remoteDebugTimer);
+      remoteDebugTimer = setInterval(updateRemoteDebug, 500);
+      updateRemoteDebug();
     } else {
       remoteSensor.pause();
       remoteTapCount = 0;
       clearTimeout(remoteTapTimer);
+      clearInterval(remoteDebugTimer);
+      if (remoteDebugNote) remoteDebugNote.textContent = '';
       if (remoteStatusNote) remoteStatusNote.textContent = 'Off. Turn on, then use your remote: 1 click scores Player 1, 2 quick clicks score Player 2. Keep this tab open and the screen unlocked while scoring.';
     }
   }
