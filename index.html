@@ -1981,6 +1981,86 @@
     .pc-paddle-right{right:3%;}
   }
 
+  /* ============ REMOTE DEBUG PANEL ============ */
+  .debug-toggle-btn{
+    position:fixed;
+    bottom:14px;
+    left:14px;
+    z-index:999;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:rgba(0,240,200,0.16);
+    border:1px solid var(--mint);
+    color:var(--mint);
+    font-size:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .debug-panel{
+    position:fixed;
+    left:14px;
+    right:14px;
+    bottom:64px;
+    max-height:46vh;
+    z-index:998;
+    background:rgba(8,26,30,0.96);
+    border:1px solid var(--mint);
+    border-radius:12px;
+    color:#EAFFFB;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    line-height:1.5;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .debug-panel[hidden]{ display:none; }
+  .debug-panel-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 10px;
+    border-bottom:1px solid rgba(0,240,200,0.3);
+    flex:0 0 auto;
+  }
+  .debug-panel-head b{ color:var(--mint); font-size:12px; letter-spacing:0.03em; }
+  .debug-panel-head button{
+    background:transparent;
+    border:1px solid rgba(234,255,251,0.4);
+    color:#EAFFFB;
+    border-radius:6px;
+    font-size:11px;
+    padding:4px 8px;
+    margin-left:6px;
+  }
+  .debug-panel-body{
+    overflow-y:auto;
+    padding:8px 10px;
+    flex:1 1 auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .debug-panel-body p{ margin:0 0 4px; opacity:0.65; }
+  .debug-row{
+    display:flex;
+    gap:8px;
+    padding:3px 0;
+    border-bottom:1px dashed rgba(234,255,251,0.12);
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .debug-row .dtype{ color:#7CE8D3; flex:0 0 62px; }
+  .debug-row .dtime{ color:rgba(234,255,251,0.5); flex:0 0 58px; }
+  .debug-row .ddata{ flex:1 1 auto; }
+  .debug-panel-foot{
+    padding:6px 10px;
+    border-top:1px solid rgba(0,240,200,0.3);
+    font-size:10.5px;
+    opacity:0.6;
+    flex:0 0 auto;
+  }
 </style>
 </head>
 <body>
@@ -2835,6 +2915,22 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
         </button>
       </div>
+    </div>
+
+    <!-- Bluetooth remote diagnostic tool — safe to remove once the remote is confirmed working -->
+    <button type="button" class="debug-toggle-btn" id="debugToggleBtn" aria-label="Toggle remote debug panel">🔧</button>
+    <div class="debug-panel" id="debugPanel" hidden>
+      <div class="debug-panel-head">
+        <b>REMOTE DEBUG</b>
+        <div>
+          <button type="button" id="debugClearBtn">Clear</button>
+          <button type="button" id="debugCloseBtn">Close</button>
+        </div>
+      </div>
+      <div class="debug-panel-body" id="debugPanelBody">
+        <p>Waiting for input… Pair the remote, then press its button. Any signal your phone can see will show up below, including keyboard keys, gamepad buttons, and pointer/touch events. Volume-button presses on iOS never reach the browser, so if nothing appears at all when you press the remote, that's the answer.</p>
+      </div>
+      <div class="debug-panel-foot">Logging keydown/keyup, gamepad connect + button state, and pointer events site-wide.</div>
     </div>
   </section>
 
@@ -4148,6 +4244,121 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
     }
   }
 
+  /* ---------- Bluetooth remote diagnostic panel ----------
+     Purpose: figure out whether the paired remote sends anything
+     the browser can see at all before wiring it to applyPoint().
+     Logs three separate channels, since remotes show up differently:
+       1) keydown/keyup   — HID keyboard-style remotes (arrows, space, page up/down)
+       2) gamepad         — remotes that enumerate via the Gamepad API
+       3) pointer/click   — remotes that act like a mouse/tap
+     Dedicated volume-up/down HID usage codes are intentionally NOT
+     delivered to Safari on iOS by the OS, so a camera-shutter-style
+     remote will show nothing here no matter what — that itself is
+     the diagnostic answer. Safe to delete this whole block (and the
+     matching HTML block + CSS) once you know what you're working with. */
+  (function initRemoteDebugPanel(){
+    const toggleBtn = document.getElementById('debugToggleBtn');
+    const panel = document.getElementById('debugPanel');
+    const panelBody = document.getElementById('debugPanelBody');
+    const clearBtn = document.getElementById('debugClearBtn');
+    const closeBtn = document.getElementById('debugCloseBtn');
+    if (!toggleBtn || !panel || !panelBody) return;
+
+    let rows = [];
+    const MAX_ROWS = 60;
+    let gamepadPollId = null;
+    const lastGamepadState = new Map(); // gamepad index -> array of pressed booleans
+
+    function timeStamp(){
+      const d = new Date();
+      return d.toTimeString().slice(0,8);
+    }
+
+    function logEvent(type, data){
+      rows.push({ type, data, time: timeStamp() });
+      if (rows.length > MAX_ROWS) rows = rows.slice(-MAX_ROWS);
+      renderRows();
+    }
+
+    function renderRows(){
+      if (panel.hidden) return; // don't burn cycles while closed
+      if (!rows.length){
+        panelBody.innerHTML = '<p>Waiting for input… press the remote\'s button now.</p>';
+        return;
+      }
+      panelBody.innerHTML = rows.slice().reverse().map(r =>
+        `<div class="debug-row"><span class="dtime">${r.time}</span><span class="dtype">${r.type}</span><span class="ddata">${r.data}</span></div>`
+      ).join('');
+    }
+
+    function openPanel(){
+      panel.hidden = false;
+      renderRows();
+      startGamepadPolling();
+    }
+    function closePanel(){
+      panel.hidden = true;
+      stopGamepadPolling();
+    }
+
+    toggleBtn.addEventListener('click', ()=>{
+      if (panel.hidden) openPanel(); else closePanel();
+    });
+    closeBtn.addEventListener('click', closePanel);
+    clearBtn.addEventListener('click', ()=>{ rows = []; renderRows(); });
+
+    /* Channel 1: keyboard-style input (arrows, space, page up/down, letters).
+       Capture phase + no preventDefault, so this never interferes with
+       normal typing or the app's own Enter-key handlers elsewhere. */
+    window.addEventListener('keydown', (e)=>{
+      logEvent('keydown', `key="${e.key}" code="${e.code}" keyCode=${e.keyCode}`);
+    }, true);
+    window.addEventListener('keyup', (e)=>{
+      logEvent('keyup', `key="${e.key}" code="${e.code}"`);
+    }, true);
+
+    /* Channel 2: Gamepad API. Some Bluetooth clickers enumerate as a
+       generic game controller rather than a keyboard, especially on iOS. */
+    window.addEventListener('gamepadconnected', (e)=>{
+      logEvent('gamepad', `connected: "${e.gamepad.id}" (${e.gamepad.buttons.length} buttons)`);
+      lastGamepadState.set(e.gamepad.index, e.gamepad.buttons.map(b=>b.pressed));
+    });
+    window.addEventListener('gamepaddisconnected', (e)=>{
+      logEvent('gamepad', `disconnected: "${e.gamepad.id}"`);
+      lastGamepadState.delete(e.gamepad.index);
+    });
+
+    function pollGamepads(){
+      const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+      for (const gp of pads){
+        if (!gp) continue;
+        const prev = lastGamepadState.get(gp.index) || [];
+        gp.buttons.forEach((b, i)=>{
+          const wasPressed = !!prev[i];
+          if (b.pressed && !wasPressed){
+            logEvent('gamepad', `"${gp.id}" button[${i}] pressed`);
+          }
+        });
+        lastGamepadState.set(gp.index, gp.buttons.map(b=>b.pressed));
+      }
+      gamepadPollId = requestAnimationFrame(pollGamepads);
+    }
+    function startGamepadPolling(){
+      if (gamepadPollId) return;
+      pollGamepads();
+    }
+    function stopGamepadPolling(){
+      if (gamepadPollId) cancelAnimationFrame(gamepadPollId);
+      gamepadPollId = null;
+    }
+
+    /* Channel 3: pointer/click, in case the remote behaves like a mouse
+       or generates a synthetic tap somewhere on the page. */
+    window.addEventListener('pointerdown', (e)=>{
+      logEvent('pointer', `type="${e.pointerType}" target="${(e.target && e.target.id) || (e.target && e.target.className) || 'unknown'}"`);
+    }, true);
+  })();
+
   /* ---------- animations ---------- */
   function animatePoint(playerIndex){
     const scoreEl = playerIndex === 0 ? scoreP1 : scoreP2;
@@ -4495,11 +4706,31 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
     }
   });
 
-  /* ---------- speech synthesis (spoken confirmation) ---------- */
+  /* ---------- speech synthesis (spoken score call) ---------- */
   function speakPoint(playerIndex){
     if (!voiceEnabled || !synthSupported || !state) return;
-    const name = state.players[playerIndex];
-    const utter = new SpeechSynthesisUtterance('1 point for ' + name);
+
+    let phrase;
+
+    if (state.pendingGameAck || state.matchComplete) {
+      // This point just finished a game (currentGame has already been reset
+      // or the match ended), so pull the real numbers from the game that
+      // just closed rather than the fresh 0-0 sitting in currentGame.
+      const lastGame = state.completedGames[state.completedGames.length - 1];
+      const [a, b] = lastGame.score;
+      const winnerName = state.players[lastGame.winner];
+      phrase = state.matchComplete
+        ? `Game and match, ${winnerName}. ${a}, ${b}.`
+        : `Game, ${winnerName}. ${a}, ${b}.`;
+    } else {
+      // Standard umpire convention: server's score is called first.
+      const server = getServer(state);
+      const a = state.currentGame.score[server];
+      const b = state.currentGame.score[1 - server];
+      phrase = (a === b) ? `${a} all` : `${a}, ${b}`;
+    }
+
+    const utter = new SpeechSynthesisUtterance(phrase);
 
     utter.onstart = ()=>{
       isSpeaking = true;
