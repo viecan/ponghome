@@ -1542,35 +1542,6 @@
     margin-bottom:22px;
   }
 
-  .remote-status-row{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-size:0.85rem;
-    color:var(--ink-dim);
-    margin-top:12px;
-  }
-  .remote-status-dot{
-    width:9px; height:9px;
-    border-radius:50%;
-    background:var(--ink-faint);
-    flex:0 0 auto;
-    transition:background 0.2s ease, box-shadow 0.2s ease;
-  }
-  .remote-status-dot.on{ background:var(--p1); box-shadow:0 0 8px var(--p1); }
-  .remote-status-dot.paused{ background:var(--p2); box-shadow:0 0 8px var(--p2); }
-  .remote-note{
-    font-size:0.82rem;
-    line-height:1.55;
-    color:var(--ink-dim);
-    background:rgba(0,240,200,0.06);
-    border:1px solid rgba(0,240,200,0.25);
-    border-radius:10px;
-    padding:12px 14px;
-    margin-top:14px;
-  }
-  .remote-note strong{ color:var(--ink); }
-
   .btn-start{
     width:100%;
     background:var(--p1);
@@ -2687,6 +2658,46 @@
       </div>
     </details>
 
+    <!-- CHAPTER 8 -->
+    <details class="chapter">
+      <summary>
+        <span class="ch-num">08</span>
+        <span class="ch-heading">
+          <span class="ch-label">Chapter 8</span>
+          <h3>7 Pro Tactics</h3>
+        </span>
+        <span class="ch-chevron">⌄</span>
+      </summary>
+      <div class="chapter-body">
+        <p class="intro">Seven proven serve-and-attack patterns used by advanced players, organized by serve tactics, general play tactics, and a specialized tactic against left-handers.</p>
+
+        <div class="subsection">
+          <h4>8.1 — Serve Tactics</h4>
+          <dl class="term-list">
+            <div class="term"><dt>1. Pendulum topspin serve to short forehand middle</dt><dd>Serve low with topspin/deception to the opponent's short forehand middle to force a passive, weak push. Follow-up: step in and attack aggressively to their backhand, forehand, or crossover point.</dd></div>
+            <div class="term"><dt>2. Pendulum long &amp; fast serve to the crossover</dt><dd>Target the crossover point, where the opponent switches between forehand and backhand; the sudden depth creates hesitation. Follow-up: opponents usually return weakly to your middle or backhand, so counter immediately with a fast topspin cross-court or pivot to your forehand.</dd></div>
+            <div class="term"><dt>3. Wide backhand pendulum serve (short / half-long)</dt><dd>The wider the serve, the harder it is for opponents to hit down the line; a half-long serve invites a slow spin return toward your backhand corner. Follow-up: anticipate the slow return, pivot quickly, and finish the rally with a powerful forehand counter.</dd></div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>8.2 — General Play Tactics</h4>
+          <dl class="term-list">
+            <div class="term"><dt>4. Heavy backhand topspin → pivot forehand counter</dt><dd>Start the rally by pressing hard with a strong backhand topspin attack. Follow-up: as long as your initial backhand is deep and fast, the return will be weak, giving you time to pivot from the backhand corner and hit a high-power forehand topspin.</dd></div>
+            <div class="term"><dt>5. Touch short to forehand → pivot forehand attack</dt><dd>Drop a short touch shot to the opponent's forehand to draw out a soft return or high push. Follow-up: stay light on your feet so you can immediately pivot into the backhand corner and put the point away with a strong forehand.</dd></div>
+            <div class="term"><dt>6. Rhythm change via chop block</dt><dd>When facing relentless heavy topspin, absorb and reverse the spin using an active chop block off the bounce to disrupt their timing. Follow-up: side-spin chop blocks usually return diagonally, letting you prepare your next offensive shot early.</dd></div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>8.3 — Specialized Left-Hander Tactic</h4>
+          <dl class="term-list">
+            <div class="term"><dt>7. Bait the flick vs. lefties → exploit corners</dt><dd>Left-handed players like to flick short balls in the middle with their backhand; serve or touch short to their middle to invite this flick. Follow-up: anticipate the flick and drive it straight down the line to their wide backhand, then once they expect that, mix in a sharp diagonal attack to their wide forehand.</dd></div>
+          </dl>
+        </div>
+      </div>
+    </details>
+
   </div>
 </section>
 
@@ -2881,24 +2892,6 @@
           </div>
         </div>
         <p class="voice-unsupported-note" id="setVoiceUnsupportedNote" hidden style="margin-top:16px; margin-bottom:0;">This browser doesn't support voice recognition. You can still score every point with the tap buttons.</p>
-      </div>
-
-      <div class="settings-section">
-        <h3>Remote Control</h3>
-        <div class="pc-field-block toggle-row" style="margin-bottom:0;">
-          <label for="setRemoteToggle" style="margin:0;">Enable Remote Control</label>
-          <button type="button" id="setRemoteToggle" class="toggle-switch" role="switch" aria-checked="false"><span class="knob"></span></button>
-        </div>
-        <div class="remote-status-row">
-          <span class="remote-status-dot" id="remoteStatusDot"></span>
-          <span id="remoteStatusText">Remote control is off</span>
-        </div>
-        <p class="remote-note">
-          <strong>1 press</strong> = point for Player 1 &nbsp;&middot;&nbsp; <strong>2 quick presses</strong> = point for Player 2.
-        </p>
-        <p class="remote-note">
-          This works with Bluetooth clickers that send a real keyboard key (Space, Enter, an arrow key, or Page Up/Down) &mdash; common on presentation remotes and page&#8209;turner pedals. iOS Safari has no way to read a remote that only sends a plain volume&#8209;up signal (the default on most basic selfie/shutter remotes), because Apple keeps hardware volume presses private to the operating system and never passes them to web pages.
-        </p>
       </div>
 
       <div class="settings-section">
@@ -4029,10 +4022,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
   const setResetMatchBtn = document.getElementById('setResetMatchBtn');
   const setCloseBtn = document.getElementById('setCloseBtn');
 
-  const setRemoteToggle = document.getElementById('setRemoteToggle');
-  const remoteStatusDot = document.getElementById('remoteStatusDot');
-  const remoteStatusText = document.getElementById('remoteStatusText');
-
   /* ---------- global app state ---------- */
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognitionSupported = !!SR;
@@ -4040,7 +4029,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
 
   let voiceEnabled = true;
   let listenMode = 'continuous'; // 'continuous' | 'push'
-  let remoteEnabled = false;
 
   let state = null;
   let history = [];
@@ -4160,92 +4148,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
     }
   }
 
-  /* ---------- remote control (Bluetooth single-button clicker) ----------
-     iOS Safari cannot see the iPhone's hardware volume buttons — Apple never
-     exposes that signal to any web page (there is no DOM event, and Web
-     Bluetooth isn't supported in Safari either). So a remote that only sends
-     a plain "volume up" command can't be captured here.
-     What *can* be captured: a real keyboard keypress. Many Bluetooth
-     clickers (presentation remotes, page-turner pedals, camera shutter
-     remotes with a "keyboard mode" switch) send an actual key such as
-     Space, Enter, an arrow key, or Page Up/Down instead of a volume command.
-     This listener watches for those keys and applies the same single-press /
-     double-press rules through the existing applyPoint() function, so
-     remote scoring behaves exactly like a tap or a voice call. */
-  const REMOTE_PRESS_KEYS = new Set([
-    ' ', 'Spacebar', 'Enter', 'ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown',
-    'PageUp', 'PageDown', 'AudioVolumeUp', 'VolumeUp'
-  ]);
-  const REMOTE_DOUBLE_PRESS_WINDOW_MS = 400; // within the requested 300–500ms window
-
-  let remotePressCount = 0;
-  let remotePressTimer = null;
-
-  function remoteCanScoreNow(){
-    return remoteEnabled && !!state && !state.matchComplete && screenIsMatch() && !overlayOpen();
-  }
-
-  function clearRemotePressTimer(){
-    if (remotePressTimer) { clearTimeout(remotePressTimer); remotePressTimer = null; }
-    remotePressCount = 0;
-  }
-
-  function handleRemoteButtonPress(){
-    if (!remoteCanScoreNow()) { clearRemotePressTimer(); return; }
-    remotePressCount += 1;
-
-    if (remotePressCount === 1) {
-      remotePressTimer = setTimeout(()=>{
-        remotePressTimer = null;
-        remotePressCount = 0;
-        if (remoteCanScoreNow()) applyPoint(0); // single press → Player 1
-      }, REMOTE_DOUBLE_PRESS_WINDOW_MS);
-    } else {
-      clearRemotePressTimer();
-      applyPoint(1); // second press within the window → Player 2 only
-    }
-  }
-
-  document.addEventListener('keydown', (e)=>{
-    if (!remoteEnabled || e.repeat) return;
-    if (!REMOTE_PRESS_KEYS.has(e.key)) return;
-
-    const active = document.activeElement;
-    const tag = active && active.tagName;
-    // Let normal typing and the existing tap-zone Enter/Space handling work untouched.
-    if (tag === 'INPUT' || tag === 'TEXTAREA' || active === halfP1 || active === halfP2) return;
-    if (!remoteCanScoreNow()) return;
-
-    e.preventDefault();
-    handleRemoteButtonPress();
-  });
-
-  function updateRemoteStatus(){
-    const toggledOn = setRemoteToggle.classList.contains('active');
-    if (!toggledOn) {
-      remoteStatusDot.className = 'remote-status-dot';
-      remoteStatusText.textContent = 'Remote control is off';
-      return;
-    }
-    const live = !!state && !state.matchComplete && screenIsMatch() &&
-      !overlayGameComplete.classList.contains('show') &&
-      !overlayMatchComplete.classList.contains('show');
-    if (live) {
-      remoteStatusDot.className = 'remote-status-dot on';
-      remoteStatusText.textContent = 'Active \u2014 listening for button presses';
-    } else {
-      remoteStatusDot.className = 'remote-status-dot paused';
-      remoteStatusText.textContent = 'Paused \u2014 waiting for the next game or match';
-    }
-  }
-
-  setRemoteToggle.addEventListener('click', ()=>{
-    const nowActive = !setRemoteToggle.classList.contains('active');
-    setRemoteToggle.classList.toggle('active', nowActive);
-    setRemoteToggle.setAttribute('aria-checked', String(nowActive));
-    updateRemoteStatus();
-  });
-
   /* ---------- animations ---------- */
   function animatePoint(playerIndex){
     const scoreEl = playerIndex === 0 ? scoreP1 : scoreP2;
@@ -4296,8 +4198,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
     newGameBtn.disabled = state.matchComplete;
 
     micBtn.disabled = !recognitionSupported;
-
-    updateRemoteStatus();
   }
 
   function resetTickerDefault(){
@@ -4330,8 +4230,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
     gcWinnerName.textContent = state.players[last.winner] + ' wins the game';
     gcFinalScore.textContent = last.score[0] + ' – ' + last.score[1];
     overlayGameComplete.classList.add('show');
-    clearRemotePressTimer();
-    updateRemoteStatus();
   }
   gcNextGameBtn.addEventListener('click', ()=>{
     state.pendingGameAck = false;
@@ -4344,8 +4242,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
     mcFinalTally.textContent = state.gamesWon[0] + ' – ' + state.gamesWon[1];
     renderGamesList(mcGamesList);
     overlayMatchComplete.classList.add('show');
-    clearRemotePressTimer();
-    updateRemoteStatus();
   }
   mcNewMatchBtn.addEventListener('click', ()=>{
     overlayMatchComplete.classList.remove('show');
@@ -4353,7 +4249,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
     p1NameInput.value = state.players[0];
     p2NameInput.value = state.players[1];
     showScreen('setup');
-    updateRemoteStatus();
   });
 
   function renderGamesList(ulEl){
@@ -4388,16 +4283,10 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
     setVoiceToggle.classList.toggle('active', voiceEnabled);
     setVoiceToggle.setAttribute('aria-checked', String(voiceEnabled));
     syncSegActive(setListenSeg, listenMode);
-    setRemoteToggle.classList.toggle('active', remoteEnabled);
-    setRemoteToggle.setAttribute('aria-checked', String(remoteEnabled));
     renderGamesList(setGamesList);
     overlaySettings.classList.add('show');
-    updateRemoteStatus();
   });
-  setCloseBtn.addEventListener('click', ()=>{
-    overlaySettings.classList.remove('show');
-    updateRemoteStatus();
-  });
+  setCloseBtn.addEventListener('click', ()=> overlaySettings.classList.remove('show'));
 
   setVoiceToggle.addEventListener('click', ()=>{
     if (setVoiceToggle.disabled) return;
@@ -4421,9 +4310,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
     listenMode = newListenMode;
     applyListeningModeChange();
 
-    remoteEnabled = setRemoteToggle.classList.contains('active');
-    clearRemotePressTimer();
-
     overlaySettings.classList.remove('show');
     render();
     resetTickerDefault();
@@ -4438,7 +4324,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
     overlaySettings.classList.remove('show');
     overlayGameComplete.classList.remove('show');
     overlayMatchComplete.classList.remove('show');
-    clearRemotePressTimer();
     render();
     resetTickerDefault();
   });
@@ -4459,7 +4344,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
     overlayGameComplete.classList.remove('show');
     overlayMatchComplete.classList.remove('show');
     overlaySettings.classList.remove('show');
-    clearRemotePressTimer();
     showScreen('setup');
   });
 
