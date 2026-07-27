@@ -289,7 +289,23 @@
     50%{box-shadow:0 0 0 5px rgba(46,204,113,0);}
   }
   @media (max-width:480px){
-    .viewer-popup{left:14px; bottom:14px; right:14px; font-size:0.8rem;}
+    .viewer-popup{
+      left:12px;
+      bottom:14px;
+      right:auto;
+      max-width:calc(100vw - 24px);
+      padding:8px 12px 8px 10px;
+      font-size:0.74rem;
+      gap:7px;
+      border-radius:999px;
+    }
+    .viewer-text{
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .viewer-dot{width:6px; height:6px;}
+    .viewer-close{font-size:0.95rem; padding:1px 3px;}
   }
 
   /* ============ HERO ============ */
