@@ -528,6 +528,93 @@
     padding:22px;
   }
 
+  /* ============ CONTACT SECTION ============ */
+  .contact-section{
+    background:var(--paper);
+    padding:80px 28px;
+  }
+  .contact-wrap{
+    max-width:520px;
+    margin:0 auto;
+    text-align:center;
+  }
+  .contact-wrap .hero-eyebrow{
+    background:var(--mint-soft);
+    color:var(--mint-dim);
+  }
+  .contact-wrap h2{
+    font-size:clamp(1.8rem,4vw,2.6rem);
+    color:var(--ink);
+    margin:20px 0 12px;
+  }
+  .contact-wrap h2 .dot{background:var(--mint-dim);}
+  .contact-wrap > p{
+    color:var(--ink-soft);
+    font-size:1rem;
+    line-height:1.6;
+    max-width:420px;
+    margin:0 auto 36px;
+  }
+  .contact-form{
+    background:var(--paper-card);
+    border:1px solid var(--line-light);
+    border-radius:20px;
+    padding:32px 30px;
+    box-shadow:var(--shadow);
+    text-align:left;
+  }
+  .contact-field{margin-bottom:20px; text-align:left;}
+  .contact-field:last-of-type{margin-bottom:26px;}
+  .contact-field > label{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .contact-input{
+    width:100%;
+    padding:14px 16px;
+    border-radius:12px;
+    border:1.5px solid var(--line-light);
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:1rem;
+    outline:none;
+    transition:border-color 0.2s ease;
+  }
+  .contact-input:focus{border-color:var(--mint-dim);}
+  .contact-input::placeholder{color:var(--ink-soft); opacity:0.6;}
+  .contact-submit{
+    width:100%;
+    justify-content:center;
+    border:none;
+    cursor:pointer;
+    font-size:0.95rem;
+  }
+  .contact-submit:disabled{opacity:0.6; cursor:not-allowed;}
+  .contact-status{
+    margin:16px 0 0;
+    font-size:0.88rem;
+    line-height:1.5;
+    text-align:center;
+  }
+  .contact-status.ok{color:var(--mint-dim);}
+  .contact-status.err{color:#c0392b;}
+  .contact-hidden-field{
+    position:absolute;
+    left:-9999px;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+  }
+  @media (max-width:520px){
+    .contact-form{padding:26px 20px;}
+  }
+
   /* ============ LEARN TAB ============ */
   .learn-hero{
     background:var(--bg-deep);
@@ -1981,86 +2068,6 @@
     .pc-paddle-right{right:3%;}
   }
 
-  /* ============ REMOTE DEBUG PANEL ============ */
-  .debug-toggle-btn{
-    position:fixed;
-    bottom:14px;
-    left:14px;
-    z-index:999;
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    background:rgba(0,240,200,0.16);
-    border:1px solid var(--mint);
-    color:var(--mint);
-    font-size:16px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    -webkit-tap-highlight-color:transparent;
-  }
-  .debug-panel{
-    position:fixed;
-    left:14px;
-    right:14px;
-    bottom:64px;
-    max-height:46vh;
-    z-index:998;
-    background:rgba(8,26,30,0.96);
-    border:1px solid var(--mint);
-    border-radius:12px;
-    color:#EAFFFB;
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    line-height:1.5;
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
-  }
-  .debug-panel[hidden]{ display:none; }
-  .debug-panel-head{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:8px 10px;
-    border-bottom:1px solid rgba(0,240,200,0.3);
-    flex:0 0 auto;
-  }
-  .debug-panel-head b{ color:var(--mint); font-size:12px; letter-spacing:0.03em; }
-  .debug-panel-head button{
-    background:transparent;
-    border:1px solid rgba(234,255,251,0.4);
-    color:#EAFFFB;
-    border-radius:6px;
-    font-size:11px;
-    padding:4px 8px;
-    margin-left:6px;
-  }
-  .debug-panel-body{
-    overflow-y:auto;
-    padding:8px 10px;
-    flex:1 1 auto;
-    -webkit-overflow-scrolling:touch;
-  }
-  .debug-panel-body p{ margin:0 0 4px; opacity:0.65; }
-  .debug-row{
-    display:flex;
-    gap:8px;
-    padding:3px 0;
-    border-bottom:1px dashed rgba(234,255,251,0.12);
-    white-space:pre-wrap;
-    word-break:break-word;
-  }
-  .debug-row .dtype{ color:#7CE8D3; flex:0 0 62px; }
-  .debug-row .dtime{ color:rgba(234,255,251,0.5); flex:0 0 58px; }
-  .debug-row .ddata{ flex:1 1 auto; }
-  .debug-panel-foot{
-    padding:6px 10px;
-    border-top:1px solid rgba(0,240,200,0.3);
-    font-size:10.5px;
-    opacity:0.6;
-    flex:0 0 auto;
-  }
 </style>
 </head>
 <body>
@@ -2274,18 +2281,37 @@
     </div>
   </section>
 
-  <section class="footer-cta">
-    <h2>Let's get you on the table<span class="dot"></span></h2>
-    <p>Message us to book your first session!</p>
-    <a class="btn-primary" href="https://wa.me/14372441309" target="_blank" rel="noopener">Contact us →</a>
+  <section class="contact-section" id="contactSection">
+    <div class="contact-wrap">
+      <span class="hero-eyebrow">Get In Touch</span>
+      <h2>Let's find your coach<span class="dot"></span></h2>
+      <p>Leave your details and we'll get back to you to set up your first session.</p>
 
-    <div class="social-row" style="justify-content:center; margin-top:30px;">
-      <a class="social-btn" href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" aria-label="Pong Home on Instagram">
-        <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.97.24 2.43.4a4.9 4.9 0 0 1 1.77 1.15 4.9 4.9 0 0 1 1.15 1.77c.16.46.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.97-.4 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.46.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.24-2.43-.4a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.16-.46-.35-1.26-.4-2.43C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.24-1.97.4-2.43a4.9 4.9 0 0 1 1.15-1.77A4.9 4.9 0 0 1 5.59 1.8c.46-.16 1.26-.35 2.43-.4C9.29 1.34 9.67 1.33 12 1.33Zm0 1.8c-3.15 0-3.5.01-4.74.07-.96.04-1.48.2-1.82.34-.46.18-.78.39-1.13.74-.35.35-.56.67-.74 1.13-.14.34-.3.86-.34 1.82C3.16 8.94 3.15 9.29 3.15 12s.01 3.06.07 4.3c.04.96.2 1.48.34 1.82.18.46.39.78.74 1.13.35.35.67.56 1.13.74.34.14.86.3 1.82.34 1.24.06 1.59.07 4.75.07s3.5-.01 4.74-.07c.96-.04 1.48-.2 1.82-.34.46-.18.78-.39 1.13-.74.35-.35.56-.67.74-1.13.14-.34.3-.86.34-1.82.06-1.24.07-1.59.07-4.3s-.01-3.06-.07-4.3c-.04-.96-.2-1.48-.34-1.82a3.05 3.05 0 0 0-.74-1.13 3.05 3.05 0 0 0-1.13-.74c-.34-.14-.86-.3-1.82-.34-1.24-.06-1.59-.07-4.75-.07Zm0 3.98a4.02 4.02 0 1 1 0 8.04 4.02 4.02 0 0 1 0-8.04Zm0 1.8a2.22 2.22 0 1 0 0 4.44 2.22 2.22 0 0 0 0-4.44Zm4.18-2.2a.94.94 0 1 1 0 1.88.94.94 0 0 1 0-1.88Z"/></svg>
-      </a>
-      <a class="social-btn" href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" aria-label="Pong Home on Facebook">
-        <svg viewBox="0 0 24 24"><path d="M13.5 21.9v-8.4h2.82l.42-3.28h-3.24V8.1c0-.95.26-1.6 1.63-1.6h1.74V3.6c-.3-.04-1.33-.13-2.53-.13-2.5 0-4.22 1.53-4.22 4.33v2.42H7.3v3.28h2.82v8.4h3.38Z"/></svg>
-      </a>
+      <form id="contactForm" class="contact-form" novalidate>
+        <div class="contact-field">
+          <label for="contactName">Name</label>
+          <input type="text" id="contactName" name="name" class="contact-input" placeholder="Your full name" autocomplete="name" required>
+        </div>
+        <div class="contact-field">
+          <label for="contactEmail">Email</label>
+          <input type="email" id="contactEmail" name="email" class="contact-input" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+        <div class="contact-field">
+          <label for="contactPhone">Phone</label>
+          <input type="tel" id="contactPhone" name="phone" class="contact-input" placeholder="(555) 555-5555" autocomplete="tel" required>
+        </div>
+
+        <!-- honeypot field to deter simple bots; kept off-screen and out of tab order -->
+        <div class="contact-hidden-field" aria-hidden="true">
+          <label for="contactHoney">Leave this field empty</label>
+          <input type="text" id="contactHoney" name="_honey" tabindex="-1" autocomplete="off">
+        </div>
+        <input type="hidden" name="_subject" value="New lead from Pong Home website">
+        <input type="hidden" name="_captcha" value="false">
+
+        <button type="submit" class="btn-primary contact-submit" id="contactSubmitBtn">Send message →</button>
+        <p class="contact-status" id="contactStatus" role="status" hidden></p>
+      </form>
     </div>
   </section>
 </section>
@@ -2744,35 +2770,56 @@
         <span class="ch-num">08</span>
         <span class="ch-heading">
           <span class="ch-label">Chapter 8</span>
-          <h3>7 Pro Tactics</h3>
+          <h3>7 Pro Tactics for Table Tennis</h3>
         </span>
         <span class="ch-chevron">⌄</span>
       </summary>
       <div class="chapter-body">
-        <p class="intro">Seven proven serve-and-attack patterns used by advanced players, organized by serve tactics, general play tactics, and a specialized tactic against left-handers.</p>
+        <p class="intro">Key takeaways and tactical breakdowns for building a repeatable, pro-level game plan &mdash; from the serve through the pivot-and-finish counter.</p>
 
         <div class="subsection">
-          <h4>8.1 — Serve Tactics</h4>
+          <h4>8.1 &mdash; Serve Tactics</h4>
           <dl class="term-list">
-            <div class="term"><dt>1. Pendulum topspin serve to short forehand middle</dt><dd>Serve low with topspin/deception to the opponent's short forehand middle to force a passive, weak push. Follow-up: step in and attack aggressively to their backhand, forehand, or crossover point.</dd></div>
-            <div class="term"><dt>2. Pendulum long &amp; fast serve to the crossover</dt><dd>Target the crossover point, where the opponent switches between forehand and backhand; the sudden depth creates hesitation. Follow-up: opponents usually return weakly to your middle or backhand, so counter immediately with a fast topspin cross-court or pivot to your forehand.</dd></div>
-            <div class="term"><dt>3. Wide backhand pendulum serve (short / half-long)</dt><dd>The wider the serve, the harder it is for opponents to hit down the line; a half-long serve invites a slow spin return toward your backhand corner. Follow-up: anticipate the slow return, pivot quickly, and finish the rally with a powerful forehand counter.</dd></div>
+            <div class="term">
+              <dt>1. Pendulum Topspin Serve to Short Forehand Middle</dt>
+              <dd><strong>How it works:</strong> Serve low with topspin/deception to your opponent's short forehand middle to force a passive, weak push.<br><strong>Follow-up:</strong> Step in and attack aggressively with a forehand to their backhand, forehand, or crossover point.</dd>
+            </div>
+            <div class="term">
+              <dt>2. Pendulum Long &amp; Fast Serve to the Crossover</dt>
+              <dd><strong>How it works:</strong> Target the opponent's crossover point (where they switch between forehand and backhand). The sudden depth creates hesitation.<br><strong>Follow-up:</strong> Opponents usually return weakly to your middle or backhand; counter immediately with a fast topspin cross-court or pivot to use your forehand.</dd>
+            </div>
+            <div class="term">
+              <dt>3. Wide Backhand Pendulum Serve (Short / Half-Long)</dt>
+              <dd><strong>How it works:</strong> The wider you serve, the harder it is for opponents to hit down the line. A half-long serve invites a slow spin return toward your backhand corner.<br><strong>Follow-up:</strong> Anticipate the slow return, pivot quickly, and finish the rally with a powerful forehand counter.</dd>
+            </div>
           </dl>
         </div>
 
         <div class="subsection">
-          <h4>8.2 — General Play Tactics</h4>
+          <h4>8.2 &mdash; General Play Tactics</h4>
           <dl class="term-list">
-            <div class="term"><dt>4. Heavy backhand topspin → pivot forehand counter</dt><dd>Start the rally by pressing hard with a strong backhand topspin attack. Follow-up: as long as your initial backhand is deep and fast, the return will be weak, giving you time to pivot from the backhand corner and hit a high-power forehand topspin.</dd></div>
-            <div class="term"><dt>5. Touch short to forehand → pivot forehand attack</dt><dd>Drop a short touch shot to the opponent's forehand to draw out a soft return or high push. Follow-up: stay light on your feet so you can immediately pivot into the backhand corner and put the point away with a strong forehand.</dd></div>
-            <div class="term"><dt>6. Rhythm change via chop block</dt><dd>When facing relentless heavy topspin, absorb and reverse the spin using an active chop block off the bounce to disrupt their timing. Follow-up: side-spin chop blocks usually return diagonally, letting you prepare your next offensive shot early.</dd></div>
+            <div class="term">
+              <dt>4. Heavy Backhand Topspin &rarr; Pivot Forehand Counter</dt>
+              <dd><strong>How it works:</strong> Start the rally by pressing hard with a strong backhand topspin attack.<br><strong>Follow-up:</strong> As long as your initial backhand is deep and fast, the return will be weak, giving you the time to pivot from the backhand corner and hit a high-power forehand topspin.</dd>
+            </div>
+            <div class="term">
+              <dt>5. Touch Short to Forehand &rarr; Pivot Forehand Attack</dt>
+              <dd><strong>How it works:</strong> Drop a short touch shot to your opponent's forehand to draw out a soft return or high push.<br><strong>Follow-up:</strong> Stay light on your feet so you can immediately pivot into the backhand corner and put the point away with a strong forehand.</dd>
+            </div>
+            <div class="term">
+              <dt>6. Rhythm Change via Chop Block</dt>
+              <dd><strong>How it works:</strong> When facing relentless heavy topspin, absorb and reverse the spin using an active chop block off the bounce to disrupt their timing.<br><strong>Follow-up:</strong> Side-spin chop blocks usually return diagonally, allowing you to prepare your next offensive shot early.</dd>
+            </div>
           </dl>
         </div>
 
         <div class="subsection">
-          <h4>8.3 — Specialized Left-Hander Tactic</h4>
+          <h4>8.3 &mdash; Specialized Left-Hander Tactic</h4>
           <dl class="term-list">
-            <div class="term"><dt>7. Bait the flick vs. lefties → exploit corners</dt><dd>Left-handed players like to flick short balls in the middle with their backhand; serve or touch short to their middle to invite this flick. Follow-up: anticipate the flick and drive it straight down the line to their wide backhand, then once they expect that, mix in a sharp diagonal attack to their wide forehand.</dd></div>
+            <div class="term">
+              <dt>7. Bait the Flick vs. Lefties &rarr; Exploit Corners</dt>
+              <dd><strong>How it works:</strong> Left-handed players like to flick short balls in the middle with their backhand. Serve or touch short to their middle to invite this flick.<br><strong>Follow-up:</strong> Anticipate the flick and drive it straight down the line to their wide backhand. Once they expect that, mix in a sharp diagonal attack to their wide forehand.</dd>
+            </div>
           </dl>
         </div>
       </div>
@@ -2903,7 +2950,7 @@
     </div>
 
     <div class="bottom-dock">
-      <div class="ticker" id="ticker">Say "Point for [name]" to score</div>
+      <div class="ticker" id="ticker">Say "Score [name]" or "Score 1 / 2"</div>
       <div class="dock-controls">
         <button type="button" class="dock-btn" id="undoBtn" disabled aria-label="Undo last point">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>
@@ -2915,22 +2962,6 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
         </button>
       </div>
-    </div>
-
-    <!-- Bluetooth remote diagnostic tool — safe to remove once the remote is confirmed working -->
-    <button type="button" class="debug-toggle-btn" id="debugToggleBtn" aria-label="Toggle remote debug panel">🔧</button>
-    <div class="debug-panel" id="debugPanel" hidden>
-      <div class="debug-panel-head">
-        <b>REMOTE DEBUG</b>
-        <div>
-          <button type="button" id="debugClearBtn">Clear</button>
-          <button type="button" id="debugCloseBtn">Close</button>
-        </div>
-      </div>
-      <div class="debug-panel-body" id="debugPanelBody">
-        <p>Waiting for input… Pair the remote, then press its button. Any signal your phone can see will show up below, including keyboard keys, gamepad buttons, and pointer/touch events. Volume-button presses on iOS never reach the browser, so if nothing appears at all when you press the remote, that's the answer.</p>
-      </div>
-      <div class="debug-panel-foot">Logging keydown/keyup, gamepad connect + button state, and pointer events site-wide.</div>
     </div>
   </section>
 
@@ -3049,6 +3080,61 @@
       activateTab(link.getAttribute('data-tab-link'));
     });
   });
+
+  /* ---------- Get in touch contact form ---------- */
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    const contactSubmitBtn = document.getElementById('contactSubmitBtn');
+    const contactStatus = document.getElementById('contactStatus');
+    const CONTACT_ENDPOINT = 'https://formsubmit.co/ajax/viet.adops@gmail.com';
+
+    function setContactStatus(message, kind){
+      contactStatus.textContent = message;
+      contactStatus.hidden = false;
+      contactStatus.classList.toggle('ok', kind === 'ok');
+      contactStatus.classList.toggle('err', kind === 'err');
+    }
+
+    contactForm.addEventListener('submit', function(e){
+      e.preventDefault();
+
+      // honeypot: if filled, silently drop (bot submission)
+      const honey = contactForm.querySelector('[name="_honey"]');
+      if (honey && honey.value) return;
+
+      if (!contactForm.checkValidity()) {
+        contactForm.reportValidity();
+        return;
+      }
+
+      const formData = new FormData(contactForm);
+      const payload = {};
+      formData.forEach((value, key) => { payload[key] = value; });
+
+      contactSubmitBtn.disabled = true;
+      contactSubmitBtn.textContent = 'Sending…';
+      setContactStatus('', null);
+      contactStatus.hidden = true;
+
+      fetch(CONTACT_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => { if (!res.ok) throw new Error('Request failed'); return res.json(); })
+      .then(() => {
+        setContactStatus('Thanks! We\u2019ve got your details and will be in touch shortly.', 'ok');
+        contactForm.reset();
+      })
+      .catch(() => {
+        setContactStatus('Something went wrong sending that. Please try again, or email viet.adops@gmail.com directly.', 'err');
+      })
+      .finally(() => {
+        contactSubmitBtn.disabled = false;
+        contactSubmitBtn.textContent = 'Send message \u2192';
+      });
+    });
+  }
 </script>
 
 <script>
@@ -4021,13 +4107,14 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
   const names = [name1 || 'Player 1', name2 || 'Player 2'];
   const namesLower = names.map(n => n.toLowerCase());
 
-  const triggerMatch = transcript.match(/\bpoints?\s+for\s+(.+)/);
+  const triggerMatch = transcript.match(/\bscore\s+(.+)/);
   if (!triggerMatch) {
     return { matched: false, playerIndex: null, reason: 'no-trigger' };
   }
 
   let identifier = triggerMatch[1].trim();
   identifier = stripLeadingPlayerWord(identifier);
+  identifier = identifier.replace(/^for\s+/, '').trim();
 
   const nameHits = namesLower.map(n => !!n && transcript.indexOf(n) !== -1);
   const nameHitCount = nameHits.filter(Boolean).length;
@@ -4244,121 +4331,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
     }
   }
 
-  /* ---------- Bluetooth remote diagnostic panel ----------
-     Purpose: figure out whether the paired remote sends anything
-     the browser can see at all before wiring it to applyPoint().
-     Logs three separate channels, since remotes show up differently:
-       1) keydown/keyup   — HID keyboard-style remotes (arrows, space, page up/down)
-       2) gamepad         — remotes that enumerate via the Gamepad API
-       3) pointer/click   — remotes that act like a mouse/tap
-     Dedicated volume-up/down HID usage codes are intentionally NOT
-     delivered to Safari on iOS by the OS, so a camera-shutter-style
-     remote will show nothing here no matter what — that itself is
-     the diagnostic answer. Safe to delete this whole block (and the
-     matching HTML block + CSS) once you know what you're working with. */
-  (function initRemoteDebugPanel(){
-    const toggleBtn = document.getElementById('debugToggleBtn');
-    const panel = document.getElementById('debugPanel');
-    const panelBody = document.getElementById('debugPanelBody');
-    const clearBtn = document.getElementById('debugClearBtn');
-    const closeBtn = document.getElementById('debugCloseBtn');
-    if (!toggleBtn || !panel || !panelBody) return;
-
-    let rows = [];
-    const MAX_ROWS = 60;
-    let gamepadPollId = null;
-    const lastGamepadState = new Map(); // gamepad index -> array of pressed booleans
-
-    function timeStamp(){
-      const d = new Date();
-      return d.toTimeString().slice(0,8);
-    }
-
-    function logEvent(type, data){
-      rows.push({ type, data, time: timeStamp() });
-      if (rows.length > MAX_ROWS) rows = rows.slice(-MAX_ROWS);
-      renderRows();
-    }
-
-    function renderRows(){
-      if (panel.hidden) return; // don't burn cycles while closed
-      if (!rows.length){
-        panelBody.innerHTML = '<p>Waiting for input… press the remote\'s button now.</p>';
-        return;
-      }
-      panelBody.innerHTML = rows.slice().reverse().map(r =>
-        `<div class="debug-row"><span class="dtime">${r.time}</span><span class="dtype">${r.type}</span><span class="ddata">${r.data}</span></div>`
-      ).join('');
-    }
-
-    function openPanel(){
-      panel.hidden = false;
-      renderRows();
-      startGamepadPolling();
-    }
-    function closePanel(){
-      panel.hidden = true;
-      stopGamepadPolling();
-    }
-
-    toggleBtn.addEventListener('click', ()=>{
-      if (panel.hidden) openPanel(); else closePanel();
-    });
-    closeBtn.addEventListener('click', closePanel);
-    clearBtn.addEventListener('click', ()=>{ rows = []; renderRows(); });
-
-    /* Channel 1: keyboard-style input (arrows, space, page up/down, letters).
-       Capture phase + no preventDefault, so this never interferes with
-       normal typing or the app's own Enter-key handlers elsewhere. */
-    window.addEventListener('keydown', (e)=>{
-      logEvent('keydown', `key="${e.key}" code="${e.code}" keyCode=${e.keyCode}`);
-    }, true);
-    window.addEventListener('keyup', (e)=>{
-      logEvent('keyup', `key="${e.key}" code="${e.code}"`);
-    }, true);
-
-    /* Channel 2: Gamepad API. Some Bluetooth clickers enumerate as a
-       generic game controller rather than a keyboard, especially on iOS. */
-    window.addEventListener('gamepadconnected', (e)=>{
-      logEvent('gamepad', `connected: "${e.gamepad.id}" (${e.gamepad.buttons.length} buttons)`);
-      lastGamepadState.set(e.gamepad.index, e.gamepad.buttons.map(b=>b.pressed));
-    });
-    window.addEventListener('gamepaddisconnected', (e)=>{
-      logEvent('gamepad', `disconnected: "${e.gamepad.id}"`);
-      lastGamepadState.delete(e.gamepad.index);
-    });
-
-    function pollGamepads(){
-      const pads = navigator.getGamepads ? navigator.getGamepads() : [];
-      for (const gp of pads){
-        if (!gp) continue;
-        const prev = lastGamepadState.get(gp.index) || [];
-        gp.buttons.forEach((b, i)=>{
-          const wasPressed = !!prev[i];
-          if (b.pressed && !wasPressed){
-            logEvent('gamepad', `"${gp.id}" button[${i}] pressed`);
-          }
-        });
-        lastGamepadState.set(gp.index, gp.buttons.map(b=>b.pressed));
-      }
-      gamepadPollId = requestAnimationFrame(pollGamepads);
-    }
-    function startGamepadPolling(){
-      if (gamepadPollId) return;
-      pollGamepads();
-    }
-    function stopGamepadPolling(){
-      if (gamepadPollId) cancelAnimationFrame(gamepadPollId);
-      gamepadPollId = null;
-    }
-
-    /* Channel 3: pointer/click, in case the remote behaves like a mouse
-       or generates a synthetic tap somewhere on the page. */
-    window.addEventListener('pointerdown', (e)=>{
-      logEvent('pointer', `type="${e.pointerType}" target="${(e.target && e.target.id) || (e.target && e.target.className) || 'unknown'}"`);
-    }, true);
-  })();
-
   /* ---------- animations ---------- */
   function animatePoint(playerIndex){
     const scoreEl = playerIndex === 0 ? scoreP1 : scoreP2;
@@ -4413,7 +4385,7 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
 
   function resetTickerDefault(){
     ticker.innerHTML = voiceEnabled
-      ? 'Say &ldquo;Point for [name]&rdquo; to score'
+      ? 'Say &ldquo;Score [name]&rdquo; or &ldquo;Score 1 / 2&rdquo;'
       : 'Voice scoring is off — tap a half to score';
   }
 
@@ -4706,31 +4678,14 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
     }
   });
 
-  /* ---------- speech synthesis (spoken score call) ---------- */
+  /* ---------- speech synthesis (spoken confirmation) ---------- */
   function speakPoint(playerIndex){
     if (!voiceEnabled || !synthSupported || !state) return;
-
-    let phrase;
-
-    if (state.pendingGameAck || state.matchComplete) {
-      // This point just finished a game (currentGame has already been reset
-      // or the match ended), so pull the real numbers from the game that
-      // just closed rather than the fresh 0-0 sitting in currentGame.
-      const lastGame = state.completedGames[state.completedGames.length - 1];
-      const [a, b] = lastGame.score;
-      const winnerName = state.players[lastGame.winner];
-      phrase = state.matchComplete
-        ? `Game and match, ${winnerName}. ${a}, ${b}.`
-        : `Game, ${winnerName}. ${a}, ${b}.`;
-    } else {
-      // Standard umpire convention: server's score is called first.
-      const server = getServer(state);
-      const a = state.currentGame.score[server];
-      const b = state.currentGame.score[1 - server];
-      phrase = (a === b) ? `${a} all` : `${a}, ${b}`;
-    }
-
-    const utter = new SpeechSynthesisUtterance(phrase);
+    const name = state.players[playerIndex];
+    const score1 = state.currentGame.score[0];
+    const score2 = state.currentGame.score[1];
+    const scoreText = isDeuce(score1, score2, state.target) ? 'Deuce' : (score1 + ' to ' + score2);
+    const utter = new SpeechSynthesisUtterance('Point ' + name + '. ' + scoreText);
 
     utter.onstart = ()=>{
       isSpeaking = true;
