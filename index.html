@@ -4520,6 +4520,19 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
   wireHalf(halfP1, 0);
   wireHalf(halfP2, 1);
 
+  /* ---------- arrow-key scoring ---------- */
+  document.addEventListener('keydown', (e)=>{
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (!screenIsMatch() || overlayOpen()) return;
+
+    const tag = (e.target && e.target.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) return;
+
+    e.preventDefault();
+    applyPoint(e.key === 'ArrowLeft' ? 0 : 1);
+  });
+
   function overlayOpen(){
     return overlayGameComplete.classList.contains('show') ||
            overlayMatchComplete.classList.contains('show') ||
