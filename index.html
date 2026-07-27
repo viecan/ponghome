@@ -227,6 +227,71 @@
   .tab-panel{display:none;}
   .tab-panel.active{display:block;}
 
+  /* ============ VIEWER POPUP ============ */
+  .viewer-popup{
+    display:none;
+    position:fixed;
+    left:20px;
+    bottom:20px;
+    z-index:45;
+    align-items:center;
+    gap:10px;
+    background:var(--paper-card);
+    border:1px solid var(--line-light);
+    border-radius:999px;
+    padding:10px 14px 10px 12px;
+    box-shadow:var(--shadow);
+    font-family:'Inter',sans-serif;
+    font-size:0.85rem;
+    color:var(--ink);
+  }
+  .viewer-popup.show{
+    display:flex;
+    animation:viewerPopIn 0.4s ease both;
+  }
+  .viewer-popup.show.hide{
+    animation:viewerPopOut 0.25s ease both;
+  }
+  .viewer-dot{
+    flex:0 0 auto;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#2ecc71;
+    box-shadow:0 0 0 rgba(46,204,113,0.5);
+    animation:viewerDotPulse 1.6s ease-in-out infinite;
+  }
+  .viewer-text strong{color:var(--ink); font-weight:700;}
+  .viewer-close{
+    flex:0 0 auto;
+    appearance:none;
+    border:none;
+    background:transparent;
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    line-height:1;
+    padding:2px 4px;
+    margin-left:2px;
+    cursor:pointer;
+    border-radius:50%;
+  }
+  .viewer-close:hover{color:var(--ink); background:var(--line-light);}
+  @keyframes viewerPopIn{
+    from{opacity:0; transform:translateY(12px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  @keyframes viewerPopOut{
+    from{opacity:1; transform:translateY(0);}
+    to{opacity:0; transform:translateY(12px);}
+  }
+  @keyframes viewerDotPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(46,204,113,0.45);}
+    50%{box-shadow:0 0 0 5px rgba(46,204,113,0);}
+  }
+  @media (max-width:480px){
+    .viewer-popup{left:14px; bottom:14px; right:14px; font-size:0.8rem;}
+  }
+
   /* ============ HERO ============ */
   .hero{
     background:
@@ -500,6 +565,45 @@
     color:rgba(255,255,255,0.68);
   }
 
+  .coach-cta-card{
+    background:linear-gradient(135deg, var(--mint) 0%, var(--mint-dim) 100%);
+    border:1px solid transparent;
+    border-radius:20px;
+    padding:24px;
+    display:flex;
+    flex-direction:column;
+    transition:transform 0.2s ease;
+  }
+  .coach-cta-card:hover{transform:translateY(-4px);}
+  .coach-cta-eyebrow{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--bg-deeper);
+    opacity:0.72;
+    margin-bottom:10px;
+  }
+  .coach-cta-quote{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:1.08rem;
+    line-height:1.35;
+    color:var(--bg-deeper);
+    margin:0 0 18px;
+    flex:1;
+  }
+  .coach-cta-btn{
+    background:var(--bg-deeper);
+    color:var(--mint);
+    justify-content:center;
+    width:100%;
+  }
+  .coach-cta-btn:hover{
+    background:var(--bg-deep-soft);
+  }
+
   /* ============ FOOTER CTA ============ */
   .footer-cta{
     background:var(--bg-deeper);
@@ -527,6 +631,7 @@
     font-size:0.85rem;
     padding:22px;
   }
+  .footer-follow{margin-left:6px;}
 
   /* ============ CONTACT SECTION ============ */
   .contact-section{
@@ -588,6 +693,17 @@
   }
   .contact-input:focus{border-color:var(--mint-dim);}
   .contact-input::placeholder{color:var(--ink-soft); opacity:0.6;}
+  .contact-select{
+    appearance:none;
+    -webkit-appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234C6B70' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+    background-size:18px;
+    padding-right:42px;
+    cursor:pointer;
+  }
+  .contact-select:invalid{color:var(--ink-soft);}
   .contact-submit{
     width:100%;
     justify-content:center;
@@ -2095,6 +2211,12 @@
   </div>
 </nav>
 
+<div class="viewer-popup" id="viewerPopup" role="status" aria-live="polite">
+  <span class="viewer-dot"></span>
+  <span class="viewer-text" id="viewerText">Loading…</span>
+  <button class="viewer-close" id="viewerClose" aria-label="Dismiss">&times;</button>
+</div>
+
 <!-- ================= HOME TAB ================= -->
 <section id="home" class="tab-panel active">
 
@@ -2276,6 +2398,12 @@
             <p class="coach-role">Advanced player | Coach, technique development &amp; match play</p>
           </div>
 
+          <div class="coach-cta-card">
+            <span class="coach-cta-eyebrow">Now recruiting coaches</span>
+            <p class="coach-cta-quote">Your next student could be Justine Bieber</p>
+            <a class="btn-primary coach-cta-btn" href="https://wa.me/14372441309" target="_blank" rel="noopener">Work with us →</a>
+          </div>
+
         </div>
       </div>
     </div>
@@ -2290,7 +2418,17 @@
       <form id="contactForm" class="contact-form" novalidate>
         <div class="contact-field">
           <label for="contactName">Name</label>
-          <input type="text" id="contactName" name="name" class="contact-input" placeholder="Your full name" autocomplete="name" required>
+          <input type="text" id="contactName" name="name" class="contact-input" placeholder="Vince" autocomplete="name" required>
+        </div>
+        <div class="contact-field">
+          <label for="contactGoal">What are you looking for?</label>
+          <select id="contactGoal" name="goal" class="contact-input contact-select" required>
+            <option value="" disabled selected>Select an option</option>
+            <option value="Build a strong foundation">Build a strong foundation</option>
+            <option value="Improve my technique">Improve my technique</option>
+            <option value="Learn advanced techniques and game tactics">Learn advanced techniques and game tactics</option>
+            <option value="Just get better and have fun">Just get better and have fun</option>
+          </select>
         </div>
         <div class="contact-field">
           <label for="contactEmail">Email</label>
@@ -3037,7 +3175,7 @@
 </section>
 
 <footer class="site-footer">
-  Pong Home | On-demand table tennis coaching <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a>
+  Pong Home | On-demand table tennis coaching <span class="footer-follow">Follow us on</span> <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a>
 </footer>
 
 <script>
@@ -3072,6 +3210,7 @@
     window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
     document.dispatchEvent(new CustomEvent('pc:site-tab-changed', {detail:{active: name === 'scoreboard'}}));
     updateNavHeightVar();
+    updateViewerPopupForTab(name);
   }
 
   tabLinks.forEach(link => {
@@ -3080,6 +3219,69 @@
       activateTab(link.getAttribute('data-tab-link'));
     });
   });
+
+  /* ---------- Live viewers popup ---------- */
+  const viewerPopup = document.getElementById('viewerPopup');
+  const viewerText = document.getElementById('viewerText');
+  const viewerClose = document.getElementById('viewerClose');
+  const VIEWER_TABS = ['home', 'learn'];
+  let viewerDismissed = false;
+  let viewerCycleTimer = null;
+
+  function randomViewerCount(){
+    return Math.floor(Math.random() * (9 - 2 + 1)) + 2;
+  }
+
+  function setViewerText(){
+    if (!viewerText) return;
+    const n = randomViewerCount();
+    viewerText.innerHTML = '<strong>' + n + '</strong> player' + (n === 1 ? '' : 's') + ' are online right now';
+  }
+
+  function showViewerPopup(){
+    if (!viewerPopup || viewerDismissed) return;
+    setViewerText();
+    viewerPopup.classList.remove('hide');
+    viewerPopup.classList.add('show');
+  }
+
+  function hideViewerPopup(){
+    if (!viewerPopup) return;
+    viewerPopup.classList.add('hide');
+    setTimeout(() => { viewerPopup.classList.remove('show', 'hide'); }, 250);
+  }
+
+  function updateViewerPopupForTab(name){
+    if (!viewerPopup) return;
+    if (VIEWER_TABS.indexOf(name) !== -1 && !viewerDismissed) {
+      showViewerPopup();
+    } else {
+      hideViewerPopup();
+    }
+  }
+
+  if (viewerPopup) {
+    // initial state on page load
+    const initialTab = document.querySelector('.tab-panel.active');
+    updateViewerPopupForTab(initialTab ? initialTab.id : 'home');
+
+    // every 1 minute: disappear, then reappear moments later with a fresh random count
+    viewerCycleTimer = setInterval(() => {
+      const activePanel = document.querySelector('.tab-panel.active');
+      const activeName = activePanel ? activePanel.id : null;
+      if (VIEWER_TABS.indexOf(activeName) === -1 || viewerDismissed) return;
+      hideViewerPopup();
+      setTimeout(() => { updateViewerPopupForTab(activeName); }, 500);
+    }, 60000);
+  }
+
+  if (viewerClose && viewerPopup) {
+    viewerClose.addEventListener('click', () => {
+      viewerDismissed = true;
+      if (viewerCycleTimer) clearInterval(viewerCycleTimer);
+      hideViewerPopup();
+    });
+  }
 
   /* ---------- Get in touch contact form ---------- */
   const contactForm = document.getElementById('contactForm');
@@ -3109,7 +3311,16 @@
 
       const formData = new FormData(contactForm);
       const payload = {};
-      formData.forEach((value, key) => { payload[key] = value; });
+      formData.forEach((value, key) => {
+        if (Object.prototype.hasOwnProperty.call(payload, key)) {
+          payload[key] = Array.isArray(payload[key]) ? payload[key].concat(value) : [payload[key], value];
+        } else {
+          payload[key] = value;
+        }
+      });
+      Object.keys(payload).forEach((key) => {
+        if (Array.isArray(payload[key])) payload[key] = payload[key].join(', ');
+      });
 
       contactSubmitBtn.disabled = true;
       contactSubmitBtn.textContent = 'Sending…';
