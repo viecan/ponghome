@@ -755,11 +755,11 @@
     text-align:center;
   }
   .learn-hero .book-title{
-    font-size:clamp(2rem,5vw,3.1rem);
+    font-size:clamp(2rem,4.8vw,3rem);
     color:var(--mint);
     max-width:760px;
     margin:0 auto 14px;
-    line-height:1.08;
+    line-height:1.1;
   }
   .learn-hero .book-sub{
     font-style:italic;
@@ -2416,7 +2416,7 @@
 
           <div class="coach-cta-card">
             <span class="coach-cta-eyebrow">Now recruiting coaches</span>
-            <p class="coach-cta-quote">Your next student could be Justine Bieber</p>
+            <p class="coach-cta-quote">Your next student could be Drake or Justin Bieber</p>
             <a class="btn-primary coach-cta-btn" href="https://wa.me/14372441309" target="_blank" rel="noopener">Work with us →</a>
           </div>
 
@@ -3240,9 +3240,10 @@
   const viewerPopup = document.getElementById('viewerPopup');
   const viewerText = document.getElementById('viewerText');
   const viewerClose = document.getElementById('viewerClose');
-  const VIEWER_TABS = ['home', 'learn'];
+  const VIEWER_TABS = ['home'];
   let viewerDismissed = false;
   let viewerCycleTimer = null;
+  let viewerHideTimer = null;
 
   function randomViewerCount(){
     return Math.floor(Math.random() * (9 - 2 + 1)) + 2;
@@ -3256,6 +3257,7 @@
 
   function showViewerPopup(){
     if (!viewerPopup || viewerDismissed) return;
+    if (viewerHideTimer) { clearTimeout(viewerHideTimer); viewerHideTimer = null; }
     setViewerText();
     viewerPopup.classList.remove('hide');
     viewerPopup.classList.add('show');
@@ -3263,8 +3265,12 @@
 
   function hideViewerPopup(){
     if (!viewerPopup) return;
+    if (viewerHideTimer) clearTimeout(viewerHideTimer);
     viewerPopup.classList.add('hide');
-    setTimeout(() => { viewerPopup.classList.remove('show', 'hide'); }, 250);
+    viewerHideTimer = setTimeout(() => {
+      viewerPopup.classList.remove('show', 'hide');
+      viewerHideTimer = null;
+    }, 250);
   }
 
   function updateViewerPopupForTab(name){
