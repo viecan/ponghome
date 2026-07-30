@@ -43,6 +43,48 @@
     margin:0;
   }
 
+  /* ============ TYPOGRAPHY: widow/orphan control ============
+     Headings get balanced line-breaking so short titles never leave
+     a single dangling word on the last line. Body copy gets "pretty"
+     wrapping, which specifically avoids orphans at paragraph ends.
+     Both degrade gracefully to normal wrapping on unsupported
+     browsers; widows/orphans is included as a fallback signal. */
+  h1,h2,h3,h4,
+  .display,
+  .section-title,
+  .book-title,
+  .book-sub,
+  .ch-heading,
+  .subsection,
+  .city-head h3,
+  .pc-title,
+  .games-recap-title,
+  .fo-title,
+  .bracket-title,
+  .bracket-section-heading,
+  .hero-eyebrow,
+  .eyebrow,
+  .coach-cta-eyebrow,
+  .overlay-eyebrow,
+  .tagline{
+    text-wrap:balance;
+    widows:2;
+    orphans:2;
+  }
+
+  p,
+  li,
+  .service-copy p,
+  .chapter-body,
+  .chapter-body p,
+  .fo-desc,
+  .sub,
+  .viewer-text{
+    text-wrap:pretty;
+    widows:2;
+    orphans:2;
+  }
+
   .mono{font-family:'JetBrains Mono',monospace;}
 
   a{color:inherit;}
@@ -2366,14 +2408,6 @@
 
           <div class="coach-card">
             <div class="coach-top">
-              <span class="coach-name">Roman C.</span>
-              <span class="coach-price">$55/h</span>
-            </div>
-            <p class="coach-role">Advanced player | Coach, foundations &amp; technique development</p>
-          </div>
-
-          <div class="coach-card">
-            <div class="coach-top">
               <span class="coach-name">Tony D.</span>
               <span class="coach-price">$45/h</span>
             </div>
@@ -2426,10 +2460,10 @@
 
           <a class="coach-card" href="https://wa.me/14372441309" target="_blank" rel="noopener" style="text-decoration:none;">
             <div class="coach-top">
-              <span class="coach-name">Your city?</span>
+              <span class="coach-name">Your coach</span>
               <span class="coach-price tbd">Contact us</span>
             </div>
-            <p class="coach-role">Not in one of our cities yet? Tell us where you'd like a coach next.</p>
+            <p class="coach-role">Tell us your city, we may have a coach available nearby.</p>
           </a>
 
           <div class="coach-cta-card">
