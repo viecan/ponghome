@@ -356,7 +356,7 @@
       radial-gradient(circle at 82% -10%, rgba(0,240,200,0.16), transparent 45%),
       var(--bg-deep);
     color:#fff;
-    padding:100px 28px 90px;
+    padding:20px 28px 90px;
     position:relative;
     overflow:hidden;
   }
@@ -381,18 +381,92 @@
     margin-bottom:28px;
   }
   .hero h1{
-    font-size:clamp(2.6rem, 7vw, 5.4rem);
-    line-height:0.98;
+    font-size:clamp(2rem, 5.2vw, 3.9rem);
+    line-height:1.04;
     color:var(--mint);
     text-transform:uppercase;
+    margin-top:24px;
+  }
+  @media (min-width:861px){
+    .hero h1{
+      font-size:clamp(1.8rem, 3.2vw, 2.7rem);
+      white-space:nowrap;
+    }
+    .hero-break{display:none;}
   }
   .hero h1 .white{color:#fff;}
+  .hero-ball-wrap{
+    display:block;
+    position:relative;
+    width:24px;
+    height:24px;
+    margin:14px auto 0;
+    z-index:2;
+    pointer-events:none;
+  }
+  .hero-ball{
+    position:relative;
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    background:radial-gradient(circle at 32% 28%, #ffffff, #eaf9f5 55%, #cfeee6 100%);
+    box-shadow:0 0 24px rgba(0,240,200,0.45), 0 16px 28px rgba(0,0,0,0.35), inset -8px -8px 14px rgba(0,0,0,0.08);
+    animation:heroBallFloat 4.4s ease-in-out infinite;
+  }
+  .hero-ball::after{
+    content:"";
+    position:absolute;
+    inset:9%;
+    border-radius:50%;
+    border:1px solid rgba(0,240,200,0.25);
+    opacity:0.6;
+  }
+  .hero-ball-shadow{
+    position:absolute;
+    left:50%;
+    bottom:-6px;
+    width:17px;
+    height:4.5px;
+    margin-left:-8.5px;
+    border-radius:50%;
+    background:rgba(0,0,0,0.35);
+    filter:blur(3px);
+    animation:heroBallShadow 4.4s ease-in-out infinite;
+  }
+  @media (min-width:861px){
+    .hero-ball-wrap{
+      width:32px;
+      height:32px;
+      margin:16px auto 0;
+    }
+    .hero-ball-shadow{
+      width:23px;
+      height:6px;
+      margin-left:-11.5px;
+      bottom:-7px;
+    }
+  }
+  @keyframes heroBallFloat{
+    0%,100%{ transform:translateY(0) rotate(0deg); }
+    50%{ transform:translateY(-24px) rotate(180deg); }
+  }
+  @keyframes heroBallShadow{
+    0%,100%{ transform:scale(1); opacity:0.35; }
+    50%{ transform:scale(0.7); opacity:0.16; }
+  }
   .hero p.lead{
     max-width:560px;
     margin:26px auto 38px;
     font-size:1.08rem;
     line-height:1.65;
     color:rgba(255,255,255,0.78);
+    text-align:justify;
+    text-align-last:center;
+  }
+  @media (min-width:861px){
+    .hero p.lead{
+      max-width:800px;
+    }
   }
   .btn-primary{
     display:inline-flex;
@@ -2300,6 +2374,9 @@
     .pc-ball, .pc-ball-shadow, .pc-paddle-left, .pc-paddle-right{
       animation:none !important;
     }
+    .hero-ball, .hero-ball-shadow{
+      animation:none !important;
+    }
     .pc-ball{left:50%; top:35%;}
     .pc-ball-shadow{left:50%; opacity:0.2;}
     .pc-paddle-left{left:3%;}
@@ -2345,7 +2422,13 @@
   <header class="hero">
     <div class="hero-inner">
       <span class="hero-eyebrow">Toronto · NYC · San Francisco · Berlin · *Now expanding</span>
-      <h1>On-demand<br><span class="white">table tennis</span><br>coaching</h1>
+      <h1>On-demand <br class="hero-break"><span class="white">table tennis</span> <br class="hero-break">coaching</h1>
+
+      <div class="hero-ball-wrap" aria-hidden="true">
+        <div class="hero-ball"></div>
+        <div class="hero-ball-shadow"></div>
+      </div>
+
       <p class="lead">Whether you’re a beginner looking to build a strong foundation, a recreational player who simply wants to stay active and improve, or an advanced player preparing for tournaments, our Pong Home coaches can help you take your game to the next level. We come to you at a time and location that works for you, focusing on technique, footwork, and match strategy to help you improve faster and play with more confidence. </p>
       <div class="hero-actions">
         <a class="btn-primary" href="https://wa.me/14372441309" target="_blank" rel="noopener">
@@ -2363,13 +2446,6 @@
         </a>
       </div>
     </div>
-
-    <svg class="rally-divider" viewBox="0 0 1200 46" preserveAspectRatio="none" aria-hidden="true" style="margin-top:70px;">
-      <path d="M0,40 Q100,4 200,40 T400,40 T600,40 T800,40 T1000,40 T1200,40" fill="none" stroke="rgba(0,240,200,0.28)" stroke-width="2" stroke-dasharray="1 14" stroke-linecap="round"/>
-      <circle cx="200" cy="40" r="4" fill="#00F0C8"/>
-      <circle cx="600" cy="40" r="4" fill="#00F0C8"/>
-      <circle cx="1000" cy="40" r="4" fill="#00F0C8"/>
-    </svg>
   </header>
 
   <section class="section section-light">
