@@ -9,19 +9,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-deep:#0E3B42;
-    --bg-deeper:#082A30;
-    --bg-deep-soft:#134650;
-    --mint:#00F0C8;
-    --mint-dim:#00B89C;
-    --mint-soft:rgba(0,240,200,0.14);
-    --paper:#F3F7F6;
+    --bg-deep:#0C5C66;
+    --bg-deeper:#0A4952;
+    --bg-deep-soft:#14727C;
+    --mint:#00FFD1;
+    --mint-dim:#00E0B8;
+    --mint-soft:rgba(0,255,209,0.18);
+    --paper:#FAFFFB;
     --paper-card:#FFFFFF;
     --ink:#0A2A2F;
     --ink-soft:#4C6B70;
-    --line-dark:rgba(255,255,255,0.14);
-    --line-light:rgba(10,42,47,0.12);
-    --shadow: 0 18px 40px rgba(4,26,30,0.18);
+    --line-dark:rgba(255,255,255,0.16);
+    --line-light:rgba(10,42,47,0.10);
+    --shadow: 0 18px 40px rgba(6,88,96,0.22);
+    --coral:#FF6B6B;
+    --sun:#FFB020;
     --nav-h: 64px;
   }
 
@@ -78,8 +80,7 @@
   .chapter-body,
   .chapter-body p,
   .fo-desc,
-  .sub,
-  .viewer-text{
+  .sub{
     text-wrap:pretty;
     widows:2;
     orphans:2;
@@ -268,87 +269,6 @@
   /* ============ TAB PANELS ============ */
   .tab-panel{display:none;}
   .tab-panel.active{display:block;}
-
-  /* ============ VIEWER POPUP ============ */
-  .viewer-popup{
-    display:none;
-    position:fixed;
-    left:20px;
-    bottom:20px;
-    z-index:45;
-    align-items:center;
-    gap:10px;
-    background:var(--paper-card);
-    border:1px solid var(--line-light);
-    border-radius:999px;
-    padding:10px 14px 10px 12px;
-    box-shadow:var(--shadow);
-    font-family:'Inter',sans-serif;
-    font-size:0.85rem;
-    color:var(--ink);
-  }
-  .viewer-popup.show{
-    display:flex;
-    animation:viewerPopIn 0.4s ease both;
-  }
-  .viewer-popup.show.hide{
-    animation:viewerPopOut 0.25s ease both;
-  }
-  .viewer-dot{
-    flex:0 0 auto;
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:#2ecc71;
-    box-shadow:0 0 0 rgba(46,204,113,0.5);
-    animation:viewerDotPulse 1.6s ease-in-out infinite;
-  }
-  .viewer-text strong{color:var(--ink); font-weight:700;}
-  .viewer-close{
-    flex:0 0 auto;
-    appearance:none;
-    border:none;
-    background:transparent;
-    color:var(--ink-soft);
-    font-size:1.05rem;
-    line-height:1;
-    padding:2px 4px;
-    margin-left:2px;
-    cursor:pointer;
-    border-radius:50%;
-  }
-  .viewer-close:hover{color:var(--ink); background:var(--line-light);}
-  @keyframes viewerPopIn{
-    from{opacity:0; transform:translateY(12px);}
-    to{opacity:1; transform:translateY(0);}
-  }
-  @keyframes viewerPopOut{
-    from{opacity:1; transform:translateY(0);}
-    to{opacity:0; transform:translateY(12px);}
-  }
-  @keyframes viewerDotPulse{
-    0%,100%{box-shadow:0 0 0 0 rgba(46,204,113,0.45);}
-    50%{box-shadow:0 0 0 5px rgba(46,204,113,0);}
-  }
-  @media (max-width:480px){
-    .viewer-popup{
-      left:12px;
-      bottom:14px;
-      right:auto;
-      max-width:calc(100vw - 24px);
-      padding:8px 12px 8px 10px;
-      font-size:0.74rem;
-      gap:7px;
-      border-radius:999px;
-    }
-    .viewer-text{
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-    }
-    .viewer-dot{width:6px; height:6px;}
-    .viewer-close{font-size:0.95rem; padding:1px 3px;}
-  }
 
   /* ============ HERO ============ */
   .hero{
@@ -2416,18 +2336,12 @@
   </div>
 </nav>
 
-<div class="viewer-popup" id="viewerPopup" role="status" aria-live="polite">
-  <span class="viewer-dot"></span>
-  <span class="viewer-text" id="viewerText">Loading…</span>
-  <button class="viewer-close" id="viewerClose" aria-label="Dismiss">&times;</button>
-</div>
-
 <!-- ================= HOME TAB ================= -->
 <section id="home" class="tab-panel active">
 
   <header class="hero">
     <div class="hero-inner">
-      <span class="hero-eyebrow">Toronto · NYC · San Francisco · Berlin · *Now expanding</span>
+      <span class="hero-eyebrow">Toronto · NYC · San Francisco · Berlin · Coming to your city</span>
       <h1>On-demand <br class="hero-break"><span class="white">table tennis</span> <br class="hero-break">coaching</h1>
 
       <div class="hero-ball-wrap" aria-hidden="true">
@@ -3432,7 +3346,6 @@
     window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
     document.dispatchEvent(new CustomEvent('pc:site-tab-changed', {detail:{active: name === 'scoreboard'}}));
     updateNavHeightVar();
-    updateViewerPopupForTab(name);
   }
 
   tabLinks.forEach(link => {
@@ -3441,75 +3354,6 @@
       activateTab(link.getAttribute('data-tab-link'));
     });
   });
-
-  /* ---------- Live viewers popup ---------- */
-  const viewerPopup = document.getElementById('viewerPopup');
-  const viewerText = document.getElementById('viewerText');
-  const viewerClose = document.getElementById('viewerClose');
-  const VIEWER_TABS = ['home'];
-  let viewerDismissed = false;
-  let viewerCycleTimer = null;
-  let viewerHideTimer = null;
-
-  function randomViewerCount(){
-    return Math.floor(Math.random() * (9 - 2 + 1)) + 2;
-  }
-
-  function setViewerText(){
-    if (!viewerText) return;
-    const n = randomViewerCount();
-    viewerText.innerHTML = '<strong>' + n + '</strong> player' + (n === 1 ? '' : 's') + ' are online right now';
-  }
-
-  function showViewerPopup(){
-    if (!viewerPopup || viewerDismissed) return;
-    if (viewerHideTimer) { clearTimeout(viewerHideTimer); viewerHideTimer = null; }
-    setViewerText();
-    viewerPopup.classList.remove('hide');
-    viewerPopup.classList.add('show');
-  }
-
-  function hideViewerPopup(){
-    if (!viewerPopup) return;
-    if (viewerHideTimer) clearTimeout(viewerHideTimer);
-    viewerPopup.classList.add('hide');
-    viewerHideTimer = setTimeout(() => {
-      viewerPopup.classList.remove('show', 'hide');
-      viewerHideTimer = null;
-    }, 250);
-  }
-
-  function updateViewerPopupForTab(name){
-    if (!viewerPopup) return;
-    if (VIEWER_TABS.indexOf(name) !== -1 && !viewerDismissed) {
-      showViewerPopup();
-    } else {
-      hideViewerPopup();
-    }
-  }
-
-  if (viewerPopup) {
-    // initial state on page load
-    const initialTab = document.querySelector('.tab-panel.active');
-    updateViewerPopupForTab(initialTab ? initialTab.id : 'home');
-
-    // every 1 minute: disappear, then reappear moments later with a fresh random count
-    viewerCycleTimer = setInterval(() => {
-      const activePanel = document.querySelector('.tab-panel.active');
-      const activeName = activePanel ? activePanel.id : null;
-      if (VIEWER_TABS.indexOf(activeName) === -1 || viewerDismissed) return;
-      hideViewerPopup();
-      setTimeout(() => { updateViewerPopupForTab(activeName); }, 500);
-    }, 60000);
-  }
-
-  if (viewerClose && viewerPopup) {
-    viewerClose.addEventListener('click', () => {
-      viewerDismissed = true;
-      if (viewerCycleTimer) clearInterval(viewerCycleTimer);
-      hideViewerPopup();
-    });
-  }
 
   /* ---------- Get in touch contact form ---------- */
   const contactForm = document.getElementById('contactForm');
