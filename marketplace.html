@@ -2440,42 +2440,11 @@
   .mkt-price-clickable:hover{
     background:rgba(0,224,184,0.1);
   }
-  .mkt-price-edit-icon{
-    font-family:'Inter',sans-serif;
-    font-weight:600;
-    font-size:0.68rem;
+  .mkt-price-pencil{
+    font-size:0.7rem;
     color:var(--ink-soft);
-    text-transform:none;
-    letter-spacing:0;
+    margin-left:auto;
   }
-  .mkt-price-edit{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    margin-bottom:8px;
-  }
-  .mkt-price-input{
-    width:100px;
-    padding:6px 8px;
-    font-family:'JetBrains Mono',monospace;
-    font-weight:700;
-  }
-  .mkt-price-save, .mkt-price-cancel{
-    appearance:none;
-    border:none;
-    width:26px; height:26px;
-    min-width:26px;
-    border-radius:50%;
-    cursor:pointer;
-    font-size:0.8rem;
-    line-height:1;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    flex-shrink:0;
-  }
-  .mkt-price-save{background:var(--mint); color:var(--bg-deeper);}
-  .mkt-price-cancel{background:rgba(10,42,47,0.08); color:var(--ink-soft);}
   .mkt-meta{
     font-size:0.82rem;
     color:var(--ink-soft);
@@ -2713,7 +2682,6 @@
   let loadError = false;
   let loadErrorDetail = '';
   let filters = { city: '', condition: '', status: '', category: '' };
-  let editingPriceId = null;
 
   const badgeClass = { 'new': 'mkt-badge-new', 'like new': 'mkt-badge-likenew', 'good': 'mkt-badge-good', 'fair': 'mkt-badge-fair' };
   const statusClass = { 'Available': 'mkt-status-available', 'Pending': 'mkt-status-pending', 'Sold': 'mkt-status-sold', 'Cancelled': 'mkt-status-cancelled' };
@@ -2854,16 +2822,9 @@
           <select class="mkt-status-pill ${statusClass[status] || ''}" data-id="${l.id}">${statusOpts}</select>
         </div>
         <h3>${escapeHtml(l.title)}</h3>
-        ${l.id === editingPriceId
-          ? `<div class="mkt-price-edit">
-              <input type="number" min="0" class="text-input mkt-price-input" id="mkt-price-input-${l.id}" value="${l.price}" />
-              <button class="mkt-price-save" data-id="${l.id}">✓</button>
-              <button class="mkt-price-cancel">✕</button>
-            </div>`
-          : `<div class="mkt-price mkt-price-clickable" data-id="${l.id}">$${Number(l.price).toLocaleString()} <span class="mkt-currency">${currency}</span> <span class="mkt-price-edit-icon">✎ tap to edit</span></div>`
-        }
+        <div class="mkt-price mkt-price-clickable" data-id="${l.id}">$${Number(l.price).toLocaleString()} <span class="mkt-currency">${currency}</span> <span class="mkt-price-pencil">✎</span></div>
         <div class="mkt-meta">${escapeHtml(l.city)} · posted ${dateStr}</div>
-        <div class="mkt-meta">Seller: ${escapeHtml(l.seller_name || 'N/A')}</div>
+        <div class="mkt-meta">Seller: <strong>${escapeHtml(l.seller_name || 'N/A')}</strong></div>
         ${l.category ? `<div class="mkt-meta">Category: ${escapeHtml(l.category)}</div>` : ''}
         ${l.description ? `<div class="mkt-desc">${escapeHtml(l.description)}</div>` : ''}
         <div class="mkt-contact-row">
@@ -2926,35 +2887,25 @@
       img.onclick = () => openLightbox(img.src);
     });
     document.querySelectorAll('.mkt-price-clickable').forEach(el => {
-      el.onclick = () => {
-        editingPriceId = el.getAttribute('data-id');
-        renderMkt();
-        const input = document.getElementById(`mkt-price-input-${editingPriceId}`);
-        if (input) { input.focus(); input.select(); }
-      };
-    });
-    document.querySelectorAll('.mkt-price-cancel').forEach(btn => {
-      btn.onclick = () => { editingPriceId = null; renderMkt(); };
-    });
-    document.querySelectorAll('.mkt-price-save').forEach(btn => {
-      btn.onclick = async () => {
-        const id = btn.getAttribute('data-id');
-        const input = document.getElementById(`mkt-price-input-${id}`);
-        const newPrice = Number(input.value);
-        if (!input.value || isNaN(newPrice) || newPrice < 0) {
+      el.onclick = async () => {
+        const id = el.getAttribute('data-id');
+        const listing = listings.find(x => String(x.id) === String(id));
+        if (!listing) return;
+        const input = window.prompt('Update price:', listing.price);
+        if (input === null) return;
+        const newPrice = Number(input);
+        if (input.trim() === '' || isNaN(newPrice) || newPrice < 0) {
           toast('Enter a valid price');
           return;
         }
         try {
           await updateListingPrice(id, newPrice);
-          const l = listings.find(x => String(x.id) === String(id));
-          if (l) l.price = newPrice;
-          editingPriceId = null;
+          listing.price = newPrice;
           toast('Price updated');
           renderMkt();
         } catch (err) {
           console.error('Marketplace: failed to update price —', err.message || err);
-          toast('Could not update price');
+          toast('Could not update price: ' + (err.message || 'unknown error'));
         }
       };
     });
