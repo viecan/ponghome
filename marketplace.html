@@ -152,6 +152,8 @@
     cursor:pointer;
     transition:background 0.25s ease, color 0.25s ease;
     white-space:nowrap;
+    text-decoration:none;
+    display:inline-block;
   }
   .nav-tab.active{
     background:var(--mint);
@@ -2333,7 +2335,6 @@
     margin-bottom:28px;
   }
   .mkt-toolbar .text-input{width:auto;}
-  #mkt-title-filter{flex:1; min-width:150px;}
   #mkt-city-filter{flex:1; min-width:150px;}
   .mkt-spacer{flex-grow:1;}
   .btn-create-listing{
@@ -2371,8 +2372,27 @@
     box-shadow:0 4px 14px rgba(10,42,47,0.05);
     transition:transform 0.2s ease, box-shadow 0.2s ease;
   }
+  .mkt-sponsored-row{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:8px;
+  }
+  .mkt-sponsored-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    background:linear-gradient(135deg,#F6D365,#D4A017);
+    color:#3A2A00;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:0.62rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border-radius:999px;
+    box-shadow:0 2px 6px rgba(180,130,0,0.35);
+  }
   .mkt-card:hover{
-    transform:translateY(-3px);
     box-shadow:var(--shadow);
   }
   .mkt-badge{
@@ -2407,21 +2427,27 @@
     margin-bottom:8px;
     display:flex;
     align-items:center;
+    flex-wrap:wrap;
     gap:6px;
   }
-  .mkt-price-edit-btn{
-    appearance:none;
-    border:none;
-    background:rgba(10,42,47,0.06);
-    color:var(--ink-soft);
-    font-size:0.75rem;
-    width:22px; height:22px;
-    border-radius:50%;
+  .mkt-price-clickable{
     cursor:pointer;
-    line-height:1;
-    padding:0;
+    border-radius:10px;
+    padding:6px 8px;
+    margin-left:-8px;
+    transition:background 0.15s ease;
   }
-  .mkt-price-edit-btn:hover{background:rgba(10,42,47,0.12); color:var(--ink);}
+  .mkt-price-clickable:hover{
+    background:rgba(0,224,184,0.1);
+  }
+  .mkt-price-edit-icon{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:0.68rem;
+    color:var(--ink-soft);
+    text-transform:none;
+    letter-spacing:0;
+  }
   .mkt-price-edit{
     display:flex;
     align-items:center;
@@ -2438,10 +2464,15 @@
     appearance:none;
     border:none;
     width:26px; height:26px;
+    min-width:26px;
     border-radius:50%;
     cursor:pointer;
     font-size:0.8rem;
     line-height:1;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
   }
   .mkt-price-save{background:var(--mint); color:var(--bg-deeper);}
   .mkt-price-cancel{background:rgba(10,42,47,0.08); color:var(--ink-soft);}
@@ -2456,18 +2487,6 @@
     line-height:1.55;
     margin:10px 0;
   }
-  .mkt-phone{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    margin-top:8px;
-    font-size:0.85rem;
-    font-weight:700;
-    color:var(--bg-deep-soft);
-    text-decoration:none;
-  }
-  .mkt-phone:hover{color:var(--mint-dim);}
-
   .mkt-contact-row{
     display:flex;
     align-items:center;
@@ -2490,7 +2509,6 @@
     white-space:nowrap;
   }
   .mkt-text-cta:hover{background:var(--mint-dim);}
-  .mkt-contact-row .mkt-phone{margin-top:0;}
 
   .mkt-card-top{
     display:flex;
@@ -2694,7 +2712,7 @@
   let loaded = false;
   let loadError = false;
   let loadErrorDetail = '';
-  let filters = { title: '', city: '', condition: '', status: '', sort: 'newest' };
+  let filters = { city: '', condition: '', status: '', category: '' };
   let editingPriceId = null;
 
   const badgeClass = { 'new': 'mkt-badge-new', 'like new': 'mkt-badge-likenew', 'good': 'mkt-badge-good', 'fair': 'mkt-badge-fair' };
@@ -2797,15 +2815,24 @@
 
   function getFiltered() {
     let out = listings.filter(l =>
-      (!filters.title || (l.title || '').toLowerCase().includes(filters.title.toLowerCase())) &&
       (!filters.city || (l.city || '').toLowerCase().includes(filters.city.toLowerCase())) &&
       (!filters.condition || l.condition === filters.condition) &&
-      (!filters.status || (l.status || 'Available') === filters.status)
+      (!filters.status || (l.status || 'Available') === filters.status) &&
+      (!filters.category || l.category === filters.category)
     );
-    if (filters.sort === 'newest') out.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    if (filters.sort === 'price-low') out.sort((a, b) => a.price - b.price);
-    if (filters.sort === 'price-high') out.sort((a, b) => b.price - a.price);
-    return out;
+    out.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    const sponsored = out.filter(l => l.is_sponsored);
+    const nonSponsored = out.filter(l => !l.is_sponsored);
+    const topSponsored = sponsored.slice(0, 3);
+    const overflowSponsored = sponsored.slice(3);
+    const frontFillCount = Math.max(0, 3 - topSponsored.length);
+    const frontFill = nonSponsored.slice(0, frontFillCount);
+    const remainingNonSponsored = nonSponsored.slice(frontFillCount);
+    const rest = remainingNonSponsored.concat(overflowSponsored)
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    return topSponsored.concat(frontFill).concat(rest);
   }
 
   function escapeHtml(s) {
@@ -2821,6 +2848,7 @@
     const images = Array.isArray(l.image_url) ? l.image_url : (l.image_url ? [l.image_url] : []);
     return `
       <div class="mkt-card">
+        ${l.is_sponsored ? `<div class="mkt-sponsored-row"><span class="mkt-sponsored-tag">★ Sponsored</span></div>` : ''}
         <div class="mkt-card-top">
           <span class="mkt-badge ${badgeClass[l.condition] || ''}"><span class="dot"></span>${l.condition}</span>
           <select class="mkt-status-pill ${statusClass[status] || ''}" data-id="${l.id}">${statusOpts}</select>
@@ -2832,14 +2860,14 @@
               <button class="mkt-price-save" data-id="${l.id}">✓</button>
               <button class="mkt-price-cancel">✕</button>
             </div>`
-          : `<div class="mkt-price">$${Number(l.price).toLocaleString()} <span class="mkt-currency">${currency}</span> <button class="mkt-price-edit-btn" data-id="${l.id}" aria-label="Edit price">✎</button></div>`
+          : `<div class="mkt-price mkt-price-clickable" data-id="${l.id}">$${Number(l.price).toLocaleString()} <span class="mkt-currency">${currency}</span> <span class="mkt-price-edit-icon">✎ tap to edit</span></div>`
         }
         <div class="mkt-meta">${escapeHtml(l.city)} · posted ${dateStr}</div>
         <div class="mkt-meta">Seller: ${escapeHtml(l.seller_name || 'N/A')}</div>
+        ${l.category ? `<div class="mkt-meta">Category: ${escapeHtml(l.category)}</div>` : ''}
         ${l.description ? `<div class="mkt-desc">${escapeHtml(l.description)}</div>` : ''}
         <div class="mkt-contact-row">
           <a class="mkt-text-cta" href="sms:${escapeHtml(l.seller_contact)}">Text me</a>
-          <a class="mkt-phone" href="tel:${escapeHtml(l.seller_contact)}">${escapeHtml(l.seller_contact)} →</a>
         </div>
         ${images.length ? `<div class="mkt-images">${images.map(u => `<img src="${escapeHtml(u)}" class="mkt-img-thumb" alt="listing photo" />`).join('')}</div>` : ''}
       </div>
@@ -2858,7 +2886,6 @@
     const filtered = getFiltered();
     wrap.innerHTML = `
       <div class="mkt-toolbar">
-        <input class="text-input" id="mkt-title-filter" placeholder="Search by title" value="${escapeHtml(filters.title)}" />
         <input class="text-input" id="mkt-city-filter" placeholder="Filter by location" value="${escapeHtml(filters.city)}" />
         <select class="text-input" id="mkt-cond-filter">
           <option value="">Any condition</option>
@@ -2874,10 +2901,13 @@
           <option value="Sold"${filters.status === 'Sold' ? ' selected' : ''}>Sold</option>
           <option value="Cancelled"${filters.status === 'Cancelled' ? ' selected' : ''}>Cancelled</option>
         </select>
-        <select class="text-input" id="mkt-sort">
-          <option value="newest"${filters.sort === 'newest' ? ' selected' : ''}>Newest</option>
-          <option value="price-low"${filters.sort === 'price-low' ? ' selected' : ''}>Price: low to high</option>
-          <option value="price-high"${filters.sort === 'price-high' ? ' selected' : ''}>Price: high to low</option>
+        <select class="text-input" id="mkt-category-filter">
+          <option value="">Any category</option>
+          <option value="Racket"${filters.category === 'Racket' ? ' selected' : ''}>Racket</option>
+          <option value="Blade"${filters.category === 'Blade' ? ' selected' : ''}>Blade</option>
+          <option value="Rubber"${filters.category === 'Rubber' ? ' selected' : ''}>Rubber</option>
+          <option value="Accessories"${filters.category === 'Accessories' ? ' selected' : ''}>Accessories</option>
+          <option value="Other"${filters.category === 'Other' ? ' selected' : ''}>Other</option>
         </select>
         <div class="mkt-spacer"></div>
         <button class="btn-create-listing" id="mkt-list-btn">+ Create Listing</button>
@@ -2887,18 +2917,17 @@
         : `<div class="mkt-grid">${filtered.map(cardHtml).join('')}</div>`
       }
     `;
-    document.getElementById('mkt-title-filter').oninput = (e) => { filters.title = e.target.value; renderMkt(); };
     document.getElementById('mkt-city-filter').oninput = (e) => { filters.city = e.target.value; renderMkt(); };
     document.getElementById('mkt-cond-filter').onchange = (e) => { filters.condition = e.target.value; renderMkt(); };
     document.getElementById('mkt-status-filter').onchange = (e) => { filters.status = e.target.value; renderMkt(); };
-    document.getElementById('mkt-sort').onchange = (e) => { filters.sort = e.target.value; renderMkt(); };
+    document.getElementById('mkt-category-filter').onchange = (e) => { filters.category = e.target.value; renderMkt(); };
     document.getElementById('mkt-list-btn').onclick = openForm;
     document.querySelectorAll('.mkt-img-thumb').forEach(img => {
       img.onclick = () => openLightbox(img.src);
     });
-    document.querySelectorAll('.mkt-price-edit-btn').forEach(btn => {
-      btn.onclick = () => {
-        editingPriceId = btn.getAttribute('data-id');
+    document.querySelectorAll('.mkt-price-clickable').forEach(el => {
+      el.onclick = () => {
+        editingPriceId = el.getAttribute('data-id');
         renderMkt();
         const input = document.getElementById(`mkt-price-input-${editingPriceId}`);
         if (input) { input.focus(); input.select(); }
@@ -2963,6 +2992,16 @@
           <input class="text-input" id="mkt-f-seller" placeholder="e.g. Vince" />
         </div>
         <div class="field-block">
+          <label class="field-label">Category</label>
+          <select class="text-input" id="mkt-f-category">
+            <option value="Racket">Racket</option>
+            <option value="Blade">Blade</option>
+            <option value="Rubber">Rubber</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="field-block">
           <label class="field-label">City</label>
           <input class="text-input" id="mkt-f-city" placeholder="e.g. Toronto" />
         </div>
@@ -3014,6 +3053,7 @@
     document.getElementById('mkt-f-submit').onclick = async () => {
       const title = document.getElementById('mkt-f-title').value.trim();
       const sellerName = document.getElementById('mkt-f-seller').value.trim();
+      const category = document.getElementById('mkt-f-category').value;
       const city = document.getElementById('mkt-f-city').value.trim();
       const price = document.getElementById('mkt-f-price').value;
       const currency = document.getElementById('mkt-f-currency').value;
@@ -3041,7 +3081,7 @@
         if (img1) imageUrls.push(await uploadImage(img1));
         if (img2) imageUrls.push(await uploadImage(img2));
         await postListing({
-          title, city, price: Number(price), currency, condition,
+          title, city, price: Number(price), currency, condition, category,
           seller_contact: phone, seller_name: sellerName,
           description: description || null, status: 'Available',
           image_url: imageUrls.length ? imageUrls : null
