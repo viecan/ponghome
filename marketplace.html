@@ -1309,9 +1309,14 @@
   .mkt-hero-title{
     font-size:clamp(1rem,2.5vw,1.5rem) !important;
     max-width:none !important;
+    margin-bottom:16px !important;
   }
   @media (min-width:640px){
     .mkt-hero-title{white-space:nowrap;}
+  }
+  @media (max-width:640px){
+    .arena-hero{padding-top:32px;}
+    .mkt-hero-title{margin-bottom:24px !important;}
   }
   .mkt-hero-sub{
     max-width:640px !important;
