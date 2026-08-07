@@ -2504,6 +2504,17 @@
     background-repeat:no-repeat;
     background-position:right 7px center;
   }
+  .mkt-status-pill-readonly{
+    display:inline-block;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:0.62rem;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
   .mkt-status-available{background-color:rgba(0,224,184,0.16); color:var(--bg-deep-soft);}
   .mkt-status-pending{background-color:rgba(255,176,32,0.18); color:#8A5A00;}
   .mkt-status-sold{background-color:rgba(87,103,111,0.16); color:var(--ink-soft);}
@@ -2819,10 +2830,16 @@
         ${l.is_sponsored ? `<div class="mkt-sponsored-row"><span class="mkt-sponsored-tag">★ Sponsored</span></div>` : ''}
         <div class="mkt-card-top">
           <span class="mkt-badge ${badgeClass[l.condition] || ''}"><span class="dot"></span>${l.condition}</span>
-          <select class="mkt-status-pill ${statusClass[status] || ''}" data-id="${l.id}">${statusOpts}</select>
+          ${l.is_sponsored
+            ? `<span class="mkt-status-pill-readonly ${statusClass[status] || ''}">${status}</span>`
+            : `<select class="mkt-status-pill ${statusClass[status] || ''}" data-id="${l.id}">${statusOpts}</select>`
+          }
         </div>
         <h3>${escapeHtml(l.title)}</h3>
-        <div class="mkt-price mkt-price-clickable" data-id="${l.id}">$${Number(l.price).toLocaleString()} <span class="mkt-currency">${currency}</span> <span class="mkt-price-pencil">✎</span></div>
+        ${l.is_sponsored
+          ? `<div class="mkt-price">$${Number(l.price).toLocaleString()} <span class="mkt-currency">${currency}</span></div>`
+          : `<div class="mkt-price mkt-price-clickable" data-id="${l.id}">$${Number(l.price).toLocaleString()} <span class="mkt-currency">${currency}</span> <span class="mkt-price-pencil">✎</span></div>`
+        }
         <div class="mkt-meta">${escapeHtml(l.city)} · posted ${dateStr}</div>
         <div class="mkt-meta">Seller: <strong>${escapeHtml(l.seller_name || 'N/A')}</strong></div>
         ${l.category ? `<div class="mkt-meta">Category: ${escapeHtml(l.category)}</div>` : ''}
