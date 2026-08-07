@@ -1260,6 +1260,16 @@
     font-size:1rem;
     line-height:1.6;
   }
+  .mkt-hero-title{
+    font-size:clamp(1rem,2.5vw,1.5rem) !important;
+    max-width:none !important;
+  }
+  @media (min-width:640px){
+    .mkt-hero-title{white-space:nowrap;}
+  }
+  .mkt-hero-sub{
+    max-width:640px !important;
+  }
 
   .arena-wrap{
     max-width:1080px;
@@ -2321,6 +2331,7 @@
       <button class="nav-tab" data-tab-link="learn" role="tab" aria-selected="false">Training</button>
       <button class="nav-tab" data-tab-link="arena" role="tab" aria-selected="false">Arena</button>
       <button class="nav-tab" data-tab-link="scoreboard" role="tab" aria-selected="false">Scoreboard</button>
+      <a class="nav-tab" href="marketplace.html">Marketplace</a>
     </div>
     <div class="nav-right">
       <div class="social-row">
@@ -5006,5 +5017,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
 
 })();
 </script>
+
 </body>
 </html>
