@@ -2470,7 +2470,7 @@
     position:relative;
   }
   .mkt-card-event{
-    background:#FDF1F6;
+    background:#FCF7F8;
     border-color:#F6D3E4;
   }
   .mkt-card-dimmed::after{
@@ -2999,12 +2999,16 @@
     );
     out.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-    const sponsored = out.filter(l => l.is_sponsored);
-    const boosted = out.filter(l => !l.is_sponsored && l.is_boosted);
-    const event = out.filter(l => !l.is_sponsored && !l.is_boosted && l.category === 'Event');
-    const rest = out.filter(l => !l.is_sponsored && !l.is_boosted && l.category !== 'Event');
+    const isAvailable = l => (l.status || 'Available') === 'Available';
+    const unavailableEvents = out.filter(l => l.category === 'Event' && !isAvailable(l));
+    const active = out.filter(l => !(l.category === 'Event' && !isAvailable(l)));
 
-    return sponsored.concat(boosted).concat(event).concat(rest);
+    const sponsored = active.filter(l => l.is_sponsored);
+    const boosted = active.filter(l => !l.is_sponsored && l.is_boosted);
+    const event = active.filter(l => !l.is_sponsored && !l.is_boosted && l.category === 'Event');
+    const rest = active.filter(l => !l.is_sponsored && !l.is_boosted && l.category !== 'Event');
+
+    return sponsored.concat(boosted).concat(event).concat(rest).concat(unavailableEvents);
   }
 
   function escapeHtml(s) {
