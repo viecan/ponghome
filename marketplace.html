@@ -2895,8 +2895,13 @@
   }
 
   function getFiltered() {
+    const namedCities = ['Toronto', 'New York City', 'Vancouver', 'Berlin'];
     let out = listings.filter(l =>
-      (!filters.city || (l.city || '').toLowerCase().includes(filters.city.toLowerCase())) &&
+      (!filters.city || (
+        filters.city === 'Other'
+          ? !namedCities.includes(l.city)
+          : l.city === filters.city
+      )) &&
       (!filters.condition || l.condition === filters.condition) &&
       (!filters.status || (l.status || 'Available') === filters.status) &&
       (!filters.category || l.category === filters.category)
@@ -2966,7 +2971,14 @@
     const filtered = getFiltered();
     wrap.innerHTML = `
       <div class="mkt-toolbar">
-        <input class="text-input" id="mkt-city-filter" placeholder="Filter by location" value="${escapeHtml(filters.city)}" />
+        <select class="text-input" id="mkt-city-filter">
+          <option value="">Any location</option>
+          <option value="Toronto"${filters.city === 'Toronto' ? ' selected' : ''}>Toronto</option>
+          <option value="New York City"${filters.city === 'New York City' ? ' selected' : ''}>New York City</option>
+          <option value="Vancouver"${filters.city === 'Vancouver' ? ' selected' : ''}>Vancouver</option>
+          <option value="Berlin"${filters.city === 'Berlin' ? ' selected' : ''}>Berlin</option>
+          <option value="Other"${filters.city === 'Other' ? ' selected' : ''}>Other</option>
+        </select>
         <select class="text-input" id="mkt-cond-filter">
           <option value="">Any condition</option>
           <option value="new"${filters.condition === 'new' ? ' selected' : ''}>New</option>
@@ -2997,7 +3009,7 @@
         : `<div class="mkt-grid">${filtered.map(cardHtml).join('')}</div>`
       }
     `;
-    document.getElementById('mkt-city-filter').oninput = (e) => { filters.city = e.target.value; renderMkt(); };
+    document.getElementById('mkt-city-filter').onchange = (e) => { filters.city = e.target.value; renderMkt(); };
     document.getElementById('mkt-cond-filter').onchange = (e) => { filters.condition = e.target.value; renderMkt(); };
     document.getElementById('mkt-status-filter').onchange = (e) => { filters.status = e.target.value; renderMkt(); };
     document.getElementById('mkt-category-filter').onchange = (e) => { filters.category = e.target.value; renderMkt(); };
