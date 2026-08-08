@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GTYKNXXBF3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GTYKNXXBF3');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Table Tennis Gear Marketplace | Pong Home</title>
@@ -2673,6 +2682,31 @@
     justify-content:flex-end;
     margin-top:20px;
   }
+  .mkt-checkbox-row{
+    display:flex;
+    align-items:center;
+  }
+  .mkt-checkbox-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:'Inter',sans-serif;
+    font-size:0.88rem;
+    font-weight:600;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .mkt-checkbox-label input[type="checkbox"]{
+    width:16px;
+    height:16px;
+    cursor:pointer;
+  }
+  .mkt-negotiable-tag{
+    font-size:0.72rem;
+    color:#9AA5A9;
+    font-weight:500;
+  }
+
   .mkt-form-error{
     color:var(--coral);
     font-size:0.82rem;
@@ -2896,8 +2930,8 @@
         </div>
         <h3>${escapeHtml(l.title)}</h3>
         ${l.is_sponsored
-          ? `<div class="mkt-price">$${Number(l.price).toLocaleString()} <span class="mkt-currency">${currency}</span></div>`
-          : `<div class="mkt-price mkt-price-clickable" data-id="${l.id}">$${Number(l.price).toLocaleString()} <span class="mkt-currency">${currency}</span> <span class="mkt-price-pencil">✎</span></div>`
+          ? `<div class="mkt-price">$${Number(l.price).toLocaleString()} <span class="mkt-currency">${currency}</span>${l.negotiable ? ' <span class="mkt-negotiable-tag">Negotiable</span>' : ''}</div>`
+          : `<div class="mkt-price mkt-price-clickable" data-id="${l.id}">$${Number(l.price).toLocaleString()} <span class="mkt-currency">${currency}</span>${l.negotiable ? ' <span class="mkt-negotiable-tag">Negotiable</span>' : ''} <span class="mkt-price-pencil">✎</span></div>`
         }
         <div class="mkt-meta">${escapeHtml(l.city)} · posted ${dateStr}</div>
         <div class="mkt-meta">Seller: <strong>${escapeHtml(l.seller_name || 'N/A')}</strong></div>
@@ -3070,6 +3104,12 @@
           <label class="field-label">Description (optional)</label>
           <textarea class="text-area" id="mkt-f-desc" placeholder="Any details buyers should know"></textarea>
         </div>
+        <div class="field-block mkt-checkbox-row">
+          <label class="mkt-checkbox-label">
+            <input type="checkbox" id="mkt-f-negotiable" />
+            Negotiable
+          </label>
+        </div>
         <div class="field-block">
           <label class="field-label">Photos (up to 3, optional)</label>
           <input class="text-input mkt-file-input" id="mkt-f-img1" type="file" accept="image/jpeg,image/png,image/webp" />
@@ -3100,6 +3140,7 @@
       const condition = document.getElementById('mkt-f-condition').value;
       const phone = document.getElementById('mkt-f-phone').value.trim();
       const description = document.getElementById('mkt-f-desc').value.trim();
+      const negotiable = document.getElementById('mkt-f-negotiable').checked;
       const img1 = document.getElementById('mkt-f-img1').files[0];
       const img2 = document.getElementById('mkt-f-img2').files[0];
       const img3 = document.getElementById('mkt-f-img3').files[0];
@@ -3125,7 +3166,7 @@
         await postListing({
           title, city, price: Number(price), currency, condition, category,
           seller_contact: phone, seller_name: sellerName,
-          description: description || null, status: 'Available',
+          description: description || null, status: 'Available', negotiable,
           image_url: imageUrls.length ? imageUrls : null
         });
         backdrop.remove();
