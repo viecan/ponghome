@@ -3039,9 +3039,11 @@
         ${l.category ? `<div class="mkt-meta">Category: ${escapeHtml(l.category)}</div>` : ''}
         ${l.description ? `<div class="mkt-desc">${escapeHtml(l.description)}</div>` : ''}
         <div class="mkt-contact-row">
-          ${l.category === 'Event'
-            ? `<a class="mkt-text-cta" href="${escapeHtml(l.seller_contact)}" target="_blank" rel="noopener">Join us</a>`
-            : `<a class="mkt-text-cta" href="sms:${escapeHtml(l.seller_contact)}">Text me</a>`}
+          ${l.title && l.title.includes('Hugo Calderano ARY-C')
+            ? `<a class="mkt-text-cta" href="sms:${escapeHtml(l.seller_contact)}">Learn more</a>`
+            : (l.category === 'Event'
+              ? `<a class="mkt-text-cta" href="${escapeHtml(l.seller_contact)}" target="_blank" rel="noopener">Join us</a>`
+              : `<a class="mkt-text-cta" href="sms:${escapeHtml(l.seller_contact)}">Text me</a>`)}
         </div>
         ${images.length ? `<div class="mkt-images">${images.map(u => `<img src="${escapeHtml(u)}" class="mkt-img-thumb" alt="listing photo" />`).join('')}</div>` : ''}
       </div>
