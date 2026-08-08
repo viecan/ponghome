@@ -2480,6 +2480,9 @@
   .mkt-sponsored-row{
     display:flex;
     justify-content:flex-end;
+    align-items:center;
+    gap:6px;
+    flex-wrap:wrap;
     margin-bottom:8px;
   }
   .mkt-sponsored-tag{
@@ -2502,6 +2505,20 @@
     gap:4px;
     background:#E9E9E9;
     color:#7A7A7A;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:0.62rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border-radius:999px;
+  }
+  .mkt-event-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    background:#FBE1EC;
+    color:#B14C7C;
     font-family:'Inter',sans-serif;
     font-weight:700;
     font-size:0.62rem;
@@ -2980,9 +2997,10 @@
 
     const sponsored = out.filter(l => l.is_sponsored);
     const boosted = out.filter(l => !l.is_sponsored && l.is_boosted);
-    const rest = out.filter(l => !l.is_sponsored && !l.is_boosted);
+    const event = out.filter(l => !l.is_sponsored && !l.is_boosted && l.category === 'Event');
+    const rest = out.filter(l => !l.is_sponsored && !l.is_boosted && l.category !== 'Event');
 
-    return sponsored.concat(boosted).concat(rest);
+    return sponsored.concat(boosted).concat(event).concat(rest);
   }
 
   function escapeHtml(s) {
@@ -2998,7 +3016,7 @@
     const images = Array.isArray(l.image_url) ? l.image_url : (l.image_url ? [l.image_url] : []);
     return `
       <div class="mkt-card${status !== 'Available' ? ' mkt-card-dimmed' : ''}">
-        ${l.is_sponsored ? `<div class="mkt-sponsored-row"><span class="mkt-sponsored-tag">★ Sponsored</span></div>` : (l.is_boosted ? `<div class="mkt-sponsored-row"><span class="mkt-boosted-tag">Boosted</span></div>` : '')}
+        ${(l.is_sponsored || l.is_boosted || l.category === 'Event') ? `<div class="mkt-sponsored-row">${l.is_sponsored ? `<span class="mkt-sponsored-tag">★ Sponsored</span>` : (l.is_boosted ? `<span class="mkt-boosted-tag">Boosted</span>` : '')}${l.category === 'Event' ? `<span class="mkt-event-tag">Event</span>` : ''}</div>` : ''}
         <div class="mkt-card-top">
           <span class="mkt-badge ${badgeClass[l.condition] || ''}"><span class="dot"></span>${l.condition}</span>
           ${l.is_sponsored
@@ -3013,7 +3031,9 @@
         ${l.category ? `<div class="mkt-meta">Category: ${escapeHtml(l.category)}</div>` : ''}
         ${l.description ? `<div class="mkt-desc">${escapeHtml(l.description)}</div>` : ''}
         <div class="mkt-contact-row">
-          <a class="mkt-text-cta" href="sms:${escapeHtml(l.seller_contact)}">Text me</a>
+          ${l.category === 'Event'
+            ? `<a class="mkt-text-cta" href="${escapeHtml(l.seller_contact)}" target="_blank" rel="noopener">Join us</a>`
+            : `<a class="mkt-text-cta" href="sms:${escapeHtml(l.seller_contact)}">Text me</a>`}
         </div>
         ${images.length ? `<div class="mkt-images">${images.map(u => `<img src="${escapeHtml(u)}" class="mkt-img-thumb" alt="listing photo" />`).join('')}</div>` : ''}
       </div>
@@ -3078,6 +3098,7 @@
           <option value="Blade"${filters.category === 'Blade' ? ' selected' : ''}>Blade</option>
           <option value="Rubber"${filters.category === 'Rubber' ? ' selected' : ''}>Rubber</option>
           <option value="Accessories"${filters.category === 'Accessories' ? ' selected' : ''}>Accessories</option>
+          <option value="Event"${filters.category === 'Event' ? ' selected' : ''}>Event</option>
           <option value="Other"${filters.category === 'Other' ? ' selected' : ''}>Other</option>
         </select>
         <div class="mkt-spacer"></div>
@@ -3136,6 +3157,7 @@
             <option value="Blade">Blade</option>
             <option value="Rubber">Rubber</option>
             <option value="Accessories">Accessories</option>
+            <option value="Event">Event</option>
             <option value="Other">Other</option>
           </select>
         </div>
@@ -3192,7 +3214,7 @@
           </select>
         </div>
         <div class="field-block">
-          <label class="field-label">Phone number</label>
+          <label class="field-label" id="mkt-f-phone-label">Phone number</label>
           <input class="text-input" id="mkt-f-phone" placeholder="e.g. 416-555-0134" />
         </div>
         <div class="field-block">
@@ -3224,6 +3246,13 @@
     document.getElementById('mkt-f-city').onchange = (e) => {
       document.getElementById('mkt-f-city-other').style.display = e.target.value === 'Other' ? 'block' : 'none';
     };
+    document.getElementById('mkt-f-category').onchange = (e) => {
+      const isEvent = e.target.value === 'Event';
+      document.getElementById('mkt-f-phone-label').textContent = isEvent ? 'Event URL' : 'Phone number';
+      const phoneInput = document.getElementById('mkt-f-phone');
+      phoneInput.placeholder = isEvent ? 'e.g. https://example.com/event' : 'e.g. 416-555-0134';
+      phoneInput.type = isEvent ? 'url' : 'text';
+    };
     document.getElementById('mkt-f-submit').onclick = async () => {
       const title = document.getElementById('mkt-f-title').value.trim();
       const sellerName = document.getElementById('mkt-f-seller').value.trim();
@@ -3253,7 +3282,9 @@
       const err = document.getElementById('mkt-f-error');
       const submitBtn = document.getElementById('mkt-f-submit');
       if (!title || !sellerName || !city || !price || !phone) {
-        err.textContent = 'Please fill in title, seller name, city, price, and phone number.';
+        err.textContent = category === 'Event'
+          ? 'Please fill in title, seller name, city, price, and event URL.'
+          : 'Please fill in title, seller name, city, price, and phone number.';
         return;
       }
       err.textContent = '';
