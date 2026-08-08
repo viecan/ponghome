@@ -2749,6 +2749,48 @@
     box-shadow:var(--shadow);
   }
 
+  .mkt-viewers-popup{
+    position:fixed;
+    left:20px;
+    bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--paper-card);
+    color:var(--ink);
+    padding:10px 16px;
+    border-radius:12px;
+    font-size:0.82rem;
+    font-weight:600;
+    box-shadow:var(--shadow);
+    border:1px solid var(--line-light);
+    z-index:110;
+    opacity:0;
+    transform:translateY(8px);
+    transition:opacity 0.35s ease, transform 0.35s ease;
+    pointer-events:none;
+  }
+  .mkt-viewers-popup.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .mkt-viewers-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#2ECC71;
+    flex-shrink:0;
+    box-shadow:0 0 0 3px rgba(46,204,113,0.2);
+  }
+  @media (max-width:640px){
+    .mkt-viewers-popup{
+      left:12px;
+      bottom:12px;
+      font-size:0.72rem;
+      padding:8px 12px;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -2820,6 +2862,20 @@
     document.body.appendChild(t);
     setTimeout(() => t.remove(), 2400);
   }
+
+  function showViewersPopup() {
+    const count = Math.floor(Math.random() * (19 - 4 + 1)) + 4;
+    const p = document.createElement('div');
+    p.className = 'mkt-viewers-popup';
+    p.innerHTML = `<span class="mkt-viewers-dot"></span><span>${count} players are viewing this page</span>`;
+    document.body.appendChild(p);
+    requestAnimationFrame(() => p.classList.add('show'));
+    setTimeout(() => {
+      p.classList.remove('show');
+      setTimeout(() => p.remove(), 400);
+    }, 6000);
+  }
+  setTimeout(showViewersPopup, 5000);
 
   function openLightbox(src) {
     const backdrop = document.createElement('div');
