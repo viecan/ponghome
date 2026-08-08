@@ -2496,6 +2496,20 @@
     padding:4px 10px;
     border-radius:999px;
   }
+  .mkt-boosted-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    background:#E9E9E9;
+    color:#7A7A7A;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:0.62rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border-radius:999px;
+  }
   .mkt-card:hover{
     box-shadow:var(--shadow);
   }
@@ -2965,9 +2979,10 @@
     out.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
     const sponsored = out.filter(l => l.is_sponsored);
-    const nonSponsored = out.filter(l => !l.is_sponsored);
+    const boosted = out.filter(l => !l.is_sponsored && l.is_boosted);
+    const rest = out.filter(l => !l.is_sponsored && !l.is_boosted);
 
-    return sponsored.concat(nonSponsored);
+    return sponsored.concat(boosted).concat(rest);
   }
 
   function escapeHtml(s) {
@@ -2983,7 +2998,7 @@
     const images = Array.isArray(l.image_url) ? l.image_url : (l.image_url ? [l.image_url] : []);
     return `
       <div class="mkt-card${status !== 'Available' ? ' mkt-card-dimmed' : ''}">
-        ${l.is_sponsored ? `<div class="mkt-sponsored-row"><span class="mkt-sponsored-tag">★ Sponsored</span></div>` : ''}
+        ${l.is_sponsored ? `<div class="mkt-sponsored-row"><span class="mkt-sponsored-tag">★ Sponsored</span></div>` : (l.is_boosted ? `<div class="mkt-sponsored-row"><span class="mkt-boosted-tag">Boosted</span></div>` : '')}
         <div class="mkt-card-top">
           <span class="mkt-badge ${badgeClass[l.condition] || ''}"><span class="dot"></span>${l.condition}</span>
           ${l.is_sponsored
