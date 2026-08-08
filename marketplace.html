@@ -2473,10 +2473,6 @@
     background:#FDF1F6;
     border-color:#F6D3E4;
   }
-  .mkt-card-sponsored{
-    background:#FFFBEB;
-    border-color:#F5E5A8;
-  }
   .mkt-card-dimmed::after{
     content:'';
     position:absolute;
@@ -3023,7 +3019,7 @@
       .map(s => `<option value="${s}"${s === status ? ' selected' : ''}>${s}</option>`).join('');
     const images = Array.isArray(l.image_url) ? l.image_url : (l.image_url ? [l.image_url] : []);
     return `
-      <div class="mkt-card${status !== 'Available' ? ' mkt-card-dimmed' : ''}${l.is_sponsored ? ' mkt-card-sponsored' : (l.category === 'Event' ? ' mkt-card-event' : '')}">
+      <div class="mkt-card${status !== 'Available' ? ' mkt-card-dimmed' : ''}${l.category === 'Event' ? ' mkt-card-event' : ''}">
         ${(l.is_sponsored || l.is_boosted || l.category === 'Event') ? `<div class="mkt-sponsored-row">${l.is_sponsored ? `<span class="mkt-sponsored-tag">★ Sponsored</span>` : (l.is_boosted ? `<span class="mkt-boosted-tag">Boosted</span>` : '')}${l.category === 'Event' ? `<span class="mkt-event-tag">Event</span>` : ''}</div>` : ''}
         <div class="mkt-card-top">
           <span class="mkt-badge ${badgeClass[l.condition] || ''}"><span class="dot"></span>${l.condition}</span>
