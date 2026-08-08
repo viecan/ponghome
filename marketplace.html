@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Second-Hand Table Tennis Gear Marketplace | Pong Home</title>
+<title>Table Tennis Gear Marketplace | Pong Home</title>
 <meta name="description" content="Buy and sell used table tennis rackets, blades, rubbers, and gear locally. Post a listing free and connect directly with buyers and sellers in your city.">
 <link rel="canonical" href="https://ponghome.com/marketplace.html">
 <meta name="robots" content="index, follow">
@@ -11,7 +11,7 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pong Home">
-<meta property="og:title" content="Second-Hand Table Tennis Gear Marketplace | Pong Home">
+<meta property="og:title" content="Table Tennis Gear Marketplace | Pong Home">
 <meta property="og:description" content="Buy and sell used table tennis rackets, blades, rubbers, and gear locally. Post a listing free and connect directly with buyers and sellers in your city.">
 <meta property="og:url" content="https://ponghome.com/marketplace.html">
 <meta property="og:image" content="https://ponghome.com/og-image-marketplace.jpg">
@@ -19,7 +19,7 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Second-Hand Table Tennis Gear Marketplace | Pong Home">
+<meta name="twitter:title" content="Table Tennis Gear Marketplace | Pong Home">
 <meta name="twitter:description" content="Buy and sell used table tennis rackets, blades, rubbers, and gear locally.">
 <meta name="twitter:image" content="https://ponghome.com/og-image-marketplace.jpg">
 
@@ -31,7 +31,7 @@
 {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  "name": "Second-Hand Table Tennis Gear Marketplace",
+  "name": "Table Tennis Gear Marketplace",
   "description": "A local marketplace for buying and selling used table tennis rackets, blades, rubbers, and accessories.",
   "url": "https://ponghome.com/marketplace.html",
   "isPartOf": {
@@ -1328,7 +1328,7 @@
     .mkt-hero-sub{
       font-size:0.64rem;
       line-height:1.5;
-      text-align:left;
+      text-align:justify;
       padding:0 4px;
     }
   }
@@ -3031,7 +3031,15 @@
         </div>
         <div class="field-block">
           <label class="field-label">City</label>
-          <input class="text-input" id="mkt-f-city" placeholder="e.g. Toronto" />
+          <select class="text-input" id="mkt-f-city">
+            <option value="Toronto">Toronto</option>
+            <option value="New York City">New York City</option>
+            <option value="Vancouver">Vancouver</option>
+            <option value="San Francisco">San Francisco</option>
+            <option value="Berlin">Berlin</option>
+            <option value="Other">Other</option>
+          </select>
+          <input class="text-input" id="mkt-f-city-other" placeholder="Enter your city" style="margin-top:8px; display:none;" />
         </div>
         <div class="field-block field-row">
           <div style="flex:2;">
@@ -3064,9 +3072,10 @@
           <textarea class="text-area" id="mkt-f-desc" placeholder="Any details buyers should know"></textarea>
         </div>
         <div class="field-block">
-          <label class="field-label">Photos (up to 2, optional)</label>
+          <label class="field-label">Photos (up to 3, optional)</label>
           <input class="text-input mkt-file-input" id="mkt-f-img1" type="file" accept="image/jpeg,image/png,image/webp" />
           <input class="text-input mkt-file-input" id="mkt-f-img2" type="file" accept="image/jpeg,image/png,image/webp" style="margin-top:8px;" />
+          <input class="text-input mkt-file-input" id="mkt-f-img3" type="file" accept="image/jpeg,image/png,image/webp" style="margin-top:8px;" />
         </div>
         <div class="mkt-form-error" id="mkt-f-error"></div>
         <div class="mkt-modal-actions">
@@ -3078,11 +3087,15 @@
     document.body.appendChild(backdrop);
     document.getElementById('mkt-f-cancel').onclick = () => backdrop.remove();
     backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
+    document.getElementById('mkt-f-city').onchange = (e) => {
+      document.getElementById('mkt-f-city-other').style.display = e.target.value === 'Other' ? 'block' : 'none';
+    };
     document.getElementById('mkt-f-submit').onclick = async () => {
       const title = document.getElementById('mkt-f-title').value.trim();
       const sellerName = document.getElementById('mkt-f-seller').value.trim();
       const category = document.getElementById('mkt-f-category').value;
-      const city = document.getElementById('mkt-f-city').value.trim();
+      const citySelect = document.getElementById('mkt-f-city').value;
+      const city = citySelect === 'Other' ? document.getElementById('mkt-f-city-other').value.trim() : citySelect;
       const price = document.getElementById('mkt-f-price').value;
       const currency = document.getElementById('mkt-f-currency').value;
       const condition = document.getElementById('mkt-f-condition').value;
@@ -3090,8 +3103,9 @@
       const description = document.getElementById('mkt-f-desc').value.trim();
       const img1 = document.getElementById('mkt-f-img1').files[0];
       const img2 = document.getElementById('mkt-f-img2').files[0];
+      const img3 = document.getElementById('mkt-f-img3').files[0];
       const isHeic = (f) => f && (/heic|heif/i.test(f.type) || /\.(heic|heif)$/i.test(f.name));
-      if (isHeic(img1) || isHeic(img2)) {
+      if (isHeic(img1) || isHeic(img2) || isHeic(img3)) {
         document.getElementById('mkt-f-error').textContent = 'HEIC photos aren\'t supported. On iPhone, go to Settings > Camera > Formats and switch to "Most Compatible," or choose a JPG/PNG file instead.';
         return;
       }
@@ -3108,6 +3122,7 @@
         const imageUrls = [];
         if (img1) imageUrls.push(await uploadImage(img1));
         if (img2) imageUrls.push(await uploadImage(img2));
+        if (img3) imageUrls.push(await uploadImage(img3));
         await postListing({
           title, city, price: Number(price), currency, condition, category,
           seller_contact: phone, seller_name: sellerName,
