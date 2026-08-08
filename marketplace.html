@@ -2440,6 +2440,15 @@
     padding:20px;
     box-shadow:0 4px 14px rgba(10,42,47,0.05);
     transition:transform 0.2s ease, box-shadow 0.2s ease;
+    position:relative;
+  }
+  .mkt-card-dimmed::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:rgba(30,38,40,0.13);
+    border-radius:18px;
+    pointer-events:none;
   }
   .mkt-sponsored-row{
     display:flex;
@@ -2919,7 +2928,7 @@
       .map(s => `<option value="${s}"${s === status ? ' selected' : ''}>${s}</option>`).join('');
     const images = Array.isArray(l.image_url) ? l.image_url : (l.image_url ? [l.image_url] : []);
     return `
-      <div class="mkt-card">
+      <div class="mkt-card${status !== 'Available' ? ' mkt-card-dimmed' : ''}">
         ${l.is_sponsored ? `<div class="mkt-sponsored-row"><span class="mkt-sponsored-tag">★ Sponsored</span></div>` : ''}
         <div class="mkt-card-top">
           <span class="mkt-badge ${badgeClass[l.condition] || ''}"><span class="dot"></span>${l.condition}</span>
