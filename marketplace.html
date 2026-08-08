@@ -2864,16 +2864,16 @@
   }
 
   function showViewersPopup() {
-    const count = Math.floor(Math.random() * (19 - 4 + 1)) + 4;
+    const count = Math.floor(Math.random() * (29 - 11 + 1)) + 11;
     const p = document.createElement('div');
     p.className = 'mkt-viewers-popup';
-    p.innerHTML = `<span class="mkt-viewers-dot"></span><span>${count} players are viewing this page</span>`;
+    p.innerHTML = `<span class="mkt-viewers-dot"></span><span>${count} visitors are viewing this page</span>`;
     document.body.appendChild(p);
     requestAnimationFrame(() => p.classList.add('show'));
     setTimeout(() => {
       p.classList.remove('show');
       setTimeout(() => p.remove(), 400);
-    }, 6000);
+    }, 7000);
   }
   setTimeout(showViewersPopup, 5000);
 
