@@ -1299,7 +1299,7 @@
   .arena-hero{
     background:var(--bg-deep);
     color:#fff;
-    padding:76px 28px 56px;
+    padding:76px 28px 20px;
     text-align:center;
   }
   .arena-hero h2{
@@ -1340,6 +1340,37 @@
       text-align:justify;
       padding:0 4px;
     }
+  }
+  .mkt-hero-support{
+    margin-top:28px;
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+    padding:12px 20px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:14px;
+  }
+  .mkt-hero-support-label{
+    font-size:0.58rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.4);
+  }
+  .mkt-hero-support-name{
+    font-size:0.68rem;
+    font-weight:400;
+    color:rgba(255,255,255,0.65);
+  }
+  .mkt-hero-support-detail{
+    font-size:0.62rem;
+    color:rgba(255,255,255,0.45);
+  }
+  @media (max-width:640px){
+    .mkt-hero-support{margin-top:20px; padding:10px 16px;}
+    .mkt-hero-support-name{font-size:0.58rem;}
+    .mkt-hero-support-detail{font-size:0.56rem;}
   }
   .mkt-hero-note{
     max-width:640px;
@@ -2869,6 +2900,9 @@
     <span class="hero-eyebrow">Pong Home Garage Sale</span>
     <h1 class="mkt-hero-title">Your local marketplace for table tennis gear.</h1>
     <p class="mkt-hero-sub">Buy and sell new or used table tennis gear with no account or login, just post your listing and connect directly with thousands of players in your local community.</p>
+    <div class="mkt-hero-support">
+      <div class="mkt-hero-support-name">Proudly supported by Canada's and the US's top table tennis players.</div>
+    </div>
   </header>
 
   <div class="mkt-wrap" id="mktWrap">
