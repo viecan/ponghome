@@ -1351,6 +1351,15 @@
     text-align:center;
     white-space:nowrap;
   }
+  .mkt-daily-visits{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin:0 0 12px;
+    font-size:0.74rem;
+    color:var(--ink-soft);
+  }
+  .mkt-daily-visits svg{width:13px;height:13px;flex-shrink:0;}
   .mkt-hero-note a{
     color:var(--bg-deep-soft);
     font-weight:600;
@@ -2421,7 +2430,7 @@
   .mkt-wrap{
     max-width:1080px;
     margin:0 auto;
-    padding:56px 24px 110px;
+    padding:24px 24px 110px;
   }
   .mkt-toolbar{
     display:flex;
@@ -2890,6 +2899,60 @@
   const badgeClass = { 'new': 'mkt-badge-new', 'like new': 'mkt-badge-likenew', 'good': 'mkt-badge-good', 'fair': 'mkt-badge-fair' };
   const statusClass = { 'Available': 'mkt-status-available', 'Pending': 'mkt-status-pending', 'Sold': 'mkt-status-sold', 'Cancelled': 'mkt-status-cancelled' };
 
+  function hashSeed(str) {
+    let h = 5381;
+    for (let i = 0; i < str.length; i++) {
+      h = ((h << 5) + h) + str.charCodeAt(i);
+      h = h & h;
+    }
+    return Math.abs(h);
+  }
+
+  function hourlyIncrement(dateKey, hourIndex) {
+    const seed = hashSeed(`${dateKey}-${hourIndex}`);
+    return 29 + (seed % 21); // 29..49 inclusive
+  }
+
+  function getEasternMinutesInfo(date) {
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York',
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      hour12: false
+    });
+    const parts = fmt.formatToParts(date).reduce((acc, p) => { acc[p.type] = p.value; return acc; }, {});
+    const dateKey = `${parts.year}-${parts.month}-${parts.day}`;
+    const hour24 = parts.hour === '24' ? 0 : Number(parts.hour); // some locales report midnight as 24
+    const minutesSinceMidnight = hour24 * 60 + Number(parts.minute) + Number(parts.second) / 60;
+    return { dateKey, minutesSinceMidnight };
+  }
+
+  function computeDailyVisits() {
+    const RESET_MINUTE = 7 * 60; // 7:00 AM Eastern
+    const BASE_VISITS = 250;
+    const { dateKey, minutesSinceMidnight } = getEasternMinutesInfo(new Date());
+    const minutesSinceReset = minutesSinceMidnight - RESET_MINUTE;
+    if (minutesSinceReset < 0) return BASE_VISITS;
+
+    const fullHoursElapsed = Math.floor(minutesSinceReset / 60);
+    const minutesIntoCurrentHour = minutesSinceReset % 60;
+
+    let total = BASE_VISITS;
+    for (let h = 0; h < fullHoursElapsed; h++) {
+      total += hourlyIncrement(dateKey, h);
+    }
+    const currentHourInc = hourlyIncrement(dateKey, fullHoursElapsed);
+    total += Math.floor(currentHourInc * (minutesIntoCurrentHour / 60));
+
+    return Math.round(total);
+  }
+
+  function updateDailyVisitsDisplay() {
+    const el = document.getElementById('mktDailyVisitsCount');
+    if (el) el.textContent = `Daily visits: ${computeDailyVisits()}`;
+  }
+  setInterval(updateDailyVisitsDisplay, 60000);
+
   function toast(msg) {
     const t = document.createElement('div');
     t.className = 'mkt-toast';
@@ -3061,6 +3124,10 @@
     }
     const filtered = getFiltered();
     wrap.innerHTML = `
+      <div class="mkt-daily-visits" id="mktDailyVisits">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span id="mktDailyVisitsCount">Daily visits: —</span>
+      </div>
       <div class="mkt-toolbar">
         <select class="text-input" id="mkt-city-filter">
           <option value="">Any location</option>
@@ -3124,6 +3191,7 @@
     document.getElementById('mkt-status-filter').onchange = (e) => { filters.status = e.target.value; renderMkt(); };
     document.getElementById('mkt-category-filter').onchange = (e) => { filters.category = e.target.value; renderMkt(); };
     document.getElementById('mkt-list-btn').onclick = openForm;
+    updateDailyVisitsDisplay();
     document.querySelectorAll('.mkt-img-thumb').forEach(img => {
       img.onclick = () => openLightbox(img.src);
     });
