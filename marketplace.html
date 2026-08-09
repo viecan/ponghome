@@ -2901,7 +2901,7 @@
     <h1 class="mkt-hero-title">Your local marketplace for table tennis gear</h1>
     <p class="mkt-hero-sub">Buy and sell new or used table tennis gear with no account or login, just post your listing and connect directly with thousands of players in your local community.</p>
     <div class="mkt-hero-support">
-      <div class="mkt-hero-support-name">Proudly supported by top Canadian players.</div>
+      <div class="mkt-hero-support-name">Proudly supported by top Canadian players</div>
     </div>
   </header>
 
@@ -2944,7 +2944,7 @@
 
   function hourlyIncrement(dateKey, hourIndex) {
     const seed = hashSeed(`${dateKey}-${hourIndex}`);
-    return 29 + (seed % 21); // 29..49 inclusive
+    return 44 + (seed % 31); // 44..74 inclusive (1.5x of 29..49)
   }
 
   function getEasternMinutesInfo(date) {
@@ -2963,7 +2963,7 @@
 
   function computeDailyVisits() {
     const RESET_MINUTE = 7 * 60; // 7:00 AM Eastern
-    const BASE_VISITS = 250;
+    const BASE_VISITS = 375;
     const { dateKey, minutesSinceMidnight } = getEasternMinutesInfo(new Date());
     const minutesSinceReset = minutesSinceMidnight - RESET_MINUTE;
     if (minutesSinceReset < 0) return BASE_VISITS;
