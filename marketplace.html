@@ -3264,6 +3264,16 @@
       phoneInput.type = isEvent ? 'url' : 'text';
     };
     document.getElementById('mkt-f-submit').onclick = async () => {
+      const err = document.getElementById('mkt-f-error');
+      const DAILY_LIMIT = 2;
+      const today = new Date().toISOString().slice(0, 10);
+      let postLog = {};
+      try { postLog = JSON.parse(localStorage.getItem('mkt_post_log') || '{}'); } catch (e) { postLog = {}; }
+      const todaysCount = postLog.date === today ? (postLog.count || 0) : 0;
+      if (todaysCount >= DAILY_LIMIT) {
+        err.textContent = "You've reached the posting limit. Please try again tomorrow.";
+        return;
+      }
       const title = document.getElementById('mkt-f-title').value.trim();
       const sellerName = document.getElementById('mkt-f-seller').value.trim();
       const category = document.getElementById('mkt-f-category').value;
@@ -3289,7 +3299,6 @@
         document.getElementById('mkt-f-error').textContent = 'Each photo must be 5MB or smaller. Please choose a smaller file.';
         return;
       }
-      const err = document.getElementById('mkt-f-error');
       const submitBtn = document.getElementById('mkt-f-submit');
       if (!title || !sellerName || !city || !price || !phone) {
         err.textContent = category === 'Event'
@@ -3311,6 +3320,7 @@
           description: description || null, status: 'Available', negotiable,
           image_url: imageUrls.length ? imageUrls : null
         });
+        localStorage.setItem('mkt_post_log', JSON.stringify({ date: today, count: todaysCount + 1 }));
         backdrop.remove();
         toast('Listing posted');
         await fetchListings();
