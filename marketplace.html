@@ -2973,7 +2973,7 @@
 
   function hourlyIncrement(dateKey, hourIndex) {
     const seed = hashSeed(`${dateKey}-${hourIndex}`);
-    return 44 + (seed % 31); // 44..74 inclusive (1.5x of 29..49)
+    return 88 + (seed % 61); // 88..148 inclusive (2x of 44..74)
   }
 
   function getEasternMinutesInfo(date) {
@@ -2992,7 +2992,7 @@
 
   function computeDailyVisits() {
     const RESET_MINUTE = 7 * 60; // 7:00 AM Eastern
-    const BASE_VISITS = 375;
+    const BASE_VISITS = 750;
     const { dateKey, minutesSinceMidnight } = getEasternMinutesInfo(new Date());
     const minutesSinceReset = minutesSinceMidnight - RESET_MINUTE;
     if (minutesSinceReset < 0) return BASE_VISITS;
@@ -3141,6 +3141,32 @@
     return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
+  function ctaHtml(l) {
+    const contact = escapeHtml(l.seller_contact || '');
+    // Legacy listings created before the CTA button field existed
+    if (!l.cta_type) {
+      if (l.title && l.title.includes('Hugo Calderano ARY-C')) {
+        return `<a class="mkt-text-cta" href="sms:${contact}">Learn more</a>`;
+      }
+      return l.category === 'Event'
+        ? `<a class="mkt-text-cta" href="${contact}" target="_blank" rel="noopener">Join us</a>`
+        : `<a class="mkt-text-cta" href="sms:${contact}">Text me</a>`;
+    }
+    switch (l.cta_type) {
+      case 'Shop now':
+        return `<a class="mkt-text-cta" href="${contact}" target="_blank" rel="noopener">Shop now</a>`;
+      case 'Call me':
+        return `<a class="mkt-text-cta" href="tel:${contact}">Call me</a>`;
+      case 'Join us':
+        return /^https?:\/\//i.test(l.seller_contact || '')
+          ? `<a class="mkt-text-cta" href="${contact}" target="_blank" rel="noopener">Join us</a>`
+          : `<a class="mkt-text-cta" href="sms:${contact}">Join us</a>`;
+      case 'Text me':
+      default:
+        return `<a class="mkt-text-cta" href="sms:${contact}">Text me</a>`;
+    }
+  }
+
   function cardHtml(l) {
     const dateStr = new Date(l.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
     const status = l.status || 'Available';
@@ -3165,11 +3191,7 @@
         ${l.category ? `<div class="mkt-meta">Category: ${escapeHtml(l.category)}</div>` : ''}
         ${l.description ? `<div class="mkt-desc">${escapeHtml(l.description)}</div>` : ''}
         <div class="mkt-contact-row">
-          ${l.title && l.title.includes('Hugo Calderano ARY-C')
-            ? `<a class="mkt-text-cta" href="sms:${escapeHtml(l.seller_contact)}">Learn more</a>`
-            : (l.category === 'Event'
-              ? `<a class="mkt-text-cta" href="${escapeHtml(l.seller_contact)}" target="_blank" rel="noopener">Join us</a>`
-              : `<a class="mkt-text-cta" href="sms:${escapeHtml(l.seller_contact)}">Text me</a>`)}
+          ${ctaHtml(l)}
         </div>
         ${images.length ? `<div class="mkt-images">${images.map(u => `<img src="${escapeHtml(u)}" class="mkt-img-thumb" alt="listing photo" />`).join('')}</div>` : ''}
       </div>
@@ -3355,6 +3377,15 @@
           </select>
         </div>
         <div class="field-block">
+          <label class="field-label">CTA button</label>
+          <select class="text-input" id="mkt-f-cta-type">
+            <option value="Shop now">Shop now</option>
+            <option value="Text me">Text me</option>
+            <option value="Call me">Call me</option>
+            <option value="Join us">Join us</option>
+          </select>
+        </div>
+        <div class="field-block">
           <label class="field-label" id="mkt-f-phone-label">Phone number</label>
           <input class="text-input" id="mkt-f-phone" placeholder="e.g. 416-555-0134" />
         </div>
@@ -3387,12 +3418,30 @@
     document.getElementById('mkt-f-city').onchange = (e) => {
       document.getElementById('mkt-f-city-other').style.display = e.target.value === 'Other' ? 'block' : 'none';
     };
+    function syncContactField() {
+      const ctaType = document.getElementById('mkt-f-cta-type').value;
+      const label = document.getElementById('mkt-f-phone-label');
+      const input = document.getElementById('mkt-f-phone');
+      if (ctaType === 'Shop now') {
+        label.textContent = 'Website link';
+        input.placeholder = 'e.g. https://yourstore.com';
+        input.type = 'url';
+      } else if (ctaType === 'Text me' || ctaType === 'Call me') {
+        label.textContent = 'Phone number';
+        input.placeholder = 'e.g. 416-555-0134';
+        input.type = 'tel';
+      } else {
+        label.textContent = 'Phone number or website link';
+        input.placeholder = 'e.g. 416-555-0134 or https://example.com';
+        input.type = 'text';
+      }
+    }
+    document.getElementById('mkt-f-cta-type').onchange = syncContactField;
     document.getElementById('mkt-f-category').onchange = (e) => {
-      const isEvent = e.target.value === 'Event';
-      document.getElementById('mkt-f-phone-label').textContent = isEvent ? 'Event URL' : 'Phone number';
-      const phoneInput = document.getElementById('mkt-f-phone');
-      phoneInput.placeholder = isEvent ? 'e.g. https://example.com/event' : 'e.g. 416-555-0134';
-      phoneInput.type = isEvent ? 'url' : 'text';
+      if (e.target.value === 'Event') {
+        document.getElementById('mkt-f-cta-type').value = 'Join us';
+        syncContactField();
+      }
     };
     document.getElementById('mkt-f-submit').onclick = async () => {
       const err = document.getElementById('mkt-f-error');
@@ -3408,6 +3457,7 @@
       const title = document.getElementById('mkt-f-title').value.trim();
       const sellerName = document.getElementById('mkt-f-seller').value.trim();
       const category = document.getElementById('mkt-f-category').value;
+      const ctaType = document.getElementById('mkt-f-cta-type').value;
       const citySelect = document.getElementById('mkt-f-city').value;
       const city = citySelect === 'Other' ? document.getElementById('mkt-f-city-other').value.trim() : citySelect;
       const price = document.getElementById('mkt-f-price').value;
@@ -3432,9 +3482,15 @@
       }
       const submitBtn = document.getElementById('mkt-f-submit');
       if (!title || !sellerName || !city || !price || !phone) {
-        err.textContent = category === 'Event'
-          ? 'Please fill in title, seller name, city, price, and event URL.'
-          : 'Please fill in title, seller name, city, price, and phone number.';
+        err.textContent = ctaType === 'Shop now'
+          ? 'Please fill in title, seller name, city, price, and website link.'
+          : ctaType === 'Join us'
+            ? 'Please fill in title, seller name, city, price, and phone number or link.'
+            : 'Please fill in title, seller name, city, price, and phone number.';
+        return;
+      }
+      if (ctaType === 'Shop now' && !/^https?:\/\//i.test(phone)) {
+        err.textContent = 'Website link must start with http:// or https://';
         return;
       }
       err.textContent = '';
@@ -3447,7 +3503,7 @@
         if (img3) imageUrls.push(await uploadImage(img3));
         await postListing({
           title, city, price: Number(price), currency, condition, category,
-          seller_contact: phone, seller_name: sellerName,
+          seller_contact: phone, seller_name: sellerName, cta_type: ctaType,
           description: description || null, status: 'Available', negotiable,
           image_url: imageUrls.length ? imageUrls : null
         });
