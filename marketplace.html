@@ -2558,6 +2558,20 @@
     padding:4px 10px;
     border-radius:999px;
   }
+  .mkt-recommended-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    background:#D9EEE1;
+    color:#1F7A4D;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:0.62rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border-radius:999px;
+  }
   .mkt-boosted-tag{
     display:inline-flex;
     align-items:center;
@@ -3130,11 +3144,12 @@
     const active = out.filter(l => !(l.category === 'Event' && !isAvailable(l)));
 
     const sponsored = active.filter(l => l.is_sponsored);
-    const boosted = active.filter(l => !l.is_sponsored && l.is_boosted);
-    const event = active.filter(l => !l.is_sponsored && !l.is_boosted && l.category === 'Event');
-    const rest = active.filter(l => !l.is_sponsored && !l.is_boosted && l.category !== 'Event');
+    const recommended = active.filter(l => !l.is_sponsored && l.is_recommended);
+    const boosted = active.filter(l => !l.is_sponsored && !l.is_recommended && l.is_boosted);
+    const event = active.filter(l => !l.is_sponsored && !l.is_recommended && !l.is_boosted && l.category === 'Event');
+    const rest = active.filter(l => !l.is_sponsored && !l.is_recommended && !l.is_boosted && l.category !== 'Event');
 
-    return sponsored.concat(boosted).concat(event).concat(rest).concat(unavailableEvents);
+    return sponsored.concat(recommended).concat(boosted).concat(event).concat(rest).concat(unavailableEvents);
   }
 
   function escapeHtml(s) {
@@ -3176,7 +3191,7 @@
     const images = Array.isArray(l.image_url) ? l.image_url : (l.image_url ? [l.image_url] : []);
     return `
       <div class="mkt-card${status !== 'Available' ? ' mkt-card-dimmed' : ''}${l.category === 'Event' ? ' mkt-card-event' : ''}">
-        ${(l.is_sponsored || l.is_boosted || l.category === 'Event') ? `<div class="mkt-sponsored-row">${l.is_sponsored ? `<span class="mkt-sponsored-tag">★ Sponsored</span>` : (l.is_boosted ? `<span class="mkt-boosted-tag">Boosted</span>` : '')}${l.category === 'Event' ? `<span class="mkt-event-tag">Event</span>` : ''}</div>` : ''}
+        ${(l.is_sponsored || l.is_recommended || l.is_boosted || l.category === 'Event') ? `<div class="mkt-sponsored-row">${l.is_sponsored ? `<span class="mkt-sponsored-tag">Sponsored</span>` : (l.is_recommended ? `<span class="mkt-recommended-tag">Recommended</span>` : (l.is_boosted ? `<span class="mkt-boosted-tag">Boosted</span>` : ''))}${l.category === 'Event' ? `<span class="mkt-event-tag">Event</span>` : ''}</div>` : ''}
         <div class="mkt-card-top">
           <span class="mkt-badge ${badgeClass[l.condition] || ''}"><span class="dot"></span>${l.condition}</span>
           ${l.is_sponsored
