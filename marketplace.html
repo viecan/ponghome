@@ -3200,9 +3200,9 @@
     );
     out.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-    const isAvailable = l => (l.status || 'Available') === 'Available';
-    const unavailableEvents = out.filter(l => l.category === 'Event' && !isAvailable(l));
-    const active = out.filter(l => !(l.category === 'Event' && !isAvailable(l)));
+    const isCancelled = l => (l.status || 'Available') === 'Cancelled';
+    const cancelled = out.filter(isCancelled);
+    const active = out.filter(l => !isCancelled(l));
 
     const sponsored = active.filter(l => l.is_sponsored);
     const recommended = active.filter(l => !l.is_sponsored && l.is_recommended);
@@ -3210,7 +3210,7 @@
     const event = active.filter(l => !l.is_sponsored && !l.is_recommended && !l.is_boosted && l.category === 'Event');
     const rest = active.filter(l => !l.is_sponsored && !l.is_recommended && !l.is_boosted && l.category !== 'Event');
 
-    return sponsored.concat(recommended).concat(boosted).concat(event).concat(rest).concat(unavailableEvents);
+    return sponsored.concat(recommended).concat(boosted).concat(event).concat(rest).concat(cancelled);
   }
 
   function escapeHtml(s) {
