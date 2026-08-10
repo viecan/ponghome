@@ -3188,11 +3188,14 @@
 
   function getFiltered() {
     const namedCities = ['Toronto', 'New York City', 'Vancouver', 'Berlin'];
+    const broadLocations = ['Worldwide', 'Canada', 'USA', 'North America', 'Europe'];
     let out = listings.filter(l =>
       (!filters.city || (
         filters.city === 'Other'
           ? !namedCities.includes(l.city)
-          : l.city === filters.city
+          : broadLocations.includes(filters.city)
+            ? (l.city === filters.city || l.is_sponsored || l.is_boosted || l.is_recommended)
+            : l.city === filters.city
       )) &&
       (!filters.condition || l.condition === filters.condition) &&
       (!filters.status || (l.status || 'Available') === filters.status) &&
@@ -3399,9 +3402,11 @@
           <option value="Barcelona"${filters.city === 'Barcelona' ? ' selected' : ''}>Barcelona</option>
           <option value="Berlin"${filters.city === 'Berlin' ? ' selected' : ''}>Berlin</option>
           <option value="Calgary"${filters.city === 'Calgary' ? ' selected' : ''}>Calgary</option>
+          <option value="Canada"${filters.city === 'Canada' ? ' selected' : ''}>Canada</option>
           <option value="Chicago"${filters.city === 'Chicago' ? ' selected' : ''}>Chicago</option>
           <option value="Dubai"${filters.city === 'Dubai' ? ' selected' : ''}>Dubai</option>
           <option value="Edmonton"${filters.city === 'Edmonton' ? ' selected' : ''}>Edmonton</option>
+          <option value="Europe"${filters.city === 'Europe' ? ' selected' : ''}>Europe</option>
           <option value="Hanoi"${filters.city === 'Hanoi' ? ' selected' : ''}>Hanoi</option>
           <option value="Hongkong"${filters.city === 'Hongkong' ? ' selected' : ''}>Hongkong</option>
           <option value="London"${filters.city === 'London' ? ' selected' : ''}>London</option>
@@ -3410,6 +3415,7 @@
           <option value="Madrid"${filters.city === 'Madrid' ? ' selected' : ''}>Madrid</option>
           <option value="Montreal"${filters.city === 'Montreal' ? ' selected' : ''}>Montreal</option>
           <option value="New York City"${filters.city === 'New York City' ? ' selected' : ''}>New York City</option>
+          <option value="North America"${filters.city === 'North America' ? ' selected' : ''}>North America</option>
           <option value="Paris"${filters.city === 'Paris' ? ' selected' : ''}>Paris</option>
           <option value="San Francisco"${filters.city === 'San Francisco' ? ' selected' : ''}>San Francisco</option>
           <option value="Shanghai"${filters.city === 'Shanghai' ? ' selected' : ''}>Shanghai</option>
@@ -3417,6 +3423,7 @@
           <option value="Stockholm"${filters.city === 'Stockholm' ? ' selected' : ''}>Stockholm</option>
           <option value="Tokyo"${filters.city === 'Tokyo' ? ' selected' : ''}>Tokyo</option>
           <option value="Toronto (GTA)"${filters.city === 'Toronto (GTA)' ? ' selected' : ''}>Toronto (GTA)</option>
+          <option value="USA"${filters.city === 'USA' ? ' selected' : ''}>USA</option>
           <option value="Vancouver"${filters.city === 'Vancouver' ? ' selected' : ''}>Vancouver</option>
           <option value="Worldwide"${filters.city === 'Worldwide' ? ' selected' : ''}>Worldwide</option>
           <option value="Other"${filters.city === 'Other' ? ' selected' : ''}>Other</option>
@@ -3519,9 +3526,11 @@
             <option value="Barcelona">Barcelona</option>
             <option value="Berlin">Berlin</option>
             <option value="Calgary">Calgary</option>
+            <option value="Canada">Canada</option>
             <option value="Chicago">Chicago</option>
             <option value="Dubai">Dubai</option>
             <option value="Edmonton">Edmonton</option>
+            <option value="Europe">Europe</option>
             <option value="Hanoi">Hanoi</option>
             <option value="Hongkong">Hongkong</option>
             <option value="London">London</option>
@@ -3530,6 +3539,7 @@
             <option value="Madrid">Madrid</option>
             <option value="Montreal">Montreal</option>
             <option value="New York City">New York City</option>
+            <option value="North America">North America</option>
             <option value="Paris">Paris</option>
             <option value="San Francisco">San Francisco</option>
             <option value="Shanghai">Shanghai</option>
@@ -3537,6 +3547,7 @@
             <option value="Stockholm">Stockholm</option>
             <option value="Tokyo">Tokyo</option>
             <option value="Toronto (GTA)">Toronto (GTA)</option>
+            <option value="USA">USA</option>
             <option value="Vancouver">Vancouver</option>
             <option value="Worldwide">Worldwide</option>
             <option value="Other">Other</option>
