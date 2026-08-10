@@ -745,6 +745,21 @@
     padding:22px;
   }
   .footer-follow{margin-left:6px;}
+  .footer-desktop{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+  }
+  .footer-mobile{display:none;}
+  .footer-mobile .footer-follow-line{
+    display:block;
+    margin-top:6px;
+  }
+  @media (max-width:640px){
+    .footer-desktop{display:none;}
+    .footer-mobile{display:block;}
+  }
 
   /* ============ CONTACT SECTION ============ */
   .contact-section{
@@ -2909,11 +2924,25 @@
     <!-- Rendered entirely by JS -->
   </div>
 
-  <p class="mkt-hero-note">Listings will be automatically deleted after 30 days. For sponsorship or listing edits, please <a href="https://wa.me/14372441309" target="_blank" rel="noopener">contact us</a>!</p>
+  <p class="mkt-hero-note">Listings will be automatically deleted after 15 days. For sponsorship or listing edits, please contact <a href="mailto:marketplace@ponghome.com">marketplace@ponghome.com</a></p>
 </section>
 
 <footer class="site-footer">
-  Pong Home | On-demand table tennis coaching <span class="footer-follow">Follow us on</span> <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a>
+  <div class="footer-desktop">
+    <span>© 2026 Pong Home. All rights reserved.</span>
+    <div class="social-row">
+      <a class="social-btn" href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" aria-label="Pong Home on Facebook">
+        <svg viewBox="0 0 24 24"><path d="M13.5 21.9v-8.4h2.82l.42-3.28h-3.24V8.1c0-.95.26-1.6 1.63-1.6h1.74V3.6c-.3-.04-1.33-.13-2.53-.13-2.5 0-4.22 1.53-4.22 4.33v2.42H7.3v3.28h2.82v8.4h3.38Z"/></svg>
+      </a>
+      <a class="social-btn" href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" aria-label="Pong Home on Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.97.24 2.43.4a4.9 4.9 0 0 1 1.77 1.15 4.9 4.9 0 0 1 1.15 1.77c.16.46.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.97-.4 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.46.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.24-2.43-.4a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.16-.46-.35-1.26-.4-2.43C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.24-1.97.4-2.43a4.9 4.9 0 0 1 1.15-1.77A4.9 4.9 0 0 1 5.59 1.8c.46-.16 1.26-.35 2.43-.4C9.29 1.34 9.67 1.33 12 1.33Zm0 1.8c-3.15 0-3.5.01-4.74.07-.96.04-1.48.2-1.82.34-.46.18-.78.39-1.13.74-.35.35-.56.67-.74 1.13-.14.34-.3.86-.34 1.82C3.16 8.94 3.15 9.29 3.15 12s.01 3.06.07 4.3c.04.96.2 1.48.34 1.82.18.46.39.78.74 1.13.35.35.67.56 1.13.74.34.14.86.3 1.82.34 1.24.06 1.59.07 4.75.07s3.5-.01 4.74-.07c.96-.04 1.48-.2 1.82-.34.46-.18.78-.39 1.13-.74.35-.35.56-.67.74-1.13.14-.34.3-.86.34-1.82.06-1.24.07-1.59.07-4.3s-.01-3.06-.07-4.3c-.04-.96-.2-1.48-.34-1.82a3.05 3.05 0 0 0-.74-1.13 3.05 3.05 0 0 0-1.13-.74c-.34-.14-.86-.3-1.82-.34-1.24-.06-1.59-.07-4.75-.07Zm0 3.98a4.02 4.02 0 1 1 0 8.04 4.02 4.02 0 0 1 0-8.04Zm0 1.8a2.22 2.22 0 1 0 0 4.44 2.22 2.22 0 0 0 0-4.44Zm4.18-2.2a.94.94 0 1 1 0 1.88.94.94 0 0 1 0-1.88Z"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="footer-mobile">
+    <span>© 2026 Pong Home. All rights reserved.</span>
+    <span class="footer-follow-line">Follow us on <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a></span>
+  </div>
 </footer>
 
 <script>
