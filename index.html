@@ -746,6 +746,8 @@
     padding:22px;
   }
   .footer-follow{margin-left:6px;}
+  .footer-mobile-text{display:none;}
+  .footer-social-mobile{display:none;}
 
   /* ============ CONTACT SECTION ============ */
   .contact-section{
@@ -867,6 +869,22 @@
     }
     .pan-am-champ{
       display:none;
+    }
+    .footer-social{
+      display:block;
+      margin-top:8px;
+    }
+    .footer-desktop-text{
+      display:none;
+    }
+    .footer-mobile-text{
+      display:inline;
+    }
+    .footer-social-desktop{
+      display:none;
+    }
+    .footer-social-mobile{
+      display:inline;
     }
   }
   .contact-wrap .hero-eyebrow{
@@ -2466,7 +2484,7 @@
 
       <p class="lead">Whether you’re a beginner looking to build a strong foundation, a recreational player who simply wants to stay active and improve, or an advanced player preparing for tournaments, our Pong Home coaches can help you take your game to the next level. We come to you at a time and location that works for you, focusing on technique, footwork, and match strategy to help you improve faster and play with more confidence. </p>
       <div class="hero-actions">
-        <a class="btn-primary" href="https://wa.me/14372441309" target="_blank" rel="noopener">
+        <a class="btn-primary" href="mailto:contact@ponghome.com">
           Contact us →
         </a>
         <a class="btn-secondary" data-tab-link="learn" href="#">Learn table tennis</a>
@@ -2644,7 +2662,7 @@
           <div class="coach-cta-card">
             <span class="coach-cta-eyebrow">Now recruiting coaches</span>
             <p class="coach-cta-quote">Your next student could be Drake or Justin Bieber</p>
-            <a class="btn-primary coach-cta-btn" href="https://wa.me/14372441309" target="_blank" rel="noopener">Work with us →</a>
+            <a class="btn-primary coach-cta-btn" href="mailto:contact@ponghome.com">Work with us →</a>
           </div>
 
         </div>
@@ -3430,7 +3448,17 @@
 </section>
 
 <footer class="site-footer">
-  Pong Home | On-demand table tennis coaching <span class="footer-follow">Follow us on</span> <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a>
+  <span class="footer-desktop-text">© 2026 Pong Home. All rights reserved. Email us at contact@ponghome.com</span><span class="footer-mobile-text">© 2026 Pong Home. All rights reserved.</span> <span class="footer-social">
+    <span class="footer-social-desktop">
+      <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" aria-label="Instagram" style="color:var(--mint-dim); display:inline-flex; vertical-align:middle; margin-left:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+      </a>
+      <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" aria-label="Facebook" style="color:var(--mint-dim); display:inline-flex; vertical-align:middle; margin-left:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+      </a>
+    </span>
+    <span class="footer-social-mobile"><span class="footer-follow">Follow us on</span> <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a></span>
+  </span>
 </footer>
 
 <script>
