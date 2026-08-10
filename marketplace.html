@@ -1359,13 +1359,60 @@
   .mkt-hero-support{
     margin-top:28px;
     display:inline-flex;
-    flex-direction:column;
+    flex-direction:row;
     align-items:center;
-    gap:2px;
+    justify-content:flex-end;
+    gap:16px;
     padding:12px 20px;
     background:rgba(255,255,255,0.06);
     border:1px solid rgba(255,255,255,0.12);
     border-radius:14px;
+  }
+  .mkt-hero-support-text{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:2px;
+  }
+  .mkt-hero-viewers{
+    display:flex;
+    align-items:center;
+  }
+  .mkt-hero-viewer-avatar{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid var(--bg-deeper);
+    box-shadow:0 0 0 1px rgba(255,255,255,0.25);
+    margin-left:-9px;
+    position:relative;
+  }
+  .mkt-hero-viewer-avatar:first-child{margin-left:0;}
+  .mkt-hero-viewers-dot{
+    display:inline-block;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#3DDC84;
+    box-shadow:0 0 0 2px var(--bg-deeper);
+    margin-left:-14px;
+    margin-top:20px;
+    position:relative;
+    z-index:2;
+  }
+  @media (max-width:640px){
+    .mkt-hero-support{
+      flex-direction:column;
+      align-items:center;
+      margin-top:20px;
+      padding:10px 16px;
+      gap:10px;
+    }
+    .mkt-hero-support-text{align-items:center;}
+    .mkt-hero-support-name{font-size:0.75rem;}
+    .mkt-hero-support-detail{font-size:0.56rem;}
+    .mkt-hero-viewer-avatar{width:26px; height:26px;}
   }
   .mkt-hero-support-label{
     font-size:0.58rem;
@@ -1381,11 +1428,6 @@
   .mkt-hero-support-detail{
     font-size:0.62rem;
     color:rgba(255,255,255,0.45);
-  }
-  @media (max-width:640px){
-    .mkt-hero-support{margin-top:20px; padding:10px 16px;}
-    .mkt-hero-support-name{font-size:0.75rem;}
-    .mkt-hero-support-detail{font-size:0.56rem;}
   }
   .mkt-hero-note{
     max-width:640px;
@@ -2990,7 +3032,17 @@
     <h1 class="mkt-hero-title">Your local marketplace for table tennis gear</h1>
     <p class="mkt-hero-sub">Buy and sell new or used table tennis gear with no account or login, just post your listing and connect directly with thousands of players in your local community.</p>
     <div class="mkt-hero-support">
-      <div class="mkt-hero-support-name">Proudly supported by top table tennis players</div>
+      <div class="mkt-hero-support-text">
+        <div class="mkt-hero-support-name">Proudly supported by top table tennis players</div>
+      </div>
+      <div class="mkt-hero-viewers">
+        <img class="mkt-hero-viewer-avatar" src="avatars/player1.jpg" alt="" loading="lazy" />
+        <img class="mkt-hero-viewer-avatar" src="avatars/player2.jpg" alt="" loading="lazy" />
+        <img class="mkt-hero-viewer-avatar" src="avatars/player3.jpg" alt="" loading="lazy" />
+        <img class="mkt-hero-viewer-avatar" src="avatars/player4.jpg" alt="" loading="lazy" />
+        <img class="mkt-hero-viewer-avatar" src="avatars/player5.jpg" alt="" loading="lazy" />
+        <span class="mkt-hero-viewers-dot" title="Online now"></span>
+      </div>
     </div>
   </header>
 
