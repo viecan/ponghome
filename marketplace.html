@@ -2996,6 +2996,23 @@
       padding:8px 12px;
     }
   }
+  @media (max-width:640px){
+    .mkt-toolbar{gap:6px;}
+    .mkt-toolbar .text-input{
+      padding:5px 8px;
+      font-size:0.7rem;
+      border-radius:7px;
+      border-width:1px;
+      height:30px;
+    }
+    #mkt-name-filter{min-width:0; flex:1 1 100%; height:32px;}
+    #mkt-city-filter{min-width:0; flex:1 1 auto;}
+    #mkt-cond-filter,#mkt-status-filter,#mkt-category-filter{flex:1 1 auto; min-width:0;}
+    .mkt-toolbar .btn-create-listing{
+      padding:6px 12px;
+      font-size:0.72rem;
+    }
+  }
 
 </style>
 </head>
@@ -3081,7 +3098,7 @@
   let loaded = false;
   let loadError = false;
   let loadErrorDetail = '';
-  let filters = { city: '', condition: '', status: '', category: '' };
+  let filters = { name: '', city: '', condition: '', status: '', category: '' };
 
   const badgeClass = { 'new': 'mkt-badge-new', 'like new': 'mkt-badge-likenew', 'good': 'mkt-badge-good', 'fair': 'mkt-badge-fair' };
   const statusClass = { 'Available': 'mkt-status-available', 'Pending': 'mkt-status-pending', 'Sold': 'mkt-status-sold', 'Cancelled': 'mkt-status-cancelled' };
@@ -3116,10 +3133,10 @@
 
   function computeDailyVisits() {
     const RESET_MINUTE = 7 * 60; // 7:00 AM Eastern
-    const BASE_VISITS = 690;
+    const BASE_VISITS = 633; // ×1.5 multiplier below brings start-of-day to ~950
     const { dateKey, minutesSinceMidnight } = getEasternMinutesInfo(new Date());
     const minutesSinceReset = minutesSinceMidnight - RESET_MINUTE;
-    if (minutesSinceReset < 0) return BASE_VISITS;
+    if (minutesSinceReset < 0) return Math.round(BASE_VISITS * 1.5);
 
     const fullHoursElapsed = Math.floor(minutesSinceReset / 60);
     const minutesIntoCurrentHour = minutesSinceReset % 60;
@@ -3249,7 +3266,8 @@
       )) &&
       (!filters.condition || l.condition === filters.condition) &&
       (!filters.status || (l.status || 'Available') === filters.status) &&
-      (!filters.category || l.category === filters.category)
+      (!filters.category || l.category === filters.category) &&
+      (!filters.name || (l.title || '').toLowerCase().includes(filters.name.toLowerCase()))
     );
     out.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
@@ -3409,7 +3427,7 @@
         ${(l.is_sponsored || l.is_recommended || l.is_boosted || l.category === 'Event') ? `<div class="mkt-sponsored-row">${l.is_sponsored ? `<span class="mkt-sponsored-tag">Sponsored</span>` : (l.is_recommended ? `<span class="mkt-recommended-tag">Recommended</span>` : (l.is_boosted ? `<span class="mkt-boosted-tag">Boosted</span>` : ''))}${l.category === 'Event' ? `<span class="mkt-event-tag">Event</span>` : ''}</div>` : ''}
         <div class="mkt-card-top">
           <span class="mkt-badge ${badgeClass[l.condition] || ''}"><span class="dot"></span>${l.condition}</span>
-          ${l.is_sponsored
+          ${(l.is_sponsored || l.is_recommended || l.is_boosted)
             ? `<span class="mkt-status-pill-readonly ${statusClass[status] || ''}">${status}</span>`
             : `<select class="mkt-status-pill ${statusClass[status] || ''}" data-id="${l.id}">${statusOpts}</select>`
           }
@@ -3432,6 +3450,8 @@
   }
 
   function renderMkt() {
+    const activeId = document.activeElement && document.activeElement.id;
+    const selStart = activeId === 'mkt-name-filter' ? document.activeElement.selectionStart : null;
     if (!loaded && !loadError) {
       wrap.innerHTML = `<div class="mkt-empty">Loading listings&hellip;</div>`;
       return;
@@ -3447,6 +3467,7 @@
         <span id="mktDailyVisitsCount">Daily visits: —</span>
       </div>
       <div class="mkt-toolbar">
+        <input class="text-input" id="mkt-name-filter" type="text" placeholder="Search by listing name…" value="${escapeHtml(filters.name)}" />
         <select class="text-input" id="mkt-city-filter">
           <option value="">Any location</option>
           <option value="Barcelona"${filters.city === 'Barcelona' ? ' selected' : ''}>Barcelona</option>
@@ -3511,12 +3532,20 @@
         : `<div class="mkt-grid">${filtered.map(cardHtml).join('')}</div>`
       }
     `;
+    document.getElementById('mkt-name-filter').oninput = (e) => { filters.name = e.target.value; renderMkt(); };
     document.getElementById('mkt-city-filter').onchange = (e) => { filters.city = e.target.value; renderMkt(); };
     document.getElementById('mkt-cond-filter').onchange = (e) => { filters.condition = e.target.value; renderMkt(); };
     document.getElementById('mkt-status-filter').onchange = (e) => { filters.status = e.target.value; renderMkt(); };
     document.getElementById('mkt-category-filter').onchange = (e) => { filters.category = e.target.value; renderMkt(); };
     document.getElementById('mkt-list-btn').onclick = openForm;
     updateDailyVisitsDisplay();
+    if (activeId === 'mkt-name-filter') {
+      const nameInput = document.getElementById('mkt-name-filter');
+      if (nameInput) {
+        nameInput.focus();
+        if (selStart !== null) nameInput.setSelectionRange(selStart, selStart);
+      }
+    }
     document.querySelectorAll('.mkt-img-thumb').forEach(img => {
       img.onclick = () => openLightbox(img.src);
     });
