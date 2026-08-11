@@ -300,17 +300,22 @@
       order:3;
       flex-basis:100%;
       width:100%;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:6px;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      justify-content:flex-start;
+      gap:5px;
       background:transparent;
       border:none;
       padding:0;
+      scrollbar-width:none;
     }
+    .nav-tabs::-webkit-scrollbar{display:none;}
     .nav-tab{
       flex:0 0 auto;
-      font-size:0.8rem;
-      padding:8px 14px;
+      white-space:nowrap;
+      font-size:0.74rem;
+      padding:7px 12px;
       background:rgba(255,255,255,0.06);
       border:1px solid var(--line-dark);
     }
@@ -319,7 +324,7 @@
     }
   }
   @media (max-width:380px){
-    .nav-tab{font-size:0.74rem; padding:7px 11px;}
+    .nav-tab{font-size:0.68rem; padding:6px 10px;}
   }
 
   /* ============ TAB PANELS ============ */
@@ -1089,7 +1094,7 @@
     <div class="nav-tabs" role="tablist">
       <button class="nav-tab active" data-tab-link="home" role="tab" aria-selected="true">Home</button>
       <a class="nav-tab" href="marketplace.html">Marketplace</a>
-      <a class="nav-tab" href="/reviews">Gear Index</a>
+      <a class="nav-tab" href="/ratings">Gear Index</a>
       <a class="nav-tab" href="resources.html">Resources</a>
     </div>
     <div class="nav-right">
