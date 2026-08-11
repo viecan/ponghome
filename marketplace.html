@@ -3729,7 +3729,7 @@
     };
     document.getElementById('mkt-f-submit').onclick = async () => {
       const err = document.getElementById('mkt-f-error');
-      const DAILY_LIMIT = 8;
+      const DAILY_LIMIT = 5;
       const today = new Date().toISOString().slice(0, 10);
       let postLog = {};
       try { postLog = JSON.parse(localStorage.getItem('mkt_post_log') || '{}'); } catch (e) { postLog = {}; }
