@@ -206,9 +206,10 @@
       radial-gradient(circle at 82% -10%, rgba(0,240,200,0.16), transparent 45%),
       var(--bg-deep);
     color:#fff;
-    padding:28px 28px 44px;
+    padding-top:28px;
+    padding-bottom:44px;
   }
-  .gi-header-inner{max-width:1180px; margin:0 auto;}
+  .gi-header-inner{max-width:1180px; margin:0 auto; padding:0 28px;}
   .gi-title{
     font-size:clamp(2rem, 4.2vw, 3.1rem);
     line-height:1.08;
@@ -650,7 +651,7 @@
     .cols{grid-template-columns: 0.8fr 1.4fr 0.5fr 0.5fr 0.5fr 0.7fr;}
     .grid-head div, .row-main > div{padding:0 3px;}
     .grid-head{font-size:0.54rem; padding:10px 10px; letter-spacing:0.03em;}
-    .row{padding:10px 10px;}
+    .row{padding:10px 10px; cursor:pointer;}
     .row-main{align-items:start;}
     .cell-brand{font-size:0.6rem; padding-top:1px;}
     .cell-name{
@@ -918,7 +919,7 @@ function render(){
       </div>`;
     }).join('');
 
-    return `<div class="row">
+    return `<div class="row" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}">
       <div class="row-main cols">
         <div class="cell-brand">${escapeHtml(item.Brand)}</div>
         <div class="cell-name">${escapeHtml(item.ItemName)}</div>
@@ -970,14 +971,22 @@ renderHead();
 populateBrandFilter();
 render();
 
-/* ---------- clicking a star in the Overall Rating column opens the rate popup ---------- */
+/* ---------- opening the rate popup: stars everywhere, whole row on mobile ---------- */
 document.getElementById('rows').addEventListener('click', function(e){
   const hit = e.target.closest('.star-hit');
-  if (!hit) return;
-  const wrap = hit.closest('.rate-stars');
-  if (!wrap) return;
+  if (hit){
+    const wrap = hit.closest('.rate-stars');
+    if (wrap) openRateModalFromData(wrap.dataset.brand, wrap.dataset.name);
+    return;
+  }
 
-  openRateModalFromData(wrap.dataset.brand, wrap.dataset.name);
+  const isMobile = window.matchMedia('(max-width:760px)').matches;
+  if (!isMobile) return;
+
+  if (e.target.closest('.rate-label')) return; // its own onclick already opens the modal
+
+  const rowEl = e.target.closest('.row');
+  if (rowEl) openRateModalFromData(rowEl.dataset.brand, rowEl.dataset.name);
 });
 
 /* ---------- rate modal (opened via the "Rate" button or, on mobile, tapping a star) ---------- */
