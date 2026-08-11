@@ -11,23 +11,50 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gear Index — Pong Home</title>
-<meta name="description" content="Browse rubber and blade ratings for table tennis equipment. Filter by brand, search by name, and compare speed, spin, control and stiffness.">
+<title>Table Tennis Gear Index: Rubber & Blade Ratings | Pong Home</title>
+<meta name="description" content="Explore the world's largest table tennis rubber and blade rating database. Search by name, filter by brand, and compare speed, spin, control, and stiffness to find the right equipment for your game.">
 <link rel="canonical" href="https://ponghome.com/reviews">
 <meta name="robots" content="index, follow">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pong Home">
-<meta property="og:title" content="Gear Index — Pong Home">
-<meta property="og:description" content="Browse rubber and blade ratings for table tennis equipment. Filter by brand, search by name, and compare speed, spin, control and stiffness.">
+<meta property="og:title" content="Table Tennis Gear Index: Rubber & Blade Ratings | Pong Home">
+<meta property="og:description" content="Explore the world's largest table tennis rubber and blade rating database. Search by name, filter by brand, and compare speed, spin, control, and stiffness to find the right equipment for your game.">
 <meta property="og:url" content="https://ponghome.com/reviews">
 <meta property="og:image" content="https://ponghome.com/og-image.jpg">
 <meta property="og:locale" content="en_US">
 
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Table Tennis Gear Index: Rubber & Blade Ratings | Pong Home">
+<meta name="twitter:description" content="Explore the world's largest table tennis rubber and blade rating database. Search by name, filter by brand, and compare speed, spin, control, and stiffness.">
+<meta name="twitter:image" content="https://ponghome.com/og-image.jpg">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Table Tennis Rubber & Blade Ratings",
+  "description": "A searchable database of table tennis rubber and blade ratings covering speed, spin, control, stiffness, and overall performance, used to help players choose the right equipment.",
+  "url": "https://ponghome.com/reviews",
+  "keywords": ["table tennis rubber ratings", "table tennis blade ratings", "ping pong equipment reviews", "best table tennis rubber", "best table tennis blade"],
+  "creator": {
+    "@type": "Organization",
+    "name": "Pong Home",
+    "url": "https://ponghome.com/"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Pong Home",
+    "url": "https://ponghome.com/"
+  }
+}
+</script>
 
 <style>
   :root{
@@ -146,11 +173,32 @@
     .nav-right{order:2; gap:8px;}
     .social-btn{width:34px; height:34px;}
     .social-btn svg{width:15px; height:15px;}
-    .nav-tabs{order:3; flex-basis:100%; width:100%; flex-wrap:wrap; justify-content:center; gap:6px; background:transparent; border:none; padding:0;}
-    .nav-tab{flex:0 0 auto; font-size:0.8rem; padding:8px 14px; background:rgba(255,255,255,0.06); border:1px solid var(--line-dark);}
+    .nav-tabs{
+      order:3;
+      flex-basis:100%;
+      width:100%;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      justify-content:flex-start;
+      gap:5px;
+      background:transparent;
+      border:none;
+      padding:0;
+      scrollbar-width:none;
+    }
+    .nav-tabs::-webkit-scrollbar{display:none;}
+    .nav-tab{
+      flex:0 0 auto;
+      white-space:nowrap;
+      font-size:0.74rem;
+      padding:7px 12px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid var(--line-dark);
+    }
     .nav-tab.active{border-color:var(--mint);}
   }
-  @media (max-width:380px){ .nav-tab{font-size:0.74rem; padding:7px 11px;} }
+  @media (max-width:380px){ .nav-tab{font-size:0.68rem; padding:6px 10px;} }
 
   /* ============ PAGE HEADER ============ */
   .gi-header{
@@ -185,9 +233,12 @@
   .gi-sub{
     margin-top:14px;
     color:rgba(255,255,255,0.75);
-    font-size:1.02rem;
-    max-width:900px;
+    font-size:1.1rem;
+    max-width:none;
     line-height:1.6;
+    text-wrap:pretty;
+    orphans:2;
+    widows:2;
   }
 
   /* ============ CONTROLS ============ */
@@ -392,15 +443,43 @@
     text-align:center;
     padding:28px 20px;
     font-size:0.84rem;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
   }
   .site-footer a{color:var(--mint-dim); text-decoration:none;}
 
   @media (max-width:760px){
-    .cols{grid-template-columns: 1.3fr 1.5fr 0.8fr;}
-    .hide-mobile{display:none;}
-    .grid-head{font-size:0.62rem; padding:12px 14px;}
-    .row{padding:12px 14px;}
-    .controls-card{margin-top:-24px; padding:18px;}
+    /* description */
+    .gi-sub{font-size:0.77rem; line-height:1.5;}
+
+    /* filter section — slimmer, tighter */
+    .controls-card{
+      margin-top:-18px;
+      padding:14px 16px;
+      gap:10px;
+      border-radius:14px;
+    }
+    .category-toggle{padding:4px;}
+    .category-toggle button{padding:8px 16px; font-size:0.82rem;}
+    .field-row{gap:8px;}
+    .field label{font-size:0.6rem; margin-bottom:5px;}
+    select, input[type="text"]{padding:9px 12px; font-size:0.85rem; border-radius:10px;}
+    .count-pill{font-size:0.68rem; padding:6px 12px;}
+
+    /* table — show all columns incl. Brand, squeezed with smaller text */
+    .cols{grid-template-columns: 0.85fr 1.25fr 0.55fr 0.55fr 0.55fr 0.75fr;}
+    .grid-head div, .row div{padding:0 3px;}
+    .grid-head{font-size:0.54rem; padding:10px 10px; letter-spacing:0.03em;}
+    .row{padding:10px 10px;}
+    .cell-brand{font-size:0.6rem;}
+    .cell-name{font-size:0.8rem;}
+    .stat-num{font-size:0.66rem; width:20px;}
+    .bar-track{height:4px;}
+    .stars{font-size:11px; letter-spacing:1px;}
+    .stars-na{font-size:0.66rem;}
+    .table-shell{border-radius:14px;}
   }
 </style>
 </head>
@@ -432,7 +511,7 @@
   <div class="gi-header-inner">
     <span class="kicker">Pong Home · Gear Index</span>
     <h1 class="gi-title">Equipment <span class="mint">Ratings</span></h1>
-    <p class="gi-sub">Explore the world’s largest database of table tennis rubber and blade ratings, built to help players find the right equipment for their game. Search by name, filter by brand, and compare speed, spin, control, stiffness, and other key performance characteristics, all in one place.</p>
+    <p class="gi-sub">Explore the world’s largest database of table tennis rubber and blade ratings, built to help players find the right equipment for their game. Search by name, filter by brand, and compare key performance characteristics, all-in-one place.</p>
   </div>
 </header>
 
@@ -464,7 +543,8 @@
 </main>
 
 <footer class="site-footer">
-  © 2026 Pong Home. All rights reserved. Email us at <a href="mailto:contact@ponghome.com">contact@ponghome.com</a>
+  <div>© 2026 Pong Home. All rights reserved.</div>
+  <div>Email us at <a href="mailto:contact@ponghome.com">contact@ponghome.com</a></div>
 </footer>
 
 <script src="data.js"></script>
@@ -525,7 +605,27 @@ function renderHead(){
   const cfg = HEAD_CONFIG[category];
   const head = document.getElementById('gridHead');
   head.className = 'grid-head cols';
-  head.innerHTML = cfg.map((c,i) => `<div class="${i>=2 ? 'hide-mobile':''}">${c.label}</div>`).join('');
+  head.innerHTML = cfg.map(c => `<div>${c.label}</div>`).join('');
+}
+
+const BRAND_PRIORITY = ['Butterfly', 'Nittaku', 'Donic', 'Andro'];
+
+function brandRank(brand){
+  const idx = BRAND_PRIORITY.indexOf(brand);
+  return idx === -1 ? BRAND_PRIORITY.length : idx;
+}
+
+function sortByBrandPriority(items){
+  return items.slice().sort((a, b) => {
+    const ra = brandRank(a.Brand);
+    const rb = brandRank(b.Brand);
+    if (ra !== rb) return ra - rb;
+    if (ra === BRAND_PRIORITY.length){
+      const brandCmp = a.Brand.localeCompare(b.Brand);
+      if (brandCmp !== 0) return brandCmp;
+    }
+    return a.ItemName.localeCompare(b.ItemName);
+  });
 }
 
 function render(){
@@ -533,11 +633,13 @@ function render(){
   const brand = document.getElementById('brandFilter').value;
   const query = document.getElementById('searchInput').value.trim().toLowerCase();
 
-  const filtered = data.filter(item => {
+  let filtered = data.filter(item => {
     const matchesBrand = !brand || item.Brand === brand;
     const matchesQuery = !query || item.ItemName.toLowerCase().includes(query);
     return matchesBrand && matchesQuery;
   });
+
+  filtered = sortByBrandPriority(filtered);
 
   document.getElementById('resultCount').textContent = filtered.length;
 
@@ -558,15 +660,15 @@ function render(){
       if (isOverall){
         const stars = starsForOverall(item[k]);
         if (stars === null){
-          return `<div class="hide-mobile"><span class="stars-na">—</span></div>`;
+          return `<div><span class="stars-na">—</span></div>`;
         }
         const pct = (stars/5)*100;
-        return `<div class="hide-mobile">
+        return `<div>
           <span class="stars" title="${stars} / 5"><span class="stars-fill" style="width:${pct}%"></span></span>
         </div>`;
       }
       const {pct, display, na} = barFill(item[k]);
-      return `<div class="hide-mobile">
+      return `<div>
         <div class="stat">
           <span class="stat-num">${display}</span>
           <span class="bar-track"><span class="bar-fill ${na?'na':''}" style="width:${pct}%"></span></span>
