@@ -3684,10 +3684,9 @@
           </label>
         </div>
         <div class="field-block">
-          <label class="field-label">Photos (up to 3, optional, 5MB max each)</label>
+          <label class="field-label">Photos (up to 2, optional, 3MB max each)</label>
           <input class="text-input mkt-file-input" id="mkt-f-img1" type="file" accept="image/jpeg,image/png,image/webp" />
           <input class="text-input mkt-file-input" id="mkt-f-img2" type="file" accept="image/jpeg,image/png,image/webp" style="margin-top:8px;" />
-          <input class="text-input mkt-file-input" id="mkt-f-img3" type="file" accept="image/jpeg,image/png,image/webp" style="margin-top:8px;" />
         </div>
         <div class="mkt-form-error" id="mkt-f-error"></div>
         <div class="mkt-modal-actions">
@@ -3729,7 +3728,7 @@
     };
     document.getElementById('mkt-f-submit').onclick = async () => {
       const err = document.getElementById('mkt-f-error');
-      const DAILY_LIMIT = 5;
+      const DAILY_LIMIT = 3;
       const today = new Date().toISOString().slice(0, 10);
       let postLog = {};
       try { postLog = JSON.parse(localStorage.getItem('mkt_post_log') || '{}'); } catch (e) { postLog = {}; }
@@ -3752,16 +3751,15 @@
       const negotiable = document.getElementById('mkt-f-negotiable').checked;
       const img1 = document.getElementById('mkt-f-img1').files[0];
       const img2 = document.getElementById('mkt-f-img2').files[0];
-      const img3 = document.getElementById('mkt-f-img3').files[0];
       const isHeic = (f) => f && (/heic|heif/i.test(f.type) || /\.(heic|heif)$/i.test(f.name));
-      if (isHeic(img1) || isHeic(img2) || isHeic(img3)) {
+      if (isHeic(img1) || isHeic(img2)) {
         document.getElementById('mkt-f-error').textContent = 'HEIC photos aren\'t supported. On iPhone, go to Settings > Camera > Formats and switch to "Most Compatible," or choose a JPG/PNG file instead.';
         return;
       }
-      const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+      const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
       const isTooLarge = (f) => f && f.size > MAX_IMAGE_BYTES;
-      if (isTooLarge(img1) || isTooLarge(img2) || isTooLarge(img3)) {
-        document.getElementById('mkt-f-error').textContent = 'Each photo must be 5MB or smaller. Please choose a smaller file.';
+      if (isTooLarge(img1) || isTooLarge(img2)) {
+        document.getElementById('mkt-f-error').textContent = 'Each photo must be 3MB or smaller. Please choose a smaller file.';
         return;
       }
       const submitBtn = document.getElementById('mkt-f-submit');
@@ -3784,7 +3782,6 @@
         const imageUrls = [];
         if (img1) imageUrls.push(await uploadImage(img1));
         if (img2) imageUrls.push(await uploadImage(img2));
-        if (img3) imageUrls.push(await uploadImage(img3));
         await postListing({
           title, city, price: Number(price), currency, condition, category,
           seller_contact: phone, seller_name: sellerName, cta_type: ctaType,
