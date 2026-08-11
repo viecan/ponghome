@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GTYKNXXBF3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-GTYKNXXBF3');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gear Index — Pong Home</title>
+<meta name="description" content="Browse rubber and blade ratings for table tennis equipment. Filter by brand, search by name, and compare speed, spin, control and stiffness.">
+<link rel="canonical" href="https://ponghome.com/reviews">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pong Home">
+<meta property="og:title" content="Gear Index — Pong Home">
+<meta property="og:description" content="Browse rubber and blade ratings for table tennis equipment. Filter by brand, search by name, and compare speed, spin, control and stiffness.">
+<meta property="og:url" content="https://ponghome.com/reviews">
+<meta property="og:image" content="https://ponghome.com/og-image.jpg">
+<meta property="og:locale" content="en_US">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg-deep:#0E3B42;
+    --bg-deeper:#0A4952;
+    --bg-deep-soft:#14727C;
+    --mint:#00FFD1;
+    --mint-dim:#00E0B8;
+    --mint-soft:rgba(0,255,209,0.18);
+    --paper:#FAFFFB;
+    --paper-card:#FFFFFF;
+    --ink:#0A2A2F;
+    --ink-soft:#4C6B70;
+    --line-dark:rgba(255,255,255,0.16);
+    --line-light:rgba(10,42,47,0.10);
+    --shadow: 0 18px 40px rgba(6,88,96,0.22);
+    --coral:#FF6B6B;
+    --sun:#FFB020;
+    --nav-h: 64px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4,.display{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    letter-spacing:0.01em;
+    margin:0;
+    text-wrap:balance;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;}
+
+  /* ============ NAV (matches ponghome.com) ============ */
+  .site-nav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--bg-deeper);
+    border-bottom:1px solid var(--line-dark);
+  }
+  .nav-inner{
+    max-width:1180px;
+    margin:0 auto;
+    padding:16px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+  }
+  .nav-logo{
+    display:flex;
+    align-items:baseline;
+    gap:2px;
+    color:var(--mint);
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:1.3rem;
+    letter-spacing:0.01em;
+    text-decoration:none;
+  }
+  .nav-logo span.sub{color:#fff;}
+  .nav-tabs{
+    display:flex;
+    gap:6px;
+    background:rgba(255,255,255,0.05);
+    padding:5px;
+    border-radius:999px;
+    border:1px solid var(--line-dark);
+  }
+  .nav-tab{
+    appearance:none;
+    border:none;
+    background:transparent;
+    color:rgba(255,255,255,0.7);
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:0.88rem;
+    padding:9px 18px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background 0.25s ease, color 0.25s ease;
+    white-space:nowrap;
+    text-decoration:none;
+    display:inline-block;
+  }
+  .nav-tab.active{background:var(--mint); color:var(--bg-deeper);}
+  .nav-tab:not(.active):hover{color:#fff;}
+  .nav-right{display:flex; align-items:center; gap:12px;}
+  .social-row{display:flex; align-items:center; gap:10px;}
+  .social-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    border:1.5px solid rgba(255,255,255,0.22);
+    color:rgba(255,255,255,0.85);
+    background:transparent;
+    text-decoration:none;
+    transition:border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+  .social-btn svg{width:17px;height:17px;fill:currentColor;}
+  .social-btn:hover{border-color:var(--mint); background:var(--mint-soft); color:var(--mint); transform:translateY(-2px);}
+
+  @media (max-width:720px){
+    .nav-inner{flex-wrap:wrap; padding:12px 16px; gap:10px; justify-content:center;}
+    .nav-logo{order:1; font-size:1.1rem;}
+    .nav-right{order:2; gap:8px;}
+    .social-btn{width:34px; height:34px;}
+    .social-btn svg{width:15px; height:15px;}
+    .nav-tabs{order:3; flex-basis:100%; width:100%; flex-wrap:wrap; justify-content:center; gap:6px; background:transparent; border:none; padding:0;}
+    .nav-tab{flex:0 0 auto; font-size:0.8rem; padding:8px 14px; background:rgba(255,255,255,0.06); border:1px solid var(--line-dark);}
+    .nav-tab.active{border-color:var(--mint);}
+  }
+  @media (max-width:380px){ .nav-tab{font-size:0.74rem; padding:7px 11px;} }
+
+  /* ============ PAGE HEADER ============ */
+  .gi-header{
+    background:
+      radial-gradient(circle at 82% -10%, rgba(0,240,200,0.16), transparent 45%),
+      var(--bg-deep);
+    color:#fff;
+    padding:56px 28px 44px;
+  }
+  .gi-header-inner{max-width:1180px; margin:0 auto;}
+  .kicker{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.76rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--mint);
+    background:var(--mint-soft);
+    border:1px solid rgba(0,240,200,0.35);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:7px 16px;
+    border-radius:999px;
+  }
+  .gi-title{
+    font-size:clamp(2rem, 4.2vw, 3.1rem);
+    line-height:1.08;
+    margin-top:20px;
+    text-transform:uppercase;
+  }
+  .gi-title .mint{color:var(--mint);}
+  .gi-sub{
+    margin-top:14px;
+    color:rgba(255,255,255,0.75);
+    font-size:1.02rem;
+    max-width:900px;
+    line-height:1.6;
+  }
+
+  /* ============ CONTROLS ============ */
+  main{max-width:1180px; margin:0 auto; padding:0 28px 80px;}
+  .controls-card{
+    background:var(--paper-card);
+    border:1px solid var(--line-light);
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    margin-top:-34px;
+    position:relative;
+    z-index:5;
+    padding:22px 24px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    align-items:flex-end;
+  }
+  .category-toggle{
+    display:flex;
+    gap:6px;
+    background:rgba(10,42,47,0.05);
+    padding:5px;
+    border-radius:999px;
+    border:1px solid var(--line-light);
+    flex-shrink:0;
+  }
+  .category-toggle button{
+    appearance:none;
+    border:none;
+    background:transparent;
+    color:var(--ink-soft);
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:0.92rem;
+    padding:11px 24px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background 0.25s ease, color 0.25s ease;
+  }
+  .category-toggle button.active{background:var(--mint); color:var(--bg-deeper);}
+  .category-toggle button:not(.active):hover{color:var(--ink);}
+
+  .field-row{display:flex; gap:14px; flex:1; min-width:280px; flex-wrap:wrap;}
+  .field{flex:1; min-width:160px;}
+  .field label{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  select, input[type="text"]{
+    width:100%;
+    padding:12px 16px;
+    border-radius:12px;
+    border:1.5px solid var(--line-light);
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:0.96rem;
+    outline:none;
+    transition:border-color 0.2s ease;
+  }
+  select{
+    appearance:none;
+    -webkit-appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234C6B70' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+    background-size:18px;
+    padding-right:42px;
+    cursor:pointer;
+  }
+  select:focus, input[type="text"]:focus{border-color:var(--mint-dim);}
+  input[type="text"]::placeholder{color:var(--ink-soft); opacity:0.6;}
+
+  .count-pill{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    background:var(--paper);
+    border:1px solid var(--line-light);
+    padding:10px 16px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .count-pill b{color:var(--ink);}
+
+  /* ============ TABLE ============ */
+  .table-shell{
+    margin-top:22px;
+    border:1px solid var(--line-light);
+    border-radius:18px;
+    overflow:hidden;
+    background:var(--paper-card);
+    box-shadow:var(--shadow);
+  }
+  .grid-head, .row{display:grid; align-items:center;}
+  .cols{grid-template-columns: 1.1fr 1.7fr 0.9fr 0.9fr 0.9fr 0.9fr;}
+  .grid-head{
+    background:rgba(10,42,47,0.04);
+    border-bottom:1px solid var(--line-light);
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.09em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    padding:16px 22px;
+  }
+  .grid-head div{padding:0 6px;}
+
+  #rows{max-height:62vh; overflow-y:auto;}
+  #rows::-webkit-scrollbar{width:9px;}
+  #rows::-webkit-scrollbar-thumb{background:var(--line-light); border-radius:8px;}
+  #rows::-webkit-scrollbar-track{background:transparent;}
+
+  .row{
+    padding:14px 22px;
+    border-bottom:1px solid var(--line-light);
+    transition:background .15s ease;
+  }
+  .row:last-child{border-bottom:none;}
+  .row:hover{background:rgba(0,255,209,0.05);}
+  .row div{padding:0 6px; min-width:0;}
+
+  .cell-brand{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.03em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .cell-name{
+    font-weight:600;
+    font-size:0.94rem;
+    color:var(--ink);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .stat{display:flex; align-items:center; gap:8px;}
+  .stat-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    width:28px;
+    flex-shrink:0;
+  }
+  .bar-track{
+    flex:1;
+    height:5px;
+    background:var(--line-light);
+    border-radius:3px;
+    overflow:hidden;
+    min-width:30px;
+  }
+  .bar-fill{height:100%; border-radius:3px; background:linear-gradient(90deg,var(--bg-deep-soft),var(--bg-deeper));}
+  .bar-fill.overall{background:linear-gradient(90deg,var(--mint-dim),var(--mint));}
+  .bar-fill.na{background:transparent;}
+
+  .stars{
+    position:relative;
+    display:inline-block;
+    font-size:15px;
+    letter-spacing:2px;
+    line-height:1;
+    color:var(--line-light);
+    white-space:nowrap;
+  }
+  .stars::before{content:'★★★★★';}
+  .stars-fill{
+    position:absolute;
+    top:0; left:0;
+    overflow:hidden;
+    white-space:nowrap;
+    color:var(--sun);
+  }
+  .stars-fill::before{content:'★★★★★';}
+  .stars-na{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+  }
+
+  .empty-state{
+    padding:60px 20px;
+    text-align:center;
+    color:var(--ink-soft);
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.82rem;
+  }
+
+  .site-footer{
+    background:var(--bg-deeper);
+    color:rgba(255,255,255,0.6);
+    text-align:center;
+    padding:28px 20px;
+    font-size:0.84rem;
+  }
+  .site-footer a{color:var(--mint-dim); text-decoration:none;}
+
+  @media (max-width:760px){
+    .cols{grid-template-columns: 1.3fr 1.5fr 0.8fr;}
+    .hide-mobile{display:none;}
+    .grid-head{font-size:0.62rem; padding:12px 14px;}
+    .row{padding:12px 14px;}
+    .controls-card{margin-top:-24px; padding:18px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">PONG<span class="sub">·HOME</span></a>
+    <div class="nav-tabs" role="tablist">
+      <a class="nav-tab" href="/">Home</a>
+      <a class="nav-tab" href="marketplace.html">Marketplace</a>
+      <a class="nav-tab active" href="/reviews" aria-current="page">Gear Index</a>
+      <a class="nav-tab" href="resources.html">Resources</a>
+    </div>
+    <div class="nav-right">
+      <div class="social-row">
+        <a class="social-btn" href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" aria-label="Pong Home on Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.97.24 2.43.4a4.9 4.9 0 0 1 1.77 1.15 4.9 4.9 0 0 1 1.15 1.77c.16.46.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.97-.4 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.46.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.24-2.43-.4a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.16-.46-.35-1.26-.4-2.43C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.24-1.97.4-2.43a4.9 4.9 0 0 1 1.15-1.77A4.9 4.9 0 0 1 5.59 1.8c.46-.16 1.26-.35 2.43-.4C9.29 1.34 9.67 1.33 12 1.33Zm0 1.8c-3.15 0-3.5.01-4.74.07-.96.04-1.48.2-1.82.34-.46.18-.78.39-1.13.74-.35.35-.56.67-.74 1.13-.14.34-.3.86-.34 1.82C3.16 8.94 3.15 9.29 3.15 12s.01 3.06.07 4.3c.04.96.2 1.48.34 1.82.18.46.39.78.74 1.13.35.35.67.56 1.13.74.34.14.86.3 1.82.34 1.24.06 1.59.07 4.75.07s3.5-.01 4.74-.07c.96-.04 1.48-.2 1.82-.34.46-.18.78-.39 1.13-.74.35-.35.56-.67.74-1.13.14-.34.3-.86.34-1.82.06-1.24.07-1.59.07-4.3s-.01-3.06-.07-4.3c-.04-.96-.2-1.48-.34-1.82a3.05 3.05 0 0 0-.74-1.13 3.05 3.05 0 0 0-1.13-.74c-.34-.14-.86-.3-1.82-.34-1.24-.06-1.59-.07-4.75-.07Zm0 3.98a4.02 4.02 0 1 1 0 8.04 4.02 4.02 0 0 1 0-8.04Zm0 1.8a2.22 2.22 0 1 0 0 4.44 2.22 2.22 0 0 0 0-4.44Zm4.18-2.2a.94.94 0 1 1 0 1.88.94.94 0 0 1 0-1.88Z"/></svg>
+        </a>
+        <a class="social-btn" href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" aria-label="Pong Home on Facebook">
+          <svg viewBox="0 0 24 24"><path d="M13.5 21.9v-8.4h2.82l.42-3.28h-3.24V8.1c0-.95.26-1.6 1.63-1.6h1.74V3.6c-.3-.04-1.33-.13-2.53-.13-2.5 0-4.22 1.53-4.22 4.33v2.42H7.3v3.28h2.82v8.4h3.38Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<header class="gi-header">
+  <div class="gi-header-inner">
+    <span class="kicker">Pong Home · Gear Index</span>
+    <h1 class="gi-title">Equipment <span class="mint">Ratings</span></h1>
+    <p class="gi-sub">Explore the world’s largest database of table tennis rubber and blade ratings, built to help players find the right equipment for their game. Search by name, filter by brand, and compare speed, spin, control, stiffness, and other key performance characteristics, all in one place.</p>
+  </div>
+</header>
+
+<main>
+  <div class="controls-card">
+    <div class="category-toggle" id="categoryToggle">
+      <button id="btnRubbers" class="active" onclick="setCategory('rubbers')">Rubbers</button>
+      <button id="btnBlades" onclick="setCategory('blades')">Blades</button>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="brandFilter">Brand</label>
+        <select id="brandFilter" onchange="render()"></select>
+      </div>
+      <div class="field" style="flex:2;">
+        <label for="searchInput">Search by name</label>
+        <input type="text" id="searchInput" placeholder="e.g. Tenergy, Viscaria…" oninput="render()">
+      </div>
+    </div>
+
+    <div class="count-pill"><b id="resultCount">0</b> items</div>
+  </div>
+
+  <div class="table-shell">
+    <div class="grid-head cols" id="gridHead"></div>
+    <div id="rows"></div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  © 2026 Pong Home. All rights reserved. Email us at <a href="mailto:contact@ponghome.com">contact@ponghome.com</a>
+</footer>
+
+<script src="data.js"></script>
+<script>
+let category = 'rubbers';
+
+const HEAD_CONFIG = {
+  rubbers: [
+    {label:'Brand'}, {label:'Name'}, {label:'Speed'}, {label:'Spin'}, {label:'Tackiness'}, {label:'Overall Rating'}
+  ],
+  blades: [
+    {label:'Brand'}, {label:'Name'}, {label:'Speed'}, {label:'Control'}, {label:'Stiffness'}, {label:'Overall Rating'}
+  ]
+};
+
+function getDataset(){ return category === 'rubbers' ? RUBBERS : BLADES; }
+
+function statKeys(){
+  return category === 'rubbers'
+    ? ['Speed','Spin','Tackiness','Overall']
+    : ['Speed','Control','Stiffness','Overall'];
+}
+
+function populateBrandFilter(){
+  const data = getDataset();
+  const brands = [...new Set(data.map(d => d.Brand))].sort((a,b)=>a.localeCompare(b));
+  const sel = document.getElementById('brandFilter');
+  sel.innerHTML = '<option value="">All brands</option>' +
+    brands.map(b => `<option value="${escapeAttr(b)}">${escapeHtml(b)}</option>`).join('');
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeAttr(s){ return escapeHtml(s); }
+
+function barFill(val){
+  const num = parseFloat(val);
+  if (isNaN(num)) return {pct:0, display:'—', na:true};
+  const pct = Math.max(0, Math.min(100, (num/10)*100));
+  return {pct, display: (num % 1 === 0 ? num.toFixed(0) : num.toFixed(1)), na:false};
+}
+
+function starsForOverall(val){
+  const num = parseFloat(val);
+  if (isNaN(num)) return null;
+  let stars;
+  if (num > 9) stars = 5;
+  else if (num >= 8) stars = 4.5;
+  else if (num >= 7) stars = 4;
+  else if (num >= 6) stars = 3;
+  else if (num >= 5) stars = 2;
+  else stars = 1;
+  return stars;
+}
+
+function renderHead(){
+  const cfg = HEAD_CONFIG[category];
+  const head = document.getElementById('gridHead');
+  head.className = 'grid-head cols';
+  head.innerHTML = cfg.map((c,i) => `<div class="${i>=2 ? 'hide-mobile':''}">${c.label}</div>`).join('');
+}
+
+function render(){
+  const data = getDataset();
+  const brand = document.getElementById('brandFilter').value;
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+
+  const filtered = data.filter(item => {
+    const matchesBrand = !brand || item.Brand === brand;
+    const matchesQuery = !query || item.ItemName.toLowerCase().includes(query);
+    return matchesBrand && matchesQuery;
+  });
+
+  document.getElementById('resultCount').textContent = filtered.length;
+
+  const rowsEl = document.getElementById('rows');
+  const keys = statKeys();
+
+  if (filtered.length === 0){
+    rowsEl.innerHTML = `<div class="empty-state">No items match this filter — try a different brand or search term.</div>`;
+    return;
+  }
+
+  const MAX_ROWS = 400;
+  const shown = filtered.slice(0, MAX_ROWS);
+
+  rowsEl.innerHTML = shown.map(item => {
+    const statCells = keys.map(k => {
+      const isOverall = k === 'Overall';
+      if (isOverall){
+        const stars = starsForOverall(item[k]);
+        if (stars === null){
+          return `<div class="hide-mobile"><span class="stars-na">—</span></div>`;
+        }
+        const pct = (stars/5)*100;
+        return `<div class="hide-mobile">
+          <span class="stars" title="${stars} / 5"><span class="stars-fill" style="width:${pct}%"></span></span>
+        </div>`;
+      }
+      const {pct, display, na} = barFill(item[k]);
+      return `<div class="hide-mobile">
+        <div class="stat">
+          <span class="stat-num">${display}</span>
+          <span class="bar-track"><span class="bar-fill ${na?'na':''}" style="width:${pct}%"></span></span>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div class="row cols">
+      <div class="cell-brand">${escapeHtml(item.Brand)}</div>
+      <div class="cell-name">${escapeHtml(item.ItemName)}</div>
+      ${statCells}
+    </div>`;
+  }).join('');
+
+  if (filtered.length > MAX_ROWS){
+    rowsEl.insertAdjacentHTML('beforeend', `<div class="empty-state">Showing first ${MAX_ROWS} of ${filtered.length} — narrow your search to see more.</div>`);
+  }
+}
+
+function setCategory(cat){
+  category = cat;
+  document.getElementById('btnRubbers').classList.toggle('active', cat==='rubbers');
+  document.getElementById('btnBlades').classList.toggle('active', cat==='blades');
+  document.getElementById('searchInput').value = '';
+  renderHead();
+  populateBrandFilter();
+  render();
+}
+
+renderHead();
+populateBrandFilter();
+render();
+</script>
+
+</body>
+</html>
