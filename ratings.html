@@ -180,7 +180,7 @@
       flex-wrap:nowrap;
       overflow-x:auto;
       -webkit-overflow-scrolling:touch;
-      justify-content:flex-start;
+      justify-content:center;
       gap:5px;
       background:transparent;
       border:none;
@@ -237,12 +237,50 @@
     margin-top:-34px;
     position:relative;
     z-index:5;
-    padding:22px 24px;
+    padding:22px 60px 22px 24px;
     display:flex;
     flex-wrap:wrap;
     gap:18px;
     align-items:flex-end;
   }
+  .share-btn{
+    position:absolute;
+    top:14px;
+    right:14px;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(10,42,47,0.05);
+    border:1px solid var(--line-light);
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .share-btn:hover{
+    background:var(--mint-soft);
+    color:var(--mint-dim);
+    border-color:var(--mint-dim);
+  }
+  .share-btn svg{width:16px; height:16px;}
+  .share-toast{
+    position:absolute;
+    top:52px;
+    right:14px;
+    background:var(--ink);
+    color:#fff;
+    font-size:0.72rem;
+    font-family:'Inter',sans-serif;
+    padding:6px 12px;
+    border-radius:8px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.2s ease;
+    white-space:nowrap;
+  }
+  .share-toast.visible{opacity:1;}
   .category-toggle{
     display:flex;
     gap:6px;
@@ -446,10 +484,13 @@
     /* filter section — ~30% shorter, tighter */
     .controls-card{
       margin-top:-14px;
-      padding:10px 14px;
+      padding:10px 44px 10px 14px;
       gap:6px;
       border-radius:12px;
     }
+    .share-btn{width:28px; height:28px; top:10px; right:10px;}
+    .share-btn svg{width:14px; height:14px;}
+    .share-toast{top:42px; right:10px; font-size:0.66rem; padding:5px 10px;}
     .category-toggle{padding:3px;}
     .category-toggle button{padding:6px 14px; font-size:0.76rem;}
     .field-row{gap:6px;}
@@ -510,6 +551,17 @@
 
 <main>
   <div class="controls-card">
+    <button class="share-btn" id="shareBtn" onclick="sharePage()" aria-label="Share this page" title="Share this page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"></circle>
+        <circle cx="6" cy="12" r="3"></circle>
+        <circle cx="18" cy="19" r="3"></circle>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+      </svg>
+    </button>
+    <span class="share-toast" id="shareToast">Link copied</span>
+
     <div class="category-toggle" id="categoryToggle">
       <button id="btnRubbers" class="active" onclick="setCategory('rubbers')">Rubbers</button>
       <button id="btnBlades" onclick="setCategory('blades')">Blades</button>
@@ -692,6 +744,30 @@ function setCategory(cat){
   renderHead();
   populateBrandFilter();
   render();
+}
+
+function showShareToast(message){
+  const toast = document.getElementById('shareToast');
+  toast.textContent = message;
+  toast.classList.add('visible');
+  setTimeout(() => toast.classList.remove('visible'), 2000);
+}
+
+function sharePage(){
+  const shareData = {
+    title: document.title,
+    text: 'Table tennis rubber and blade ratings — Pong Home Gear Index',
+    url: window.location.href
+  };
+  if (navigator.share){
+    navigator.share(shareData).catch(() => {});
+  } else if (navigator.clipboard){
+    navigator.clipboard.writeText(shareData.url)
+      .then(() => showShareToast('Link copied'))
+      .catch(() => showShareToast('Copy failed'));
+  } else {
+    showShareToast(shareData.url);
+  }
 }
 
 renderHead();
