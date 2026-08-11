@@ -447,7 +447,6 @@
     color:var(--sun);
   }
   .stars-fill::before{content:'★★★★★';}
-  .stars-fill.personal-fill{color:var(--mint-dim);}
   .stars-na{
     font-family:'JetBrains Mono',monospace;
     font-size:0.78rem;
@@ -491,11 +490,6 @@
     background:var(--mint-soft);
     color:var(--mint-dim);
     border-color:var(--mint-dim);
-  }
-  .rate-label.rated{
-    background:rgba(255,176,32,0.14);
-    color:var(--sun);
-    border-color:rgba(255,176,32,0.4);
   }
   @media (min-width:761px){
     .rate-label{display:inline-flex;}
@@ -579,8 +573,24 @@
     color:var(--ink-soft);
     min-height:20px;
   }
+  .rate-modal-submit{
+    display:block;
+    width:100%;
+    margin-top:16px;
+    padding:12px 20px;
+    border-radius:999px;
+    border:none;
+    background:linear-gradient(135deg,var(--mint),var(--mint-dim));
+    color:var(--bg-deeper);
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:0.94rem;
+    cursor:pointer;
+    transition:filter 0.2s ease;
+  }
+  .rate-modal-submit:hover{filter:brightness(1.05);}
   .rate-modal-clear{
-    margin-top:14px;
+    margin-top:12px;
     background:none;
     border:none;
     color:var(--ink-soft);
@@ -744,7 +754,8 @@
       <span class="modal-star" data-value="4" onclick="selectModalStar(4)">★</span>
       <span class="modal-star" data-value="5" onclick="selectModalStar(5)">★</span>
     </div>
-    <p class="rate-modal-status" id="rateModalStatus">Tap a star to rate</p>
+    <p class="rate-modal-status" id="rateModalStatus">Tap a star to select a rating</p>
+    <button class="rate-modal-submit" onclick="confirmModalRating()">Rate</button>
     <button class="rate-modal-clear" onclick="clearModalRating()">Clear my rating</button>
   </div>
 </div>
@@ -885,21 +896,17 @@ function render(){
     const statCells = keys.map(k => {
       const isOverall = k === 'Overall';
       if (isOverall){
-        const myRating = getMyRating(category, item);
         const official = starsForOverall(item[k]);
-        const displayStars = myRating > 0 ? myRating : (official !== null ? official : 0);
-        const isPersonal = myRating > 0;
+        const displayStars = official !== null ? official : 0;
         const pct = (displayStars / 5) * 100;
         const hits = [1,2,3,4,5].map(v => `<span class="star-hit" data-value="${v}"></span>`).join('');
-        const titleText = isPersonal
-          ? `Your rating: ${displayStars} / 5`
-          : (official !== null ? `Rated ${official} / 5 — tap a star to rate` : 'Tap a star to rate');
+        const titleText = official !== null ? `Rated ${official} / 5 — tap to rate this item` : 'Tap to rate this item';
         return `<div class="overall-cell">
-          <span class="stars rate-stars ${isPersonal ? 'personal' : ''}" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" data-overall="${escapeAttr(item.Overall)}" title="${titleText}">
-            <span class="stars-fill ${isPersonal ? 'personal-fill' : ''}" style="width:${pct}%"></span>
+          <span class="stars rate-stars" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" title="${titleText}">
+            <span class="stars-fill" style="width:${pct}%"></span>
             ${hits}
           </span>
-          <button class="rate-label ${isPersonal ? 'rated' : ''}" onclick="openRateModal(this)" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" aria-label="Rate this item">Rate</button>
+          <button class="rate-label" onclick="openRateModal(this)" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" aria-label="Rate this item">Rate</button>
         </div>`;
       }
       const {pct, display, na} = barFill(item[k]);
@@ -963,43 +970,20 @@ renderHead();
 populateBrandFilter();
 render();
 
-/* ---------- inline star rating (click a star in the Overall Rating column) ---------- */
+/* ---------- clicking a star in the Overall Rating column opens the rate popup ---------- */
 document.getElementById('rows').addEventListener('click', function(e){
   const hit = e.target.closest('.star-hit');
   if (!hit) return;
   const wrap = hit.closest('.rate-stars');
   if (!wrap) return;
 
-  const isMobile = window.matchMedia('(max-width:760px)').matches;
-  if (isMobile){
-    openRateModalFromData(wrap.dataset.brand, wrap.dataset.name);
-    return;
-  }
-
-  const item = { Brand: wrap.dataset.brand, ItemName: wrap.dataset.name };
-  const hits = Array.from(wrap.querySelectorAll('.star-hit'));
-  const clickedValue = hits.indexOf(hit) + 1;
-  const current = getMyRating(category, item);
-  const newValue = (current === clickedValue) ? 0 : clickedValue;
-
-  setMyRating(category, item, newValue);
-
-  const official = starsForOverall(wrap.dataset.overall);
-  const displayStars = newValue > 0 ? newValue : (official !== null ? official : 0);
-  const isPersonal = newValue > 0;
-
-  const fillEl = wrap.querySelector('.stars-fill');
-  fillEl.style.width = ((displayStars / 5) * 100) + '%';
-  fillEl.classList.toggle('personal-fill', isPersonal);
-  wrap.classList.toggle('personal', isPersonal);
-  wrap.title = isPersonal
-    ? `Your rating: ${displayStars} / 5`
-    : (official !== null ? `Rated ${official} / 5 — tap a star to rate` : 'Tap a star to rate');
+  openRateModalFromData(wrap.dataset.brand, wrap.dataset.name);
 });
 
 /* ---------- rate modal (opened via the "Rate" button or, on mobile, tapping a star) ---------- */
 let modalItem = null;
 let modalCategory = null;
+let modalSelectedValue = 0;
 
 function openRateModal(btnEl){
   openRateModalFromData(btnEl.dataset.brand, btnEl.dataset.name);
@@ -1008,11 +992,11 @@ function openRateModal(btnEl){
 function openRateModalFromData(brand, name){
   modalItem = { Brand: brand, ItemName: name };
   modalCategory = category;
-  const current = getMyRating(modalCategory, modalItem);
+  modalSelectedValue = getMyRating(modalCategory, modalItem);
 
   document.getElementById('rateModalTitle').textContent = modalItem.ItemName;
-  updateModalStars(current);
-  updateModalStatus(current);
+  updateModalStars(modalSelectedValue);
+  updateModalStatus(modalSelectedValue);
 
   document.getElementById('rateModalOverlay').classList.add('visible');
 }
@@ -1031,49 +1015,30 @@ function updateModalStars(value){
 
 function updateModalStatus(value){
   const statusEl = document.getElementById('rateModalStatus');
-  statusEl.textContent = value > 0 ? `You rated this ${value} / 5` : 'Tap a star to rate';
+  statusEl.textContent = value > 0 ? `${value} / 5 selected` : 'Tap a star to select a rating';
 }
 
 function selectModalStar(value){
   if (!modalItem) return;
-  setMyRating(modalCategory, modalItem, value);
-  updateModalStars(value);
-  updateModalStatus(value);
-  syncInlineStars(modalItem, value);
+  modalSelectedValue = (modalSelectedValue === value) ? 0 : value;
+  updateModalStars(modalSelectedValue);
+  updateModalStatus(modalSelectedValue);
+}
+
+function confirmModalRating(){
+  if (!modalItem) return;
+  setMyRating(modalCategory, modalItem, modalSelectedValue);
+  const statusEl = document.getElementById('rateModalStatus');
+  statusEl.textContent = modalSelectedValue > 0 ? `Saved — you rated this ${modalSelectedValue} / 5` : 'Rating cleared';
+  setTimeout(closeRateModal, 700);
 }
 
 function clearModalRating(){
   if (!modalItem) return;
+  modalSelectedValue = 0;
   setMyRating(modalCategory, modalItem, 0);
   updateModalStars(0);
   updateModalStatus(0);
-  syncInlineStars(modalItem, 0);
-}
-
-function syncInlineStars(item, newValue){
-  const selector = `.rate-stars[data-brand="${cssEscape(item.Brand)}"][data-name="${cssEscape(item.ItemName)}"]`;
-  const wrap = document.querySelector(selector);
-  if (!wrap) return;
-
-  const official = starsForOverall(wrap.dataset.overall);
-  const displayStars = newValue > 0 ? newValue : (official !== null ? official : 0);
-  const isPersonal = newValue > 0;
-
-  const fillEl = wrap.querySelector('.stars-fill');
-  fillEl.style.width = ((displayStars / 5) * 100) + '%';
-  fillEl.classList.toggle('personal-fill', isPersonal);
-  wrap.classList.toggle('personal', isPersonal);
-  wrap.title = isPersonal
-    ? `Your rating: ${displayStars} / 5`
-    : (official !== null ? `Rated ${official} / 5 — tap a star to rate` : 'Tap a star to rate');
-
-  const btnSelector = `.rate-label[data-brand="${cssEscape(item.Brand)}"][data-name="${cssEscape(item.ItemName)}"]`;
-  const btn = document.querySelector(btnSelector);
-  if (btn) btn.classList.toggle('rated', newValue > 0);
-}
-
-function cssEscape(str){
-  return String(str).replace(/["\\]/g, '\\$&');
 }
 
 document.getElementById('rateModalOverlay').addEventListener('click', function(e){
