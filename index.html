@@ -502,11 +502,18 @@
   }
   @media (max-width:720px){
     .hero p.lead{
-      font-size:0.93rem;
-      line-height:1.55;
+      max-width:100%;
+      font-size:1.06rem;
+      line-height:1.5;
+      letter-spacing:-0.006em;
       text-align:left;
       text-align-last:left;
       word-spacing:normal;
+      text-wrap:pretty;
+      overflow-wrap:break-word;
+      hyphens:auto;
+      -webkit-hyphens:auto;
+      -ms-hyphens:auto;
       margin:18px auto 26px;
     }
     .hero{
@@ -743,6 +750,16 @@
     .service-grid{grid-template-columns:1fr;}
     .feature-list{grid-template-columns:1fr;}
     .section-light{padding-bottom:36px;}
+    .service-copy p{
+      font-size:1.06rem;
+      line-height:1.55;
+      letter-spacing:-0.006em;
+      text-align:left;
+      overflow-wrap:break-word;
+      hyphens:auto;
+      -webkit-hyphens:auto;
+      -ms-hyphens:auto;
+    }
   }
 
   /* ============ COACHES ============ */
