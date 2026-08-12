@@ -574,6 +574,83 @@
     color:var(--ink-soft);
     min-height:20px;
   }
+  .rate-modal-sliders{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    text-align:left;
+    margin-bottom:6px;
+  }
+  .rate-slider-row .rate-slider-label{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-family:'Inter',sans-serif;
+    font-size:0.86rem;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:8px;
+  }
+  .rate-slider-row .rate-slider-value{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.82rem;
+    font-weight:700;
+    color:var(--mint-dim);
+    min-width:28px;
+    text-align:right;
+  }
+  .rate-slider-row input[type="range"]{
+    -webkit-appearance:none;
+    appearance:none;
+    width:100%;
+    height:6px;
+    border-radius:999px;
+    background:linear-gradient(to right, var(--mint) 0%, var(--mint) var(--fill,50%), var(--line-light) var(--fill,50%), var(--line-light) 100%);
+    outline:none;
+    cursor:pointer;
+    margin:0;
+  }
+  .rate-slider-row input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:var(--paper-card);
+    border:3px solid var(--mint-dim);
+    box-shadow:0 1px 4px rgba(10,42,47,0.25);
+    cursor:pointer;
+    transition:transform .1s ease;
+  }
+  .rate-slider-row input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);}
+  .rate-slider-row input[type="range"]::-moz-range-thumb{
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:var(--paper-card);
+    border:3px solid var(--mint-dim);
+    box-shadow:0 1px 4px rgba(10,42,47,0.25);
+    cursor:pointer;
+  }
+  .rate-slider-row input[type="range"]::-moz-range-track{
+    height:6px;
+    border-radius:999px;
+    background:var(--line-light);
+  }
+  .rate-slider-row input[type="range"]::-moz-range-progress{
+    height:6px;
+    border-radius:999px;
+    background:var(--mint);
+  }
+  .rate-slider-ticks{
+    display:flex;
+    justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.62rem;
+    color:var(--ink-soft);
+    opacity:0.6;
+    margin-top:4px;
+  }
   .rate-modal-submit{
     display:block;
     width:100%;
@@ -748,14 +825,8 @@
     <button class="rate-modal-close" onclick="closeRateModal()" aria-label="Close">✕</button>
     <span class="rate-modal-eyebrow">Rate this item</span>
     <h3 class="rate-modal-title" id="rateModalTitle"></h3>
-    <div class="rate-modal-stars">
-      <span class="modal-star" data-value="1" onclick="selectModalStar(1)">★</span>
-      <span class="modal-star" data-value="2" onclick="selectModalStar(2)">★</span>
-      <span class="modal-star" data-value="3" onclick="selectModalStar(3)">★</span>
-      <span class="modal-star" data-value="4" onclick="selectModalStar(4)">★</span>
-      <span class="modal-star" data-value="5" onclick="selectModalStar(5)">★</span>
-    </div>
-    <p class="rate-modal-status" id="rateModalStatus">Tap a star to select a rating</p>
+    <div class="rate-modal-sliders" id="rateModalSliders"></div>
+    <p class="rate-modal-status" id="rateModalStatus">Drag each slider to rate 1–10</p>
     <button class="rate-modal-submit" onclick="confirmModalRating()">Rate</button>
     <button class="rate-modal-clear" onclick="clearModalRating()">Clear my rating</button>
   </div>
@@ -820,15 +891,19 @@ function ratingKey(cat, item){
 function getMyRating(cat, item){
   try {
     const v = localStorage.getItem(ratingKey(cat, item));
-    return v ? parseInt(v, 10) : 0;
+    return v ? JSON.parse(v) : null;
   } catch (e){
-    return 0;
+    return null;
   }
 }
 
 function setMyRating(cat, item, value){
   try {
-    localStorage.setItem(ratingKey(cat, item), String(value));
+    if (value === null){
+      localStorage.removeItem(ratingKey(cat, item));
+    } else {
+      localStorage.setItem(ratingKey(cat, item), JSON.stringify(value));
+    }
   } catch (e){
     /* localStorage unavailable — rating just won't persist */
   }
@@ -983,10 +1058,16 @@ document.getElementById('rows').addEventListener('click', function(e){
   if (rowEl) openRateModalFromData(rowEl.dataset.brand, rowEl.dataset.name);
 });
 
-/* ---------- rate modal (opened via the "Rate" button or, on mobile, tapping a star) ---------- */
+/* ---------- rate modal (opened via the "Rate" button or, on mobile, tapping a row) ---------- */
+const MODAL_CRITERIA = {
+  blades:  [ { key:'speed', label:'Speed' }, { key:'control', label:'Control' }, { key:'stiffness', label:'Stiffness' } ],
+  rubbers: [ { key:'speed', label:'Speed' }, { key:'spin', label:'Spin' }, { key:'tackiness', label:'Tackiness' } ]
+};
+const DEFAULT_SLIDER_VALUE = 5;
+
 let modalItem = null;
 let modalCategory = null;
-let modalSelectedValue = 0;
+let modalValues = {};
 
 function openRateModal(btnEl){
   openRateModalFromData(btnEl.dataset.brand, btnEl.dataset.name);
@@ -995,11 +1076,15 @@ function openRateModal(btnEl){
 function openRateModalFromData(brand, name){
   modalItem = { Brand: brand, ItemName: name };
   modalCategory = category;
-  modalSelectedValue = getMyRating(modalCategory, modalItem);
+
+  const saved = getMyRating(modalCategory, modalItem) || {};
+  const criteria = MODAL_CRITERIA[modalCategory] || MODAL_CRITERIA.rubbers;
+  modalValues = {};
+  criteria.forEach(c => { modalValues[c.key] = saved[c.key] || DEFAULT_SLIDER_VALUE; });
 
   document.getElementById('rateModalTitle').textContent = modalItem.ItemName;
-  updateModalStars(modalSelectedValue);
-  updateModalStatus(modalSelectedValue);
+  renderModalSliders(criteria);
+  updateModalStatus();
 
   document.getElementById('rateModalOverlay').classList.add('visible');
 }
@@ -1009,39 +1094,58 @@ function closeRateModal(){
   modalItem = null;
 }
 
-function updateModalStars(value){
-  document.querySelectorAll('.modal-star').forEach(s => {
-    const v = parseInt(s.dataset.value, 10);
-    s.classList.toggle('filled', v <= value);
-  });
+function renderModalSliders(criteria){
+  const wrap = document.getElementById('rateModalSliders');
+  wrap.innerHTML = criteria.map(c => `
+    <div class="rate-slider-row">
+      <div class="rate-slider-label">
+        <span>${c.label}</span>
+        <span class="rate-slider-value" id="rateVal-${c.key}">${modalValues[c.key]}</span>
+      </div>
+      <input type="range" min="1" max="10" step="1"
+        id="rateSlider-${c.key}"
+        value="${modalValues[c.key]}"
+        oninput="onModalSliderInput('${c.key}', this.value)">
+      <div class="rate-slider-ticks"><span>1</span><span>10</span></div>
+    </div>
+  `).join('');
+  criteria.forEach(c => updateSliderFill(document.getElementById(`rateSlider-${c.key}`)));
 }
 
-function updateModalStatus(value){
+function updateSliderFill(inputEl){
+  if (!inputEl) return;
+  const pct = ((inputEl.value - 1) / 9) * 100;
+  inputEl.style.setProperty('--fill', pct + '%');
+}
+
+function onModalSliderInput(key, value){
+  modalValues[key] = parseInt(value, 10);
+  document.getElementById(`rateVal-${key}`).textContent = value;
+  updateSliderFill(document.getElementById(`rateSlider-${key}`));
+  updateModalStatus();
+}
+
+function updateModalStatus(){
   const statusEl = document.getElementById('rateModalStatus');
-  statusEl.textContent = value > 0 ? `${value} / 5 selected` : 'Tap a star to select a rating';
-}
-
-function selectModalStar(value){
-  if (!modalItem) return;
-  modalSelectedValue = (modalSelectedValue === value) ? 0 : value;
-  updateModalStars(modalSelectedValue);
-  updateModalStatus(modalSelectedValue);
+  statusEl.textContent = 'Drag each slider to rate 1–10';
 }
 
 function confirmModalRating(){
   if (!modalItem) return;
-  setMyRating(modalCategory, modalItem, modalSelectedValue);
+  setMyRating(modalCategory, modalItem, modalValues);
   const statusEl = document.getElementById('rateModalStatus');
-  statusEl.textContent = modalSelectedValue > 0 ? `Saved — you rated this ${modalSelectedValue} / 5` : 'Rating cleared';
+  statusEl.textContent = 'Saved — your ratings have been recorded';
   setTimeout(closeRateModal, 700);
 }
 
 function clearModalRating(){
   if (!modalItem) return;
-  modalSelectedValue = 0;
-  setMyRating(modalCategory, modalItem, 0);
-  updateModalStars(0);
-  updateModalStatus(0);
+  const criteria = MODAL_CRITERIA[modalCategory] || MODAL_CRITERIA.rubbers;
+  criteria.forEach(c => { modalValues[c.key] = DEFAULT_SLIDER_VALUE; });
+  setMyRating(modalCategory, modalItem, null);
+  renderModalSliders(criteria);
+  const statusEl = document.getElementById('rateModalStatus');
+  statusEl.textContent = 'Rating cleared';
 }
 
 document.getElementById('rateModalOverlay').addEventListener('click', function(e){
