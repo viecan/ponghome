@@ -2571,6 +2571,7 @@
     box-shadow:0 4px 14px rgba(10,42,47,0.05);
     transition:transform 0.2s ease, box-shadow 0.2s ease;
     position:relative;
+    overflow:hidden;
   }
   .mkt-card-event{
     background:#FCF7F8;
@@ -2827,9 +2828,11 @@
     letter-spacing:0.04em;
   }
 
-  .mkt-images{display:flex; gap:8px; margin-top:12px;}
+  .mkt-images{display:flex; gap:8px; margin-top:12px; max-width:100%; flex-wrap:wrap;}
   .mkt-img-thumb{
-    width:72px; height:72px;
+    flex:0 0 56px;
+    width:56px;
+    height:56px;
     object-fit:cover;
     border-radius:10px;
     border:1px solid var(--line-light);
