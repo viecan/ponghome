@@ -808,14 +808,8 @@ function barFill(val){
 function starsForOverall(val){
   const num = parseFloat(val);
   if (isNaN(num)) return null;
-  let stars;
-  if (num > 9) stars = 5;
-  else if (num >= 8) stars = 4.5;
-  else if (num >= 7) stars = 4;
-  else if (num >= 6) stars = 3;
-  else if (num >= 5) stars = 2;
-  else stars = 1;
-  return stars;
+  const clamped = Math.max(1, Math.min(10, num));
+  return Math.round(clamped) / 2;
 }
 
 /* ---------- personal rating (saved locally in this browser only) ---------- */
