@@ -820,6 +820,82 @@
     margin-left:4px;
     color:var(--mint);
   }
+
+  /* ============ TEAM CAPTAIN + ACCORDION ============ */
+  .team-captain{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    background:linear-gradient(135deg, rgba(0,240,200,0.14), rgba(0,240,200,0.03));
+    border:1px solid rgba(0,240,200,0.45);
+    border-radius:24px;
+    padding:26px 30px;
+    margin-top:8px;
+  }
+  .team-captain .coach-avatar{
+    width:68px;
+    height:68px;
+  }
+  .team-captain-info{
+    flex:1;
+    min-width:200px;
+  }
+  .team-captain-name-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:6px;
+  }
+  .team-captain .coach-name{font-size:1.3rem;}
+  .team-captain .coach-role{margin:0;}
+
+  .team-accordion{
+    margin-top:36px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .city-collapse{
+    border:1px solid var(--line-dark);
+    border-radius:16px;
+    background:rgba(255,255,255,0.02);
+    overflow:hidden;
+  }
+  .city-collapse summary{
+    list-style:none;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:18px 22px;
+    user-select:none;
+  }
+  .city-collapse summary::-webkit-details-marker{display:none;}
+  .city-collapse summary::marker{content:"";}
+  .city-collapse h3{
+    font-size:1.15rem;
+    color:#fff;
+    margin:0;
+  }
+  .city-collapse .city-count{
+    margin-left:auto;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    color:rgba(255,255,255,0.5);
+  }
+  .city-collapse .chevron{
+    color:var(--mint);
+    flex-shrink:0;
+    transition:transform 0.2s ease;
+  }
+  .city-collapse[open] .chevron{
+    transform:rotate(180deg);
+  }
+  .city-collapse .coach-grid{
+    padding:4px 22px 22px;
+  }
   .coach-cta-card:hover{transform:translateY(-4px);}
   .coach-cta-eyebrow{
     display:inline-block;
@@ -1217,23 +1293,27 @@
       <span class="kicker">Our team</span>
       <h2 class="section-title" style="color:#fff;">Train with advanced players, national-level athletes</h2>
 
-      <div class="city-group">
-        <div class="city-head">
-          <span class="city-flag">🇨🇦</span>
-          <h3>Toronto</h3>
-        </div>
-        <div class="coach-grid">
-
-          <div class="coach-card featured">
-            <div class="coach-top">
-              <div class="coach-identity">
-                <img class="coach-avatar" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCACgAKADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5XEZB5qaMdAadJG2elCK2R9aDJO42cYxUSDLmrc0JI/CoYovmI96FoO5EUOSaXacE+9XBCT27U2SMrn5e/am2NMqKDkAVIQdpp8K4k5FWJox5ZwB0pCZQOTgU05VgQO9XI4sgdKJI8EcCnchs1tK1y7togEgL4HYV3Hw/1qQ3Hn3S7WJztrF8ATaTnZfqg+tdHrUmi2wE1pNGuOeDXkY9KtF0rfM9GjhJShzRkYvxf11L9PJ+TqMACvM0DHBArotbuIdR1EAnIJxmur8LaT4eivUN40fljB+Y8VvhKccJh1E5pN1KnKc74H8Eat4o882YEcUQ+ZipP5VR8U+HLrw9fLBOd4fowr6d0TxZ4P8AD2lMlnNaKWTBCkCvDfilruna5fZtXVgjFsjpzXJRxtariuVL3fQ+ullWDp5LKtVSVTSzvvrtb0PPQjYPFOKnyzkc4qxGFC9ac4Taa9o+KcjPKZzUoXGCQelT4HoKJCOMelAKVy9IAPemRgbv/rV6zd/Af4hW1jLeS6ZAqxqWKedlj9OK8seKSK5eKSMo6EqynqCOopJp7GEZJ7EU7AfTFV0wDmu4+F/w61z4ia2+maR5cSQqGmnkGVQHp9TXt9v+yLfhAZvF0W7HIS0/+vRdDU+iPl4FsZwaQ7jnj8a991b9mzxHZ6wbSHU4JLbHErREH8q3rf8AZhkXTTNd6zMZducRxgAfnU+0ihKsj5iWJt2cUsuQCK9Ys/hLqR8Yvoc837lTkSqOSK6Txf8AAOOx0qS4s7y4EqKT8/INDqJMpVongcKnaMdqc0bHNfT/AOz5+z5o+t+G01rxask8krHy4VcqoUcDp1r1v/hnb4af9ARPpvb/ABp81x88paxifACxSBvlfb+NK6TY+aRj+NfoEn7Pnw1TgaBbn65P9aWT4AfDoITHoVsrf7uaV0HNVS+H8T8+BEFbIODU+Sy7WlbB96+gfGPwQ0uP4u6dpFgXh0673NLEp+7t/u+ma9lg/Zu+H/2dN2l5cDkmRuf1ockQq7b92LPhcxIR94/nTAiDjIr7+0z4AfD+0BB0S2kPq67v51avvgt4H8hhHolmh9REKnnS6DlUqtbfifAOnabfahN5Wn2F1dv3EMTP/IVvW3gLxlcD914V1l/+3R/8K/QT4c+CdA8M6Z5Om2EEeWJYhBkmuwEUY6Io/CqjJyVwjCrJX0R+Yer+EPEukw+dqXh/U7SPON8tuwGansvh7411GFLix8K6tNEwyHFsQD+dfpNrOk2GowCO7to5VDA4Zc1cht4YoljjiVUUYAA4quZjVKre10R6lFG9lIrICCpyMV+cPxThih+JPiBIUCoL18AV+kN//wAekn0r84/i0u34meIR/wBPr/0rOPxlVfjR7x+wiq+d4kyoyDDz+Br6rr5W/YSAE/iQ/wDXH/2avqmtF1KobP1Kl5AjyKxUE/SotRAFi4GBxVm4+8KraiP9Dk/3a5prVhU0ueEWRB+J0uccD0rtPiG6x+H5zgZ8s/yri7ZCvxJmatr4v6/omjeHn/tjVrWyMiEIsjgM/HYdTUy2OWEW1odf8CZlk+H9hjHCf1ruLm5t7dC88yRqOpJr4R1r9oa78PeDoNC8GXnl3YfbJdbP9Wmc4UHjcema4xv2hvHq3cNyL5rn7MuLcXBJVXH/AC0ZR99up+bIyc46VspO2iO+lTkoJM/SK2nE6b0R1U/dLjGffFSN901+cukftNfFLSb0TyajDqJkIYx3QLD9CMZr2n4f/tkadqMsVp4t8Jz2bNw1zp0vnKD6mMgNj6E1V3a7RdmeieKCE+NWik9Ssg/lXtUWGjH0r59uNf0zxH8UPDOtaVdLPY3KSMj4I7dCDyD7V9AW7L5a4ORisqb1OWjo5JjyMHjvUF0P3TfSrOR6iobtkEDliAMVclobSirEGj4+z/jV6szQ54nhYLIpIY1pZFOk/cQU3eKGT/cp69BUdwyhPmYCnoQVBByKtNXKW5ieJNYhs9LmmY8BTX52/EjUE1Dx9rd5H9yW7Yiv0D8fQRHQLgbB9w1+dPilh/wlWpjGALl+PxrCk25u5ySbc9T2n9kPxnB4e8U32lzxu39oIrKQM4K+v519lRalFJAJQDgjPSviP9k21t5/HdxJMgYpANuR0ya+34IYhagBRjFaSbvoFLm5mlsc7qPiqNL9bVInYn0XiqvifX5bbS3kEbdPStWW2t2vdxRcj2rM8ZiJdJlyoPy8VzydyXzPdnzv4z+I1n4Siv8AxFdoGuVHl2kB6zSkcD6DqT2FfJ3ijxbrHifXZ9W1e586ed9zAdFHoPQV0Px/8QDWviFeQ284ks7E+RCFPy7v4yPq3H4VwEa5IrohBWuzrow5FobBRZVBETDPoO1QXVuscyRnIUH5qfa2+1RMt5sboMrkVtWOg6rqSMYoGnOOGVev+FZyko6tnZGEp7IxrWCN2CA7ppSQvsP/ANVVipgnDwb1KsQcHGK6KLR7vSpWnvYfLZYmYZHbpkVVstPe9mjcLhJCXI9KFUTV+g5QtuejfDjVvEVhHa3sd0CYJFaDJ454Ix7jvX1toXjXX20qB2t0LMoJO6vj3QmW3gtLWJzuEyll9ia+ptEaU6VAoz/qxWSRwYmC59DppPGniHHFtFn/AHqztb8WeKG0+XEcKHaehrIuZLpH4YiqGsXc406Vi54WnZnO7LQw/h34t8Zxa/dpJeh4y/yxsOFr1e18S+LJJ0Xdb4J968N+HV48viK5LN0avXbO+23Cc45qasrSsi4w0NbxrqHi+WO3hsbiGEuRvbbnH0rqfCtr4k+wKbvUhIwH9wVkTXAkMDFt3Su60Vw9oCKmCberBU03e5l+PB/xIZz/ALJr85PFiMPFWqZHP2l/51+jHj64jj0Ocv02Gvzr8bzK3i7U2Xobhq6KPxMmXxnqv7JP/I73Pr5K/wA6+2kbFmD/ALNfE37IcUknjW8deiwrn8zX2xgiywf7tE/iY6d02znhcs+qMgzgVw37Smu32gfCXWb7TYZpLww+VCY1J8stwXPoFGTn6V3NnGv293PrVfx7pGn654bvNL1CMS2tzEY5UzjK1la2pEX1Z+VTh2lIYlnJ5z1JrZ0rQbu6YZXanUn0FdT8Q/Az+EPiRHpzzLcWVzOXtpR3XP3SOzDit/T7MBjBGoJb5arEYhwS5T28JRjW96+hb+GPw7tbu7S7vSzW4PCkctX034W8OaWlrFGllCkajAXaPm+teY+EP3flwAcKBgCvX9BMxVPLPAFfJYzEVak/eZ9VhcPClD3UeafHLwFFc6BquqJb4eKHcFTuq8nH4ZrwO0jtIrWGS2fKMjY+lfbmo27XEBWdd6MuCMcEGvlL4n/DHU/Bd1PqFgHudAefcpHLW27+Fh/d9678sxit7Kbs+h5+YYVte0ivU4Pw3Ow1y1R2IxKFO768V9jaBcw/YIVJGdg6/SvmX4f+ALjxffho53tbe3kV5p1j3kAHO1R3Y9q9x8U6jFpKMkVtdWUkDrG8c7K28MpKspX6HIr1Vi6XtFSvqeFiMBWdJ10vdR1epPFtzkZrA1wg6ZMB3WsOx1S6vip3Eg1p6kxGlyBjzt710PQ8Zxs9TgPAbND4iuef4jXpUmqCFQ5PIrzHwXIn/CSXG48biK7PWZESIlWFZ1YXmjspTtFo6a38TTPtC5IWus8P+PjafLckhfpXl/h2aNl+Yg1o3xi2GlZpk3PY/HuqWd3ocuyRSCvY18Oap4dfU/FOoyK2E85iADXqul+Idcu/DqpKJCdmDz1rzvQru7fxi1jIhUyyck+lDqtRfJudOGwtql6ux2HwQhvPCnigTwwO0c2EkPpz1r67i1N7jSw0eSSteS6Lpen2OkxzPsyADmuy8L+ILKaERI6nHHWiDqbz6mWJVPmbpDQ+rjUCVHyk+tV/Fs2srprlM52+tdR50SZl7GsTxVq9v/Z7jcOla+p53I+h8ffE/StR1W7kDYa+tZvtNvnuR95fxA/MCsTTNe0611RPMZg2QSCvXIr0PxFMJPHcTKQQWrkfiHpUui+IpotK02zMUiiRFlBx8w9vfNRiYqcU2evldWUJOn8zrNO1yzaaOSyy77OFHUmtQ+NdSnlS3vtUtdGtUYeYWODj3NcF8MYbo+PtMS5RVR5wCo6YxXtXxU+Emn6hcLq1nEHJAMsBYjcQOorwaip0p2Z9VTqTnG6Ou8LeJdOvtPhGn6l/aiFQQ0ETMoHTO7pjiuh1zS7bVtEubC8hDRXMRRgR6iuJ+GJttH0+Kyt7f7OsahNg7Adq7uW784HB6+leZWVpXidShJpXPN/hz4Ki0fwvd2N6Jdx1BmTymKEgAAcjt19q534rpNFqmkaPNIZZbe23SuTyxZjtz/wEfrXreqz3MFgZrVYyysWbfnGADk8V454mSbU9fl1B7iG6eQgiSFgybQMAAgnjFetlFKVau60un5niZ5ifY4VUI9fyNvwZZxKo3KOlaviqyRtOk2cHaap+G3SJB5rBdo5J7Voa5IJ7Vord1dyOlfRexqSl7sWz4uVeEfikkeN+HIJI9eucZ+91rodVhuHhOWOKfpmgatb6rJPIkCo7Z/1wz+Vbl9YzyxsixgNjuwFbSw1a9+R/cWsXh2v4iv6mT4agkxgMfzrZubaU/KZKZpej6tbJuNlKR2K4b+VR3dzcQzbZopIyezgj+dY1ISi9VYulUjPZ3Oog02w0zQj5iqMJx+VeB+M9UsbTWfttoyiaN+CPrXsF3qR1mM2G4gdODXlvxD8CRxBPs7ESM3WuKEoxaXc9iNOrrKfQG+KF5dWMVlHu3HC8GvRfAU1/a2sd5cO21+T7V5T4Y+H0w1e1Z5Nw3AkYr6MutCWz0BIwuMR1pX1SsyKUoRdrbnWaXqC6jpW1X+YCuc8QWkr20qbiTj1rI8H6p/Z8LiaXGCRya1G1y1uZSodWLVMaqlE56lGVOroeLXWny2ni2NrrJUycGul+MOhxS6FYa7ajcYB5VwP9g8q34Hj8ai+Kckcd3DLAPnBzxWzp00+reExDJHuR0Kup7isnV54WO+NN06sZrc8r8HT29p4u0+6uZBFFHKGLE9D2r6TvPFegX87aTb6/pxvzECtsZR5pOM9K+VfGOnnS7+a0uMnb80Z/vDsa674ceNdC0vyhI0ct9gDeLcyyNx90kAnivNxVFyXMlc9/DVVex7dpyBpj5kPlTA4J9a3Y1wAAcevvXn0HjuG8bdLY3FooOFkkiKbh+PNa9r4miuSIbNi7twpxXkVKU72Z6Kqxa0Z0X21TfJCvKr19K8u+MPwr0u0tZ/GXha2On3sB828gtiVjnjJ+dto4DD73HXBr0v7CYYopc5JA3Hvmtd/Kl09o5gHidCjg9wRgitMLip4aqpwe34nPiaEMRTcJLc8G+E/iH+1FvfD2qTCWeIJPbyN954weUJ74OD+NdyF2xOrHL7y5z6HpXz3YXEvhb4nMgYkWd+9sST1TcV/livc/EF1MtxbfYY/MkmTdx02+5r9kwdT2lJNH4TneG+r4l+ZDqFyFLxW7O8jDG1eST6VLb2fkw/atRl8tEXLoD09ifX6UluI9HtECnzb66+YMw5AJrA8a3rzTwaFDLhVIa4cnGWPauxRueM3Y7Dwxqkl5EJVhaOB2IiOewrqbGWC9kaxmjjlJ/glUMD+dctazW9rbw2UQCtAqJGv1Uc/nWFqWt3CXml3aSFGlaWB+2GBGKhxU1ZotSdNqUdznNZvDoPiFVdsKx9ateK9Ut309LtmDYGavfFP4aeJNc1Nbiylt0UHPJOayNT+Gni+TRFt08lpAMfer82+rVEotH7THHUJNpsh+HWvRXXiBTKQqIeM17P4k8VaTHpvltMmQvTIrwPQfhj48065aRoouem1qr+LPh98R5yJLdWf/AGQ9dEaM+axyVquHklJSNvxd4lEcbmxyxJ421H4Q1u5Ox5+GJ6E1i+HvBfjOGApqOmSMw77gas/2B4qt7n93pNwEB6gVEqEoJqJssTRnJSkzX8TXf2i9jLsDyOCa7nw5qNla6EEZl4XmvKr3SfFFxON2lXfB67K6ux0HUzojJNBcI+3utZQws+Sw6mMoqd73MjxEuneKdSksum0nbIvVD/Ue1cPq1jrHgvUNqXIto5Qds0bhRKvfr/Kuy8L6Readq8jy20+3OSzIcV5X8U9X/wCEq1q7uIn3RRfu7ZfRFz/M5P416NLBKpHlPP8A7UnTrXWzPRtG8Y+GvsSz3b3NzcrwUWTejH2Pauv+FWtR6lqM9/cBIQDiGFT90CvlXw7eyWd4EGWjc/MnvXpGjXhbZ9nnaDfxkMQD+NeTi8vjC67n0WGxsqlmz69TUYry1KiQcHsePpU0FyTFz8yr1A71474Kt/EUNpG6zCaAD5QjZFd74c1K5tppI9QhYfKWQ44OO1eDPDuD01PXp1OZanz1+0FZ/wBkfEfUp7OQlLtY76Jh2LDn8mU1f0XxVeDT4jcandudgXHmGtL9p77BdS6Fq1o22aeCWKdf7u1gR/6Ea57whpBtNLi1HUYybm5G+3if/lnH2Yj1PX24r9P4eqOpQh6fkfmHFap4ac5SXXT5np/w/wBW+3XP/E0Mfy5NrI6k4Hp71P4t0/S7lx5drcxzSvv8yObKlj3KkZrnNMGyOO4ZiWjbcOa67UTHNHZzQSGTgByw6Hrmvopu2x8E6inq1uR3V0tvrdkRIJAqJFLxjkDg1Q8R2+HtlXtqalfYMOaw9bvpDrS7ASVfNanivU0l0eG4t28qVJkLcfMh6f1pyjazMYy5m0cxqPx81mK/ETWoxnsa7rw78UNU1Gw897CQcZBHOa+X/EgCamzLyAa7Xwn8RU0vTxbSrwBivgsRKoop00frOFw1CUv3rPWdV+NV/YTeXJpkoGepOK1rD4u/aLMTSQMvFfPfivxfFqku+NBVODxHJ9jMI44xWa9tKKdrM2eGwqm03dHv1x8ddKhmMckcmQcHC1PafHTw/KQpSTJ/6Z18ySTeZJvPJJqfTXVbhWJwMiutR01PPlQjfS9j6en+Nfh2JcupX6x1PZ/GzwnOm1p0X1BWvnTXzE9mpRgTiubsE8258pSoZjgbjgD6mkldEuil1PqnxH8W/CUWh3XkzJPczxPFBDEuXZmUgH2Azkk18v6fC9vqSWt6hRgPm9/Q1taRoUWqpu0u8iN0rbWifowzjIYVL48sZ9K8S2FjcSxS3UFkiTOgwNxJwPwBAz7V6mHw7grnmVK0ZSdNb6mL440XTNM1a2l0i68wsg+0J1WOT2PfPp2ru/gjY2uo381lewwXlqyZlgbh0PZlPXFch4j0nVbOQD7LOqDhSyZDe/49aqaNe6zo+o2+pWUFxZXkDbklQblPsR6e1Y5ngHWi4x0fRnrZVmEaHK5Svbc+vPBXhe20a+J0+WdLM/ejkcsoPtmur1KK1ZSQqkjpgV4jo3xiu20uKa58LavNJgeaLNFePd3xk5/MVB4j+Mms32j3Nlo/g3UrWaaNo1ubuVE8vPGQuetfGRyXHTnZwfqfYSzvAQhzKovvOd+IesWmueOp5YYI59M0T90N33ZZ2PPPtg49xVxrq2n2Np8d3K8yjcZiHOfQYrl9RhtdH0PSNBD75iTqWouOpY8Iv4ngew963/BGp29jdNa3q4w3ysT0zX6VllCOFoqmuh+Q8Q4ieOrOs9nt6HV2tqY7MRtGwJXnjvVnSdQS2tp7O6U+ZH80TDncvpWj51rNB5kVwHGOea57WiiAzKQWj6YPr1r0fiPn7cqMlJPP1gyP03k1m+Nb54rqFFbarZ3c9QOat2LBrst26/SuU+IEm5lKMThZf/QTWlWXJG48DS9rXUX1PP8AU2LRB2OSTWaVDA+la93aS/Y0Yqe1UltZQpYjiviVY/VCqvBAxmtvTNKeeIO3esaRWjIJrpvDuoGQCBFJPTFRUbS0NIcv2iYaOqQ5PUVnwoEuQmOM13Nto95dQswjIFYlx4duUviuw1nGbtqZNx5ixNp0c1iHDjBHrWNFZPpiDUo4EuEL7H3LuC/7JHuO9dFdWM1vZbZGZV4H58Vt6HZxLZNeWdikzFRHc2rzsrrt6MNw2knr6ckV15dQlUm29jhzXF06NNRju/yKHhfSl0vxXoGo6cTJpWqSqI8clCfvI3uK0fF3hN9dWfxAl5FDcNNIdkpwGjBwMHt0NL4OuV0/xDaaSZEfTzfefBHKmyW3lKkbSp7c5BGQcV3Gj6ZFfSLb3iM8cNsNkWcAkDnP45r6OjCLjZnyGKxNSnWjJb/mjC8ESTal4dufD+qxGO+swkxVus0DL8re+Mj86xLjw+8d40SKpjzx7V1XiWxntNZ0rxLb4huUmFrcoBxJCxxj8M4/L0qHxTKbJd8UDushO2RegrWKdmn0OOpUTmpx+1v6nI3dna2qN5ReKYcFkOAaztK0O5urr7RdXOuXESnINuVGD27VpQwXF/dqu0tk128UUWl6OyscBEyxHG403TT3RdPETp3secXkcaayURL52LhpHvWDSOwGFHH8I5Na82jyz4kQlZQAGU9c4603w+2ntqct/dJNOUJKgkbSewJPOKNY1x5LiSRpQXY5JAxWiioqwVqk6klbclikvdOwklzwf4d3NLLqEsylXfIPvXM3F60jbjJu9yajGobCATTU4ol4OUtTrYLhY4WUffPQ+1ct4km825MTcgwu35cf1oGpO2AprF8RXDperKr5It3H1zgVFequQ68vwbjWuz//2Q==" alt="Vince N." loading="lazy" />
-                <span class="coach-name">Vince N.</span>
-              </div>
-              <span class="coach-price tbd">Captain</span>
-            </div>
-            <p class="coach-role">Table tennis lover, Matchmaker for coaches and players</p>
+      <div class="team-captain">
+        <img class="coach-avatar" src="data:image/jpeg;base64,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" alt="Vince N." loading="lazy" />
+        <div class="team-captain-info">
+          <div class="team-captain-name-row">
+            <span class="coach-name">Vince N.</span>
+            <span class="coach-price tbd">Captain</span>
           </div>
+          <p class="coach-role">Table tennis lover, Matchmaker for coaches and players</p>
+        </div>
+      </div>
+
+      <div class="team-accordion">
+
+        <details class="city-collapse" open>
+          <summary>
+            <span class="city-flag">🇨🇦</span>
+            <h3>Toronto</h3>
+            <span class="city-count">6 coaches</span>
+            <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="coach-grid">
 
           <div class="coach-card">
             <div class="coach-top">
@@ -1283,15 +1363,17 @@
             <p class="coach-role">Advanced player | Coach, basic technique development</p>
           </div>
 
-        </div>
-      </div>
+          </div>
+        </details>
 
-      <div class="city-group">
-        <div class="city-head">
-          <span class="city-flag">🇺🇸</span>
-          <h3>New York City</h3>
-        </div>
-        <div class="coach-grid">
+        <details class="city-collapse">
+          <summary>
+            <span class="city-flag">🇺🇸</span>
+            <h3>New York City</h3>
+            <span class="city-count">3 coaches</span>
+            <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="coach-grid">
 
           <div class="coach-card">
             <div class="coach-top">
@@ -1317,15 +1399,17 @@
             <p class="coach-role">Advanced player | Coach, technique development &amp; match play</p>
           </div>
 
-        </div>
-      </div>
+          </div>
+        </details>
 
-      <div class="city-group">
-        <div class="city-head">
-          <span class="city-flag">🌍</span>
-          <h3>Other cities</h3>
-        </div>
-        <div class="coach-grid">
+        <details class="city-collapse">
+          <summary>
+            <span class="city-flag">🌍</span>
+            <h3>International</h3>
+            <span class="city-count">1 coach</span>
+            <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="coach-grid">
 
           <div class="coach-card featured">
             <div class="coach-top">
@@ -1351,7 +1435,9 @@
             <a class="btn-primary coach-cta-btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=contact@ponghome.com" target="_blank" rel="noopener">Work with us →</a>
           </div>
 
-        </div>
+          </div>
+        </details>
+
       </div>
     </div>
   </section>
