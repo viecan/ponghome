@@ -3184,6 +3184,25 @@
   }
   setTimeout(showViewersPopup, 5000);
 
+  // Converts a Supabase Storage public object URL into a transformed "render"
+  // URL, so the CDN resizes/re-encodes the image instead of serving the full
+  // original file. This cuts egress since thumbnails no longer download the
+  // full-size photo.
+  function transformImageUrl(url, { width, height, quality = 60, resize = 'cover' } = {}) {
+    if (!url || typeof url !== 'string') return url;
+    const marker = '/storage/v1/object/public/';
+    const idx = url.indexOf(marker);
+    if (idx === -1) return url; // not a Supabase public storage URL, leave as-is
+    const base = url.slice(0, idx);
+    const path = url.slice(idx + marker.length);
+    const params = new URLSearchParams();
+    if (width) params.set('width', width);
+    if (height) params.set('height', height);
+    params.set('quality', quality);
+    params.set('resize', resize);
+    return `${base}/storage/v1/render/image/public/${path}?${params.toString()}`;
+  }
+
   function openLightbox(src) {
     const backdrop = document.createElement('div');
     backdrop.className = 'mkt-lightbox-backdrop';
@@ -3446,7 +3465,7 @@
         <div class="mkt-contact-row">
           ${ctaHtml(l)}
         </div>
-        ${images.length ? `<div class="mkt-images">${images.map(u => `<img src="${escapeHtml(u)}" class="mkt-img-thumb" alt="listing photo" />`).join('')}</div>` : ''}
+        ${images.length ? `<div class="mkt-images">${images.map(u => `<img src="${escapeHtml(transformImageUrl(u, { width: 300, height: 300, quality: 60 }))}" data-full="${escapeHtml(transformImageUrl(u, { width: 1200, quality: 75, resize: 'contain' }))}" class="mkt-img-thumb" alt="listing photo" loading="lazy" />`).join('')}</div>` : ''}
         <button class="mkt-share-btn" data-id="${l.id}" data-title="${escapeHtml(l.title)}" aria-label="Share this listing">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
         </button>
@@ -3552,7 +3571,7 @@
       }
     }
     document.querySelectorAll('.mkt-img-thumb').forEach(img => {
-      img.onclick = () => openLightbox(img.src);
+      img.onclick = () => openLightbox(img.getAttribute('data-full') || img.src);
     });
     document.querySelectorAll('.mkt-status-pill').forEach(sel => {
       sel.onchange = async (e) => {
