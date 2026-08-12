@@ -802,8 +802,7 @@
       </div>
       <div class="field" id="rubberTypeField" style="display:none;">
         <label for="rubberTypeFilter">Rubber Type</label>
-        <select id="rubberTypeFilter" onchange="render()">
-          <option value="">All types</option>
+        <select id="rubberTypeFilter" onchange="renderHead(); render()">
           <option value="Inverted">Inverted</option>
           <option value="Long">Long</option>
           <option value="Short">Short</option>
@@ -854,9 +853,6 @@ const BLADES = [{"Brand":"Adidas","ItemName":"Adidas Accelum High Speed Carbon",
 let category = 'rubbers';
 
 const HEAD_CONFIG = {
-  rubbers: [
-    {label:'Brand'}, {label:'Name'}, {label:'Speed'}, {label:'Spin'}, {label:'Tackiness'}, {label:'Overall Rating'}
-  ],
   blades: [
     {label:'Brand'}, {label:'Name'}, {label:'Speed'}, {label:'Control'}, {label:'Stiffness'}, {label:'Overall Rating'}
   ]
@@ -924,9 +920,18 @@ function setMyRating(cat, item, value){
 }
 
 function renderHead(){
-  const cfg = HEAD_CONFIG[category];
   const head = document.getElementById('gridHead');
   head.className = 'grid-head cols';
+  let cfg;
+  if (category === 'rubbers'){
+    const rubberType = document.getElementById('rubberTypeFilter').value;
+    const thirdLabel = rubberType === 'Inverted' ? 'Tackiness' : 'Deception';
+    cfg = [
+      {label:'Brand'}, {label:'Name'}, {label:'Speed'}, {label:'Spin'}, {label:thirdLabel}, {label:'Overall Rating'}
+    ];
+  } else {
+    cfg = HEAD_CONFIG.blades;
+  }
   head.innerHTML = cfg.map(c => `<div>${c.label}</div>`).join('');
 }
 
@@ -988,11 +993,11 @@ function render(){
         const hits = [1,2,3,4,5].map(v => `<span class="star-hit" data-value="${v}"></span>`).join('');
         const titleText = official !== null ? `Rated ${official} / 5 — tap to rate this item` : 'Tap to rate this item';
         return `<div class="overall-cell">
-          <span class="stars rate-stars" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" title="${titleText}">
+          <span class="stars rate-stars" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" data-type="${escapeAttr(item.Type || '')}" title="${titleText}">
             <span class="stars-fill" style="width:${pct}%"></span>
             ${hits}
           </span>
-          <button class="rate-label" onclick="openRateModal(this)" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" aria-label="Rate this item">Rate</button>
+          <button class="rate-label" onclick="openRateModal(this)" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" data-type="${escapeAttr(item.Type || '')}" aria-label="Rate this item">Rate</button>
         </div>`;
       }
       const {pct, display, na} = barFill(item[k]);
@@ -1004,7 +1009,7 @@ function render(){
       </div>`;
     }).join('');
 
-    return `<div class="row" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}">
+    return `<div class="row" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" data-type="${escapeAttr(item.Type || '')}">
       <div class="row-main cols">
         <div class="cell-brand">${escapeHtml(item.Brand)}</div>
         <div class="cell-name">${escapeHtml(item.ItemName)}</div>
@@ -1024,7 +1029,7 @@ function setCategory(cat){
   document.getElementById('btnBlades').classList.toggle('active', cat==='blades');
   document.getElementById('searchInput').value = '';
   document.getElementById('rubberTypeField').style.display = cat === 'rubbers' ? '' : 'none';
-  if (cat !== 'rubbers') document.getElementById('rubberTypeFilter').value = '';
+  if (cat !== 'rubbers') document.getElementById('rubberTypeFilter').value = 'Inverted';
   renderHead();
   populateBrandFilter();
   render();
@@ -1064,7 +1069,7 @@ document.getElementById('rows').addEventListener('click', function(e){
   const hit = e.target.closest('.star-hit');
   if (hit){
     const wrap = hit.closest('.rate-stars');
-    if (wrap) openRateModalFromData(wrap.dataset.brand, wrap.dataset.name);
+    if (wrap) openRateModalFromData(wrap.dataset.brand, wrap.dataset.name, wrap.dataset.type);
     return;
   }
 
@@ -1074,30 +1079,35 @@ document.getElementById('rows').addEventListener('click', function(e){
   if (e.target.closest('.rate-label')) return; // its own onclick already opens the modal
 
   const rowEl = e.target.closest('.row');
-  if (rowEl) openRateModalFromData(rowEl.dataset.brand, rowEl.dataset.name);
+  if (rowEl) openRateModalFromData(rowEl.dataset.brand, rowEl.dataset.name, rowEl.dataset.type);
 });
 
 /* ---------- rate modal (opened via the "Rate" button or, on mobile, tapping a row) ---------- */
-const MODAL_CRITERIA = {
-  blades:  [ { key:'speed', label:'Speed' }, { key:'control', label:'Control' }, { key:'stiffness', label:'Stiffness' } ],
-  rubbers: [ { key:'speed', label:'Speed' }, { key:'spin', label:'Spin' }, { key:'tackiness', label:'Tackiness' } ]
-};
+function getModalCriteria(cat, itemType){
+  if (cat === 'blades'){
+    return [ { key:'speed', label:'Speed' }, { key:'control', label:'Control' }, { key:'stiffness', label:'Stiffness' } ];
+  }
+  const thirdLabel = itemType === 'Inverted' ? 'Tackiness' : 'Deception';
+  return [ { key:'speed', label:'Speed' }, { key:'spin', label:'Spin' }, { key:'tackiness', label:thirdLabel } ];
+}
 const DEFAULT_SLIDER_VALUE = 5;
 
 let modalItem = null;
 let modalCategory = null;
+let modalItemType = null;
 let modalValues = {};
 
 function openRateModal(btnEl){
-  openRateModalFromData(btnEl.dataset.brand, btnEl.dataset.name);
+  openRateModalFromData(btnEl.dataset.brand, btnEl.dataset.name, btnEl.dataset.type);
 }
 
-function openRateModalFromData(brand, name){
+function openRateModalFromData(brand, name, itemType){
   modalItem = { Brand: brand, ItemName: name };
   modalCategory = category;
+  modalItemType = itemType || '';
 
   const saved = getMyRating(modalCategory, modalItem) || {};
-  const criteria = MODAL_CRITERIA[modalCategory] || MODAL_CRITERIA.rubbers;
+  const criteria = getModalCriteria(modalCategory, modalItemType);
   modalValues = {};
   criteria.forEach(c => { modalValues[c.key] = saved[c.key] || DEFAULT_SLIDER_VALUE; });
 
@@ -1159,7 +1169,7 @@ function confirmModalRating(){
 
 function clearModalRating(){
   if (!modalItem) return;
-  const criteria = MODAL_CRITERIA[modalCategory] || MODAL_CRITERIA.rubbers;
+  const criteria = getModalCriteria(modalCategory, modalItemType);
   criteria.forEach(c => { modalValues[c.key] = DEFAULT_SLIDER_VALUE; });
   setMyRating(modalCategory, modalItem, null);
   renderModalSliders(criteria);
