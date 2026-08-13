@@ -3175,18 +3175,20 @@
   }
 
   function showViewersPopup() {
+    const { minutesSinceMidnight } = getEasternMinutesInfo(new Date());
+    if (minutesSinceMidnight < 8 * 60 || minutesSinceMidnight >= 23 * 60) return;
     const count = Math.floor(Math.random() * (49 - 21 + 1)) + 21;
     const p = document.createElement('div');
     p.className = 'mkt-viewers-popup';
-    p.innerHTML = `<span class="mkt-viewers-dot"></span><span>${count} visitors are viewing this page</span>`;
+    p.innerHTML = `<span class="mkt-viewers-dot"></span><span>${count} people browsing now</span>`;
     document.body.appendChild(p);
     requestAnimationFrame(() => p.classList.add('show'));
     setTimeout(() => {
       p.classList.remove('show');
       setTimeout(() => p.remove(), 400);
-    }, 7000);
+    }, 9000);
   }
-  setTimeout(showViewersPopup, 5000);
+  setTimeout(showViewersPopup, 10000);
 
   // No longer uses Supabase Image Transformations (render/image endpoint).
   // Instead, images are resized/compressed client-side at upload time and
