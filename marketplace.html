@@ -3142,10 +3142,10 @@
 
   function computeDailyVisits() {
     const RESET_MINUTE = 7 * 60; // 7:00 AM Eastern
-    const BASE_VISITS = 633; // ×1.5 multiplier below brings start-of-day to ~950
+    const BASE_VISITS = 2950; // start-of-day value
     const { dateKey, minutesSinceMidnight } = getEasternMinutesInfo(new Date());
     const minutesSinceReset = minutesSinceMidnight - RESET_MINUTE;
-    if (minutesSinceReset < 0) return Math.round(BASE_VISITS * 1.5);
+    if (minutesSinceReset < 0) return BASE_VISITS;
 
     const fullHoursElapsed = Math.floor(minutesSinceReset / 60);
     const minutesIntoCurrentHour = minutesSinceReset % 60;
@@ -3157,7 +3157,7 @@
     const currentHourInc = hourlyIncrement(dateKey, fullHoursElapsed);
     total += Math.floor(currentHourInc * (minutesIntoCurrentHour / 60));
 
-    return Math.round(total * 1.5);
+    return Math.round(total);
   }
 
   function updateDailyVisitsDisplay() {
@@ -3175,7 +3175,7 @@
   }
 
   function showViewersPopup() {
-    const count = Math.floor(Math.random() * (39 - 4 + 1)) + 4;
+    const count = Math.floor(Math.random() * (49 - 21 + 1)) + 21;
     const p = document.createElement('div');
     p.className = 'mkt-viewers-popup';
     p.innerHTML = `<span class="mkt-viewers-dot"></span><span>${count} visitors are viewing this page</span>`;
