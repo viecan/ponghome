@@ -700,6 +700,178 @@
   }
   .site-footer a{color:var(--mint-dim); text-decoration:none;}
 
+  .submit-equip-fab-wrap{
+    display:flex;
+    justify-content:flex-end;
+    padding:0 4px;
+    margin-top:36px;
+    margin-bottom:0;
+  }
+  .submit-equip-fab{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:7px 14px;
+    border-radius:999px;
+    border:1px solid var(--line-light);
+    background:#E4E7E8;
+    color:var(--ink-soft);
+    font-family:'Inter',sans-serif;
+    font-weight:400;
+    font-size:0.76rem;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .submit-equip-fab:hover{background:#D8DBDC; color:var(--ink);}
+  @media (max-width:760px){
+    .submit-equip-fab{padding:6px 12px; font-size:0.72rem;}
+  }
+
+  .equip-modal-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(10,42,47,0.55);
+    z-index:100;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    overflow-y:auto;
+  }
+  .equip-modal-overlay.visible{display:flex;}
+  .equip-modal{
+    background:var(--paper-card);
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    padding:28px 26px;
+    max-width:420px;
+    width:100%;
+    position:relative;
+    max-height:90vh;
+    overflow-y:auto;
+  }
+  .equip-modal-close{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    border:1px solid var(--line-light);
+    background:transparent;
+    color:var(--ink-soft);
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+    line-height:1;
+  }
+  .equip-modal-close:hover{background:rgba(10,42,47,0.06); color:var(--ink);}
+  .equip-modal-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.66rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .equip-modal-title{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:1.2rem;
+    color:var(--ink);
+    margin-bottom:18px;
+    line-height:1.25;
+  }
+  .equip-field{
+    margin-bottom:16px;
+    text-align:left;
+  }
+  .equip-field label{
+    display:block;
+    font-family:'Inter',sans-serif;
+    font-size:0.82rem;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  .equip-field input[type="text"],
+  .equip-field textarea,
+  .equip-field select{
+    width:100%;
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid var(--line-light);
+    background:var(--paper-card);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:0.88rem;
+    box-sizing:border-box;
+  }
+  .equip-field textarea{resize:vertical; min-height:70px;}
+  .equip-type-toggle{
+    display:flex;
+    gap:8px;
+  }
+  .equip-type-btn{
+    flex:1;
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid var(--line-light);
+    background:var(--paper-card);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:0.86rem;
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .equip-type-btn.active{
+    background:var(--mint);
+    border-color:var(--mint);
+    color:var(--bg-deeper);
+  }
+  #equipRubberTypeField{display:none;}
+  .equip-stars{
+    display:flex;
+    gap:6px;
+  }
+  .equip-star{
+    cursor:pointer;
+    color:var(--line-light);
+    font-size:28px;
+    line-height:1;
+    transition:color .15s ease, transform .1s ease;
+    user-select:none;
+  }
+  .equip-star:hover{transform:scale(1.12);}
+  .equip-star.filled{color:var(--sun);}
+  .equip-modal-submit{
+    display:block;
+    width:100%;
+    margin-top:6px;
+    padding:12px 20px;
+    border-radius:999px;
+    border:none;
+    background:linear-gradient(135deg,var(--mint),var(--mint-dim));
+    color:var(--bg-deeper);
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:0.94rem;
+    cursor:pointer;
+    transition:filter 0.2s ease;
+  }
+  .equip-modal-submit:hover{filter:brightness(1.05);}
+  .equip-modal-status{
+    font-family:'Inter',sans-serif;
+    font-size:0.8rem;
+    color:var(--ink-soft);
+    text-align:center;
+    margin-top:10px;
+    min-height:18px;
+  }
+
   @media (max-width:760px){
     /* header */
     .gi-title{font-size:1.6rem;}
@@ -804,9 +976,9 @@
         <label for="rubberTypeFilter">Rubber Type</label>
         <select id="rubberTypeFilter" onchange="renderHead(); render()">
           <option value="Inverted">Inverted</option>
-          <option value="Long">Long</option>
-          <option value="Short">Short</option>
-          <option value="Medium">Medium</option>
+          <option value="Long">Long Pips</option>
+          <option value="Short">Short Pips</option>
+          <option value="Medium">Medium Pips</option>
         </select>
       </div>
       <div class="field" style="flex:2;">
@@ -815,19 +987,78 @@
       </div>
     </div>
 
-    <div class="count-pill"><b id="resultCount">0</b> items</div>
+
   </div>
 
   <div class="table-shell">
     <div class="grid-head cols" id="gridHead"></div>
     <div id="rows"></div>
   </div>
+
+  <div class="submit-equip-fab-wrap">
+    <button class="submit-equip-fab" onclick="openEquipModal()">+ Submit new equipment</button>
+  </div>
 </main>
 
 <footer class="site-footer">
   <div>© 2026 Pong Home. All rights reserved.</div>
-  <div>Email us at <a href="mailto:contact@ponghome.com">contact@ponghome.com</a></div>
+  <div>Email: <a href="mailto:contact@ponghome.com">contact@ponghome.com</a></div>
 </footer>
+
+<div class="equip-modal-overlay" id="equipModalOverlay">
+  <div class="equip-modal">
+    <button class="equip-modal-close" onclick="closeEquipModal()" aria-label="Close">✕</button>
+    <span class="equip-modal-eyebrow">Add to the database</span>
+    <h3 class="equip-modal-title">Submit new equipment</h3>
+
+    <div class="equip-field">
+      <label>Equipment type</label>
+      <div class="equip-type-toggle">
+        <button type="button" class="equip-type-btn active" id="equipTypeBtnRubber" onclick="setEquipType('Rubber')">Rubber</button>
+        <button type="button" class="equip-type-btn" id="equipTypeBtnBlade" onclick="setEquipType('Blade')">Blade</button>
+      </div>
+    </div>
+
+    <div class="equip-field" id="equipRubberTypeField">
+      <label for="equipRubberType">Rubber type</label>
+      <select id="equipRubberType">
+        <option value="Inverted">Inverted</option>
+        <option value="Long">Long</option>
+        <option value="Short">Short</option>
+        <option value="Medium">Medium</option>
+      </select>
+    </div>
+
+    <div class="equip-field">
+      <label for="equipBrand">Brand</label>
+      <input type="text" id="equipBrand" placeholder="e.g. Butterfly">
+    </div>
+
+    <div class="equip-field">
+      <label for="equipName">Item name</label>
+      <input type="text" id="equipName" placeholder="e.g. Tenergy 05">
+    </div>
+
+    <div class="equip-field">
+      <label>Your rating</label>
+      <div class="equip-stars" id="equipStars">
+        <span class="equip-star" data-value="1" onclick="setEquipRating(1)">★</span>
+        <span class="equip-star" data-value="2" onclick="setEquipRating(2)">★</span>
+        <span class="equip-star" data-value="3" onclick="setEquipRating(3)">★</span>
+        <span class="equip-star" data-value="4" onclick="setEquipRating(4)">★</span>
+        <span class="equip-star" data-value="5" onclick="setEquipRating(5)">★</span>
+      </div>
+    </div>
+
+    <div class="equip-field">
+      <label for="equipNotes">Notes (optional)</label>
+      <textarea id="equipNotes" placeholder="Share your feedback! Speed, Spin, etc."></textarea>
+    </div>
+
+    <button class="equip-modal-submit" onclick="submitEquipment()">Submit</button>
+    <p class="equip-modal-status" id="equipModalStatus"></p>
+  </div>
+</div>
 
 <div class="rate-modal-overlay" id="rateModalOverlay">
   <div class="rate-modal">
@@ -969,8 +1200,6 @@ function render(){
   });
 
   filtered = sortByBrandPriority(filtered);
-
-  document.getElementById('resultCount').textContent = filtered.length;
 
   const rowsEl = document.getElementById('rows');
   const keys = statKeys();
@@ -1179,6 +1408,99 @@ function clearModalRating(){
 
 document.getElementById('rateModalOverlay').addEventListener('click', function(e){
   if (e.target === this) closeRateModal();
+});
+
+/* ---------- submit new equipment ---------- */
+// FormSubmit sends form entries straight to this email address.
+// The first submission triggers a one-time confirmation email — click the
+// link in it to activate the form.
+const EQUIPMENT_FORM_EMAIL = 'viet.adops@gmail.com';
+const EQUIPMENT_FORM_URL = `https://formsubmit.co/ajax/${EQUIPMENT_FORM_EMAIL}`;
+
+let equipType = 'Rubber';
+let equipRating = 0;
+
+function openEquipModal(){
+  equipRating = 0;
+  document.querySelectorAll('.equip-star').forEach(s => s.classList.remove('filled'));
+  document.getElementById('equipBrand').value = '';
+  document.getElementById('equipName').value = '';
+  document.getElementById('equipNotes').value = '';
+  document.getElementById('equipModalStatus').textContent = '';
+  document.getElementById('equipModalOverlay').classList.add('visible');
+}
+
+function closeEquipModal(){
+  document.getElementById('equipModalOverlay').classList.remove('visible');
+}
+
+function setEquipType(type){
+  equipType = type;
+  document.getElementById('equipTypeBtnRubber').classList.toggle('active', type === 'Rubber');
+  document.getElementById('equipTypeBtnBlade').classList.toggle('active', type === 'Blade');
+  document.getElementById('equipRubberTypeField').style.display = type === 'Rubber' ? '' : 'none';
+}
+
+function setEquipRating(value){
+  equipRating = (equipRating === value) ? 0 : value;
+  document.querySelectorAll('.equip-star').forEach(s => {
+    const v = parseInt(s.dataset.value, 10);
+    s.classList.toggle('filled', v <= equipRating);
+  });
+}
+
+function submitEquipment(){
+  const brand = document.getElementById('equipBrand').value.trim();
+  const name = document.getElementById('equipName').value.trim();
+  const notes = document.getElementById('equipNotes').value.trim();
+  const rubberType = document.getElementById('equipRubberType').value;
+  const statusEl = document.getElementById('equipModalStatus');
+  const submitBtn = document.querySelector('.equip-modal-submit');
+
+  if (!brand || !name){
+    statusEl.textContent = 'Please fill in at least the brand and item name.';
+    return;
+  }
+
+  const payload = {
+    _subject: `New ${equipType} submission: ${brand} ${name}`,
+    'Equipment Type': equipType,
+    'Rubber Type': equipType === 'Rubber' ? rubberType : 'N/A',
+    'Brand': brand,
+    'Item Name': name,
+    'Rating': equipRating > 0 ? `${equipRating} / 5` : 'Not rated',
+    'Notes': notes || '(none)'
+  };
+
+  statusEl.textContent = 'Submitting…';
+  submitBtn.disabled = true;
+
+  fetch(EQUIPMENT_FORM_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data && data.success === 'true'){
+      statusEl.textContent = 'Thanks! Your submission was sent.';
+      setTimeout(closeEquipModal, 1200);
+    } else {
+      statusEl.textContent = 'Something went wrong — please try again.';
+    }
+    submitBtn.disabled = false;
+  })
+  .catch(() => {
+    statusEl.textContent = 'Something went wrong — please try again.';
+    submitBtn.disabled = false;
+  });
+}
+
+document.getElementById('equipModalOverlay').addEventListener('click', function(e){
+  if (e.target === this) closeEquipModal();
 });
 </script>
 
