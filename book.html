@@ -1,0 +1,2379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GTYKNXXBF3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GTYKNXXBF3');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insights — Pong Home | Table Tennis Training Guides</title>
+<meta name="description" content="Table tennis training guides covering technique, strategy, mental game, and equipment — from Pong Home.">
+<link rel="canonical" href="https://ponghome.com/table-tennis-guides/book">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pong Home">
+<meta property="og:title" content="Insights — Pong Home">
+<meta property="og:description" content="Table tennis training guides covering technique, strategy, mental game, and equipment — from Pong Home.">
+<meta property="og:url" content="https://ponghome.com/table-tennis-guides/book">
+<meta property="og:image" content="https://ponghome.com/og-image.jpg">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Insights — Pong Home">
+<meta name="twitter:description" content="Table tennis training guides covering technique, strategy, mental game, and equipment.">
+<meta name="twitter:image" content="https://ponghome.com/og-image.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#0E3B42;
+    --bg-deeper:#0A4952;
+    --bg-deep-soft:#14727C;
+    --mint:#00FFD1;
+    --mint-dim:#00E0B8;
+    --mint-soft:rgba(0,255,209,0.18);
+    --paper:#FAFFFB;
+    --paper-card:#FFFFFF;
+    --ink:#0A2A2F;
+    --ink-soft:#4C6B70;
+    --line-dark:rgba(255,255,255,0.16);
+    --line-light:rgba(10,42,47,0.10);
+    --shadow: 0 18px 40px rgba(6,88,96,0.22);
+    --coral:#FF6B6B;
+    --sun:#FFB020;
+    --nav-h: 64px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+
+  h1,h2,h3,h4,.display{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    letter-spacing:0.01em;
+    margin:0;
+  }
+
+  /* ============ TYPOGRAPHY: widow/orphan control ============
+     Headings get balanced line-breaking so short titles never leave
+     a single dangling word on the last line. Body copy gets "pretty"
+     wrapping, which specifically avoids orphans at paragraph ends.
+     Both degrade gracefully to normal wrapping on unsupported
+     browsers; widows/orphans is included as a fallback signal. */
+  h1,h2,h3,h4,
+  .display,
+  .section-title,
+  .book-title,
+  .book-sub,
+  .ch-heading,
+  .subsection,
+  .city-head h3,
+  .pc-title,
+  .games-recap-title,
+  .fo-title,
+  .bracket-title,
+  .bracket-section-heading,
+  .hero-eyebrow,
+  .eyebrow,
+  .coach-cta-eyebrow,
+  .overlay-eyebrow,
+  .tagline{
+    text-wrap:balance;
+    widows:2;
+    orphans:2;
+  }
+
+  p,
+  li,
+  .service-copy p,
+  .chapter-body,
+  .chapter-body p,
+  .fo-desc,
+  .sub{
+    text-wrap:pretty;
+    widows:2;
+    orphans:2;
+  }
+
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  a{color:inherit;}
+
+  .dot{
+    display:inline-block;
+    width:0.32em;
+    height:0.32em;
+    border-radius:50%;
+    background:var(--mint);
+    vertical-align:middle;
+    margin-left:0.12em;
+  }
+
+  /* ============ NAV ============ */
+  .site-nav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--bg-deeper);
+    border-bottom:1px solid var(--line-dark);
+  }
+  .nav-inner{
+    max-width:1180px;
+    margin:0 auto;
+    padding:16px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+  }
+  .nav-logo{
+    display:flex;
+    align-items:baseline;
+    gap:2px;
+    color:var(--mint);
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:1.3rem;
+    letter-spacing:0.01em;
+    text-decoration:none;
+  }
+  .nav-logo span.sub{
+    color:#fff;
+  }
+  .nav-tabs{
+    display:flex;
+    gap:6px;
+    background:rgba(255,255,255,0.05);
+    padding:5px;
+    border-radius:999px;
+    border:1px solid var(--line-dark);
+  }
+  .nav-tab{
+    appearance:none;
+    border:none;
+    background:transparent;
+    color:rgba(255,255,255,0.7);
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:0.88rem;
+    padding:9px 18px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background 0.25s ease, color 0.25s ease;
+    white-space:nowrap;
+    text-decoration:none;
+    display:inline-block;
+  }
+  .nav-tab.active{
+    background:var(--mint);
+    color:var(--bg-deeper);
+  }
+  .nav-tab:not(.active):hover{
+    color:#fff;
+  }
+  .nav-cta{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:transparent;
+    color:var(--mint);
+    border:1.5px solid var(--mint);
+    padding:9px 16px;
+    border-radius:999px;
+    font-weight:600;
+    font-size:0.85rem;
+    text-decoration:none;
+    white-space:nowrap;
+    transition:background 0.25s ease, color 0.25s ease;
+  }
+  .nav-cta:hover{
+    background:var(--mint);
+    color:var(--bg-deeper);
+  }
+
+  .nav-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  /* social icon buttons — used to follow, not to book */
+  .social-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .social-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    border:1.5px solid rgba(255,255,255,0.22);
+    color:rgba(255,255,255,0.85);
+    background:transparent;
+    text-decoration:none;
+    transition:border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+  .social-btn svg{width:17px;height:17px;fill:currentColor;}
+  .social-btn:hover{
+    border-color:var(--mint);
+    background:var(--mint-soft);
+    color:var(--mint);
+    transform:translateY(-2px);
+  }
+  .social-btn.on-light{
+    border-color:var(--line-light);
+    color:var(--ink-soft);
+  }
+  .social-btn.on-light:hover{
+    border-color:var(--mint-dim);
+    background:var(--mint-soft);
+    color:var(--mint-dim);
+  }
+
+  @media (max-width:720px){
+    .nav-inner{
+      flex-wrap:wrap;
+      padding:12px 16px;
+      gap:10px;
+      justify-content:center;
+    }
+    .nav-logo{
+      order:1;
+      font-size:1.1rem;
+    }
+    .nav-right{
+      order:2;
+      gap:8px;
+    }
+    .social-btn{width:34px; height:34px;}
+    .social-btn svg{width:15px; height:15px;}
+    .nav-cta{display:none;}
+    .nav-tabs{
+      order:3;
+      flex-basis:100%;
+      width:100%;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      justify-content:flex-start;
+      gap:5px;
+      background:transparent;
+      border:none;
+      padding:0;
+      scrollbar-width:none;
+    }
+    .nav-tabs::-webkit-scrollbar{display:none;}
+    .nav-tab{
+      flex:0 0 auto;
+      white-space:nowrap;
+      font-size:0.74rem;
+      padding:7px 12px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid var(--line-dark);
+    }
+    .nav-tab.active{
+      border-color:var(--mint);
+    }
+  }
+  @media (max-width:380px){
+    .nav-tab{font-size:0.68rem; padding:6px 10px;}
+  }
+
+  /* ============ TAB PANELS ============ */
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  /* ============ FOOTER CTA ============ */
+  .footer-cta{
+    background:var(--bg-deeper);
+    color:#fff;
+    padding:80px 28px;
+    text-align:center;
+  }
+  .footer-cta h2{
+    font-size:clamp(1.8rem,4vw,2.6rem);
+    color:#fff;
+    margin-bottom:16px;
+  }
+  .footer-cta h2 .dot{background:var(--mint);}
+  .footer-cta p{
+    color:rgba(255,255,255,0.65);
+    max-width:480px;
+    margin:0 auto 32px;
+    font-size:1rem;
+  }
+  .site-footer{
+    background:var(--bg-deeper);
+    border-top:1px solid var(--line-dark);
+    color:rgba(255,255,255,0.5);
+    text-align:center;
+    font-size:0.85rem;
+    padding:22px;
+  }
+  .footer-follow{margin-left:6px;}
+  .footer-mobile-text{display:none;}
+  .footer-social-mobile{display:none;}
+
+  /* ============ LEARN TAB ============ */
+  .learn-hero{
+    background:var(--bg-deep);
+    color:#fff;
+    padding:76px 28px 60px;
+    text-align:center;
+  }
+  .learn-hero .book-title{
+    font-size:clamp(2rem,4.8vw,3rem);
+    color:var(--mint);
+    max-width:760px;
+    margin:0 auto 14px;
+    line-height:1.1;
+  }
+  .learn-hero .book-sub{
+    font-style:italic;
+    color:rgba(255,255,255,0.7);
+    font-size:1.05rem;
+    margin-bottom:6px;
+  }
+  .learn-hero .book-byline{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--mint-dim);
+  }
+
+  .chapters-wrap{
+    max-width:840px;
+    margin:0 auto;
+    padding:56px 24px 100px;
+  }
+
+  /* ============ PING PONG RALLY ANIMATION (Learn tab, before Chapter 1) ============ */
+  .pc-anim-card{
+    background:var(--paper-card);
+    border:1px solid var(--line-light);
+    border-radius:22px;
+    padding:22px 22px 26px;
+    margin-bottom:28px;
+    box-shadow:0 4px 14px rgba(10,42,47,0.05);
+  }
+  .pc-table-scene{
+    position:relative;
+    height:200px;
+    border-radius:16px;
+    overflow:hidden;
+    background:
+      linear-gradient(180deg, rgba(0,240,200,0.08), transparent 45%),
+      var(--bg-deep);
+    border:1px solid rgba(0,240,200,0.18);
+  }
+  .pc-table-baseline{
+    position:absolute;
+    left:8%; right:8%; top:58%;
+    height:1.5px;
+    background:rgba(255,255,255,0.14);
+    border-radius:2px;
+  }
+  .pc-net{
+    position:absolute;
+    left:50%; top:26%; bottom:36%;
+    width:3px;
+    transform:translateX(-50%);
+    background:repeating-linear-gradient(180deg, rgba(0,240,200,0.55) 0 4px, transparent 4px 9px);
+    border-radius:2px;
+  }
+  .pc-paddle{
+    position:absolute;
+    top:52%;
+    width:26px; height:60px;
+    margin-top:-42px;
+    transform-origin:bottom center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .pc-paddle-left{left:3%; animation:pcPaddleLeftHit 3.2s ease-in-out infinite;}
+  .pc-paddle-right{right:3%; animation:pcPaddleRightHit 3.2s ease-in-out infinite;}
+  .pc-paddle-blade{
+    width:26px; height:34px;
+    border-radius:50% 50% 46% 46% / 60% 60% 40% 40%;
+  }
+  .pc-paddle-left .pc-paddle-blade{background:var(--mint); box-shadow:0 0 14px rgba(0,240,200,0.4);}
+  .pc-paddle-right .pc-paddle-blade{background:var(--p2, #FFB020); box-shadow:0 0 14px rgba(255,176,32,0.35);}
+  .pc-paddle-handle{
+    width:7px; height:20px;
+    border-radius:4px;
+    margin-top:1px;
+  }
+  .pc-paddle-left .pc-paddle-handle{background:var(--mint-dim);}
+  .pc-paddle-right .pc-paddle-handle{background:var(--p2-dim, #D9930E);}
+
+  .pc-ball-shadow{
+    position:absolute;
+    top:60%;
+    width:16px; height:5px;
+    margin-left:-8px;
+    border-radius:50%;
+    background:rgba(0,0,0,0.4);
+    filter:blur(1px);
+    animation:pcBallShadow 3.2s cubic-bezier(.45,.05,.55,.95) infinite;
+  }
+  .pc-ball{
+    position:absolute;
+    width:12px; height:12px;
+    margin-left:-6px; margin-top:-6px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 0 8px rgba(255,255,255,0.75), 0 0 2px #fff;
+    animation:pcBallFly 3.2s cubic-bezier(.45,.05,.55,.95) infinite;
+  }
+
+  @keyframes pcBallFly{
+    0%   {left:6%;  top:52%; transform:scale(1);}
+    9%   {left:16%; top:20%; transform:scale(1);}
+    20%  {left:34%; top:8%;  transform:scale(1);}
+    32%  {left:56%; top:26%; transform:scale(1);}
+    38%  {left:66%; top:50%; transform:scale(1.15,0.8);}
+    44%  {left:72%; top:32%; transform:scale(1);}
+    50%  {left:94%; top:52%; transform:scale(1);}
+    59%  {left:84%; top:20%; transform:scale(1);}
+    70%  {left:66%; top:8%;  transform:scale(1);}
+    82%  {left:44%; top:26%; transform:scale(1);}
+    88%  {left:34%; top:50%; transform:scale(1.15,0.8);}
+    94%  {left:28%; top:32%; transform:scale(1);}
+    100% {left:6%;  top:52%; transform:scale(1);}
+  }
+  @keyframes pcBallShadow{
+    0%   {left:6%;  opacity:0.32;}
+    9%   {left:16%; opacity:0.14;}
+    20%  {left:34%; opacity:0.05;}
+    32%  {left:56%; opacity:0.14;}
+    38%  {left:66%; opacity:0.36;}
+    44%  {left:72%; opacity:0.18;}
+    50%  {left:94%; opacity:0.32;}
+    59%  {left:84%; opacity:0.14;}
+    70%  {left:66%; opacity:0.05;}
+    82%  {left:44%; opacity:0.14;}
+    88%  {left:34%; opacity:0.36;}
+    94%  {left:28%; opacity:0.18;}
+    100% {left:6%;  opacity:0.32;}
+  }
+  @keyframes pcPaddleLeftHit{
+    0%{transform:rotate(-18deg);}
+    6%{transform:rotate(0deg);}
+    94%{transform:rotate(0deg);}
+    100%{transform:rotate(-18deg);}
+  }
+  @keyframes pcPaddleRightHit{
+    0%,44%{transform:rotate(0deg);}
+    50%{transform:rotate(18deg);}
+    56%,100%{transform:rotate(0deg);}
+  }
+
+  @media (max-width:480px){
+    .pc-table-scene{height:160px;}
+    .pc-paddle{height:46px; margin-top:-32px;}
+    .pc-paddle-blade{width:20px; height:26px;}
+    .pc-paddle-handle{width:6px; height:14px;}
+    .pc-ball{width:10px; height:10px; margin-left:-5px; margin-top:-5px;}
+    .pc-ball-shadow{width:13px; margin-left:-6.5px;}
+  }
+
+  details.chapter{
+    background:var(--paper-card);
+    border:1px solid var(--line-light);
+    border-radius:20px;
+    margin-bottom:16px;
+    overflow:hidden;
+    box-shadow:0 4px 14px rgba(10,42,47,0.05);
+  }
+  details.chapter[open]{
+    box-shadow:var(--shadow);
+  }
+  details.chapter summary{
+    list-style:none;
+    cursor:pointer;
+    padding:22px 26px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  details.chapter summary::-webkit-details-marker{display:none;}
+  .ch-num{
+    flex:0 0 auto;
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    border:2px solid var(--mint);
+    color:var(--mint-dim);
+    background:var(--mint-soft);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'JetBrains Mono',monospace;
+    font-weight:600;
+    font-size:0.95rem;
+  }
+  .ch-heading{flex:1 1 auto;}
+  .ch-heading .ch-label{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+  .ch-heading h3{
+    font-size:1.25rem;
+    color:var(--ink);
+  }
+  .ch-chevron{
+    flex:0 0 auto;
+    width:30px;height:30px;
+    border-radius:50%;
+    border:1.5px solid var(--line-light);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink-soft);
+    transition:transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+  }
+  details.chapter[open] .ch-chevron{
+    transform:rotate(180deg);
+    background:var(--mint);
+    color:var(--bg-deeper);
+    border-color:var(--mint);
+  }
+
+  .chapter-body{
+    padding:6px 26px 34px 98px;
+    border-top:1px solid var(--line-light);
+    margin-top:0;
+  }
+  .chapter-body > .intro{
+    color:var(--ink-soft);
+    line-height:1.7;
+    margin:20px 0 6px;
+    font-size:0.98rem;
+  }
+
+  .subsection{margin-top:34px;}
+  .subsection h4{
+    font-size:1.02rem;
+    color:var(--mint-dim);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .subsection p{
+    line-height:1.7;
+    color:var(--ink-soft);
+    font-size:0.95rem;
+    margin:0 0 14px;
+  }
+
+  .term-list{
+    display:grid;
+    gap:14px;
+    margin:0 0 18px;
+  }
+  .term-list .term{
+    background:var(--paper);
+    border:1px solid var(--line-light);
+    border-radius:12px;
+    padding:14px 18px;
+  }
+  .term-list .term dt{
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:0.9rem;
+    color:var(--ink);
+    margin-bottom:4px;
+  }
+  .term-list .term dd{
+    margin:0;
+    font-size:0.9rem;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+
+  .step-list{
+    margin:0 0 18px;
+    padding-left:0;
+    list-style:none;
+    counter-reset:step;
+    display:grid;
+    gap:12px;
+  }
+  .step-list li{
+    counter-increment:step;
+    position:relative;
+    padding-left:38px;
+    font-size:0.92rem;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+  .step-list li::before{
+    content:counter(step);
+    position:absolute;
+    left:0; top:0;
+    width:26px;height:26px;
+    border-radius:50%;
+    background:var(--bg-deep);
+    color:var(--mint);
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  .bullet-list{
+    margin:0 0 18px;
+    padding-left:0;
+    list-style:none;
+    display:grid;
+    gap:10px;
+  }
+  .bullet-list li{
+    position:relative;
+    padding-left:22px;
+    font-size:0.92rem;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+  .bullet-list li::before{
+    content:"";
+    position:absolute;
+    left:0; top:0.55em;
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--mint);
+  }
+
+  .callout{
+    background:#FFF6EA;
+    border:1px solid #F1D9AE;
+    border-left:4px solid #E0A83E;
+    border-radius:10px;
+    padding:14px 18px;
+    font-size:0.9rem;
+    line-height:1.6;
+    color:#6b501f;
+    margin:0 0 18px;
+  }
+  .callout strong{color:#4d3712;}
+
+  .table-wrap{
+    overflow-x:auto;
+    margin:0 0 18px;
+    border-radius:12px;
+    border:1px solid var(--line-light);
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:0.86rem;
+  }
+  table thead th{
+    background:var(--bg-deep);
+    color:var(--mint);
+    text-align:left;
+    padding:12px 16px;
+    font-family:'JetBrains Mono',monospace;
+    font-weight:600;
+    font-size:0.72rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+  }
+  table tbody td{
+    padding:12px 16px;
+    border-top:1px solid var(--line-light);
+    color:var(--ink-soft);
+    line-height:1.5;
+    vertical-align:top;
+  }
+  table tbody tr:nth-child(even){background:var(--paper);}
+
+  @media (max-width:640px){
+    .chapter-body{padding:6px 18px 30px 18px;}
+    details.chapter summary{padding:18px;}
+    .ch-num{width:44px;height:44px;font-size:0.82rem;}
+  }
+
+  /* ============ ARENA ============ */
+  .arena-hero{
+    background:var(--bg-deep);
+    color:#fff;
+    padding:76px 28px 56px;
+    text-align:center;
+  }
+  .arena-hero h2{
+    font-size:clamp(2rem,5vw,3rem);
+    color:var(--mint);
+    max-width:640px;
+    margin:0 auto 14px;
+  }
+  .arena-hero p{
+    color:rgba(255,255,255,0.72);
+    max-width:520px;
+    margin:0 auto;
+    font-size:1rem;
+    line-height:1.6;
+  }
+  .mkt-hero-title{
+    font-size:clamp(1rem,2.5vw,1.5rem) !important;
+    max-width:none !important;
+  }
+  @media (min-width:640px){
+    .mkt-hero-title{white-space:nowrap;}
+  }
+  .mkt-hero-sub{
+    max-width:640px !important;
+  }
+
+  .arena-wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:56px 24px 110px;
+  }
+
+  /* --- setup card --- */
+  .setup-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+  }
+  @media (max-width:820px){ .setup-grid{grid-template-columns:1fr;} }
+
+  .setup-card{
+    background:var(--paper-card);
+    border:1px solid var(--line-light);
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 4px 14px rgba(10,42,47,0.05);
+  }
+  .setup-card h3{
+    font-size:1.05rem;
+    color:var(--ink);
+    margin-bottom:18px;
+  }
+  .field-label{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .text-input, .text-area{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-size:0.95rem;
+    padding:12px 14px;
+    border-radius:10px;
+    border:1.5px solid var(--line-light);
+    background:var(--paper);
+    color:var(--ink);
+    outline:none;
+    transition:border-color 0.2s ease;
+  }
+  .text-input:focus, .text-area:focus{border-color:var(--mint);}
+  .text-area{resize:vertical; min-height:88px; font-family:'Inter',sans-serif;}
+
+  .field-block{margin-bottom:22px;}
+  .field-row{display:flex; gap:10px;}
+  .field-row .text-input{flex:1;}
+
+  .btn-small{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--bg-deep);
+    color:var(--mint);
+    border:none;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:0.85rem;
+    padding:11px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background 0.2s ease;
+  }
+  .btn-small:hover{background:var(--bg-deeper);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink-soft);
+    border:1.5px solid var(--line-light);
+  }
+  .btn-ghost:hover{border-color:var(--mint-dim); color:var(--mint-dim); background:var(--mint-soft);}
+  .btn-danger{
+    background:transparent;
+    color:#B44848;
+    border:1.5px solid rgba(180,72,72,0.3);
+  }
+  .btn-danger:hover{background:rgba(180,72,72,0.08);}
+
+  .format-options{
+    display:grid;
+    gap:12px;
+  }
+  .format-option{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:14px 16px;
+    border:1.5px solid var(--line-light);
+    border-radius:12px;
+    cursor:pointer;
+    transition:border-color 0.2s ease, background 0.2s ease;
+  }
+  .format-option:hover{border-color:var(--mint-dim);}
+  .format-option.selected{
+    border-color:var(--mint);
+    background:var(--mint-soft);
+  }
+  .format-option input{accent-color:var(--mint); margin-top:3px;}
+  .format-option .fo-title{font-weight:700; font-size:0.92rem; color:var(--ink); margin-bottom:3px;}
+  .format-option .fo-desc{font-size:0.82rem; color:var(--ink-soft); line-height:1.5;}
+
+  .player-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:8px;
+    max-height:340px;
+    overflow-y:auto;
+  }
+  .player-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--paper);
+    border:1px solid var(--line-light);
+    border-radius:10px;
+    padding:9px 12px;
+  }
+  .player-row .p-seed{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    color:var(--mint-dim);
+    width:22px;
+    flex:0 0 auto;
+  }
+  .player-row .p-name{
+    flex:1;
+    font-size:0.9rem;
+    color:var(--ink);
+    border:none;
+    background:transparent;
+    outline:none;
+    font-family:'Inter',sans-serif;
+  }
+  .player-row .p-remove{
+    flex:0 0 auto;
+    width:24px;height:24px;
+    border-radius:50%;
+    border:none;
+    background:transparent;
+    color:var(--ink-soft);
+    cursor:pointer;
+    font-size:1rem;
+    line-height:1;
+  }
+  .player-row .p-remove:hover{color:#B44848;}
+  .player-count{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    margin-top:12px;
+  }
+
+  .setup-actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:26px;
+  }
+
+  .generate-bar{
+    text-align:center;
+    margin-top:32px;
+  }
+  .btn-generate{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:var(--mint);
+    color:var(--bg-deeper);
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    padding:16px 34px;
+    border-radius:999px;
+    border:none;
+    cursor:pointer;
+    box-shadow:0 14px 30px rgba(0,240,200,0.22);
+    transition:transform 0.2s ease, opacity 0.2s ease;
+  }
+  .btn-generate:hover{transform:translateY(-2px);}
+  .btn-generate:disabled{opacity:0.4; cursor:not-allowed; transform:none;}
+  .setup-hint{
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    margin-top:10px;
+  }
+
+  /* --- bracket toolbar --- */
+  .bracket-toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:14px;
+    margin-bottom:36px;
+    padding-bottom:22px;
+    border-bottom:1px solid var(--line-light);
+  }
+  .bracket-title h3{font-size:1.3rem; color:var(--ink); margin-bottom:4px;}
+  .bracket-title .bracket-meta{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--mint-dim);
+  }
+  .bracket-actions{display:flex; gap:10px; flex-wrap:wrap;}
+
+  /* --- champion banner --- */
+  .champion-banner{
+    position:relative;
+    background:var(--bg-deep);
+    color:#fff;
+    border-radius:22px;
+    padding:44px 30px;
+    text-align:center;
+    margin-bottom:40px;
+    overflow:hidden;
+  }
+  .champion-banner .cb-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--mint);
+    margin-bottom:10px;
+    display:block;
+  }
+  .champion-banner h3{
+    font-size:clamp(1.7rem,4vw,2.4rem);
+    color:#fff;
+  }
+  .champion-banner h3 .dot{background:var(--mint);}
+  .confetti-piece{
+    position:absolute;
+    top:-12px;
+    width:8px;height:14px;
+    opacity:0.9;
+    animation:confetti-fall linear forwards;
+    border-radius:2px;
+  }
+  @keyframes confetti-fall{
+    to{ transform:translateY(340px) rotate(600deg); opacity:0; }
+  }
+
+  /* --- bracket columns --- */
+  .bracket-scroll{overflow-x:auto; padding-bottom:12px;}
+  .bracket-columns{
+    display:flex;
+    gap:34px;
+    min-width:max-content;
+    padding:4px;
+  }
+  .bracket-col{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-around;
+    gap:20px;
+    min-width:230px;
+  }
+  .bracket-col-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    text-align:center;
+    margin-bottom:6px;
+  }
+
+  .match-card{
+    background:var(--paper-card);
+    border:1.5px solid var(--line-light);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 2px 8px rgba(10,42,47,0.04);
+  }
+  .match-card.match-live{border-color:var(--mint-dim);}
+  .match-card.match-done{border-color:var(--line-light);}
+  .match-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 12px;
+    font-size:0.85rem;
+    cursor:pointer;
+    transition:background 0.15s ease;
+  }
+  .match-row:first-child{border-bottom:1px solid var(--line-light);}
+  .match-row:hover:not(.no-click){background:var(--mint-soft);}
+  .match-row.winner-row{background:var(--mint-soft); font-weight:700; color:var(--ink);}
+  .match-row.winner-row .mr-name::after{
+    content:"✓";
+    color:var(--mint-dim);
+    margin-left:6px;
+  }
+  .match-row .mr-seed{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;
+    color:var(--ink-soft);
+    width:16px;
+    flex:0 0 auto;
+  }
+  .match-row .mr-name{
+    flex:1;
+    color:var(--ink);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .match-row .mr-name.tbd{color:var(--ink-soft); font-style:italic;}
+  .match-row .mr-name.bye{color:var(--ink-soft);}
+  .match-row .mr-score{
+    flex:0 0 auto;
+    width:32px;
+    text-align:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+  }
+  .match-score-form{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 12px;
+    background:var(--paper);
+    border-top:1px solid var(--line-light);
+  }
+  .match-score-form input{
+    width:36px;
+    text-align:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.82rem;
+    padding:5px 2px;
+    border-radius:6px;
+    border:1px solid var(--line-light);
+  }
+  .match-score-form span{color:var(--ink-soft); font-size:0.78rem;}
+  .match-score-form button{
+    margin-left:auto;
+    background:var(--bg-deep);
+    color:var(--mint);
+    border:none;
+    padding:6px 12px;
+    border-radius:8px;
+    font-size:0.75rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .match-label{
+    text-align:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.65rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+
+  .bracket-section-heading{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:44px 0 22px;
+  }
+  .bracket-section-heading h4{
+    font-size:1rem;
+    color:var(--ink);
+  }
+  .bracket-section-heading .bsh-tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--mint-dim);
+    background:var(--mint-soft);
+    border:1px solid rgba(0,240,200,0.35);
+    padding:3px 10px;
+    border-radius:999px;
+  }
+
+  /* --- round robin --- */
+  .rr-layout{
+    display:grid;
+    grid-template-columns:1.2fr 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  @media (max-width:900px){ .rr-layout{grid-template-columns:1fr;} }
+
+  .rr-rounds{display:grid; gap:22px;}
+  .rr-round-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  .rr-round-matches{display:grid; gap:10px;}
+
+  .standings-wrap{position:sticky; top:96px;}
+  .standings-wrap h4{font-size:1rem; color:var(--ink); margin-bottom:14px;}
+  table.standings td.rank-cell{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--mint-dim);
+    font-weight:600;
+  }
+  table.standings tr.leader td{background:var(--mint-soft);}
+
+  .empty-note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:0.9rem;
+    padding:30px;
+    border:1.5px dashed var(--line-light);
+    border-radius:14px;
+  }
+
+  /* ============ SCOREBOARD TAB ============ */
+  #scoreboard.tab-panel.active{
+    display:flex;
+    flex-direction:column;
+    height:calc(100vh - var(--nav-h, 64px));
+    height:calc(100dvh - var(--nav-h, 64px));
+  }
+  .scoreboard-frame-wrap{
+    flex:1;
+    min-height:0;
+    background:var(--bg-deeper);
+  }
+
+  /* =========================================================
+     PADDLE CALL — scoreboard tab styles
+     ========================================================= */
+
+  #pcApp{
+    --bg-deep:#0E3B42;
+    --bg-deeper:#082A30;
+    --bg-card:#123F47;
+    --p1:#00F0C8;
+    --p1-dim:#00B89C;
+    --p2:#FFB020;
+    --p2-dim:#D9930E;
+    --ink:#F3FAF9;
+    --ink-dim:rgba(243,250,249,0.62);
+    --ink-faint:rgba(243,250,249,0.4);
+    --line:rgba(255,255,255,0.14);
+    --danger:#FF6B6B;
+    --safe-t:env(safe-area-inset-top, 0px);
+    --safe-b:env(safe-area-inset-bottom, 0px);
+    --safe-l:env(safe-area-inset-left, 0px);
+    --safe-r:env(safe-area-inset-right, 0px);
+  }
+  button{font-family:inherit; cursor:pointer;}
+  input{font-family:inherit;}
+
+  #pcApp{
+    position:relative;
+    height:100%;
+    width:100%;
+    overflow:hidden;
+    background:var(--bg-deeper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .screen{display:none; height:100%; width:100%; flex-direction:column;}
+  .screen.active{display:flex;}
+
+  /* ============ SETUP SCREEN ============ */
+  #screen-setup{
+    background:
+      radial-gradient(circle at 85% -10%, rgba(0,240,200,0.14), transparent 45%),
+      var(--bg-deep);
+    overflow-y:auto;
+    align-items:center;
+    padding: calc(48px + var(--safe-t)) 20px calc(48px + var(--safe-b));
+  }
+  .pc-setup-card{
+    width:100%;
+    max-width:420px;
+    text-align:center;
+  }
+  .eyebrow{
+    display:inline-flex;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--p1);
+    background:rgba(0,240,200,0.12);
+    border:1px solid rgba(0,240,200,0.35);
+    padding:6px 14px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .pc-title{
+    font-size:clamp(2.2rem, 9vw, 3rem);
+    color:var(--p1);
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+    line-height:1;
+  }
+  .tagline{
+    color:var(--ink-dim);
+    font-size:0.95rem;
+    margin:10px 0 34px;
+  }
+
+  .pc-field-block{margin-bottom:22px; text-align:left;}
+  .pc-field-block > label{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:8px;
+  }
+  .name-input{
+    width:100%;
+    padding:14px 16px;
+    border-radius:12px;
+    border:1.5px solid var(--line);
+    background:rgba(255,255,255,0.05);
+    color:var(--ink);
+    font-size:1rem;
+    outline:none;
+    transition:border-color 0.2s ease;
+  }
+  .name-input:focus{border-color:var(--p1);}
+  .name-input::placeholder{color:var(--ink-faint);}
+
+  .segmented{
+    display:flex;
+    gap:6px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:5px;
+  }
+  .segmented button{
+    flex:1;
+    background:transparent;
+    border:none;
+    color:var(--ink-dim);
+    font-weight:700;
+    font-size:0.88rem;
+    padding:11px 8px;
+    border-radius:9px;
+    transition:background 0.2s ease, color 0.2s ease;
+  }
+  .segmented button.active{
+    background:var(--p1);
+    color:var(--bg-deeper);
+  }
+  .segmented button:disabled{opacity:0.35; cursor:not-allowed;}
+
+  .toggle-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .toggle-row > label{margin:0;}
+  .toggle-switch{
+    width:52px; height:30px;
+    border-radius:999px;
+    border:1.5px solid var(--line);
+    background:rgba(255,255,255,0.06);
+    position:relative;
+    padding:0;
+    transition:background 0.2s ease, border-color 0.2s ease;
+  }
+  .toggle-switch .knob{
+    position:absolute;
+    top:3px; left:3px;
+    width:21px; height:21px;
+    border-radius:50%;
+    background:var(--ink-dim);
+    transition:transform 0.2s ease, background 0.2s ease;
+  }
+  .toggle-switch.active{background:rgba(0,240,200,0.18); border-color:var(--p1);}
+  .toggle-switch.active .knob{transform:translateX(22px); background:var(--p1);}
+  .toggle-switch:disabled{opacity:0.35; cursor:not-allowed;}
+
+  .voice-unsupported-note{
+    font-size:0.82rem;
+    line-height:1.5;
+    color:var(--p2);
+    background:rgba(255,176,32,0.1);
+    border:1px solid rgba(255,176,32,0.3);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-bottom:22px;
+  }
+
+  .btn-start{
+    width:100%;
+    background:var(--p1);
+    color:var(--bg-deeper);
+    border:none;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:1.05rem;
+    padding:17px;
+    border-radius:14px;
+    box-shadow:0 14px 30px rgba(0,240,200,0.22);
+    margin-top:10px;
+  }
+
+  /* ============ MATCH SCREEN ============ */
+  #screen-match{ background:var(--bg-deeper); position:relative; }
+
+  .topbar{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    padding: calc(10px + var(--safe-t)) calc(12px + var(--safe-r)) 8px calc(12px + var(--safe-l));
+    flex:0 0 auto;
+    z-index:20;
+    background:var(--bg-deeper);
+  }
+  .topbar-left, .topbar-right{display:flex; gap:8px; flex:0 0 auto;}
+  .icon-btn{
+    width:38px; height:38px;
+    border-radius:50%;
+    border:1.5px solid var(--line);
+    background:rgba(255,255,255,0.04);
+    color:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.05rem;
+    flex:0 0 auto;
+  }
+  .icon-btn:active{background:rgba(255,255,255,0.1);}
+  .icon-btn.danger-hover:active{color:var(--danger); border-color:var(--danger);}
+
+  .topbar-center{flex:1 1 auto; text-align:center; min-width:0; padding-top:2px;}
+  .vs-row{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:0.92rem;
+    letter-spacing:0.01em;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .vs-row .vs-name.p1{color:var(--p1);}
+  .vs-row .vs-name.p2{color:var(--p2);}
+  .vs-row .vs-sep{color:var(--ink-faint); margin:0 6px; font-weight:500; font-size:0.78rem;}
+
+  .game-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.09em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-top:3px;
+  }
+  .game-label.deuce{
+    color:var(--p2);
+    animation:deucePulse 1.4s ease-in-out infinite;
+  }
+  @keyframes deucePulse{0%,100%{opacity:1;}50%{opacity:0.45;}}
+
+  .tally-row{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:0.82rem;
+    margin-top:4px;
+  }
+  .tally-row .tp1{color:var(--p1);}
+  .tally-row .tp2{color:var(--p2);}
+  .tally-row .tsep{color:var(--ink-faint); margin:0 6px;}
+
+  .listening-pill{
+    position:absolute;
+    top: calc(72px + var(--safe-t));
+    left:50%;
+    transform:translateX(-50%);
+    display:flex; align-items:center; gap:7px;
+    background:rgba(255,176,32,0.15);
+    border:1px solid rgba(255,176,32,0.5);
+    color:var(--p2);
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:6px 13px;
+    border-radius:999px;
+    z-index:25;
+  }
+  .dot-pulse{
+    width:7px; height:7px; border-radius:50%; background:var(--p2);
+    animation:dotPulse 1.2s ease-in-out infinite;
+  }
+  @keyframes dotPulse{0%,100%{opacity:1; transform:scale(1);}50%{opacity:0.4; transform:scale(0.7);}}
+
+  /* ---- court ---- */
+  .court{
+    flex:1 1 auto;
+    display:flex;
+    flex-direction:row;
+    min-height:0;
+    position:relative;
+  }
+  @media (orientation:portrait){
+    .court{flex-direction:column;}
+  }
+
+  .half{
+    flex:1 1 0;
+    min-width:0; min-height:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    position:relative;
+    padding: 10px 14px calc(10px + var(--safe-b));
+    outline:none;
+    overflow:hidden;
+  }
+  .half-p1{padding-left: calc(14px + var(--safe-l));}
+  .half-p2{padding-right: calc(14px + var(--safe-r));}
+  @media (orientation:portrait){
+    .half-p1{padding-left:14px;}
+    .half-p2{padding-right:14px;}
+  }
+  .half:focus-visible{box-shadow:inset 0 0 0 3px rgba(255,255,255,0.4);}
+
+  .name-row{
+    flex:0 0 auto;
+    display:flex; align-items:center; gap:8px;
+    padding-top:2px;
+  }
+  .serve-dot{
+    width:9px; height:9px; border-radius:50%;
+    background:currentColor;
+    opacity:0.15;
+    transition:opacity 0.2s ease;
+  }
+  .serve-dot.active{opacity:1; box-shadow:0 0 9px currentColor;}
+  .player-name{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    text-transform:uppercase;
+    font-size:clamp(0.85rem, 3vw, 1.15rem);
+    letter-spacing:0.02em;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .half-p1 .player-name, .half-p1 .serve-dot{color:var(--p1);}
+  .half-p2 .player-name, .half-p2 .serve-dot{color:var(--p2);}
+
+  .score-wrapper{
+    flex:1;
+    min-height:0;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .score-digit{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:clamp(72px, 26vw, 170px);
+    line-height:1;
+    color:var(--ink);
+    transform:scale(1);
+  }
+  .score-digit.bump{animation:scoreBump 0.35s ease;}
+  @keyframes scoreBump{0%{transform:scale(1);}40%{transform:scale(1.18);}100%{transform:scale(1);}}
+
+  .games-label{
+    flex:0 0 auto;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    color:var(--ink-dim);
+    margin-bottom:2px;
+  }
+  .tap-hint{
+    flex:0 0 auto;
+    font-size:0.72rem;
+    color:var(--ink-faint);
+  }
+
+  .glow{
+    position:absolute; inset:0;
+    pointer-events:none;
+    opacity:0;
+    z-index:1;
+  }
+  .half-p1 .glow{background:radial-gradient(circle at center, var(--p1), transparent 70%);}
+  .half-p2 .glow{background:radial-gradient(circle at center, var(--p2), transparent 70%);}
+  .glow.flash{animation:glowFlash 0.5s ease-out;}
+  @keyframes glowFlash{0%{opacity:0.5;}100%{opacity:0;}}
+
+  .name-row, .score-wrapper, .games-label, .tap-hint{position:relative; z-index:2;}
+
+  .net-bar{
+    flex:0 0 auto;
+    width:3px;
+    background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 4px, transparent 4px 9px);
+    position:relative;
+  }
+  @media (orientation:portrait){
+    .net-bar{width:100%; height:3px;
+      background:repeating-linear-gradient(-45deg, rgba(255,255,255,0.18) 0 4px, transparent 4px 9px);
+    }
+  }
+
+  .ball{
+    position:fixed;
+    left:50%; top:50%;
+    width:14px; height:14px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 0 10px rgba(255,255,255,0.85), 0 0 2px #fff;
+    pointer-events:none;
+    z-index:40;
+    opacity:0;
+    transform:translate(-50%,-50%);
+  }
+  .ball.fly-left{animation:ballFlyLeft 0.6s ease-out forwards;}
+  .ball.fly-right{animation:ballFlyRight 0.6s ease-out forwards;}
+  @keyframes ballFlyLeft{
+    0%{opacity:1; transform:translate(-50%,-50%) scale(1);}
+    50%{opacity:1; transform:translate(-120%,-90%) scale(1.3);}
+    100%{opacity:0; transform:translate(-220%,-40%) scale(1.6);}
+  }
+  @keyframes ballFlyRight{
+    0%{opacity:1; transform:translate(-50%,-50%) scale(1);}
+    50%{opacity:1; transform:translate(20%,-90%) scale(1.3);}
+    100%{opacity:0; transform:translate(120%,-40%) scale(1.6);}
+  }
+  @media (orientation:portrait){
+    @keyframes ballFlyLeft{
+      0%{opacity:1; transform:translate(-50%,-50%) scale(1);}
+      50%{opacity:1; transform:translate(-90%,-120%) scale(1.3);}
+      100%{opacity:0; transform:translate(-40%,-220%) scale(1.6);}
+    }
+    @keyframes ballFlyRight{
+      0%{opacity:1; transform:translate(-50%,-50%) scale(1);}
+      50%{opacity:1; transform:translate(-90%,20%) scale(1.3);}
+      100%{opacity:0; transform:translate(-40%,120%) scale(1.6);}
+    }
+  }
+
+  /* short viewport shrink */
+  @media (max-height:640px){
+    .player-name{font-size:clamp(0.72rem, 2.6vw, 0.95rem);}
+    .score-digit{font-size:clamp(52px, 20vw, 110px);}
+    .games-label, .tap-hint{font-size:0.64rem;}
+    .name-row{gap:6px;}
+  }
+
+  /* ---- bottom dock ---- */
+  .bottom-dock{
+    flex:0 0 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    padding: 8px calc(16px + var(--safe-r)) calc(14px + var(--safe-b)) calc(16px + var(--safe-l));
+    background:var(--bg-deeper);
+    border-top:1px solid var(--line);
+    z-index:20;
+  }
+  .ticker{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    color:var(--ink-faint);
+    text-align:center;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    min-height:1.2em;
+  }
+  .ticker .tick-ok{color:var(--p2); font-weight:600;}
+  .ticker .tick-no{color:var(--ink-faint);}
+
+  .dock-controls{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:22px;
+  }
+  .dock-btn{
+    width:46px; height:46px;
+    border-radius:50%;
+    border:1.5px solid var(--line);
+    background:rgba(255,255,255,0.04);
+    color:var(--ink);
+    font-size:1.15rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .dock-btn:disabled{opacity:0.3;}
+  .mic-btn{
+    width:66px; height:66px;
+    border-radius:50%;
+    border:none;
+    background:var(--bg-card);
+    border:2px solid var(--line);
+    color:var(--ink-dim);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    flex:0 0 auto;
+  }
+  .mic-btn svg{width:26px; height:26px;}
+  .mic-btn.listening{
+    background:var(--p2);
+    border-color:var(--p2);
+    color:var(--bg-deeper);
+  }
+  .mic-btn.listening::before{
+    content:"";
+    position:absolute;
+    inset:-8px;
+    border-radius:50%;
+    border:2px solid var(--p2);
+    animation:micPulse 1.4s ease-out infinite;
+  }
+  @keyframes micPulse{
+    0%{transform:scale(0.9); opacity:0.8;}
+    100%{transform:scale(1.35); opacity:0;}
+  }
+  .mic-btn:disabled{opacity:0.3;}
+
+  /* ============ OVERLAYS ============ */
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(5,20,23,0.86);
+    backdrop-filter:blur(3px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:24px calc(24px + var(--safe-r)) calc(24px + var(--safe-b)) calc(24px + var(--safe-l));
+  }
+  .overlay.show{display:flex;}
+  .overlay-card{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:34px 28px;
+    max-width:420px;
+    width:100%;
+    max-height:88vh;
+    overflow-y:auto;
+    text-align:center;
+  }
+  .overlay-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--p1);
+    margin-bottom:10px;
+    display:block;
+  }
+  .overlay-card h2{
+    font-size:1.6rem;
+    color:var(--ink);
+    margin-bottom:10px;
+  }
+  .overlay-card .final-score{
+    font-family:'JetBrains Mono',monospace;
+    font-size:2.2rem;
+    font-weight:700;
+    color:var(--p1);
+    margin:14px 0;
+  }
+  .overlay-btn{
+    width:100%;
+    background:var(--p1);
+    color:var(--bg-deeper);
+    border:none;
+    font-weight:700;
+    font-size:1rem;
+    padding:15px;
+    border-radius:12px;
+    margin-top:18px;
+  }
+  .overlay-btn.secondary{
+    background:transparent;
+    border:1.5px solid var(--line);
+    color:var(--ink);
+  }
+  .games-recap{
+    text-align:left;
+    margin-top:20px;
+    border-top:1px solid var(--line);
+    padding-top:16px;
+  }
+  .games-recap-title{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:10px;
+  }
+  .games-recap-list{list-style:none; margin:0; padding:0; display:grid; gap:8px; max-height:180px; overflow-y:auto;}
+  .games-recap-list li{
+    display:flex; justify-content:space-between;
+    font-size:0.88rem;
+    background:rgba(255,255,255,0.04);
+    border-radius:8px;
+    padding:9px 12px;
+  }
+  .games-recap-list .g-winner{font-weight:700;}
+
+  /* settings overlay specific */
+  .settings-section{text-align:left; margin-bottom:22px;}
+  .settings-section h3{font-size:0.95rem; color:var(--ink); margin-bottom:14px;}
+
+  @media (prefers-reduced-motion: reduce){
+    .ball{display:none !important;}
+    .score-digit.bump, .glow.flash, .mic-btn.listening::before, .dot-pulse, .game-label.deuce{
+      animation:none !important;
+    }
+    .pc-ball, .pc-ball-shadow, .pc-paddle-left, .pc-paddle-right{
+      animation:none !important;
+    }
+    .hero-ball, .hero-ball-shadow{
+      animation:none !important;
+    }
+    .pc-ball{left:50%; top:35%;}
+    .pc-ball-shadow{left:50%; opacity:0.2;}
+    .pc-paddle-left{left:3%;}
+    .pc-paddle-right{right:3%;}
+  }
+
+</style>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="../index.html">PONG<span class="sub">·HOME</span></a>
+    <div class="nav-tabs" role="tablist">
+      <a class="nav-tab" href="../index.html">Home</a>
+      <a class="nav-tab" href="/ratings">Gear Index</a>
+      <a class="nav-tab" href="../marketplace.html">Marketplace</a>
+      <a class="nav-tab active" href="insights.html" role="tab" aria-selected="true">Insights</a>
+      <a class="nav-tab" href="../tournament-tool.html">Tools</a>
+    </div>
+    <div class="nav-right">
+      <div class="social-row">
+        <a class="social-btn" href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" aria-label="Pong Home on Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.97.24 2.43.4a4.9 4.9 0 0 1 1.77 1.15 4.9 4.9 0 0 1 1.15 1.77c.16.46.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.97-.4 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.46.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.24-2.43-.4a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.16-.46-.35-1.26-.4-2.43C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.24-1.97.4-2.43a4.9 4.9 0 0 1 1.15-1.77A4.9 4.9 0 0 1 5.59 1.8c.46-.16 1.26-.35 2.43-.4C9.29 1.34 9.67 1.33 12 1.33Zm0 1.8c-3.15 0-3.5.01-4.74.07-.96.04-1.48.2-1.82.34-.46.18-.78.39-1.13.74-.35.35-.56.67-.74 1.13-.14.34-.3.86-.34 1.82C3.16 8.94 3.15 9.29 3.15 12s.01 3.06.07 4.3c.04.96.2 1.48.34 1.82.18.46.39.78.74 1.13.35.35.67.56 1.13.74.34.14.86.3 1.82.34 1.24.06 1.59.07 4.75.07s3.5-.01 4.74-.07c.96-.04 1.48-.2 1.82-.34.46-.18.78-.39 1.13-.74.35-.35.56-.67.74-1.13.14-.34.3-.86.34-1.82.06-1.24.07-1.59.07-4.3s-.01-3.06-.07-4.3c-.04-.96-.2-1.48-.34-1.82a3.05 3.05 0 0 0-.74-1.13 3.05 3.05 0 0 0-1.13-.74c-.34-.14-.86-.3-1.82-.34-1.24-.06-1.59-.07-4.75-.07Zm0 3.98a4.02 4.02 0 1 1 0 8.04 4.02 4.02 0 0 1 0-8.04Zm0 1.8a2.22 2.22 0 1 0 0 4.44 2.22 2.22 0 0 0 0-4.44Zm4.18-2.2a.94.94 0 1 1 0 1.88.94.94 0 0 1 0-1.88Z"/></svg>
+        </a>
+        <a class="social-btn" href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" aria-label="Pong Home on Facebook">
+          <svg viewBox="0 0 24 24"><path d="M13.5 21.9v-8.4h2.82l.42-3.28h-3.24V8.1c0-.95.26-1.6 1.63-1.6h1.74V3.6c-.3-.04-1.33-.13-2.53-.13-2.5 0-4.22 1.53-4.22 4.33v2.42H7.3v3.28h2.82v8.4h3.38Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ================= INSIGHTS (TRAINING) ================= -->
+<section id="learn" class="tab-panel active">
+
+  <header class="learn-hero">
+    <span class="hero-eyebrow">The Pong Home handbook</span>
+    <h2 class="book-title">Point Winner: The Tactical Playbook for Modern Table Tennis</h2>
+    <p class="book-sub">From Fundamental Control to Unstoppable Match Sequences</p>
+    <p class="book-byline">By Pong Home</p>
+  </header>
+
+  <div class="chapters-wrap">
+
+    <div class="pc-anim-card">
+      <div class="pc-table-scene" aria-hidden="true">
+        <div class="pc-net"></div>
+        <div class="pc-table-baseline"></div>
+
+        <div class="pc-paddle pc-paddle-left">
+          <div class="pc-paddle-blade"></div>
+          <div class="pc-paddle-handle"></div>
+        </div>
+        <div class="pc-paddle pc-paddle-right">
+          <div class="pc-paddle-blade"></div>
+          <div class="pc-paddle-handle"></div>
+        </div>
+
+        <div class="pc-ball-shadow"></div>
+        <div class="pc-ball"></div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 1 -->
+    <details class="chapter" open>
+      <summary>
+        <span class="ch-num">01</span>
+        <span class="ch-heading">
+          <span class="ch-label">Chapter 1</span>
+          <h3>The Foundations &amp; Fundamentals</h3>
+        </span>
+        <span class="ch-chevron">⌄</span>
+      </summary>
+      <div class="chapter-body">
+        <p class="intro">Mastering table tennis doesn't begin with a blistering forehand loop or a tricky backhand serve. It begins before the ball ever touches your paddle. The cleanest technique in the world falls apart if your grip is unstable, your weight is distributed incorrectly, or you are caught flat-footed. This chapter lays the bedrock for everything you will build as a player.</p>
+
+        <div class="subsection">
+          <h4>1.1 — Grip Mechanics: Your Direct Line to the Ball</h4>
+          <p>Your grip is your connection to the racket. It dictates how naturally you can rotate your wrist, how much power transfers from your body into the ball, and how quickly you can transition between forehand and backhand strokes. There is no single "correct" grip, but there are strict principles for each style.</p>
+
+          <p><strong>The Shakehand Grip</strong> — the most widely used grip globally, named because it resembles shaking hands with the handle.</p>
+          <dl class="term-list">
+            <div class="term"><dt>Hand placement</dt><dd>Wrap your bottom three fingers (middle, ring, pinky) lightly around the handle.</dd></div>
+            <div class="term"><dt>The thumb</dt><dd>Rest your thumb gently against the front blade collar (the base of the rubber).</dd></div>
+            <div class="term"><dt>The index finger</dt><dd>Extend your index finger straight across the back face of the paddle, near the bottom edge.</dd></div>
+          </dl>
+
+          <div class="callout"><strong>Common mistake — the pistol grip:</strong> avoid extending your index finger straight up the center of the blade face. This locks your wrist, limits racket angle adjustments, and severely weakens your backhand.</div>
+
+          <p><strong>Shakehand grip variations</strong></p>
+          <dl class="term-list">
+            <div class="term"><dt>Deep grip</dt><dd>Holding the handle high up, near the blade base. Offers maximum stability and racket control for blocking and precise touching, but slightly restricts wrist motion for heavy spin.</dd></div>
+            <div class="term"><dt>Shallow grip</dt><dd>Holding the handle lower down. Allows full wrist mobility for explosive topspin loops and serves, though it requires stronger finger strength to keep the racket face stable.</dd></div>
+          </dl>
+
+          <p><strong>The Penhold Grip</strong> — popularized in Asia, the handle points upward, similar to holding a pen or pencil.</p>
+          <dl class="term-list">
+            <div class="term"><dt>Front side</dt><dd>Your thumb and index finger form a hook around the top of the handle on the front side of the blade.</dd></div>
+            <div class="term"><dt>Back side — Traditional Penhold</dt><dd>The three back fingers are curled together against the back face. Provides incredible wrist freedom for forehand attacks and traditional backhand blocks, but limits backhand offensive power.</dd></div>
+            <div class="term"><dt>Back side — Reverse Penhold Backhand (RPB)</dt><dd>The three back fingers rest relatively straight along the back face, letting the player rotate the wrist inside-out to attack with the back side rubber — a modern, powerful penhold backhand loop.</dd></div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>1.2 — The Neutral Stance &amp; Body Alignment</h4>
+          <p>Table tennis is a game of micro-adjustments. You have roughly 0.2 to 0.4 seconds to react to a ball traveling toward you. If your base stance is off, you will spend those precious split seconds balancing yourself rather than preparing your stroke.</p>
+
+          <p><strong>The standard stance setup</strong></p>
+          <ol class="step-list">
+            <li><strong>Feet width:</strong> place your feet slightly wider than shoulder-width apart. A narrow base ruins balance; a base that is too wide prevents rapid lateral movement.</li>
+            <li><strong>Dominant foot position:</strong> if right-handed, your right foot should sit roughly 2–4 inches further back than your left (vice versa for left-handers). This slight angle loads hip power for forehand strokes without blocking your backhand.</li>
+            <li><strong>Weight distribution:</strong> shift your weight onto the balls of your feet, keeping your heels lightly floating off the floor. Never rest flat-footed on your heels.</li>
+            <li><strong>Lower body flexion:</strong> bend your knees to roughly 110–120 degrees to lower your center of gravity and let your legs act as springs for explosive footwork.</li>
+            <li><strong>Upper body angle:</strong> tilt your chest slightly forward from the waist. Keep your shoulders relaxed, not hunched toward your ears.</li>
+          </ol>
+
+          <p><strong>The Home Position</strong> — between every stroke, your paddle must immediately return here:</p>
+          <ul class="bullet-list">
+            <li>Elbows bent at roughly 90 degrees, kept about a fist's distance from your ribs.</li>
+            <li>Racket head pointing upward and forward, centered with your belly button.</li>
+            <li>Racket held at table height, ready to react equally fast to forehand or backhand.</li>
+          </ul>
+        </div>
+
+        <div class="subsection">
+          <h4>1.3 — Ball Contact &amp; Touch</h4>
+          <p>Developing touch — the intuitive feeling of how energy transfers from your blade to the ball — is what separates recreational ping pong players from trained table tennis athletes.</p>
+          <dl class="term-list">
+            <div class="term"><dt>Solid (flat) contact</dt><dd>Striking perpendicular through the center of the ball. Drives the ball forward in a straight line with high velocity but minimal rotation.</dd></div>
+            <div class="term"><dt>Brush (spin) contact</dt><dd>Grazing the outer perimeter of the ball at a tangent angle. Converts kinetic energy into rotational momentum (spin) rather than pure linear speed.</dd></div>
+          </dl>
+
+          <p><strong>Finding the sweet spot</strong> — typically located in the upper-middle region of the blade face.</p>
+          <ul class="bullet-list">
+            <li>Hitting near the handle/neck produces a dead, vibration-heavy response with minimal ball speed.</li>
+            <li>Hitting near the outer tip offers high tip-speed for heavy spin, but yields less stability.</li>
+            <li>Hitting in the center-upper third delivers optimal energy transfer, consistent bounce, and minimal racket torque in your hand.</li>
+          </ul>
+        </div>
+
+        <div class="subsection">
+          <h4>1.4 — Rules &amp; Regulatory Context</h4>
+          <p>You cannot construct a competitive strategy without a crystal-clear understanding of the formal regulations governing match play under International Table Tennis Federation (ITTF) rules.</p>
+          <dl class="term-list">
+            <div class="term"><dt>Scoring</dt><dd>A standard game is played to 11 points. A player must win by a margin of at least 2 points.</dd></div>
+            <div class="term"><dt>Deuce rules</dt><dd>If the score reaches 10–10 (deuce), play continues until one player establishes a 2-point lead.</dd></div>
+            <div class="term"><dt>Service rotation</dt><dd>Players alternate serving every 2 points. During deuce, service alternates after every single point.</dd></div>
+            <div class="term"><dt>Match format</dt><dd>Matches are typically played as best-of-5 or best-of-7 games.</dd></div>
+          </dl>
+
+          <p><strong>Legal service execution</strong></p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Rule stage</th><th>Requirement</th><th>Reason</th></tr></thead>
+              <tbody>
+                <tr><td>Start phase</td><td>Ball resting freely on open, flat palm behind endline &amp; above table level.</td><td>Prevents cupping, spinning, or hiding the ball in fingers.</td></tr>
+                <tr><td>Toss phase</td><td>Throw ball vertically upward at least 16 cm (6.3 in) without spin.</td><td>Ensures the serve relies on paddle stroke mechanics rather than tossed twist.</td></tr>
+                <tr><td>Impact phase</td><td>Strike ball as it descends, ensuring contact is behind endline.</td><td>Prevents hitting over the table surface to steal reaction time.</td></tr>
+                <tr><td>Visibility</td><td>Ball and paddle completely visible to receiver at all times.</td><td>Guarantees the receiver gets a fair chance to read spin contact.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- CHAPTER 2 -->
+    <details class="chapter">
+      <summary>
+        <span class="ch-num">02</span>
+        <span class="ch-heading">
+          <span class="ch-label">Chapter 2</span>
+          <h3>Essential Strokes &amp; Fundamental Footwork</h3>
+        </span>
+        <span class="ch-chevron">⌄</span>
+      </summary>
+      <div class="chapter-body">
+        <p class="intro">Once you have mastered the neutral stance, grip, and ball feeling, the next step is building a repeatable stroke mechanism. Table tennis is a game of high consistency — the player who makes the fewest unforced errors usually wins.</p>
+
+        <div class="subsection">
+          <h4>2.1 — The Four Fundamental Strokes</h4>
+
+          <p><strong>1. The Forehand Drive</strong> — your primary offensive counter-stroke against topspin or flat balls. A compact, medium-speed stroke built for placement accuracy, not a violent smash.</p>
+          <dl class="term-list">
+            <div class="term"><dt>Preparation</dt><dd>Rotate shoulders and hips back about 45°, transferring weight slightly onto the back foot. Drop the racket slightly below ball height with an open-to-neutral angle.</dd></div>
+            <div class="term"><dt>Execution</dt><dd>Push off the back foot and rotate the hips forward. Swing the arm forward and slightly upward, striking the ball at the peak of its bounce.</dd></div>
+            <div class="term"><dt>Contact &amp; finish</dt><dd>Contact the center-top of the ball with a mild brushing motion. Finish smoothly near forehead/eye level, returning to the Home Position.</dd></div>
+          </dl>
+
+          <p><strong>2. The Backhand Drive</strong> — executed directly in front of the chest, relying on a compact elbow-hinge rather than large body rotation.</p>
+          <dl class="term-list">
+            <div class="term"><dt>Preparation</dt><dd>Draw the racket back toward your navel, dropping the wrist slightly. Keep the elbow stable, roughly 90° in front of your ribs.</dd></div>
+            <div class="term"><dt>Execution</dt><dd>Push the forearm forward through the ball's path using the elbow as a steady pivot. Snap the wrist lightly at impact for clean momentum.</dd></div>
+            <div class="term"><dt>Contact &amp; finish</dt><dd>Strike at the peak of the bounce. Extend the arm toward your target without over-extending the elbow or lifting the shoulder.</dd></div>
+          </dl>
+
+          <p><strong>3. The Forehand Push</strong> — a defensive/neutral shot against short backspin balls, returning backspin with backspin while keeping the ball low.</p>
+          <dl class="term-list">
+            <div class="term"><dt>Preparation</dt><dd>Step your dominant foot forward under the table. Open your racket face upward (~45°).</dd></div>
+            <div class="term"><dt>Execution</dt><dd>Move the racket forward and slightly downward in a smooth gliding motion.</dd></div>
+            <div class="term"><dt>Contact</dt><dd>Graze the bottom perimeter (6 o'clock point) of the ball just after it bounces, on its rise. Avoid hitting through the ball — graze underneath to generate spin.</dd></div>
+          </dl>
+
+          <p><strong>4. The Backhand Push</strong> — the most common shot for receiving short backspin serves safely.</p>
+          <dl class="term-list">
+            <div class="term"><dt>Preparation</dt><dd>Lean slightly forward over the table edge, drawing the racket inward toward your chest with an open paddle angle.</dd></div>
+            <div class="term"><dt>Execution</dt><dd>Slide the blade underneath the ball with a compact forearm extension, flexing the wrist downward right at impact.</dd></div>
+            <div class="term"><dt>Contact</dt><dd>Softly graze underneath the ball immediately after it bounces. Keep the stroke brief for precise placement.</dd></div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>2.2 — The Physics &amp; Axis of Spin</h4>
+          <p>Spin is the defining characteristic of modern table tennis. Because the ball is small (2.7 g) and light, rotational force drastically alters its flight trajectory and bounce response.</p>
+          <dl class="term-list">
+            <div class="term"><dt>Topspin mechanics</dt><dd>High spin creates lower air pressure on top of the ball and higher pressure underneath. This pressure differential (Magnus Effect) forces the ball down sharply, letting you hit hard while keeping the ball inside the table.</dd></div>
+            <div class="term"><dt>Backspin mechanics</dt><dd>Air pressure is higher on top, creating lift. Hitting a backspin ball with a flat racket face makes the ball dig into your rubber and dive into the net.</dd></div>
+            <div class="term"><dt>Sidespin mechanics</dt><dd>The rotational axis tilts horizontally, forcing the ball to curve laterally in flight and jump sideways off your opponent's rubber.</dd></div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>2.3 — Fundamental Footwork Systems</h4>
+          <p>A flawless stroke is useless if you arrive late to the ball. Footwork ensures your body is locked into position before you begin your swing.</p>
+          <ol class="step-list">
+            <li><strong>Read the ball —</strong> observe the opponent's contact point and paddle angle to anticipate direction and depth before the ball crosses the net.</li>
+            <li><strong>Initiate push off —</strong> push forcefully off the foot opposite to your target direction (e.g., push off the left foot to move right).</li>
+            <li><strong>Step &amp; plant —</strong> slide the lead foot toward the ball's trajectory, quickly followed by the trailing foot to re-establish a balanced base.</li>
+            <li><strong>Strike &amp; recover —</strong> execute your stroke with a firm base, then spring back to the central Home Position on the balls of your feet.</li>
+          </ol>
+        </div>
+
+        <div class="subsection">
+          <h4>2.4 — Diagnostic Practice Drills</h4>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Drill name</th><th>Movement pattern</th><th>Core objective</th></tr></thead>
+              <tbody>
+                <tr><td>Forehand crosscourt</td><td>Stationary</td><td>Maintain 50+ ball rallies focusing on contact consistency and weight transfer.</td></tr>
+                <tr><td>Backhand crosscourt</td><td>Stationary</td><td>Build elbow stability and wrist control without lifting the shoulders.</td></tr>
+                <tr><td>Falkenberg drill</td><td>1 BH, 1 FH from BH corner, 1 wide FH</td><td>Train rapid transition between backhand drive and wide forehand attack using side-step footwork.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- CHAPTER 3 -->
+    <details class="chapter">
+      <summary>
+        <span class="ch-num">03</span>
+        <span class="ch-heading">
+          <span class="ch-label">Chapter 3</span>
+          <h3>Mastering the Serve &amp; Return</h3>
+        </span>
+        <span class="ch-chevron">⌄</span>
+      </summary>
+      <div class="chapter-body">
+        <p class="intro">In table tennis, no other stroke carries as much tactical weight as the serve. It is the only moment in a match where you have absolute control over the ball without any interference from your opponent's spin, speed, or placement.</p>
+
+        <div class="subsection">
+          <h4>3.1 — Serving Mechanics &amp; the Whip Effect</h4>
+          <p>Generating high levels of spin requires high racket head speed at the exact instant of ball contact, created entirely through a relaxed kinetic chain — the whip effect.</p>
+          <ol class="step-list">
+            <li><strong>Loose grip pressure:</strong> hold the handle loosely using a modified service grip — pinching the blade face between thumb and index finger while releasing the bottom three fingers.</li>
+            <li><strong>Elbow rotation:</strong> initiate the motion with the forearm and elbow, keeping the upper arm relaxed.</li>
+            <li><strong>Wrist snap:</strong> right before impact, snap your wrist forcefully through the line of contact — the tip of the racket accelerates faster than your hand.</li>
+            <li><strong>Brushing point:</strong> to maximize spin, brush the ball near the outer tip of the blade face. Contact near the handle produces control and speed, but minimal spin.</li>
+          </ol>
+        </div>
+
+        <div class="subsection">
+          <h4>3.2 — Core Service Variations</h4>
+          <dl class="term-list">
+            <div class="term"><dt>The Pendulum Serve</dt><dd>The foundational serve of modern table tennis — swing the paddle in a downward arc across the front of your body like a pendulum. Contact bottom-side for backspin/sidespin; upper-side for topspin/sidespin.</dd></div>
+            <div class="term"><dt>The Reverse Pendulum Serve</dt><dd>Pull the racket inward toward your body and snap it outward, generating opposite sidespin to force returns toward the opponent's forehand.</dd></div>
+            <div class="term"><dt>The Backhand Serve</dt><dd>Executed standing directly behind the table, facing your opponent head-on. Sweeping across the body allows a shorter recovery time back to the Home Position.</dd></div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>3.3 — Deception &amp; Disguise</h4>
+          <p>High-level serving relies on making two completely different spin returns look identical during the backswing and initial motion.</p>
+          <dl class="term-list">
+            <div class="term"><dt>Contact point manipulation</dt><dd>Keep swing speed and trajectory identical, but adjust racket angle by just 10°–15° at impact. Brushing under yields heavy backspin; brushing to the side yields pure sidespin.</dd></div>
+            <div class="term"><dt>Faking follow-through</dt><dd>After making brush contact on a backspin serve, rapidly lift your paddle upward in a dramatic follow-through to mimic topspin.</dd></div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>3.4 — Reading &amp; Neutralizing Serves</h4>
+          <p>Use this three-phase observation model to read incoming spin:</p>
+          <dl class="term-list">
+            <div class="term"><dt>Phase 1 — Pre-contact</dt><dd>Observe racket face orientation. Open face = backspin; vertical/closed face = topspin or sidespin.</dd></div>
+            <div class="term"><dt>Phase 2 — At contact</dt><dd>Listen closely. Crisp friction sound = heavy spin; hollow thud = no spin.</dd></div>
+            <div class="term"><dt>Phase 3 — Flight &amp; bounce</dt><dd>Track the ball seam. A blurred logo means heavy spin. Notice the first bounce depth.</dd></div>
+          </dl>
+
+          <p><strong>Sidespin adjustment</strong></p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Incoming spin direction</th><th>Racket reaction</th><th>Required angle adjustment</th></tr></thead>
+              <tbody>
+                <tr><td>Clockwise sidespin</td><td>Jumps laterally to your right</td><td>Angle paddle face toward the left side</td></tr>
+                <tr><td>Counter-clockwise sidespin</td><td>Jumps laterally to your left</td><td>Angle paddle face toward the right side</td></tr>
+                <tr><td>Heavy backspin</td><td>Dives downward into net</td><td>Open paddle face upward (45°+) and lift</td></tr>
+                <tr><td>Heavy topspin</td><td>Pops up high over table</td><td>Close paddle face downward (45°−) and press</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- CHAPTER 4 -->
+    <details class="chapter">
+      <summary>
+        <span class="ch-num">04</span>
+        <span class="ch-heading">
+          <span class="ch-label">Chapter 4</span>
+          <h3>Advanced Strokes &amp; Offensive Play</h3>
+        </span>
+        <span class="ch-chevron">⌄</span>
+      </summary>
+      <div class="chapter-body">
+        <p class="intro">To dictate play and pressure your opponent, you must develop an offensive arsenal capable of creating heavy spin, attacking short balls over the net, and counter-striking under pressure.</p>
+
+        <div class="subsection">
+          <h4>4.1 — The Loop Shot: Table Tennis's Ultimate Weapon</h4>
+          <dl class="term-list">
+            <div class="term"><dt>Forehand loop vs. backspin</dt><dd>Drop right shoulder/hip, transfer weight to the back leg. Open racket angle (60°–70°). Uncoil energy through hips and core, brushing the upper-back perimeter of the ball.</dd></div>
+            <div class="term"><dt>Backhand loop</dt><dd>Lower your center of gravity, drop the racket between the knees. Lead with the elbow, snapping the forearm forward/upward with a wrist flick at peak bounce.</dd></div>
+            <div class="term"><dt>The counter-loop</dt><dd>Swing angle flattens from upward (60°) to forward (30°). Take the ball at peak bounce or early drop, using the opponent's own pace.</dd></div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>4.2 — Over-the-Table Attacks</h4>
+          <p>Compact, wrist-driven mechanics inside the table perimeter:</p>
+          <dl class="term-list">
+            <div class="term"><dt>Forehand flick / flip</dt><dd>Forward wrist snap over the net against short backspin/no-spin.</dd></div>
+            <div class="term"><dt>Banana flip (chiquita)</dt><dd>Inward-to-outward wrist curve generating heavy sidespin-topspin.</dd></div>
+            <div class="term"><dt>Strawberry flip</dt><dd>Outward-to-inward wrist sweep generating reverse sidespin deception.</dd></div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>4.3 — Smashing &amp; Finishing High Balls</h4>
+          <p>When an opponent pops the ball high into the air (2+ feet above the net), loop mechanics are discarded in favor of a high-velocity, flat smash.</p>
+          <ul class="bullet-list">
+            <li>Position the body so the ball falls in front of the hitting shoulder.</li>
+            <li>Open the paddle face perpendicular to the floor (90°).</li>
+            <li>Drive high-to-low weight transfer straight through the ball at the highest bounce point.</li>
+          </ul>
+        </div>
+
+        <div class="subsection">
+          <h4>4.4 — Active Defense &amp; Blocking Systems</h4>
+          <dl class="term-list">
+            <div class="term"><dt>Passive block</dt><dd>Hold a firm racket angle close to the table. Relax the grip to absorb speed and redirect the ball.</dd></div>
+            <div class="term"><dt>Active punch block</dt><dd>Press the racket forward with a short forearm extension at contact to return a fast flat ball early.</dd></div>
+            <div class="term"><dt>Side-spin block</dt><dd>Brush laterally across an incoming loop to alter the rotational axis and cause the ball to wobble.</dd></div>
+          </dl>
+        </div>
+      </div>
+    </details>
+
+    <!-- CHAPTER 5 -->
+    <details class="chapter">
+      <summary>
+        <span class="ch-num">05</span>
+        <span class="ch-heading">
+          <span class="ch-label">Chapter 5</span>
+          <h3>Advanced Strategy &amp; Tactical Systems</h3>
+        </span>
+        <span class="ch-chevron">⌄</span>
+      </summary>
+      <div class="chapter-body">
+        <p class="intro">High-level table tennis is fast-paced chess. You must continuously gather data on your opponent, predict responses, and construct multi-shot patterns.</p>
+
+        <div class="subsection">
+          <h4>5.1 — Opponent Analysis &amp; System Framing</h4>
+          <dl class="term-list">
+            <div class="term"><dt>The aggressive looper</dt><dd>Prefers medium/long rallies with topspin. Counter: keep serves short, use punch-blocks directly to the body.</dd></div>
+            <div class="term"><dt>The close-table blocker</dt><dd>Close-table redirection focus. Counter: vary spin intensity, mix heavy slow loops with deep pushes.</dd></div>
+            <div class="term"><dt>The defensive chopper</dt><dd>Stands 8–10 ft back returning heavy chop backspin. Counter: use a "loop-push" cadence — loop wide, soft push short, loop deep.</dd></div>
+            <div class="term"><dt>The pips/anti-spin tactician</dt><dd>Non-standard rubber reverses spin. Counter: play patient topspin, then attack the predictable backspin return.</dd></div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>5.2 — Numbered Sequence Attacks</h4>
+          <dl class="term-list">
+            <div class="term"><dt>3-ball attack — blueprint A</dt><dd>Serve short heavy backspin → expect long push return → execute forehand loop attack.</dd></div>
+            <div class="term"><dt>3-ball attack — blueprint B</dt><dd>Serve fast long to the crossover point → expect a rushed middle return → execute a fast punch-block or counter-drive.</dd></div>
+            <div class="term"><dt>5-ball attack system</dt><dd>Use the 3rd-ball loop loaded with spin (not full speed) to force a floating block → execute a 5th-ball finishing smash.</dd></div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>5.3 — Space, Placement &amp; the Crossover Point</h4>
+          <p>Target the crossover point — the dominant hip/elbow transition zone — where opponents hesitate between forehand and backhand. Use extreme angle placement to force opponents 70% off the table.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- CHAPTER 6 -->
+    <details class="chapter">
+      <summary>
+        <span class="ch-num">06</span>
+        <span class="ch-heading">
+          <span class="ch-label">Chapter 6</span>
+          <h3>Practical Tips &amp; Match Play Game Tactics</h3>
+        </span>
+        <span class="ch-chevron">⌄</span>
+      </summary>
+      <div class="chapter-body">
+        <p class="intro">High-stress match situations like 9–9 in a deciding game demand practical shortcuts, quick-hitting tactical fixes, and a deep understanding of non-standard playing styles.</p>
+
+        <div class="subsection">
+          <h4>6.1 — Tactics Against Specialized Equipment</h4>
+          <dl class="term-list">
+            <div class="term"><dt>Long pips rule</dt><dd>Alternating stroke type neutralizes pips. Never push twice or loop twice in a row without adjusting angle — follow a loop → push → loop rhythm.</dd></div>
+            <div class="term"><dt>Chopper rule</dt><dd>Avoid over-attacking. Use a push-loop cadence to move the chopper forward and backward rather than just side to side.</dd></div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>6.2 — Game Management &amp; Pressure Play</h4>
+          <dl class="term-list">
+            <div class="term"><dt>Short no-spin serve at 9–9</dt><dd>Serve short to the forehand/middle elbow with zero spin. It's the hardest serve to attack aggressively under pressure, forcing safe, lifted returns.</dd></div>
+            <div class="term"><dt>Timeout strategy</dt><dd>Call a timeout when losing 3–4 consecutive points, or at 9-8/10-9, to clarify your 3rd-ball tactical plan. Ask: "Where am I getting points from?"</dd></div>
+          </dl>
+        </div>
+      </div>
+    </details>
+
+    <!-- CHAPTER 7 -->
+    <details class="chapter">
+      <summary>
+        <span class="ch-num">07</span>
+        <span class="ch-heading">
+          <span class="ch-label">Chapter 7</span>
+          <h3>The Mental Game, Equipment &amp; Training</h3>
+        </span>
+        <span class="ch-chevron">⌄</span>
+      </summary>
+      <div class="chapter-body">
+        <p class="intro">Psychology, gear, and practice design constitute the engine of long-term development.</p>
+
+        <div class="subsection">
+          <h4>7.1 — Equipment Mechanics &amp; Selection</h4>
+          <dl class="term-list">
+            <div class="term"><dt>Blades</dt><dd>All-wood blades offer high dwell time and feel for loopers. Carbon blades reduce flex, expand the sweet spot, and increase ball velocity.</dd></div>
+            <div class="term"><dt>Sponge hardness</dt><dd>Soft sponge (38°–42°) offers high control and forgiveness; hard sponge (47°–52°+) provides a higher ceiling for maximum spin and speed.</dd></div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>7.2 — Performance Psychology</h4>
+          <p>Use the 15-second reset protocol between points:</p>
+          <ol class="step-list">
+            <li><strong>Physical disengagement —</strong> turn your back to the table, walk to the towel/corner to signal a physical boundary.</li>
+            <li><strong>Breathing &amp; release —</strong> take a slow diaphragmatic breath (in 4s, out 6s) to drop your shoulders.</li>
+            <li><strong>Tactical focus —</strong> pick ONE explicit tactical goal for the next point.</li>
+          </ol>
+        </div>
+
+        <div class="subsection">
+          <h4>7.3 — Practice Design</h4>
+          <dl class="term-list">
+            <div class="term"><dt>Tier 1 — Multi-ball systems</dt><dd>High-volume stroke mechanics and stamina building with a coach/partner feeding balls.</dd></div>
+            <div class="term"><dt>Tier 2 — Fixed drills</dt><dd>Predictable sequences (e.g., Falkenberg) developing footwork rhythm and weight transfer.</dd></div>
+            <div class="term"><dt>Tier 3 — Random play</dt><dd>Unpredictable match-context drills training reading ability and real-time decision making.</dd></div>
+          </dl>
+        </div>
+      </div>
+    </details>
+
+    <!-- CHAPTER 8 -->
+    <details class="chapter">
+      <summary>
+        <span class="ch-num">08</span>
+        <span class="ch-heading">
+          <span class="ch-label">Chapter 8</span>
+          <h3>7 Pro Tactics for Table Tennis</h3>
+        </span>
+        <span class="ch-chevron">⌄</span>
+      </summary>
+      <div class="chapter-body">
+        <p class="intro">Key takeaways and tactical breakdowns for building a repeatable, pro-level game plan &mdash; from the serve through the pivot-and-finish counter.</p>
+
+        <div class="subsection">
+          <h4>8.1 &mdash; Serve Tactics</h4>
+          <dl class="term-list">
+            <div class="term">
+              <dt>1. Pendulum Topspin Serve to Short Forehand Middle</dt>
+              <dd><strong>How it works:</strong> Serve low with topspin/deception to your opponent's short forehand middle to force a passive, weak push.<br><strong>Follow-up:</strong> Step in and attack aggressively with a forehand to their backhand, forehand, or crossover point.</dd>
+            </div>
+            <div class="term">
+              <dt>2. Pendulum Long &amp; Fast Serve to the Crossover</dt>
+              <dd><strong>How it works:</strong> Target the opponent's crossover point (where they switch between forehand and backhand). The sudden depth creates hesitation.<br><strong>Follow-up:</strong> Opponents usually return weakly to your middle or backhand; counter immediately with a fast topspin cross-court or pivot to use your forehand.</dd>
+            </div>
+            <div class="term">
+              <dt>3. Wide Backhand Pendulum Serve (Short / Half-Long)</dt>
+              <dd><strong>How it works:</strong> The wider you serve, the harder it is for opponents to hit down the line. A half-long serve invites a slow spin return toward your backhand corner.<br><strong>Follow-up:</strong> Anticipate the slow return, pivot quickly, and finish the rally with a powerful forehand counter.</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>8.2 &mdash; General Play Tactics</h4>
+          <dl class="term-list">
+            <div class="term">
+              <dt>4. Heavy Backhand Topspin &rarr; Pivot Forehand Counter</dt>
+              <dd><strong>How it works:</strong> Start the rally by pressing hard with a strong backhand topspin attack.<br><strong>Follow-up:</strong> As long as your initial backhand is deep and fast, the return will be weak, giving you the time to pivot from the backhand corner and hit a high-power forehand topspin.</dd>
+            </div>
+            <div class="term">
+              <dt>5. Touch Short to Forehand &rarr; Pivot Forehand Attack</dt>
+              <dd><strong>How it works:</strong> Drop a short touch shot to your opponent's forehand to draw out a soft return or high push.<br><strong>Follow-up:</strong> Stay light on your feet so you can immediately pivot into the backhand corner and put the point away with a strong forehand.</dd>
+            </div>
+            <div class="term">
+              <dt>6. Rhythm Change via Chop Block</dt>
+              <dd><strong>How it works:</strong> When facing relentless heavy topspin, absorb and reverse the spin using an active chop block off the bounce to disrupt their timing.<br><strong>Follow-up:</strong> Side-spin chop blocks usually return diagonally, allowing you to prepare your next offensive shot early.</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="subsection">
+          <h4>8.3 &mdash; Specialized Left-Hander Tactic</h4>
+          <dl class="term-list">
+            <div class="term">
+              <dt>7. Bait the Flick vs. Lefties &rarr; Exploit Corners</dt>
+              <dd><strong>How it works:</strong> Left-handed players like to flick short balls in the middle with their backhand. Serve or touch short to their middle to invite this flick.<br><strong>Follow-up:</strong> Anticipate the flick and drive it straight down the line to their wide backhand. Once they expect that, mix in a sharp diagonal attack to their wide forehand.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <span class="footer-desktop-text">© 2026 Pong Home. All rights reserved. Email us at contact@ponghome.com</span><span class="footer-mobile-text">© 2026 Pong Home. All rights reserved.</span> <span class="footer-social">
+    <span class="footer-social-desktop">
+      <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" aria-label="Instagram" style="color:var(--mint-dim); display:inline-flex; vertical-align:middle; margin-left:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+      </a>
+      <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" aria-label="Facebook" style="color:var(--mint-dim); display:inline-flex; vertical-align:middle; margin-left:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+      </a>
+    </span>
+    <span class="footer-social-mobile"><span class="footer-follow">Follow us on</span> <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a></span>
+  </span>
+</footer>
+
+<script>
+  const siteNavEl = document.querySelector('.site-nav');
+
+  function updateNavHeightVar(){
+    if (!siteNavEl) return;
+    const h = Math.ceil(siteNavEl.getBoundingClientRect().height);
+    if (h > 0) document.documentElement.style.setProperty('--nav-h', h + 'px');
+  }
+  updateNavHeightVar();
+  window.addEventListener('resize', updateNavHeightVar);
+  window.addEventListener('orientationchange', () => setTimeout(updateNavHeightVar, 150));
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', updateNavHeightVar);
+  }
+  if (document.fonts && document.fonts.ready) {
+    // nav width (and thus wrap height) can shift once the brand font finishes loading
+    document.fonts.ready.then(updateNavHeightVar).catch(()=>{});
+  }
+</script>
+
+</body>
+</html>
