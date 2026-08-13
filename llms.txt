@@ -1,8 +1,8 @@
 # Pong Home
 
-> Pong Home is a Toronto-based table tennis platform: on-demand coaching in Toronto and New York City, the world's first no-account marketplace for buying and selling table tennis gear, and the Gear Index — a rubber and blade ratings database where players find and rate equipment.
+> Pong Home is a Toronto-based table tennis platform: on-demand coaching in Toronto and New York City, the world's first no-account marketplace for buying and selling table tennis gear, the Gear Index — a rubber and blade ratings database where players find and rate equipment, and the Discount Center — a directory of table tennis store promo codes.
 
-Pong Home is built around three connected products: coaching, the marketplace, and the Gear Index. All three point back to the same goal — helping table tennis players in Toronto (and beyond) find the right coach, the right gear, and the right community.
+Pong Home is built around four connected products: coaching, the marketplace, the Gear Index, and the Discount Center. All four point back to the same goal — helping table tennis players in Toronto (and beyond) find the right coach, the right gear, and the right community.
 
 ## Coaching (Toronto focus)
 
@@ -21,6 +21,12 @@ The Pong Home Marketplace is built specifically for table tennis gear — racket
 The Gear Index is a searchable, filterable database covering thousands of table tennis rubbers and blades, with speed, spin, control, and stiffness ratings for each. Players use it to compare equipment and choose the right setup for their playing style before buying — including filtering by rubber type (inverted, long pips, short pips, medium pips) and sorting by brand. Beyond browsing official ratings, players can also **add their own personal rating** for any rubber or blade (on a 1–10 scale across attributes like speed, spin/control, and stiffness), saved to their own device, making it a community-informed resource as well as a reference database.
 
 - [Gear Index](https://ponghome.com/ratings): Search and compare table tennis rubber and blade ratings; rate equipment yourself.
+
+## Discount Center
+
+The Discount Center is a directory of promo codes and discount offers from table tennis stores worldwide, organized by region and store. Each offer is graded by trustworthiness — Valid means a specific, checkable policy (an exact percentage, a named page, a stated threshold); Unverified means the source was vague or unconfirmed; Expired means a code no longer works. Players can filter by region or store name, copy a code directly, and **update the status themselves** based on what they find at checkout, saved to their own device.
+
+- [Discount Center](https://ponghome.com/discount): Browse table tennis store promo codes by region or store, copy a code before you check out.
 
 ## Tools
 
