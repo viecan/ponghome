@@ -1,19 +1,34 @@
 # Pong Home
 
-> Pong Home is a table tennis platform offering on-demand coaching, an equipment marketplace, and the world's largest table tennis rubber and blade rating database.
+> Pong Home is a Toronto-based table tennis platform: on-demand coaching in Toronto and New York City, the world's first no-account marketplace for buying and selling table tennis gear, and the Gear Index — a rubber and blade ratings database where players find and rate equipment.
 
-Pong Home connects players with advanced and national-level coaches for private lessons and matchmaking in Toronto and New York City, provides a searchable rubber/blade ratings database with 1,600+ rubbers and 2,400+ blades, runs a local marketplace for buying and selling used table tennis gear, and offers free tools including a tournament bracket generator (Arena) and an on-court digital Scoreboard.
+Pong Home is built around three connected products: coaching, the marketplace, and the Gear Index. All three point back to the same goal — helping table tennis players in Toronto (and beyond) find the right coach, the right gear, and the right community.
 
-## Core Pages
+## Coaching (Toronto focus)
 
-- [Home](https://ponghome.com/): Coaching booking, matchmaking, and overview of all Pong Home products.
-- [Gear Index](https://ponghome.com/ratings): Searchable database of table tennis rubber and blade ratings (speed, spin, control, stiffness).
-- [Marketplace](https://ponghome.com/marketplace): Buy and sell used table tennis rackets, blades, rubbers, and gear locally.
-- [Tools](https://ponghome.com/tools): Free Arena tournament bracket tool and on-court Scoreboard app.
-- [Insights](https://ponghome.com/table-tennis-guides): Coach-written guides on technique, equipment, and the mental game.
+Pong Home connects players with advanced and national-level coaches for one-on-one and small-group table tennis coaching, from beginners through competitive athletes. Coaching is offered in Toronto and New York City, with matchmaking between players and coaches and a local community around the sport. This is the primary product for anyone searching for "table tennis coaching Toronto," "ping pong lessons Toronto," or a private table tennis coach.
 
-## Guides
+- [Home / Book Coaching](https://ponghome.com/): Browse coaches, book on-demand table tennis lessons in Toronto, get matched by skill level.
 
+## Marketplace — the world's first no-account table tennis marketplace
+
+The Pong Home Marketplace is built specifically for table tennis gear — rackets, blades, rubbers, and accessories — and is designed to be the fastest way to buy or sell used equipment locally. Unlike general marketplaces, sellers can post a listing in seconds with **no account and no login required**. Buyers browse listings and **contact sellers directly** (by text, call, or email) with no middleman, no bidding system, and no waiting on approval. This makes it the go-to place for table tennis players who want to sell paddles or rubbers quickly, or buy affordable gear from other local players.
+
+- [Marketplace](https://ponghome.com/marketplace): Post or browse table tennis gear listings — no account needed, message sellers directly.
+
+## Gear Index (Ratings)
+
+The Gear Index is a searchable, filterable database covering thousands of table tennis rubbers and blades, with speed, spin, control, and stiffness ratings for each. Players use it to compare equipment and choose the right setup for their playing style before buying — including filtering by rubber type (inverted, long pips, short pips, medium pips) and sorting by brand. Beyond browsing official ratings, players can also **add their own personal rating** for any rubber or blade (on a 1–10 scale across attributes like speed, spin/control, and stiffness), saved to their own device, making it a community-informed resource as well as a reference database.
+
+- [Gear Index](https://ponghome.com/ratings): Search and compare table tennis rubber and blade ratings; rate equipment yourself.
+
+## Tools
+
+- [Tools](https://ponghome.com/tools): Free Arena tournament bracket generator and on-court digital Scoreboard app.
+
+## Guides (Insights)
+
+- [Insights hub](https://ponghome.com/table-tennis-guides): Coach-written guides on technique, equipment, and the mental game.
 - [Point Winner Handbook](https://ponghome.com/table-tennis-guides/handbook): Full tactical playbook for modern table tennis.
 - [How to Improve Your Backhand](https://ponghome.com/table-tennis-guides/how-to-improve-your-backhand): Backhand drive and loop technique, grip, and drills.
 - [How to Improve Your Footwork](https://ponghome.com/table-tennis-guides/improve-your-table-tennis-footwork): Footwork patterns, stance, and movement drills.
