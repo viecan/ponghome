@@ -1,0 +1,21 @@
+# Pong Home
+
+> Pong Home is a table tennis platform offering on-demand coaching, an equipment marketplace, and the world's largest table tennis rubber and blade rating database.
+
+Pong Home connects players with advanced and national-level coaches for private lessons and matchmaking in Toronto and New York City, provides a searchable rubber/blade ratings database with 1,600+ rubbers and 2,400+ blades, runs a local marketplace for buying and selling used table tennis gear, and offers free tools including a tournament bracket generator (Arena) and an on-court digital Scoreboard.
+
+## Core Pages
+
+- [Home](https://ponghome.com/): Coaching booking, matchmaking, and overview of all Pong Home products.
+- [Gear Index](https://ponghome.com/ratings): Searchable database of table tennis rubber and blade ratings (speed, spin, control, stiffness).
+- [Marketplace](https://ponghome.com/marketplace): Buy and sell used table tennis rackets, blades, rubbers, and gear locally.
+- [Tools](https://ponghome.com/tools): Free Arena tournament bracket tool and on-court Scoreboard app.
+- [Insights](https://ponghome.com/table-tennis-guides): Coach-written guides on technique, equipment, and the mental game.
+
+## Guides
+
+- [Point Winner Handbook](https://ponghome.com/table-tennis-guides/handbook): Full tactical playbook for modern table tennis.
+- [How to Improve Your Backhand](https://ponghome.com/table-tennis-guides/how-to-improve-your-backhand): Backhand drive and loop technique, grip, and drills.
+- [How to Improve Your Footwork](https://ponghome.com/table-tennis-guides/improve-your-table-tennis-footwork): Footwork patterns, stance, and movement drills.
+- [Wood vs. Carbon Blades](https://ponghome.com/table-tennis-guides/table-tennis-blade-comparison-wood-vs-carbon): Comparison of blade construction types and how to choose one.
+- [Tips, Techniques & the Mental Game](https://ponghome.com/table-tennis-guides/table-tennis-tips-techniques-mental-game): Pre-match routines and mental toughness training.
