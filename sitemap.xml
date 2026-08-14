@@ -55,4 +55,14 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://ponghome.com/table-tennis-guides/where-can-i-buy-a-table-tennis-racket</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ponghome.com/table-tennis-guides/how-often-should-i-change-my-rubber</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>
