@@ -3105,7 +3105,7 @@
   // Cloudflare Worker that caches Supabase storage images at the edge,
   // cutting egress costs. Only used for image display (not the REST API
   // or uploads, which still hit Supabase directly).
-  const IMAGE_CDN_URL = 'https://ponghome-image-cdn.viet-adops.workers.dev';
+  const IMAGE_CDN_URL = 'https://images.ponghome.com';
   const SUPABASE_BUCKET_PATH = '/storage/v1/object/public/listing-images/';
 
   // Rewrites a stored Supabase image URL to go through the image CDN instead,
