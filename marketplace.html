@@ -3106,13 +3106,18 @@
   // cutting egress costs. Only used for image display (not the REST API
   // or uploads, which still hit Supabase directly).
   const IMAGE_CDN_URL = 'https://ponghome-image-cdn.viet-adops.workers.dev';
+  const SUPABASE_BUCKET_PATH = '/storage/v1/object/public/listing-images/';
 
-  // Rewrites a stored Supabase image URL to go through the image CDN instead.
-  // Works for both old and new listings since it just swaps the origin.
+  // Rewrites a stored Supabase image URL to go through the image CDN instead,
+  // using a simplified /img/<filename> path. (Not /storage/v1/object/public/...
+  // — some ad-blocker filter lists match that exact path pattern regardless
+  // of domain, which silently broke images for some visitors.)
   function toCdnUrl(url) {
     if (!url || typeof url !== 'string') return url;
-    if (!url.startsWith(SUPABASE_URL)) return url;
-    return IMAGE_CDN_URL + url.slice(SUPABASE_URL.length);
+    const idx = url.indexOf(SUPABASE_BUCKET_PATH);
+    if (idx === -1) return url;
+    const filename = url.slice(idx + SUPABASE_BUCKET_PATH.length);
+    return `${IMAGE_CDN_URL}/img/${filename}`;
   }
 
   let listings = [];
