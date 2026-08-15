@@ -3108,16 +3108,21 @@
   const IMAGE_CDN_URL = 'https://images.ponghome.com';
   const SUPABASE_BUCKET_PATH = '/storage/v1/object/public/listing-images/';
 
-  // Rewrites a stored Supabase image URL to go through the image CDN instead,
-  // using a simplified /img/<filename> path. (Not /storage/v1/object/public/...
-  // — some ad-blocker filter lists match that exact path pattern regardless
-  // of domain, which silently broke images for some visitors.)
-  function toCdnUrl(url) {
+  // Rewrites a stored Supabase (full-size) image URL to go through the
+  // image CDN instead, using a simplified /img/<filename> path.
+  //
+  // The small variant is requested via ?size=sm rather than a "sm-" or
+  // "thumb-" filename prefix. Filename-text patterns like that get silently
+  // blocked by some browser/OS-level content filters regardless of domain
+  // (confirmed across Chrome, Safari, Incognito, and a first-party
+  // subdomain) — moving the size hint into a query param avoids it, since
+  // the visible filename stays identical to the full-size version.
+  function toCdnUrl(url, small) {
     if (!url || typeof url !== 'string') return url;
     const idx = url.indexOf(SUPABASE_BUCKET_PATH);
     if (idx === -1) return url;
     const filename = url.slice(idx + SUPABASE_BUCKET_PATH.length);
-    return `${IMAGE_CDN_URL}/img/${filename}`;
+    return `${IMAGE_CDN_URL}/img/${filename}${small ? '?size=sm' : ''}`;
   }
 
   let listings = [];
@@ -3531,7 +3536,7 @@
         <div class="mkt-contact-row">
           ${ctaHtml(l)}
         </div>
-        ${images.length ? `<div class="mkt-images">${images.map(u => `<img src="${escapeHtml(toCdnUrl(getThumbUrl(u)))}" data-full="${escapeHtml(toCdnUrl(u))}" onerror="this.onerror=null;this.src=this.dataset.full;" class="mkt-img-thumb" alt="listing photo" loading="lazy" />`).join('')}</div>` : ''}
+        ${images.length ? `<div class="mkt-images">${images.map(u => `<img src="${escapeHtml(toCdnUrl(u, true))}" data-full="${escapeHtml(toCdnUrl(u, false))}" onerror="this.onerror=null;this.src=this.dataset.full;" class="mkt-img-thumb" alt="listing photo" loading="lazy" />`).join('')}</div>` : ''}
         <button class="mkt-share-btn" data-id="${l.id}" data-title="${escapeHtml(l.title)}" aria-label="Share this listing">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
         </button>
