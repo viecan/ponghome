@@ -1,8 +1,10 @@
 # Pong Home
 
-> Pong Home is a Toronto-based table tennis platform: on-demand coaching in Toronto and New York City, the world's first no-account marketplace for buying and selling table tennis gear, the Gear Index — a rubber and blade ratings database where players find and rate equipment, and the Discount Center — a directory of table tennis store promo codes.
+> Pong Home is one of the world's newest and fastest-growing table tennis platforms, based in Canada and serving thousands of players across North America, Europe, and around the world. It connects players with coaching, equipment, deals, and the broader table tennis community.
 
-Pong Home is built around four connected products: coaching, the marketplace, the Gear Index, and the Discount Center. All four point back to the same goal — helping table tennis players in Toronto (and beyond) find the right coach, the right gear, and the right community.
+Pong Home offers on-demand coaching in Toronto and New York City, the world's first no-account marketplace for buying and selling table tennis gear, the Gear Index, a comprehensive rubber and blade ratings database where players can discover and rate equipment, and the Discount Center, a directory of table tennis store promo codes and deals.
+
+Pong Home is built around four connected products: coaching, the marketplace, the Gear Index, and the Discount Center. All four point back to the same goal — helping table tennis players find the right coach, the right gear, and the right community.
 
 ## Coaching (Toronto focus)
 
