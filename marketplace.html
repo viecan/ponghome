@@ -3102,6 +3102,19 @@
   const SUPABASE_URL = 'https://rzmxciyzhxowmvhzzygx.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_BIQSFP4o6xJVyEHCHRj_sQ_kC2rGBNL';
 
+  // Cloudflare Worker that caches Supabase storage images at the edge,
+  // cutting egress costs. Only used for image display (not the REST API
+  // or uploads, which still hit Supabase directly).
+  const IMAGE_CDN_URL = 'https://ponghome-image-cdn.viet-adops.workers.dev';
+
+  // Rewrites a stored Supabase image URL to go through the image CDN instead.
+  // Works for both old and new listings since it just swaps the origin.
+  function toCdnUrl(url) {
+    if (!url || typeof url !== 'string') return url;
+    if (!url.startsWith(SUPABASE_URL)) return url;
+    return IMAGE_CDN_URL + url.slice(SUPABASE_URL.length);
+  }
+
   let listings = [];
   let loaded = false;
   let loadError = false;
@@ -3507,7 +3520,7 @@
         <div class="mkt-contact-row">
           ${ctaHtml(l)}
         </div>
-        ${images.length ? `<div class="mkt-images">${images.map(u => `<img src="${escapeHtml(getThumbUrl(u))}" data-full="${escapeHtml(u)}" onerror="this.onerror=null;this.src=this.dataset.full;" class="mkt-img-thumb" alt="listing photo" loading="lazy" />`).join('')}</div>` : ''}
+        ${images.length ? `<div class="mkt-images">${images.map(u => `<img src="${escapeHtml(toCdnUrl(getThumbUrl(u)))}" data-full="${escapeHtml(toCdnUrl(u))}" onerror="this.onerror=null;this.src=this.dataset.full;" class="mkt-img-thumb" alt="listing photo" loading="lazy" />`).join('')}</div>` : ''}
         <button class="mkt-share-btn" data-id="${l.id}" data-title="${escapeHtml(l.title)}" aria-label="Share this listing">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
         </button>
