@@ -3213,15 +3213,21 @@
   // Egress low without touching the paid Transformation quota.
   //
   // getThumbUrl() derives the small variant's URL from the full-size URL by
-  // convention (same path, filename prefixed with "thumb-"). Listings posted
+  // convention (same path, filename prefixed with "sm-"). Listings posted
   // before this change only have the full-size file, so the <img> tag falls
-  // back to the full URL via onerror if the thumb 404s.
+  // back to the full URL via onerror if the small variant 404s.
+  //
+  // NOTE: this used to be prefixed "thumb-", but many ad-blocker filter
+  // lists block any URL containing "thumb" (a common pattern for ad
+  // thumbnails), which silently broke small-image loading for a chunk of
+  // visitors and forced a fallback to full-size images every time. "sm-"
+  // avoids that collision.
   function getThumbUrl(fullUrl) {
     if (!fullUrl || typeof fullUrl !== 'string') return fullUrl;
     const marker = '/listing-images/';
     const idx = fullUrl.indexOf(marker);
     if (idx === -1) return fullUrl;
-    return fullUrl.slice(0, idx + marker.length) + 'thumb-' + fullUrl.slice(idx + marker.length);
+    return fullUrl.slice(0, idx + marker.length) + 'sm-' + fullUrl.slice(idx + marker.length);
   }
 
   // Resizes an image file to fit within maxDim x maxDim (preserving aspect
@@ -3330,7 +3336,7 @@
     };
 
     await putVariant(fullBlob, path);
-    await putVariant(thumbBlob, `thumb-${path}`);
+    await putVariant(thumbBlob, `sm-${path}`);
 
     // Only the full-size URL is stored in the DB; the thumb URL is derived
     // from it at render time via getThumbUrl(), so no schema change needed.
