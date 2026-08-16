@@ -930,10 +930,32 @@
   #equipModalSliders.rate-modal-sliders{gap:12px; margin-bottom:2px;}
   #equipModalSliders .rate-slider-row .rate-slider-label{font-size:0.78rem; margin-bottom:4px;}
   #equipModalSliders .rate-slider-row .rate-slider-value{font-size:0.76rem; min-width:22px;}
-  #equipModalSliders .rate-slider-row input[type="range"]{height:4px;}
-  #equipModalSliders .rate-slider-row input[type="range"]::-webkit-slider-thumb{width:16px; height:16px; border-width:2px;}
-  #equipModalSliders .rate-slider-row input[type="range"]::-moz-range-thumb{width:16px; height:16px; border-width:2px;}
-  #equipModalSliders .rate-slider-ticks{font-size:0.58rem; margin-top:2px;}
+  .equip-number-bar{
+    display:flex;
+    border-radius:10px;
+    border:1px solid var(--line-light);
+    overflow:hidden;
+    background:var(--paper-card);
+  }
+  .equip-number-btn{
+    flex:1;
+    padding:7px 0;
+    border:none;
+    border-right:1px solid var(--line-light);
+    background:transparent;
+    color:var(--ink-soft);
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.76rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:background .12s ease, color .12s ease;
+  }
+  .equip-number-btn:last-child{border-right:none;}
+  .equip-number-btn:hover{background:rgba(10,42,47,0.05);}
+  .equip-number-btn.active{
+    background:var(--mint);
+    color:var(--bg-deeper);
+  }
   .equip-modal-submit{padding:10px 18px; font-size:0.88rem; margin-top:2px;}
 
 
@@ -1585,20 +1607,19 @@ function renderEquipSliders(){
         <span>${c.label}</span>
         <span class="rate-slider-value" id="equipVal-${c.key}">${equipValues[c.key]}</span>
       </div>
-      <input type="range" min="1" max="10" step="1"
-        id="equipSlider-${c.key}"
-        value="${equipValues[c.key]}"
-        oninput="onEquipSliderInput('${c.key}', this.value)">
-      <div class="rate-slider-ticks"><span>1</span><span>10</span></div>
+      <div class="equip-number-bar" id="equipBar-${c.key}">
+        ${[1,2,3,4,5,6,7,8,9,10].map(n => `<button type="button" class="equip-number-btn${n === equipValues[c.key] ? ' active' : ''}" data-value="${n}" onclick="onEquipNumberClick('${c.key}', ${n})">${n}</button>`).join('')}
+      </div>
     </div>
   `).join('');
-  criteria.forEach(c => updateSliderFill(document.getElementById(`equipSlider-${c.key}`)));
 }
 
-function onEquipSliderInput(key, value){
-  equipValues[key] = parseInt(value, 10);
+function onEquipNumberClick(key, value){
+  equipValues[key] = value;
   document.getElementById(`equipVal-${key}`).textContent = value;
-  updateSliderFill(document.getElementById(`equipSlider-${key}`));
+  document.querySelectorAll(`#equipBar-${key} .equip-number-btn`).forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.value, 10) === value);
+  });
 }
 
 function onEquipRubberTypeChange(){
