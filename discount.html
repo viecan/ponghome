@@ -307,6 +307,117 @@
   }
   .reset-btn:hover{border-color:var(--mint-dim); color:var(--mint-dim); background:var(--mint-soft);}
 
+  .add-store-btn{
+    align-self:flex-end;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:#E7EBEA;
+    border:1.5px solid #D3D9D8;
+    color:var(--ink-soft);
+    font-family:'Inter',sans-serif;
+    font-size:0.96rem;
+    font-weight:700;
+    padding:12px 16px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:all .15s;
+    white-space:nowrap;
+  }
+  .add-store-btn:hover{background:#DADFDE; border-color:#C3CAC9; color:var(--ink);}
+
+  /* ============ ADD A STORE MODAL ============ */
+  .as-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(10,42,47,0.55);
+    z-index:100;
+    align-items:flex-start;
+    justify-content:center;
+    padding:30px 16px;
+    overflow-y:auto;
+  }
+  .as-overlay.open{display:flex;}
+  .as-modal{
+    background:var(--paper-card);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    width:100%;
+    max-width:380px;
+    padding:20px;
+    position:relative;
+  }
+  .as-close{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    border:1.5px solid var(--line-light);
+    background:transparent;
+    color:var(--ink-soft);
+    font-size:0.9rem;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:all .15s;
+  }
+  .as-close:hover{border-color:var(--coral); color:var(--coral); background:rgba(255,107,107,0.08);}
+  .as-title{font-size:1.15rem; margin-bottom:4px;}
+  .as-sub{color:var(--ink-soft); font-size:0.8rem; margin-bottom:14px; line-height:1.4;}
+  .as-field{margin-bottom:10px;}
+  .as-field label{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.6rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:5px;
+  }
+  .as-field input[type="text"],
+  .as-field input[type="email"],
+  .as-field textarea{
+    width:100%;
+    padding:8px 12px;
+    border-radius:9px;
+    border:1.5px solid var(--line-light);
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:0.85rem;
+    outline:none;
+    transition:border-color 0.2s ease;
+    resize:vertical;
+  }
+  .as-field textarea{min-height:52px;}
+  .as-field input:focus, .as-field textarea:focus{border-color:var(--mint-dim);}
+  .as-checkbox-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .as-checkbox-row input{width:15px; height:15px; accent-color:var(--mint-dim); cursor:pointer;}
+  .as-checkbox-row label{font-size:0.8rem; color:var(--ink); cursor:pointer;}
+  .as-submit-btn{
+    width:100%;
+    background:var(--mint);
+    border:none;
+    color:var(--bg-deeper);
+    font-family:'Inter',sans-serif;
+    font-size:0.88rem;
+    font-weight:700;
+    padding:10px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .as-submit-btn:hover{background:var(--mint-dim);}
+
   .share-btn{
     position:absolute;
     top:14px;
@@ -646,6 +757,18 @@
     }
     .search-field{display:none;}
     .reset-btn{display:none;}
+    .add-store-btn{
+      width:auto;
+      align-self:auto;
+      justify-content:center;
+      font-size:0.82rem;
+      font-weight:600;
+      padding:8px 10px;
+      border-radius:9px;
+      gap:4px;
+    }
+    .as-plus{display:none;}
+    .as-modal{padding:16px 14px;}
     .grid{grid-template-columns:1fr;}
   }
 </style>
@@ -710,12 +833,58 @@
       </div>
     </div>
     <button class="reset-btn" id="f-reset">Clear filters</button>
+    <button class="add-store-btn" id="add-store-btn"><span class="as-plus">+</span> Add a store</button>
   </div>
 
   <div class="grid" id="grid"></div>
 
-
 </main>
+
+<div class="as-overlay" id="as-overlay">
+  <div class="as-modal">
+    <button class="as-close" id="as-close" aria-label="Close">✕</button>
+    <h3 class="as-title">Add a store</h3>
+    <p class="as-sub">Know a store with a good table tennis deal? Submit it below and we'll review it for the Discount Center.</p>
+    <form id="as-form" action="https://formsubmit.co/viet.adops@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="New Discount Center store submission">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_next" value="https://ponghome.com/discount?submitted=true">
+
+      <div class="as-field">
+        <label for="as-store">Store name</label>
+        <input type="text" id="as-store" name="Store name" required>
+      </div>
+
+      <div class="as-field">
+        <label for="as-location">Country / City</label>
+        <input type="text" id="as-location" name="Country/City" placeholder="e.g. Toronto, Canada / Worldwide / Online" required>
+      </div>
+
+      <div class="as-field">
+        <label for="as-code">Discount code</label>
+        <input type="text" id="as-code" name="Discount Code">
+      </div>
+
+      <div class="as-field">
+        <label for="as-desc">Description / condition</label>
+        <textarea id="as-desc" name="Description/Condition" rows="3" placeholder="e.g. 10% off orders over $50, valid until Dec 2026"></textarea>
+      </div>
+
+      <div class="as-field">
+        <label for="as-email">Your email</label>
+        <input type="email" id="as-email" name="Your Email" required>
+      </div>
+
+      <div class="as-checkbox-row">
+        <input type="checkbox" id="as-promote" name="Promote store" value="Yes">
+        <label for="as-promote">Do you want to promote your store?</label>
+      </div>
+
+      <button type="submit" class="as-submit-btn">Submit</button>
+    </form>
+  </div>
+</div>
 
 <footer class="site-footer">
   <div>© 2026 Pong Home. All rights reserved.</div>
@@ -855,6 +1024,24 @@ function resetFilters(){
 [regionSel, storeSel].forEach(el => el.addEventListener('change', applyFilters));
 searchInput.addEventListener('input', applyFilters);
 document.getElementById('f-reset').addEventListener('click', resetFilters);
+
+const asOverlay = document.getElementById('as-overlay');
+const asForm = document.getElementById('as-form');
+document.getElementById('add-store-btn').addEventListener('click', ()=>{
+  asOverlay.classList.add('open');
+});
+document.getElementById('as-close').addEventListener('click', ()=>{
+  asOverlay.classList.remove('open');
+});
+asOverlay.addEventListener('click', (e)=>{
+  if(e.target === asOverlay) asOverlay.classList.remove('open');
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape') asOverlay.classList.remove('open');
+});
+asForm.addEventListener('submit', ()=>{
+  asForm.querySelector('.as-submit-btn').textContent = 'Sending…';
+});
 
 const menu = document.getElementById('status-menu');
 let menuTargetId = null;
