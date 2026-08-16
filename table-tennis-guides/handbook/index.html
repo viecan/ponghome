@@ -1802,6 +1802,35 @@
     .pc-paddle-right{right:3%;}
   }
 
+
+  /* ============ SHARE BAR ============ */
+  .share-bar{
+    max-width:840px;
+    margin:0 auto;
+    padding:16px 24px 0;
+    display:flex;
+    justify-content:flex-end;
+  }
+  .share-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--paper-card);
+    border:1px solid var(--line-light);
+    border-radius:999px;
+    padding:8px 16px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .share-btn:hover{border-color:var(--mint-dim); color:var(--mint-dim); background:var(--mint-soft);}
+  .share-btn svg{width:15px;height:15px;flex:0 0 auto;}
+  @media (max-width:760px){
+    .share-bar{padding:14px 18px 0;}
+  }
 </style>
 <body>
 
@@ -1837,6 +1866,13 @@
     <p class="book-sub">From Fundamental Control to Unstoppable Match Sequences</p>
     <p class="book-byline">By Pong Home</p>
   </header>
+
+  <div class="share-bar">
+    <button class="share-btn" id="shareBtn" type="button" aria-label="Share this page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      <span id="shareBtnLabel">Share</span>
+    </button>
+  </div>
 
   <div class="chapters-wrap">
 
@@ -2374,5 +2410,26 @@
   }
 </script>
 
+
+<script>
+  (function(){
+    var btn = document.getElementById('shareBtn');
+    var label = document.getElementById('shareBtnLabel');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+      var url = window.location.href;
+      if(navigator.share){
+        navigator.share({ title: document.title, url: url }).catch(function(){});
+      } else if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(url).then(function(){
+          label.textContent = 'Copied!';
+          setTimeout(function(){ label.textContent = 'Share'; }, 2000);
+        });
+      } else {
+        window.prompt('Copy this link:', url);
+      }
+    });
+  })();
+</script>
 </body>
 </html>
