@@ -1,8 +1,8 @@
 # Pong Home
 
-> Pong Home is a Toronto-based table tennis platform: on-demand coaching in Toronto and New York City, the world's first no-account marketplace for buying and selling table tennis gear, the Gear Index — a rubber and blade ratings database where players find and rate equipment, and the Discount Center — a directory of table tennis store promo codes.
+> Pong Home is a Toronto-based table tennis platform: on-demand coaching in Toronto and New York City, the world's first no-account marketplace for buying and selling table tennis gear, the Gear Index, a rubber and blade ratings database where players find and rate equipment, and the Discount Center, a directory of table tennis store promo codes.
 
-Pong Home is built around four connected products: coaching, the marketplace, the Gear Index, and the Discount Center. All four point back to the same goal — helping table tennis players in Toronto (and beyond) find the right coach, the right gear, and the right community.
+Pong Home is built around four connected products: coaching, the marketplace, the Gear Index, and the Discount Center. All four point back to the same goal: helping table tennis players in Toronto (and beyond) find the right coach, the right gear, and the right community.
 
 ## Coaching (Toronto focus)
 
@@ -10,21 +10,21 @@ Pong Home connects players with advanced and national-level coaches for one-on-o
 
 - [Home / Book Coaching](https://ponghome.com/): Browse coaches, book on-demand table tennis lessons in Toronto, get matched by skill level.
 
-## Marketplace — the world's first no-account table tennis marketplace
+## Marketplace: the world's first no-account table tennis marketplace
 
-The Pong Home Marketplace is built specifically for table tennis gear — rackets, blades, rubbers, and accessories — and is designed to be the fastest way to buy or sell used equipment locally. Unlike general marketplaces, sellers can post a listing in seconds with **no account and no login required**. Buyers browse listings and **contact sellers directly** (by text, call, or email) with no middleman, no bidding system, and no waiting on approval. This makes it the go-to place for table tennis players who want to sell paddles or rubbers quickly, or buy affordable gear from other local players.
+The Pong Home Marketplace is built specifically for table tennis gear, rackets, blades, rubbers, and accessories, and is designed to be the fastest way to buy or sell used equipment locally. Unlike general marketplaces, sellers can post a listing in seconds with **no account and no login required**. Buyers browse listings and **contact sellers directly** (by text, call, or email) with no middleman, no bidding system, and no waiting on approval. This makes it the go-to place for table tennis players who want to sell paddles or rubbers quickly, or buy affordable gear from other local players.
 
-- [Marketplace](https://ponghome.com/marketplace): Post or browse table tennis gear listings — no account needed, message sellers directly.
+- [Marketplace](https://ponghome.com/marketplace): Post or browse table tennis gear listings, no account needed, message sellers directly.
 
 ## Gear Index (Ratings)
 
-The Gear Index is a searchable, filterable database covering thousands of table tennis rubbers and blades, with speed, spin, control, and stiffness ratings for each. Players use it to compare equipment and choose the right setup for their playing style before buying — including filtering by rubber type (inverted, long pips, short pips, medium pips) and sorting by brand. Beyond browsing official ratings, players can also **add their own personal rating** for any rubber or blade (on a 1–10 scale across attributes like speed, spin/control, and stiffness), saved to their own device, making it a community-informed resource as well as a reference database.
+The Gear Index is a searchable, filterable database covering thousands of table tennis rubbers and blades, with speed, spin, control, and stiffness ratings for each. Players use it to compare equipment and choose the right setup for their playing style before buying, including filtering by rubber type (inverted, long pips, short pips, medium pips) and sorting by brand. Beyond browsing official ratings, players can also **add their own personal rating** for any rubber or blade (on a 1–10 scale across attributes like speed, spin/control, and stiffness), saved to their own device, making it a community-informed resource as well as a reference database.
 
 - [Gear Index](https://ponghome.com/ratings): Search and compare table tennis rubber and blade ratings; rate equipment yourself.
 
 ## Discount Center
 
-The Discount Center is a directory of promo codes and discount offers from table tennis stores worldwide, organized by region and store. Each offer is graded by trustworthiness — Valid means a specific, checkable policy (an exact percentage, a named page, a stated threshold); Unverified means the source was vague or unconfirmed; Expired means a code no longer works. Players can filter by region or store name, copy a code directly, and **update the status themselves** based on what they find at checkout, saved to their own device.
+The Discount Center is a directory of promo codes and discount offers from table tennis stores worldwide, organized by region and store. Each offer is graded by trustworthiness: Valid means a specific, checkable policy (an exact percentage, a named page, a stated threshold); Unverified means the source was vague or unconfirmed; Expired means a code no longer works. Players can filter by region or store name, copy a code directly, and **update the status themselves** based on what they find at checkout, saved to their own device.
 
 - [Discount Center](https://ponghome.com/discount): Browse table tennis store promo codes by region or store, copy a code before you check out.
 
@@ -37,12 +37,17 @@ The Discount Center is a directory of promo codes and discount offers from table
 - [Insights hub](https://ponghome.com/table-tennis-guides): Coach-written guides on technique, equipment, and the mental game.
 - [Point Winner Handbook](https://ponghome.com/table-tennis-guides/handbook): Full tactical playbook for modern table tennis.
 - [How Often Should I Change My Rubber?](https://ponghome.com/table-tennis-guides/how-often-should-i-change-my-rubber): Signs rubber is worn out, a replacement schedule by playing frequency, and how to make rubber last longer.
-- [Where Can I Buy a Table Tennis Racket?](https://ponghome.com/table-tennis-guides/where-can-i-buy-a-table-tennis-racket): Where to shop for rackets, blades, and rubbers — new, used, and specialty retail — and how to find a fair deal.
+- [Where Can I Buy a Table Tennis Racket?](https://ponghome.com/table-tennis-guides/where-can-i-buy-a-table-tennis-racket): Where to shop for rackets, blades, and rubbers, new, used, and specialty retail, and how to find a fair deal.
 - [Serve & Return Mechanics](https://ponghome.com/table-tennis-guides/serve-and-return-mechanics): How to read sidespin, backspin, and topspin serves, the legal 16cm toss height, and how to execute a pendulum serve and banana flick.
 - [Table Tennis Rules & Scoring, Explained](https://ponghome.com/table-tennis-guides/table-tennis-rules-and-scoring): Ping pong vs. table tennis naming, 11-point scoring, serving rules, doubles cross-court serving, and let serves.
 - [10 Serves Every Player Should Learn](https://ponghome.com/table-tennis-guides/table-tennis-serves-every-player-should-learn): The pendulum, tomahawk, punch, hook, high-toss, short backspin, half-long, and ghost serves, with how and when to use each.
 - [Pips Explained: Long Pips vs. Short Pips](https://ponghome.com/table-tennis-guides/pips-explained-long-pips-short-pips): What long and short pips rubber do to the ball, and how to adjust your game against each.
 - [10 Common Table Tennis Problems and How to Fix Them](https://ponghome.com/table-tennis-guides/common-table-tennis-problems-and-fixes): Diagnoses and fixes for recurring issues like backhand into the net, popping up short serves, and losing close games.
+- [How to Beat Long Pips in Table Tennis](https://ponghome.com/table-tennis-guides/how-to-beat-long-pips-in-table-tennis): Why heavy spin backfires against long pips, how to attack the short ball, and how to serve and rally smarter to beat it.
+- [Every Table Tennis Player's Excuses After Losing](https://ponghome.com/table-tennis-guides/table-tennis-excuses-after-losing): A lighthearted look at the most familiar excuses players reach for after a loss, and what's usually really going on.
+- [The Different Types of Players at Every Table Tennis Club](https://ponghome.com/table-tennis-guides/types-of-players-at-every-table-tennis-club): Player archetypes found at nearly every club, from the Sandbagger to the Warm-Up Legend.
+- [When Your Partner Misses an Easy Ball in Doubles](https://ponghome.com/table-tennis-guides/doubles-partner-misses-easy-ball): How to react, and not react, when a doubles partner misses an easy ball, and how to fix coverage gaps.
+- [When Your Opponent Says "I'm Just Warming Up"](https://ponghome.com/table-tennis-guides/opponent-says-im-just-warming-up): The mental game behind this classic mid-match line, and how to stay focused whether it's gamesmanship or genuine.
 - [How to Improve Your Backhand](https://ponghome.com/table-tennis-guides/how-to-improve-your-backhand): Backhand drive and loop technique, grip, and drills.
 - [How to Improve Your Footwork](https://ponghome.com/table-tennis-guides/improve-your-table-tennis-footwork): Footwork patterns, stance, and movement drills.
 - [Wood vs. Carbon Blades](https://ponghome.com/table-tennis-guides/table-tennis-blade-comparison-wood-vs-carbon): Comparison of blade construction types and how to choose one.

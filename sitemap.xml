@@ -90,4 +90,29 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://ponghome.com/table-tennis-guides/how-to-beat-long-pips-in-table-tennis</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ponghome.com/table-tennis-guides/table-tennis-excuses-after-losing</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://ponghome.com/table-tennis-guides/types-of-players-at-every-table-tennis-club</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://ponghome.com/table-tennis-guides/doubles-partner-misses-easy-ball</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://ponghome.com/table-tennis-guides/opponent-says-im-just-warming-up</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>
