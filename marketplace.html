@@ -2892,6 +2892,82 @@
     border-radius:18px;
   }
 
+  /* ============ MARKETPLACE PAGINATION ============ */
+  .mkt-pagination{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    margin-top:36px;
+    padding-top:28px;
+    border-top:1px solid var(--line-light);
+  }
+  .mkt-page-controls{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .mkt-page-nav{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--bg-deep);
+    color:var(--mint);
+    border:none;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:0.85rem;
+    padding:10px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background 0.2s ease, opacity 0.2s ease;
+  }
+  .mkt-page-nav:hover:not(:disabled){background:var(--bg-deeper);}
+  .mkt-page-nav:disabled{opacity:0.35; cursor:not-allowed;}
+  .mkt-page-numbers{
+    display:flex;
+    align-items:center;
+    gap:4px;
+  }
+  .mkt-page-num{
+    min-width:36px;
+    height:36px;
+    padding:0 8px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    background:transparent;
+    color:var(--ink);
+    border:1.5px solid var(--line-light);
+    border-radius:10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.82rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .mkt-page-num:hover{border-color:var(--mint-dim); color:var(--mint-dim); background:var(--mint-soft);}
+  .mkt-page-num.active{
+    background:var(--bg-deep);
+    border-color:var(--bg-deep);
+    color:var(--mint);
+    cursor:default;
+  }
+  .mkt-page-ellipsis{
+    color:var(--ink-soft);
+    padding:0 4px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.82rem;
+  }
+  @media (max-width:600px){
+    .mkt-page-controls{gap:6px;}
+    .mkt-page-nav{padding:9px 12px; font-size:0.8rem;}
+    .mkt-page-num{min-width:32px; height:32px; font-size:0.78rem;}
+  }
+
   .mkt-modal-backdrop{
     position:fixed; inset:0;
     background:rgba(5,20,23,0.78);
@@ -3140,6 +3216,8 @@
   let loadError = false;
   let loadErrorDetail = '';
   let filters = { name: '', city: '', condition: '', status: '', category: '' };
+  const MKT_PAGE_SIZE = 20;
+  let currentPage = 1;
 
   const badgeClass = { 'new': 'mkt-badge-new', 'like new': 'mkt-badge-likenew', 'good': 'mkt-badge-good', 'fair': 'mkt-badge-fair' };
   const statusClass = { 'Available': 'mkt-status-available', 'Pending': 'mkt-status-pending', 'Sold': 'mkt-status-sold', 'Cancelled': 'mkt-status-cancelled' };
@@ -3288,6 +3366,7 @@
       listings = await res.json();
       loaded = true;
       loadError = false;
+      if (loaded) setPageForSharedListing();
     } catch (e) {
       loadError = true;
       loadErrorDetail = e.message || String(e);
@@ -3295,6 +3374,18 @@
     }
     renderMkt();
     if (loaded) setTimeout(scrollToSharedListing, 150);
+  }
+
+  // If the page was opened via a shared listing link, jump straight to
+  // whichever page (in the default, unfiltered sort order) that listing
+  // falls on, so scrollToSharedListing() can find it in the DOM.
+  function setPageForSharedListing() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('listing');
+    if (!id) return;
+    const idx = getFiltered().findIndex(l => String(l.id) === String(id));
+    if (idx === -1) return;
+    currentPage = Math.floor(idx / MKT_PAGE_SIZE) + 1;
   }
 
   async function postListing(data) {
@@ -3391,6 +3482,40 @@
 
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  // Builds the pager shown under the listing grid: Prev / page numbers / Next,
+  // plus a "showing X to Y of Z" line. Uses a compact window of page numbers
+  // with ellipses so it stays readable even with dozens of pages.
+  function paginationHtml(page, totalPages) {
+    if (totalPages <= 1) return '';
+
+    const pages = [];
+    const addPage = (p) => pages.push(p);
+    const addEllipsis = () => pages.push('…');
+    addPage(1);
+    const windowStart = Math.max(2, page - 1);
+    const windowEnd = Math.min(totalPages - 1, page + 1);
+    if (windowStart > 2) addEllipsis();
+    for (let p = windowStart; p <= windowEnd; p++) addPage(p);
+    if (windowEnd < totalPages - 1) addEllipsis();
+    if (totalPages > 1) addPage(totalPages);
+
+    const numberButtons = pages.map(p =>
+      p === '…'
+        ? `<span class="mkt-page-ellipsis">…</span>`
+        : `<button class="mkt-page-num${p === page ? ' active' : ''}" data-page="${p}" ${p === page ? 'aria-current="page"' : ''}>${p}</button>`
+    ).join('');
+
+    return `
+      <nav class="mkt-pagination" aria-label="Marketplace listings pagination">
+        <div class="mkt-page-controls">
+          <button class="mkt-page-nav" id="mkt-page-prev" ${page === 1 ? 'disabled' : ''} aria-label="Previous page">&larr; Prev</button>
+          <div class="mkt-page-numbers">${numberButtons}</div>
+          <button class="mkt-page-nav" id="mkt-page-next" ${page === totalPages ? 'disabled' : ''} aria-label="Next page">Next &rarr;</button>
+        </div>
+      </nav>
+    `;
   }
 
   function shareUrlFor(id) {
@@ -3566,6 +3691,11 @@
       return;
     }
     const filtered = getFiltered();
+    const totalPages = Math.max(1, Math.ceil(filtered.length / MKT_PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+    const pageStart = (currentPage - 1) * MKT_PAGE_SIZE;
+    const pageItems = filtered.slice(pageStart, pageStart + MKT_PAGE_SIZE);
     wrap.innerHTML = `
       <div class="mkt-daily-visits" id="mktDailyVisits">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -3634,15 +3764,30 @@
       </div>
       ${filtered.length === 0
         ? `<div class="mkt-empty">No gear on the table yet — be the first to serve one up.</div>`
-        : `<div class="mkt-grid">${filtered.map(cardHtml).join('')}</div>`
+        : `<div class="mkt-grid">${pageItems.map(cardHtml).join('')}</div>${paginationHtml(currentPage, totalPages)}`
       }
     `;
-    document.getElementById('mkt-name-filter').oninput = (e) => { filters.name = e.target.value; renderMkt(); };
-    document.getElementById('mkt-city-filter').onchange = (e) => { filters.city = e.target.value; renderMkt(); };
-    document.getElementById('mkt-cond-filter').onchange = (e) => { filters.condition = e.target.value; renderMkt(); };
-    document.getElementById('mkt-status-filter').onchange = (e) => { filters.status = e.target.value; renderMkt(); };
-    document.getElementById('mkt-category-filter').onchange = (e) => { filters.category = e.target.value; renderMkt(); };
+    document.getElementById('mkt-name-filter').oninput = (e) => { filters.name = e.target.value; currentPage = 1; renderMkt(); };
+    document.getElementById('mkt-city-filter').onchange = (e) => { filters.city = e.target.value; currentPage = 1; renderMkt(); };
+    document.getElementById('mkt-cond-filter').onchange = (e) => { filters.condition = e.target.value; currentPage = 1; renderMkt(); };
+    document.getElementById('mkt-status-filter').onchange = (e) => { filters.status = e.target.value; currentPage = 1; renderMkt(); };
+    document.getElementById('mkt-category-filter').onchange = (e) => { filters.category = e.target.value; currentPage = 1; renderMkt(); };
     document.getElementById('mkt-list-btn').onclick = openForm;
+    if (totalPages > 1) {
+      const goToPage = (p) => {
+        currentPage = Math.min(Math.max(1, p), totalPages);
+        renderMkt();
+        const grid = document.querySelector('.mkt-grid') || wrap;
+        grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+      const prevBtn = document.getElementById('mkt-page-prev');
+      const nextBtn = document.getElementById('mkt-page-next');
+      if (prevBtn) prevBtn.onclick = () => goToPage(currentPage - 1);
+      if (nextBtn) nextBtn.onclick = () => goToPage(currentPage + 1);
+      document.querySelectorAll('.mkt-page-num').forEach(btn => {
+        btn.onclick = () => goToPage(Number(btn.getAttribute('data-page')));
+      });
+    }
     updateDailyVisitsDisplay();
     if (activeId === 'mkt-name-filter') {
       const nameInput = document.getElementById('mkt-name-filter');
