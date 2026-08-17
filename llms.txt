@@ -1,10 +1,10 @@
 # Pong Home
 
-> Pong Home is a Toronto-based table tennis platform: on-demand coaching in Toronto and New York City, the world's first no-account marketplace for buying and selling table tennis gear, the Gear Index, a rubber and blade ratings database where players find and rate equipment, and the Discount Center, a directory of table tennis store promo codes.
+> Pong Home is a global table tennis platform: on-demand coaching in Canada and the United States, the world's first no-account marketplace for buying and selling table tennis gear, the Gear Index, a rubber and blade ratings database where players find and rate equipment, and the Discount Center, a directory of table tennis store promo codes.
 
 Pong Home is built around four connected products: coaching, the marketplace, the Gear Index, and the Discount Center. All four point back to the same goal: helping table tennis players in Toronto (and beyond) find the right coach, the right gear, and the right community.
 
-## Coaching (Toronto focus)
+## Coaching (Toronto, ON, Canada focus)
 
 Pong Home connects players with advanced and national-level coaches for one-on-one and small-group table tennis coaching, from beginners through competitive athletes. Coaching is offered in Toronto and New York City, with matchmaking between players and coaches and a local community around the sport. This is the primary product for anyone searching for "table tennis coaching Toronto," "ping pong lessons Toronto," or a private table tennis coach.
 
@@ -36,6 +36,7 @@ The Discount Center is a directory of promo codes and discount offers from table
 
 - [Insights hub](https://ponghome.com/table-tennis-guides): Coach-written guides on technique, equipment, and the mental game.
 - [Point Winner Handbook](https://ponghome.com/table-tennis-guides/handbook): Full tactical playbook for modern table tennis.
+- [The Complete Table Tennis Dictionary](https://ponghome.com/table-tennis-guides/table-tennis-dictionary): A 170+ term glossary covering equipment, grip styles, strokes, spin, tactics, rules, and competition, translatable into 7 languages.
 - [How Often Should I Change My Rubber?](https://ponghome.com/table-tennis-guides/how-often-should-i-change-my-rubber): Signs rubber is worn out, a replacement schedule by playing frequency, and how to make rubber last longer.
 - [Where Can I Buy a Table Tennis Racket?](https://ponghome.com/table-tennis-guides/where-can-i-buy-a-table-tennis-racket): Where to shop for rackets, blades, and rubbers, new, used, and specialty retail, and how to find a fair deal.
 - [Serve & Return Mechanics](https://ponghome.com/table-tennis-guides/serve-and-return-mechanics): How to read sidespin, backspin, and topspin serves, the legal 16cm toss height, and how to execute a pendulum serve and banana flick.
