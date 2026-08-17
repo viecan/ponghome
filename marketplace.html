@@ -3645,8 +3645,15 @@
     }
   }
 
+  function postedLabel(createdAt) {
+    const daysAgo = (Date.now() - new Date(createdAt).getTime()) / 86400000;
+    if (daysAgo >= 8) return 'a week ago';
+    if (daysAgo >= 3) return 'just listed';
+    return 'listed today';
+  }
+
   function cardHtml(l) {
-    const dateStr = new Date(l.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    const dateStr = postedLabel(l.created_at);
     const status = l.status || 'Available';
     const currency = l.currency || 'CAD';
     const statusOpts = ['Available', 'Pending', 'Sold', 'Cancelled']
@@ -3664,7 +3671,7 @@
         </div>
         <h3>${escapeHtml(l.title)}</h3>
         <div class="mkt-price">$${Number(l.price).toLocaleString()} <span class="mkt-currency">${currency}</span>${l.negotiable ? ' <span class="mkt-negotiable-tag">Negotiable</span>' : ''}</div>
-        <div class="mkt-meta">${escapeHtml(l.city)} · posted ${dateStr}</div>
+        <div class="mkt-meta">${escapeHtml(l.city)} · ${dateStr}</div>
         <div class="mkt-meta">Seller: <strong>${escapeHtml(l.seller_name || 'N/A')}</strong></div>
         ${l.category ? `<div class="mkt-meta">Category: ${escapeHtml(l.category)}</div>` : ''}
         ${l.description ? `<div class="mkt-desc">${escapeHtml(l.description)}</div>` : ''}
