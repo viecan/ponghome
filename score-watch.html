@@ -182,17 +182,11 @@
   }
   .setup-sub{
     font-family:'JetBrains Mono', monospace;
-    font-size:clamp(9px, 3vw, 11px);
+    font-size:clamp(13px, 4.4vw, 16px);
     letter-spacing:0.04em;
     text-transform:uppercase;
-    color:rgba(255,255,255,0.6);
-    margin-top:-4px;
-  }
-  .setup-label{
-    font-size:clamp(10px, 3.4vw, 12px);
-    color:var(--paper);
-    font-weight:600;
-    margin-top:4px;
+    color:rgba(255,255,255,0.75);
+    margin-top:-2px;
   }
   .format-row{
     display:flex;
@@ -344,7 +338,7 @@
   .score{
     font-family:'Baloo 2',sans-serif;
     font-weight:800;
-    font-size:clamp(38px, 17vw, 68px);
+    font-size:clamp(76px, 34vw, 136px);
     line-height:1;
     color:var(--paper);
     margin-top:1px;
@@ -435,8 +429,7 @@
   <!-- ============ SETUP SCREEN ============ -->
   <section class="setup" id="setupScreen" aria-label="Match format setup">
     <div class="setup-brand">PONG HOME</div>
-    <div class="setup-sub">Scoreboard Remote</div>
-    <div class="setup-label">Choose match format</div>
+    <div class="setup-sub">Scoreboard on your watch</div>
     <div class="format-row" role="group" aria-label="Match format">
       <button class="format-btn" data-games="3">BO3</button>
       <button class="format-btn selected" data-games="5">BO5</button>
