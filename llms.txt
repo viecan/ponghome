@@ -31,6 +31,8 @@ The Discount Center is a directory of promo codes and discount offers from table
 ## Tools
 
 - [Tools](https://ponghome.com/tools): Free Arena tournament bracket generator and on-court digital Scoreboard app.
+- [Scoreboard](https://ponghome.com/scoreboard): Free voice-scored digital scoreboard for on-court table tennis matches.
+- [Arena](https://ponghome.com/tournament): Free table tennis tournament bracket generator.
 
 ## Guides (Insights)
 
