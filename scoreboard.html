@@ -1,0 +1,2860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GTYKNXXBF3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GTYKNXXBF3');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<title>Scoreboard — Pong Home | Voice-Scored Table Tennis</title>
+<meta name="description" content="The on-court Scoreboard app — free voice-scored table tennis scoreboard from Pong Home.">
+<link rel="canonical" href="https://ponghome.com/scoreboard">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pong Home">
+<meta property="og:title" content="Scoreboard — Pong Home">
+<meta property="og:description" content="The on-court Scoreboard app — free voice-scored table tennis scoreboard from Pong Home.">
+<meta property="og:url" content="https://ponghome.com/scoreboard">
+<meta property="og:image" content="https://ponghome.com/og-image.jpg">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Scoreboard — Pong Home">
+<meta name="twitter:description" content="The on-court Scoreboard app — free voice-scored table tennis scoreboard.">
+<meta name="twitter:image" content="https://ponghome.com/og-image.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#0E3B42;
+    --bg-deeper:#0A4952;
+    --bg-deep-soft:#14727C;
+    --mint:#00FFD1;
+    --mint-dim:#00E0B8;
+    --mint-soft:rgba(0,255,209,0.18);
+    --paper:#FAFFFB;
+    --paper-card:#FFFFFF;
+    --ink:#0A2A2F;
+    --ink-soft:#4C6B70;
+    --line-dark:rgba(255,255,255,0.16);
+    --line-light:rgba(10,42,47,0.10);
+    --shadow: 0 18px 40px rgba(6,88,96,0.22);
+    --coral:#FF6B6B;
+    --sun:#FFB020;
+    --nav-h: 64px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+
+  h1,h2,h3,h4,.display{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    letter-spacing:0.01em;
+    margin:0;
+  }
+
+  /* ============ TYPOGRAPHY: widow/orphan control ============
+     Headings get balanced line-breaking so short titles never leave
+     a single dangling word on the last line. Body copy gets "pretty"
+     wrapping, which specifically avoids orphans at paragraph ends.
+     Both degrade gracefully to normal wrapping on unsupported
+     browsers; widows/orphans is included as a fallback signal. */
+  h1,h2,h3,h4,
+  .display,
+  .section-title,
+  .book-title,
+  .book-sub,
+  .ch-heading,
+  .subsection,
+  .city-head h3,
+  .pc-title,
+  .games-recap-title,
+  .fo-title,
+  .bracket-title,
+  .bracket-section-heading,
+  .hero-eyebrow,
+  .eyebrow,
+  .coach-cta-eyebrow,
+  .overlay-eyebrow,
+  .tagline{
+    text-wrap:balance;
+    widows:2;
+    orphans:2;
+  }
+
+  p,
+  li,
+  .service-copy p,
+  .chapter-body,
+  .chapter-body p,
+  .fo-desc,
+  .sub{
+    text-wrap:pretty;
+    widows:2;
+    orphans:2;
+  }
+
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  a{color:inherit;}
+
+  .dot{
+    display:inline-block;
+    width:0.32em;
+    height:0.32em;
+    border-radius:50%;
+    background:var(--mint);
+    vertical-align:middle;
+    margin-left:0.12em;
+  }
+
+  /* ============ NAV ============ */
+  .site-nav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--bg-deeper);
+    border-bottom:1px solid var(--line-dark);
+  }
+  .nav-inner{
+    max-width:1180px;
+    margin:0 auto;
+    padding:16px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+  }
+  .nav-logo{
+    display:flex;
+    align-items:baseline;
+    gap:2px;
+    color:var(--mint);
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:1.3rem;
+    letter-spacing:0.01em;
+    text-decoration:none;
+  }
+  .nav-logo span.sub{
+    color:#fff;
+  }
+  .nav-tabs{
+    display:flex;
+    gap:6px;
+    background:rgba(255,255,255,0.05);
+    padding:5px;
+    border-radius:999px;
+    border:1px solid var(--line-dark);
+  }
+  .nav-tab{
+    appearance:none;
+    border:none;
+    background:transparent;
+    color:rgba(255,255,255,0.7);
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:0.88rem;
+    padding:9px 18px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background 0.25s ease, color 0.25s ease;
+    white-space:nowrap;
+    text-decoration:none;
+    display:inline-block;
+  }
+  .nav-tab.active{
+    background:var(--mint);
+    color:var(--bg-deeper);
+  }
+  .nav-tab:not(.active):hover{
+    color:#fff;
+  }
+  .nav-cta{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:transparent;
+    color:var(--mint);
+    border:1.5px solid var(--mint);
+    padding:9px 16px;
+    border-radius:999px;
+    font-weight:600;
+    font-size:0.85rem;
+    text-decoration:none;
+    white-space:nowrap;
+    transition:background 0.25s ease, color 0.25s ease;
+  }
+  .nav-cta:hover{
+    background:var(--mint);
+    color:var(--bg-deeper);
+  }
+
+  .nav-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  /* social icon buttons — used to follow, not to book */
+  .social-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .social-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    border:1.5px solid rgba(255,255,255,0.22);
+    color:rgba(255,255,255,0.85);
+    background:transparent;
+    text-decoration:none;
+    transition:border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+  .social-btn svg{width:17px;height:17px;fill:currentColor;}
+  .social-btn:hover{
+    border-color:var(--mint);
+    background:var(--mint-soft);
+    color:var(--mint);
+    transform:translateY(-2px);
+  }
+  .social-btn.on-light{
+    border-color:var(--line-light);
+    color:var(--ink-soft);
+  }
+  .social-btn.on-light:hover{
+    border-color:var(--mint-dim);
+    background:var(--mint-soft);
+    color:var(--mint-dim);
+  }
+
+  @media (max-width:720px){
+    .nav-inner{
+      flex-wrap:wrap;
+      padding:12px 16px;
+      gap:10px;
+      justify-content:center;
+    }
+    .nav-logo{
+      order:1;
+      font-size:1.1rem;
+    }
+    .nav-right{
+      order:2;
+      gap:8px;
+    }
+    .social-btn{width:34px; height:34px;}
+    .social-btn svg{width:15px; height:15px;}
+    .nav-cta{display:none;}
+    .nav-tabs{
+      order:3;
+      flex-basis:100%;
+      width:100%;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      justify-content:flex-start;
+      gap:5px;
+      background:transparent;
+      border:none;
+      padding:0;
+      scrollbar-width:none;
+    }
+    .nav-tabs::-webkit-scrollbar{display:none;}
+    .nav-tab{
+      flex:0 0 auto;
+      white-space:nowrap;
+      font-size:0.74rem;
+      padding:7px 12px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid var(--line-dark);
+    }
+    .nav-tab.active{
+      border-color:var(--mint);
+    }
+  }
+  @media (max-width:380px){
+    .nav-tab{font-size:0.68rem; padding:6px 10px;}
+  }
+
+  /* ============ TAB PANELS ============ */
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  /* ============ FOOTER CTA ============ */
+  .footer-cta{
+    background:var(--bg-deeper);
+    color:#fff;
+    padding:80px 28px;
+    text-align:center;
+  }
+  .footer-cta h2{
+    font-size:clamp(1.8rem,4vw,2.6rem);
+    color:#fff;
+    margin-bottom:16px;
+  }
+  .footer-cta h2 .dot{background:var(--mint);}
+  .footer-cta p{
+    color:rgba(255,255,255,0.65);
+    max-width:480px;
+    margin:0 auto 32px;
+    font-size:1rem;
+  }
+  .site-footer{
+    background:var(--bg-deeper);
+    border-top:1px solid var(--line-dark);
+    color:rgba(255,255,255,0.5);
+    text-align:center;
+    font-size:0.85rem;
+    padding:22px;
+  }
+  .footer-follow{margin-left:6px;}
+  .footer-mobile-text{display:none;}
+  .footer-social-mobile{display:none;}
+
+  /* ============ LEARN TAB ============ */
+  .learn-hero{
+    background:var(--bg-deep);
+    color:#fff;
+    padding:76px 28px 60px;
+    text-align:center;
+  }
+  .learn-hero .book-title{
+    font-size:clamp(2rem,4.8vw,3rem);
+    color:var(--mint);
+    max-width:760px;
+    margin:0 auto 14px;
+    line-height:1.1;
+  }
+  .learn-hero .book-sub{
+    font-style:italic;
+    color:rgba(255,255,255,0.7);
+    font-size:1.05rem;
+    margin-bottom:6px;
+  }
+  .learn-hero .book-byline{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--mint-dim);
+  }
+
+  .chapters-wrap{
+    max-width:840px;
+    margin:0 auto;
+    padding:56px 24px 100px;
+  }
+
+  /* ============ PING PONG RALLY ANIMATION (Learn tab, before Chapter 1) ============ */
+  .pc-anim-card{
+    background:var(--paper-card);
+    border:1px solid var(--line-light);
+    border-radius:22px;
+    padding:22px 22px 26px;
+    margin-bottom:28px;
+    box-shadow:0 4px 14px rgba(10,42,47,0.05);
+  }
+  .pc-table-scene{
+    position:relative;
+    height:200px;
+    border-radius:16px;
+    overflow:hidden;
+    background:
+      linear-gradient(180deg, rgba(0,240,200,0.08), transparent 45%),
+      var(--bg-deep);
+    border:1px solid rgba(0,240,200,0.18);
+  }
+  .pc-table-baseline{
+    position:absolute;
+    left:8%; right:8%; top:58%;
+    height:1.5px;
+    background:rgba(255,255,255,0.14);
+    border-radius:2px;
+  }
+  .pc-net{
+    position:absolute;
+    left:50%; top:26%; bottom:36%;
+    width:3px;
+    transform:translateX(-50%);
+    background:repeating-linear-gradient(180deg, rgba(0,240,200,0.55) 0 4px, transparent 4px 9px);
+    border-radius:2px;
+  }
+  .pc-paddle{
+    position:absolute;
+    top:52%;
+    width:26px; height:60px;
+    margin-top:-42px;
+    transform-origin:bottom center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .pc-paddle-left{left:3%; animation:pcPaddleLeftHit 3.2s ease-in-out infinite;}
+  .pc-paddle-right{right:3%; animation:pcPaddleRightHit 3.2s ease-in-out infinite;}
+  .pc-paddle-blade{
+    width:26px; height:34px;
+    border-radius:50% 50% 46% 46% / 60% 60% 40% 40%;
+  }
+  .pc-paddle-left .pc-paddle-blade{background:var(--mint); box-shadow:0 0 14px rgba(0,240,200,0.4);}
+  .pc-paddle-right .pc-paddle-blade{background:var(--p2, #FFB020); box-shadow:0 0 14px rgba(255,176,32,0.35);}
+  .pc-paddle-handle{
+    width:7px; height:20px;
+    border-radius:4px;
+    margin-top:1px;
+  }
+  .pc-paddle-left .pc-paddle-handle{background:var(--mint-dim);}
+  .pc-paddle-right .pc-paddle-handle{background:var(--p2-dim, #D9930E);}
+
+  .pc-ball-shadow{
+    position:absolute;
+    top:60%;
+    width:16px; height:5px;
+    margin-left:-8px;
+    border-radius:50%;
+    background:rgba(0,0,0,0.4);
+    filter:blur(1px);
+    animation:pcBallShadow 3.2s cubic-bezier(.45,.05,.55,.95) infinite;
+  }
+  .pc-ball{
+    position:absolute;
+    width:12px; height:12px;
+    margin-left:-6px; margin-top:-6px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 0 8px rgba(255,255,255,0.75), 0 0 2px #fff;
+    animation:pcBallFly 3.2s cubic-bezier(.45,.05,.55,.95) infinite;
+  }
+
+  @keyframes pcBallFly{
+    0%   {left:6%;  top:52%; transform:scale(1);}
+    9%   {left:16%; top:20%; transform:scale(1);}
+    20%  {left:34%; top:8%;  transform:scale(1);}
+    32%  {left:56%; top:26%; transform:scale(1);}
+    38%  {left:66%; top:50%; transform:scale(1.15,0.8);}
+    44%  {left:72%; top:32%; transform:scale(1);}
+    50%  {left:94%; top:52%; transform:scale(1);}
+    59%  {left:84%; top:20%; transform:scale(1);}
+    70%  {left:66%; top:8%;  transform:scale(1);}
+    82%  {left:44%; top:26%; transform:scale(1);}
+    88%  {left:34%; top:50%; transform:scale(1.15,0.8);}
+    94%  {left:28%; top:32%; transform:scale(1);}
+    100% {left:6%;  top:52%; transform:scale(1);}
+  }
+  @keyframes pcBallShadow{
+    0%   {left:6%;  opacity:0.32;}
+    9%   {left:16%; opacity:0.14;}
+    20%  {left:34%; opacity:0.05;}
+    32%  {left:56%; opacity:0.14;}
+    38%  {left:66%; opacity:0.36;}
+    44%  {left:72%; opacity:0.18;}
+    50%  {left:94%; opacity:0.32;}
+    59%  {left:84%; opacity:0.14;}
+    70%  {left:66%; opacity:0.05;}
+    82%  {left:44%; opacity:0.14;}
+    88%  {left:34%; opacity:0.36;}
+    94%  {left:28%; opacity:0.18;}
+    100% {left:6%;  opacity:0.32;}
+  }
+  @keyframes pcPaddleLeftHit{
+    0%{transform:rotate(-18deg);}
+    6%{transform:rotate(0deg);}
+    94%{transform:rotate(0deg);}
+    100%{transform:rotate(-18deg);}
+  }
+  @keyframes pcPaddleRightHit{
+    0%,44%{transform:rotate(0deg);}
+    50%{transform:rotate(18deg);}
+    56%,100%{transform:rotate(0deg);}
+  }
+
+  @media (max-width:480px){
+    .pc-table-scene{height:160px;}
+    .pc-paddle{height:46px; margin-top:-32px;}
+    .pc-paddle-blade{width:20px; height:26px;}
+    .pc-paddle-handle{width:6px; height:14px;}
+    .pc-ball{width:10px; height:10px; margin-left:-5px; margin-top:-5px;}
+    .pc-ball-shadow{width:13px; margin-left:-6.5px;}
+  }
+
+  details.chapter{
+    background:var(--paper-card);
+    border:1px solid var(--line-light);
+    border-radius:20px;
+    margin-bottom:16px;
+    overflow:hidden;
+    box-shadow:0 4px 14px rgba(10,42,47,0.05);
+  }
+  details.chapter[open]{
+    box-shadow:var(--shadow);
+  }
+  details.chapter summary{
+    list-style:none;
+    cursor:pointer;
+    padding:22px 26px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  details.chapter summary::-webkit-details-marker{display:none;}
+  .ch-num{
+    flex:0 0 auto;
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    border:2px solid var(--mint);
+    color:var(--mint-dim);
+    background:var(--mint-soft);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'JetBrains Mono',monospace;
+    font-weight:600;
+    font-size:0.95rem;
+  }
+  .ch-heading{flex:1 1 auto;}
+  .ch-heading .ch-label{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+  .ch-heading h3{
+    font-size:1.25rem;
+    color:var(--ink);
+  }
+  .ch-chevron{
+    flex:0 0 auto;
+    width:30px;height:30px;
+    border-radius:50%;
+    border:1.5px solid var(--line-light);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink-soft);
+    transition:transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+  }
+  details.chapter[open] .ch-chevron{
+    transform:rotate(180deg);
+    background:var(--mint);
+    color:var(--bg-deeper);
+    border-color:var(--mint);
+  }
+
+  .chapter-body{
+    padding:6px 26px 34px 98px;
+    border-top:1px solid var(--line-light);
+    margin-top:0;
+  }
+  .chapter-body > .intro{
+    color:var(--ink-soft);
+    line-height:1.7;
+    margin:20px 0 6px;
+    font-size:0.98rem;
+  }
+
+  .subsection{margin-top:34px;}
+  .subsection h4{
+    font-size:1.02rem;
+    color:var(--mint-dim);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .subsection p{
+    line-height:1.7;
+    color:var(--ink-soft);
+    font-size:0.95rem;
+    margin:0 0 14px;
+  }
+
+  .term-list{
+    display:grid;
+    gap:14px;
+    margin:0 0 18px;
+  }
+  .term-list .term{
+    background:var(--paper);
+    border:1px solid var(--line-light);
+    border-radius:12px;
+    padding:14px 18px;
+  }
+  .term-list .term dt{
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:0.9rem;
+    color:var(--ink);
+    margin-bottom:4px;
+  }
+  .term-list .term dd{
+    margin:0;
+    font-size:0.9rem;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+
+  .step-list{
+    margin:0 0 18px;
+    padding-left:0;
+    list-style:none;
+    counter-reset:step;
+    display:grid;
+    gap:12px;
+  }
+  .step-list li{
+    counter-increment:step;
+    position:relative;
+    padding-left:38px;
+    font-size:0.92rem;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+  .step-list li::before{
+    content:counter(step);
+    position:absolute;
+    left:0; top:0;
+    width:26px;height:26px;
+    border-radius:50%;
+    background:var(--bg-deep);
+    color:var(--mint);
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  .bullet-list{
+    margin:0 0 18px;
+    padding-left:0;
+    list-style:none;
+    display:grid;
+    gap:10px;
+  }
+  .bullet-list li{
+    position:relative;
+    padding-left:22px;
+    font-size:0.92rem;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+  .bullet-list li::before{
+    content:"";
+    position:absolute;
+    left:0; top:0.55em;
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--mint);
+  }
+
+  .callout{
+    background:#FFF6EA;
+    border:1px solid #F1D9AE;
+    border-left:4px solid #E0A83E;
+    border-radius:10px;
+    padding:14px 18px;
+    font-size:0.9rem;
+    line-height:1.6;
+    color:#6b501f;
+    margin:0 0 18px;
+  }
+  .callout strong{color:#4d3712;}
+
+  .table-wrap{
+    overflow-x:auto;
+    margin:0 0 18px;
+    border-radius:12px;
+    border:1px solid var(--line-light);
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:0.86rem;
+  }
+  table thead th{
+    background:var(--bg-deep);
+    color:var(--mint);
+    text-align:left;
+    padding:12px 16px;
+    font-family:'JetBrains Mono',monospace;
+    font-weight:600;
+    font-size:0.72rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+  }
+  table tbody td{
+    padding:12px 16px;
+    border-top:1px solid var(--line-light);
+    color:var(--ink-soft);
+    line-height:1.5;
+    vertical-align:top;
+  }
+  table tbody tr:nth-child(even){background:var(--paper);}
+
+  @media (max-width:640px){
+    .chapter-body{padding:6px 18px 30px 18px;}
+    details.chapter summary{padding:18px;}
+    .ch-num{width:44px;height:44px;font-size:0.82rem;}
+  }
+
+  /* ============ ARENA ============ */
+  .arena-hero{
+    background:var(--bg-deep);
+    color:#fff;
+    padding:76px 28px 56px;
+    text-align:center;
+  }
+  .arena-hero h2{
+    font-size:clamp(2rem,5vw,3rem);
+    color:var(--mint);
+    max-width:640px;
+    margin:0 auto 14px;
+  }
+  .arena-hero p{
+    color:rgba(255,255,255,0.72);
+    max-width:520px;
+    margin:0 auto;
+    font-size:1rem;
+    line-height:1.6;
+  }
+  .mkt-hero-title{
+    font-size:clamp(1rem,2.5vw,1.5rem) !important;
+    max-width:none !important;
+  }
+  @media (min-width:640px){
+    .mkt-hero-title{white-space:nowrap;}
+  }
+  .mkt-hero-sub{
+    max-width:640px !important;
+  }
+
+  .arena-wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:56px 24px 110px;
+  }
+
+  /* --- setup card --- */
+  .setup-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+  }
+  @media (max-width:820px){ .setup-grid{grid-template-columns:1fr;} }
+
+  .setup-card{
+    background:var(--paper-card);
+    border:1px solid var(--line-light);
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 4px 14px rgba(10,42,47,0.05);
+  }
+  .setup-card h3{
+    font-size:1.05rem;
+    color:var(--ink);
+    margin-bottom:18px;
+  }
+  .field-label{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .text-input, .text-area{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-size:0.95rem;
+    padding:12px 14px;
+    border-radius:10px;
+    border:1.5px solid var(--line-light);
+    background:var(--paper);
+    color:var(--ink);
+    outline:none;
+    transition:border-color 0.2s ease;
+  }
+  .text-input:focus, .text-area:focus{border-color:var(--mint);}
+  .text-area{resize:vertical; min-height:88px; font-family:'Inter',sans-serif;}
+
+  .field-block{margin-bottom:22px;}
+  .field-row{display:flex; gap:10px;}
+  .field-row .text-input{flex:1;}
+
+  .btn-small{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--bg-deep);
+    color:var(--mint);
+    border:none;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:0.85rem;
+    padding:11px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background 0.2s ease;
+  }
+  .btn-small:hover{background:var(--bg-deeper);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink-soft);
+    border:1.5px solid var(--line-light);
+  }
+  .btn-ghost:hover{border-color:var(--mint-dim); color:var(--mint-dim); background:var(--mint-soft);}
+  .btn-danger{
+    background:transparent;
+    color:#B44848;
+    border:1.5px solid rgba(180,72,72,0.3);
+  }
+  .btn-danger:hover{background:rgba(180,72,72,0.08);}
+
+  .format-options{
+    display:grid;
+    gap:12px;
+  }
+  .format-option{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:14px 16px;
+    border:1.5px solid var(--line-light);
+    border-radius:12px;
+    cursor:pointer;
+    transition:border-color 0.2s ease, background 0.2s ease;
+  }
+  .format-option:hover{border-color:var(--mint-dim);}
+  .format-option.selected{
+    border-color:var(--mint);
+    background:var(--mint-soft);
+  }
+  .format-option input{accent-color:var(--mint); margin-top:3px;}
+  .format-option .fo-title{font-weight:700; font-size:0.92rem; color:var(--ink); margin-bottom:3px;}
+  .format-option .fo-desc{font-size:0.82rem; color:var(--ink-soft); line-height:1.5;}
+
+  .player-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:8px;
+    max-height:340px;
+    overflow-y:auto;
+  }
+  .player-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--paper);
+    border:1px solid var(--line-light);
+    border-radius:10px;
+    padding:9px 12px;
+  }
+  .player-row .p-seed{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    color:var(--mint-dim);
+    width:22px;
+    flex:0 0 auto;
+  }
+  .player-row .p-name{
+    flex:1;
+    font-size:0.9rem;
+    color:var(--ink);
+    border:none;
+    background:transparent;
+    outline:none;
+    font-family:'Inter',sans-serif;
+  }
+  .player-row .p-remove{
+    flex:0 0 auto;
+    width:24px;height:24px;
+    border-radius:50%;
+    border:none;
+    background:transparent;
+    color:var(--ink-soft);
+    cursor:pointer;
+    font-size:1rem;
+    line-height:1;
+  }
+  .player-row .p-remove:hover{color:#B44848;}
+  .player-count{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    margin-top:12px;
+  }
+
+  .setup-actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:26px;
+  }
+
+  .generate-bar{
+    text-align:center;
+    margin-top:32px;
+  }
+  .btn-generate{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:var(--mint);
+    color:var(--bg-deeper);
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    padding:16px 34px;
+    border-radius:999px;
+    border:none;
+    cursor:pointer;
+    box-shadow:0 14px 30px rgba(0,240,200,0.22);
+    transition:transform 0.2s ease, opacity 0.2s ease;
+  }
+  .btn-generate:hover{transform:translateY(-2px);}
+  .btn-generate:disabled{opacity:0.4; cursor:not-allowed; transform:none;}
+  .setup-hint{
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    margin-top:10px;
+  }
+
+  /* --- bracket toolbar --- */
+  .bracket-toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:14px;
+    margin-bottom:36px;
+    padding-bottom:22px;
+    border-bottom:1px solid var(--line-light);
+  }
+  .bracket-title h3{font-size:1.3rem; color:var(--ink); margin-bottom:4px;}
+  .bracket-title .bracket-meta{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--mint-dim);
+  }
+  .bracket-actions{display:flex; gap:10px; flex-wrap:wrap;}
+
+  /* --- champion banner --- */
+  .champion-banner{
+    position:relative;
+    background:var(--bg-deep);
+    color:#fff;
+    border-radius:22px;
+    padding:44px 30px;
+    text-align:center;
+    margin-bottom:40px;
+    overflow:hidden;
+  }
+  .champion-banner .cb-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--mint);
+    margin-bottom:10px;
+    display:block;
+  }
+  .champion-banner h3{
+    font-size:clamp(1.7rem,4vw,2.4rem);
+    color:#fff;
+  }
+  .champion-banner h3 .dot{background:var(--mint);}
+  .confetti-piece{
+    position:absolute;
+    top:-12px;
+    width:8px;height:14px;
+    opacity:0.9;
+    animation:confetti-fall linear forwards;
+    border-radius:2px;
+  }
+  @keyframes confetti-fall{
+    to{ transform:translateY(340px) rotate(600deg); opacity:0; }
+  }
+
+  /* --- bracket columns --- */
+  .bracket-scroll{overflow-x:auto; padding-bottom:12px;}
+  .bracket-columns{
+    display:flex;
+    gap:34px;
+    min-width:max-content;
+    padding:4px;
+  }
+  .bracket-col{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-around;
+    gap:20px;
+    min-width:230px;
+  }
+  .bracket-col-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    text-align:center;
+    margin-bottom:6px;
+  }
+
+  .match-card{
+    background:var(--paper-card);
+    border:1.5px solid var(--line-light);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 2px 8px rgba(10,42,47,0.04);
+  }
+  .match-card.match-live{border-color:var(--mint-dim);}
+  .match-card.match-done{border-color:var(--line-light);}
+  .match-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 12px;
+    font-size:0.85rem;
+    cursor:pointer;
+    transition:background 0.15s ease;
+  }
+  .match-row:first-child{border-bottom:1px solid var(--line-light);}
+  .match-row:hover:not(.no-click){background:var(--mint-soft);}
+  .match-row.winner-row{background:var(--mint-soft); font-weight:700; color:var(--ink);}
+  .match-row.winner-row .mr-name::after{
+    content:"✓";
+    color:var(--mint-dim);
+    margin-left:6px;
+  }
+  .match-row .mr-seed{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;
+    color:var(--ink-soft);
+    width:16px;
+    flex:0 0 auto;
+  }
+  .match-row .mr-name{
+    flex:1;
+    color:var(--ink);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .match-row .mr-name.tbd{color:var(--ink-soft); font-style:italic;}
+  .match-row .mr-name.bye{color:var(--ink-soft);}
+  .match-row .mr-score{
+    flex:0 0 auto;
+    width:32px;
+    text-align:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+  }
+  .match-score-form{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 12px;
+    background:var(--paper);
+    border-top:1px solid var(--line-light);
+  }
+  .match-score-form input{
+    width:36px;
+    text-align:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.82rem;
+    padding:5px 2px;
+    border-radius:6px;
+    border:1px solid var(--line-light);
+  }
+  .match-score-form span{color:var(--ink-soft); font-size:0.78rem;}
+  .match-score-form button{
+    margin-left:auto;
+    background:var(--bg-deep);
+    color:var(--mint);
+    border:none;
+    padding:6px 12px;
+    border-radius:8px;
+    font-size:0.75rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .match-label{
+    text-align:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.65rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+
+  .bracket-section-heading{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:44px 0 22px;
+  }
+  .bracket-section-heading h4{
+    font-size:1rem;
+    color:var(--ink);
+  }
+  .bracket-section-heading .bsh-tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--mint-dim);
+    background:var(--mint-soft);
+    border:1px solid rgba(0,240,200,0.35);
+    padding:3px 10px;
+    border-radius:999px;
+  }
+
+  /* --- round robin --- */
+  .rr-layout{
+    display:grid;
+    grid-template-columns:1.2fr 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  @media (max-width:900px){ .rr-layout{grid-template-columns:1fr;} }
+
+  .rr-rounds{display:grid; gap:22px;}
+  .rr-round-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  .rr-round-matches{display:grid; gap:10px;}
+
+  .standings-wrap{position:sticky; top:96px;}
+  .standings-wrap h4{font-size:1rem; color:var(--ink); margin-bottom:14px;}
+  table.standings td.rank-cell{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--mint-dim);
+    font-weight:600;
+  }
+  table.standings tr.leader td{background:var(--mint-soft);}
+
+  .empty-note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:0.9rem;
+    padding:30px;
+    border:1.5px dashed var(--line-light);
+    border-radius:14px;
+  }
+
+  /* ============ SCOREBOARD TAB ============ */
+  #scoreboard.tab-panel.active{
+    display:flex;
+    flex-direction:column;
+    height:calc(100vh - var(--nav-h, 64px));
+    height:calc(100dvh - var(--nav-h, 64px));
+  }
+  .scoreboard-frame-wrap{
+    flex:1;
+    min-height:0;
+    background:var(--bg-deeper);
+  }
+
+  /* =========================================================
+     PADDLE CALL — scoreboard tab styles
+     ========================================================= */
+
+  #pcApp{
+    --bg-deep:#0E3B42;
+    --bg-deeper:#082A30;
+    --bg-card:#123F47;
+    --p1:#00F0C8;
+    --p1-dim:#00B89C;
+    --p2:#FFB020;
+    --p2-dim:#D9930E;
+    --ink:#F3FAF9;
+    --ink-dim:rgba(243,250,249,0.62);
+    --ink-faint:rgba(243,250,249,0.4);
+    --line:rgba(255,255,255,0.14);
+    --danger:#FF6B6B;
+    --safe-t:env(safe-area-inset-top, 0px);
+    --safe-b:env(safe-area-inset-bottom, 0px);
+    --safe-l:env(safe-area-inset-left, 0px);
+    --safe-r:env(safe-area-inset-right, 0px);
+  }
+  button{font-family:inherit; cursor:pointer;}
+  input{font-family:inherit;}
+
+  #pcApp{
+    position:relative;
+    height:100%;
+    width:100%;
+    overflow:hidden;
+    background:var(--bg-deeper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .screen{display:none; height:100%; width:100%; flex-direction:column;}
+  .screen.active{display:flex;}
+
+  /* ============ SETUP SCREEN ============ */
+  #screen-setup{
+    background:
+      radial-gradient(circle at 85% -10%, rgba(0,240,200,0.14), transparent 45%),
+      var(--bg-deep);
+    overflow-y:auto;
+    align-items:center;
+    padding: calc(48px + var(--safe-t)) 20px calc(48px + var(--safe-b));
+  }
+  .pc-setup-card{
+    width:100%;
+    max-width:420px;
+    text-align:center;
+  }
+  .eyebrow{
+    display:inline-flex;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--p1);
+    background:rgba(0,240,200,0.12);
+    border:1px solid rgba(0,240,200,0.35);
+    padding:6px 14px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .pc-title{
+    font-size:clamp(2.2rem, 9vw, 3rem);
+    color:var(--p1);
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+    line-height:1;
+  }
+  .tagline{
+    color:var(--ink-dim);
+    font-size:0.95rem;
+    margin:10px 0 34px;
+  }
+
+  .pc-field-block{margin-bottom:22px; text-align:left;}
+  .pc-field-block > label{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:8px;
+  }
+  .name-input{
+    width:100%;
+    padding:14px 16px;
+    border-radius:12px;
+    border:1.5px solid var(--line);
+    background:rgba(255,255,255,0.05);
+    color:var(--ink);
+    font-size:1rem;
+    outline:none;
+    transition:border-color 0.2s ease;
+  }
+  .name-input:focus{border-color:var(--p1);}
+  .name-input::placeholder{color:var(--ink-faint);}
+
+  .segmented{
+    display:flex;
+    gap:6px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:5px;
+  }
+  .segmented button{
+    flex:1;
+    background:transparent;
+    border:none;
+    color:var(--ink-dim);
+    font-weight:700;
+    font-size:0.88rem;
+    padding:11px 8px;
+    border-radius:9px;
+    transition:background 0.2s ease, color 0.2s ease;
+  }
+  .segmented button.active{
+    background:var(--p1);
+    color:var(--bg-deeper);
+  }
+  .segmented button:disabled{opacity:0.35; cursor:not-allowed;}
+
+  .toggle-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .toggle-row > label{margin:0;}
+  .toggle-switch{
+    width:52px; height:30px;
+    border-radius:999px;
+    border:1.5px solid var(--line);
+    background:rgba(255,255,255,0.06);
+    position:relative;
+    padding:0;
+    transition:background 0.2s ease, border-color 0.2s ease;
+  }
+  .toggle-switch .knob{
+    position:absolute;
+    top:3px; left:3px;
+    width:21px; height:21px;
+    border-radius:50%;
+    background:var(--ink-dim);
+    transition:transform 0.2s ease, background 0.2s ease;
+  }
+  .toggle-switch.active{background:rgba(0,240,200,0.18); border-color:var(--p1);}
+  .toggle-switch.active .knob{transform:translateX(22px); background:var(--p1);}
+  .toggle-switch:disabled{opacity:0.35; cursor:not-allowed;}
+
+  .voice-unsupported-note{
+    font-size:0.82rem;
+    line-height:1.5;
+    color:var(--p2);
+    background:rgba(255,176,32,0.1);
+    border:1px solid rgba(255,176,32,0.3);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-bottom:22px;
+  }
+
+  .btn-start{
+    width:100%;
+    background:var(--p1);
+    color:var(--bg-deeper);
+    border:none;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:1.05rem;
+    padding:17px;
+    border-radius:14px;
+    box-shadow:0 14px 30px rgba(0,240,200,0.22);
+    margin-top:10px;
+  }
+
+  /* ============ MATCH SCREEN ============ */
+  #screen-match{ background:var(--bg-deeper); position:relative; }
+
+  .topbar{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    padding: calc(10px + var(--safe-t)) calc(12px + var(--safe-r)) 8px calc(12px + var(--safe-l));
+    flex:0 0 auto;
+    z-index:20;
+    background:var(--bg-deeper);
+  }
+  .topbar-left, .topbar-right{display:flex; gap:8px; flex:0 0 auto;}
+  .icon-btn{
+    width:38px; height:38px;
+    border-radius:50%;
+    border:1.5px solid var(--line);
+    background:rgba(255,255,255,0.04);
+    color:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.05rem;
+    flex:0 0 auto;
+  }
+  .icon-btn:active{background:rgba(255,255,255,0.1);}
+  .icon-btn.danger-hover:active{color:var(--danger); border-color:var(--danger);}
+
+  .topbar-center{flex:1 1 auto; text-align:center; min-width:0; padding-top:2px;}
+  .vs-row{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:0.92rem;
+    letter-spacing:0.01em;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .vs-row .vs-name.p1{color:var(--p1);}
+  .vs-row .vs-name.p2{color:var(--p2);}
+  .vs-row .vs-sep{color:var(--ink-faint); margin:0 6px; font-weight:500; font-size:0.78rem;}
+
+  .game-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.09em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-top:3px;
+  }
+  .game-label.deuce{
+    color:var(--p2);
+    animation:deucePulse 1.4s ease-in-out infinite;
+  }
+  @keyframes deucePulse{0%,100%{opacity:1;}50%{opacity:0.45;}}
+
+  .tally-row{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:0.82rem;
+    margin-top:4px;
+  }
+  .tally-row .tp1{color:var(--p1);}
+  .tally-row .tp2{color:var(--p2);}
+  .tally-row .tsep{color:var(--ink-faint); margin:0 6px;}
+
+  .listening-pill{
+    position:absolute;
+    top: calc(72px + var(--safe-t));
+    left:50%;
+    transform:translateX(-50%);
+    display:flex; align-items:center; gap:7px;
+    background:rgba(255,176,32,0.15);
+    border:1px solid rgba(255,176,32,0.5);
+    color:var(--p2);
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:6px 13px;
+    border-radius:999px;
+    z-index:25;
+  }
+  .dot-pulse{
+    width:7px; height:7px; border-radius:50%; background:var(--p2);
+    animation:dotPulse 1.2s ease-in-out infinite;
+  }
+  @keyframes dotPulse{0%,100%{opacity:1; transform:scale(1);}50%{opacity:0.4; transform:scale(0.7);}}
+
+  /* ---- court ---- */
+  .court{
+    flex:1 1 auto;
+    display:flex;
+    flex-direction:row;
+    min-height:0;
+    position:relative;
+  }
+  @media (orientation:portrait) and (hover:none) and (pointer:coarse){
+    .court{flex-direction:column;}
+  }
+
+  .half{
+    flex:1 1 0;
+    min-width:0; min-height:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    position:relative;
+    padding: 10px 14px calc(10px + var(--safe-b));
+    outline:none;
+    overflow:hidden;
+  }
+  .half-p1{padding-left: calc(14px + var(--safe-l));}
+  .half-p2{padding-right: calc(14px + var(--safe-r));}
+  @media (orientation:portrait) and (hover:none) and (pointer:coarse){
+    .half-p1{padding-left:14px;}
+    .half-p2{padding-right:14px;}
+  }
+  .half:focus-visible{box-shadow:inset 0 0 0 3px rgba(255,255,255,0.4);}
+
+  .name-row{
+    flex:0 0 auto;
+    display:flex; align-items:center; gap:8px;
+    padding-top:2px;
+  }
+  .serve-dot{
+    width:9px; height:9px; border-radius:50%;
+    background:currentColor;
+    opacity:0.15;
+    transition:opacity 0.2s ease;
+  }
+  .serve-dot.active{opacity:1; box-shadow:0 0 9px currentColor;}
+  .player-name{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    text-transform:uppercase;
+    font-size:clamp(0.85rem, 3vw, 1.15rem);
+    letter-spacing:0.02em;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .half-p1 .player-name, .half-p1 .serve-dot{color:var(--p1);}
+  .half-p2 .player-name, .half-p2 .serve-dot{color:var(--p2);}
+
+  .score-wrapper{
+    flex:1;
+    min-height:0;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .score-digit{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:clamp(72px, 26vw, 170px);
+    line-height:1;
+    color:var(--ink);
+    transform:scale(1);
+  }
+  .score-digit.bump{animation:scoreBump 0.35s ease;}
+  @keyframes scoreBump{0%{transform:scale(1);}40%{transform:scale(1.18);}100%{transform:scale(1);}}
+
+  .games-label{
+    flex:0 0 auto;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    color:var(--ink-dim);
+    margin-bottom:2px;
+  }
+  .tap-hint{
+    flex:0 0 auto;
+    font-size:0.72rem;
+    color:var(--ink-faint);
+  }
+
+  .glow{
+    position:absolute; inset:0;
+    pointer-events:none;
+    opacity:0;
+    z-index:1;
+  }
+  .half-p1 .glow{background:radial-gradient(circle at center, var(--p1), transparent 70%);}
+  .half-p2 .glow{background:radial-gradient(circle at center, var(--p2), transparent 70%);}
+  .glow.flash{animation:glowFlash 0.5s ease-out;}
+  @keyframes glowFlash{0%{opacity:0.5;}100%{opacity:0;}}
+
+  .name-row, .score-wrapper, .games-label, .tap-hint{position:relative; z-index:2;}
+
+  .net-bar{
+    flex:0 0 auto;
+    width:3px;
+    background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 4px, transparent 4px 9px);
+    position:relative;
+  }
+  @media (orientation:portrait) and (hover:none) and (pointer:coarse){
+    .net-bar{width:100%; height:3px;
+      background:repeating-linear-gradient(-45deg, rgba(255,255,255,0.18) 0 4px, transparent 4px 9px);
+    }
+  }
+
+  .ball{
+    position:fixed;
+    left:50%; top:50%;
+    width:14px; height:14px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 0 10px rgba(255,255,255,0.85), 0 0 2px #fff;
+    pointer-events:none;
+    z-index:40;
+    opacity:0;
+    transform:translate(-50%,-50%);
+  }
+  .ball.fly-left{animation:ballFlyLeft 0.6s ease-out forwards;}
+  .ball.fly-right{animation:ballFlyRight 0.6s ease-out forwards;}
+  @keyframes ballFlyLeft{
+    0%{opacity:1; transform:translate(-50%,-50%) scale(1);}
+    50%{opacity:1; transform:translate(-120%,-90%) scale(1.3);}
+    100%{opacity:0; transform:translate(-220%,-40%) scale(1.6);}
+  }
+  @keyframes ballFlyRight{
+    0%{opacity:1; transform:translate(-50%,-50%) scale(1);}
+    50%{opacity:1; transform:translate(20%,-90%) scale(1.3);}
+    100%{opacity:0; transform:translate(120%,-40%) scale(1.6);}
+  }
+  @media (orientation:portrait) and (hover:none) and (pointer:coarse){
+    @keyframes ballFlyLeft{
+      0%{opacity:1; transform:translate(-50%,-50%) scale(1);}
+      50%{opacity:1; transform:translate(-90%,-120%) scale(1.3);}
+      100%{opacity:0; transform:translate(-40%,-220%) scale(1.6);}
+    }
+    @keyframes ballFlyRight{
+      0%{opacity:1; transform:translate(-50%,-50%) scale(1);}
+      50%{opacity:1; transform:translate(-90%,20%) scale(1.3);}
+      100%{opacity:0; transform:translate(-40%,120%) scale(1.6);}
+    }
+  }
+
+  /* short viewport shrink */
+  @media (max-height:640px){
+    .player-name{font-size:clamp(0.72rem, 2.6vw, 0.95rem);}
+    .score-digit{font-size:clamp(52px, 20vw, 110px);}
+    .games-label, .tap-hint{font-size:0.64rem;}
+    .name-row{gap:6px;}
+  }
+
+  /* ---- bottom dock ---- */
+  .bottom-dock{
+    flex:0 0 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    padding: 8px calc(16px + var(--safe-r)) calc(14px + var(--safe-b)) calc(16px + var(--safe-l));
+    background:var(--bg-deeper);
+    border-top:1px solid var(--line);
+    z-index:20;
+  }
+  .ticker{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    color:var(--ink-faint);
+    text-align:center;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    min-height:1.2em;
+  }
+  .ticker .tick-ok{color:var(--p2); font-weight:600;}
+  .ticker .tick-no{color:var(--ink-faint);}
+
+  .dock-controls{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:22px;
+  }
+  .dock-btn{
+    width:46px; height:46px;
+    border-radius:50%;
+    border:1.5px solid var(--line);
+    background:rgba(255,255,255,0.04);
+    color:var(--ink);
+    font-size:1.15rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .dock-btn:disabled{opacity:0.3;}
+  .mic-btn{
+    width:66px; height:66px;
+    border-radius:50%;
+    border:none;
+    background:var(--bg-card);
+    border:2px solid var(--line);
+    color:var(--ink-dim);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    flex:0 0 auto;
+  }
+  .mic-btn svg{width:26px; height:26px;}
+  .mic-btn.listening{
+    background:var(--p2);
+    border-color:var(--p2);
+    color:var(--bg-deeper);
+  }
+  .mic-btn.listening::before{
+    content:"";
+    position:absolute;
+    inset:-8px;
+    border-radius:50%;
+    border:2px solid var(--p2);
+    animation:micPulse 1.4s ease-out infinite;
+  }
+  @keyframes micPulse{
+    0%{transform:scale(0.9); opacity:0.8;}
+    100%{transform:scale(1.35); opacity:0;}
+  }
+  .mic-btn:disabled{opacity:0.3;}
+
+  /* ============ OVERLAYS ============ */
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(5,20,23,0.86);
+    backdrop-filter:blur(3px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:24px calc(24px + var(--safe-r)) calc(24px + var(--safe-b)) calc(24px + var(--safe-l));
+  }
+  .overlay.show{display:flex;}
+  .overlay-card{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:34px 28px;
+    max-width:420px;
+    width:100%;
+    max-height:88vh;
+    overflow-y:auto;
+    text-align:center;
+  }
+  .overlay-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--p1);
+    margin-bottom:10px;
+    display:block;
+  }
+  .overlay-card h2{
+    font-size:1.6rem;
+    color:var(--ink);
+    margin-bottom:10px;
+  }
+  .overlay-card .final-score{
+    font-family:'JetBrains Mono',monospace;
+    font-size:2.2rem;
+    font-weight:700;
+    color:var(--p1);
+    margin:14px 0;
+  }
+  .overlay-btn{
+    width:100%;
+    background:var(--p1);
+    color:var(--bg-deeper);
+    border:none;
+    font-weight:700;
+    font-size:1rem;
+    padding:15px;
+    border-radius:12px;
+    margin-top:18px;
+  }
+  .overlay-btn.secondary{
+    background:transparent;
+    border:1.5px solid var(--line);
+    color:var(--ink);
+  }
+  .games-recap{
+    text-align:left;
+    margin-top:20px;
+    border-top:1px solid var(--line);
+    padding-top:16px;
+  }
+  .games-recap-title{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:10px;
+  }
+  .games-recap-list{list-style:none; margin:0; padding:0; display:grid; gap:8px; max-height:180px; overflow-y:auto;}
+  .games-recap-list li{
+    display:flex; justify-content:space-between;
+    font-size:0.88rem;
+    background:rgba(255,255,255,0.04);
+    border-radius:8px;
+    padding:9px 12px;
+  }
+  .games-recap-list .g-winner{font-weight:700;}
+
+  /* settings overlay specific */
+  .settings-section{text-align:left; margin-bottom:22px;}
+  .settings-section h3{font-size:0.95rem; color:var(--ink); margin-bottom:14px;}
+
+  @media (prefers-reduced-motion: reduce){
+    .ball{display:none !important;}
+    .score-digit.bump, .glow.flash, .mic-btn.listening::before, .dot-pulse, .game-label.deuce{
+      animation:none !important;
+    }
+    .pc-ball, .pc-ball-shadow, .pc-paddle-left, .pc-paddle-right{
+      animation:none !important;
+    }
+    .hero-ball, .hero-ball-shadow{
+      animation:none !important;
+    }
+    .pc-ball{left:50%; top:35%;}
+    .pc-ball-shadow{left:50%; opacity:0.2;}
+    .pc-paddle-left{left:3%;}
+    .pc-paddle-right{right:3%;}
+  }
+
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Pong Home Scoreboard",
+  "url": "https://ponghome.com/scoreboard",
+  "description": "Free voice-scored table tennis scoreboard. Call the score out loud and it keeps count, tracks games, and shows who's serving.",
+  "applicationCategory": "SportsApplication",
+  "operatingSystem": "Any",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Pong Home",
+    "url": "https://ponghome.com"
+  }
+}
+</script>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">PONG<span class="sub">·HOME</span></a>
+    <div class="nav-tabs" role="tablist">
+      <a class="nav-tab" href="/">Home</a>
+      <a class="nav-tab" href="/tournament">Arena</a>
+      <a class="nav-tab active" href="/scoreboard" aria-current="page">Scoreboard</a>
+    </div>
+    <div class="nav-right">
+      <div class="social-row">
+        <a class="social-btn" href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" aria-label="Pong Home on Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.97.24 2.43.4a4.9 4.9 0 0 1 1.77 1.15 4.9 4.9 0 0 1 1.15 1.77c.16.46.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.97-.4 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.46.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.24-2.43-.4a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.16-.46-.35-1.26-.4-2.43C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.24-1.97.4-2.43a4.9 4.9 0 0 1 1.15-1.77A4.9 4.9 0 0 1 5.59 1.8c.46-.16 1.26-.35 2.43-.4C9.29 1.34 9.67 1.33 12 1.33Zm0 1.8c-3.15 0-3.5.01-4.74.07-.96.04-1.48.2-1.82.34-.46.18-.78.39-1.13.74-.35.35-.56.67-.74 1.13-.14.34-.3.86-.34 1.82C3.16 8.94 3.15 9.29 3.15 12s.01 3.06.07 4.3c.04.96.2 1.48.34 1.82.18.46.39.78.74 1.13.35.35.67.56 1.13.74.34.14.86.3 1.82.34 1.24.06 1.59.07 4.75.07s3.5-.01 4.74-.07c.96-.04 1.48-.2 1.82-.34.46-.18.78-.39 1.13-.74.35-.35.56-.67.74-1.13.14-.34.3-.86.34-1.82.06-1.24.07-1.59.07-4.3s-.01-3.06-.07-4.3c-.04-.96-.2-1.48-.34-1.82a3.05 3.05 0 0 0-.74-1.13 3.05 3.05 0 0 0-1.13-.74c-.34-.14-.86-.3-1.82-.34-1.24-.06-1.59-.07-4.75-.07Zm0 3.98a4.02 4.02 0 1 1 0 8.04 4.02 4.02 0 0 1 0-8.04Zm0 1.8a2.22 2.22 0 1 0 0 4.44 2.22 2.22 0 0 0 0-4.44Zm4.18-2.2a.94.94 0 1 1 0 1.88.94.94 0 0 1 0-1.88Z"/></svg>
+        </a>
+        <a class="social-btn" href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" aria-label="Pong Home on Facebook">
+          <svg viewBox="0 0 24 24"><path d="M13.5 21.9v-8.4h2.82l.42-3.28h-3.24V8.1c0-.95.26-1.6 1.63-1.6h1.74V3.6c-.3-.04-1.33-.13-2.53-.13-2.5 0-4.22 1.53-4.22 4.33v2.42H7.3v3.28h2.82v8.4h3.38Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="scoreboard-frame-wrap">
+<div id="pcApp">
+
+  <!-- ================= SETUP SCREEN ================= -->
+  <section id="screen-setup" class="screen active">
+    <div class="pc-setup-card">
+      <span class="eyebrow">Voice-Scored Table Tennis</span>
+      <h1 class="pc-title">Scoreboard</h1>
+      <p class="tagline">Call the score. It keeps the count.</p>
+
+      <div class="pc-field-block">
+        <label for="p1NameInput">Player 1</label>
+        <input type="text" id="p1NameInput" class="name-input" maxlength="16" placeholder="Vince">
+      </div>
+      <div class="pc-field-block">
+        <label for="p2NameInput">Player 2</label>
+        <input type="text" id="p2NameInput" class="name-input" maxlength="16" placeholder="John">
+      </div>
+
+      <div class="pc-field-block">
+        <label>Match Format</label>
+        <div class="segmented" id="formatSeg">
+          <button type="button" data-value="1">Bo1</button>
+          <button type="button" data-value="3" class="active">Bo3</button>
+          <button type="button" data-value="5">Bo5</button>
+          <button type="button" data-value="7">Bo7</button>
+        </div>
+      </div>
+
+      <div class="pc-field-block">
+        <label>Points to Win</label>
+        <div class="segmented" id="targetSeg">
+          <button type="button" data-value="11" class="active">11</button>
+          <button type="button" data-value="21">21</button>
+        </div>
+      </div>
+
+      <div class="pc-field-block toggle-row">
+        <label for="voiceToggle" style="margin:0;">Voice Scoring</label>
+        <button type="button" id="voiceToggle" class="toggle-switch active" role="switch" aria-checked="true"><span class="knob"></span></button>
+      </div>
+
+      <div class="pc-field-block" id="listeningModeBlock">
+        <label>Listening Mode</label>
+        <div class="segmented" id="listenSeg">
+          <button type="button" data-value="continuous" class="active">Continuous</button>
+          <button type="button" data-value="push">Push to Call</button>
+        </div>
+      </div>
+
+      <p class="voice-unsupported-note" id="voiceUnsupportedNote" hidden>This browser doesn't support voice recognition. You can still score every point with the tap buttons.</p>
+
+      <button type="button" id="startMatchBtn" class="btn-start">Start Match</button>
+    </div>
+  </section>
+
+  <!-- ================= MATCH SCREEN ================= -->
+  <section id="screen-match" class="screen">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button type="button" class="icon-btn" id="settingsBtn" aria-label="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+        <button type="button" class="icon-btn danger-hover" id="resetBtn" aria-label="Reset match">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7"></path><polyline points="21 3 21 9 15 9"></polyline></svg>
+        </button>
+      </div>
+
+      <div class="topbar-center">
+        <div class="vs-row"><span class="vs-name p1" id="vsP1"></span><span class="vs-sep">vs</span><span class="vs-name p2" id="vsP2"></span></div>
+        <div class="game-label" id="gameLabel">BO3 · GAME 1</div>
+        <div class="tally-row"><span class="tp1" id="tallyP1">0</span><span class="tsep">—</span><span class="tp2" id="tallyP2">0</span></div>
+      </div>
+
+      <div class="topbar-right">
+        <button type="button" class="icon-btn" id="fullscreenBtn" aria-label="Toggle fullscreen">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="listening-pill" id="listeningPill" hidden><span class="dot-pulse"></span>Listening</div>
+
+    <div class="court" id="court">
+      <div class="half half-p1" id="halfP1" tabindex="0" role="button" aria-label="Add point">
+        <div class="glow" id="glowP1"></div>
+        <div class="name-row"><span class="serve-dot" id="serveDotP1"></span><span class="player-name" id="nameP1"></span></div>
+        <div class="score-wrapper"><div class="score-digit" id="scoreP1">0</div></div>
+        <div class="games-label">GAMES <span id="gamesP1">0</span></div>
+        <div class="tap-hint">Tap to score</div>
+      </div>
+
+      <div class="net-bar"></div>
+
+      <div class="half half-p2" id="halfP2" tabindex="0" role="button" aria-label="Add point">
+        <div class="glow" id="glowP2"></div>
+        <div class="name-row"><span class="serve-dot" id="serveDotP2"></span><span class="player-name" id="nameP2"></span></div>
+        <div class="score-wrapper"><div class="score-digit" id="scoreP2">0</div></div>
+        <div class="games-label">GAMES <span id="gamesP2">0</span></div>
+        <div class="tap-hint">Tap to score</div>
+      </div>
+
+      <div class="ball" id="ball" hidden></div>
+    </div>
+
+    <div class="bottom-dock">
+      <div class="ticker" id="ticker">Say "Score [name]" or "Score 1 / 2"</div>
+      <div class="dock-controls">
+        <button type="button" class="dock-btn" id="undoBtn" disabled aria-label="Undo last point">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>
+        </button>
+        <button type="button" class="mic-btn" id="micBtn" aria-label="Toggle microphone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+        </button>
+        <button type="button" class="dock-btn" id="newGameBtn" aria-label="New game">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= OVERLAYS ================= -->
+  <div class="overlay" id="overlayGameComplete">
+    <div class="overlay-card">
+      <span class="overlay-eyebrow">Game complete</span>
+      <h2 id="gcWinnerName">—</h2>
+      <div class="final-score" id="gcFinalScore">0 – 0</div>
+      <button type="button" class="overlay-btn" id="gcNextGameBtn">Next Game</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlayMatchComplete">
+    <div class="overlay-card">
+      <span class="overlay-eyebrow">🏆 Match complete</span>
+      <h2 id="mcWinnerName">—</h2>
+      <div class="final-score" id="mcFinalTally">0 – 0</div>
+      <div class="games-recap">
+        <div class="games-recap-title">Games this match</div>
+        <ul class="games-recap-list" id="mcGamesList"></ul>
+      </div>
+      <button type="button" class="overlay-btn" id="mcNewMatchBtn">New Match</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlaySettings">
+    <div class="overlay-card">
+      <span class="overlay-eyebrow">Settings</span>
+      <h2 style="margin-bottom:20px;">Match Settings</h2>
+
+      <div class="settings-section">
+        <h3>Player names</h3>
+        <div class="pc-field-block">
+          <label for="setP1Name">Player 1</label>
+          <input type="text" id="setP1Name" class="name-input" maxlength="16">
+        </div>
+        <div class="pc-field-block" style="margin-bottom:0;">
+          <label for="setP2Name">Player 2</label>
+          <input type="text" id="setP2Name" class="name-input" maxlength="16">
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Voice</h3>
+        <div class="pc-field-block toggle-row">
+          <label for="setVoiceToggle" style="margin:0;">Voice Scoring</label>
+          <button type="button" id="setVoiceToggle" class="toggle-switch" role="switch" aria-checked="false"><span class="knob"></span></button>
+        </div>
+        <div class="pc-field-block" id="setListeningModeBlock" style="margin-bottom:0;">
+          <label>Listening Mode</label>
+          <div class="segmented" id="setListenSeg">
+            <button type="button" data-value="continuous">Continuous</button>
+            <button type="button" data-value="push">Push to Call</button>
+          </div>
+        </div>
+        <p class="voice-unsupported-note" id="setVoiceUnsupportedNote" hidden style="margin-top:16px; margin-bottom:0;">This browser doesn't support voice recognition. You can still score every point with the tap buttons.</p>
+      </div>
+
+      <div class="settings-section">
+        <h3>Games this match</h3>
+        <ul class="games-recap-list" id="setGamesList"><li style="justify-content:center; color:var(--ink-faint);">No games completed yet</li></ul>
+      </div>
+
+      <button type="button" class="overlay-btn" id="setApplyBtn">Apply Changes</button>
+      <button type="button" class="overlay-btn secondary" id="setResetMatchBtn" style="margin-top:10px; border-color:rgba(255,107,107,0.4); color:var(--danger);">Reset Entire Match</button>
+      <button type="button" class="overlay-btn secondary" id="setCloseBtn" style="margin-top:10px;">Close</button>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<footer class="site-footer">
+  <span class="footer-desktop-text">© 2026 Pong Home. All rights reserved.<br>Email: contact@ponghome.com</span><span class="footer-mobile-text">© 2026 Pong Home. All rights reserved.</span> <span class="footer-social">
+    <span class="footer-social-desktop">
+      <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" aria-label="Instagram" style="color:var(--mint-dim); display:inline-flex; vertical-align:middle; margin-left:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+      </a>
+      <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" aria-label="Facebook" style="color:var(--mint-dim); display:inline-flex; vertical-align:middle; margin-left:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+      </a>
+    </span>
+    <span class="footer-social-mobile"><span class="footer-follow">Follow us on</span> <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a></span>
+  </span>
+</footer>
+
+<script>
+  const siteNavEl = document.querySelector('.site-nav');
+
+  function updateNavHeightVar(){
+    if (!siteNavEl) return;
+    const h = Math.ceil(siteNavEl.getBoundingClientRect().height);
+    if (h > 0) document.documentElement.style.setProperty('--nav-h', h + 'px');
+  }
+  updateNavHeightVar();
+  window.addEventListener('resize', updateNavHeightVar);
+  window.addEventListener('orientationchange', () => setTimeout(updateNavHeightVar, 150));
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', updateNavHeightVar);
+  }
+  if (document.fonts && document.fonts.ready) {
+    // nav width (and thus wrap height) can shift once the brand font finishes loading
+    document.fonts.ready.then(updateNavHeightVar).catch(()=>{});
+  }
+</script>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ===== Paddle Call engine (pure game logic + voice parsing) ===== */
+/* =========================================================
+   PADDLE CALL — pure game-logic & voice-parsing engine
+   (identical to the standalone engine.js used for unit tests)
+   ========================================================= */
+
+function deepClone(obj){ return JSON.parse(JSON.stringify(obj)); }
+
+function createInitialState(config){
+  const target = config.target || 11;
+  const formatGames = config.formatGames || 3;
+  const gamesNeeded = Math.ceil(formatGames / 2);
+  return {
+    players: [config.name1 || 'Player 1', config.name2 || 'Player 2'],
+    target: target,
+    formatGames: formatGames,
+    gamesNeeded: gamesNeeded,
+    currentGame: { score: [0, 0], firstServer: 0 },
+    completedGames: [],
+    gamesWon: [0, 0],
+    matchComplete: false,
+    matchWinner: null,
+    pendingGameAck: false
+  };
+}
+
+function isDeuce(a, b, target){
+  return a >= target - 1 && b >= target - 1;
+}
+
+function computeServer(a, b, target, firstServer){
+  const deuceThreshold = target - 1;
+  const p = a + b;
+  if (!isDeuce(a, b, target)) {
+    const block = Math.floor(p / 2);
+    return block % 2 === 0 ? firstServer : 1 - firstServer;
+  }
+  const deuceStartP = 2 * deuceThreshold;
+  const blockAtStart = Math.floor(deuceStartP / 2);
+  const serverAtDeuceStart = blockAtStart % 2 === 0 ? firstServer : 1 - firstServer;
+  const extra = p - deuceStartP;
+  return extra % 2 === 0 ? serverAtDeuceStart : 1 - serverAtDeuceStart;
+}
+
+function getServer(state){
+  if (state.matchComplete) return null;
+  const a = state.currentGame.score[0], b = state.currentGame.score[1];
+  return computeServer(a, b, state.target, state.currentGame.firstServer);
+}
+
+function reducePoint(state, playerIndex){
+  if (state.matchComplete) return state;
+  if (playerIndex !== 0 && playerIndex !== 1) return state;
+
+  const s = deepClone(state);
+  const g = s.currentGame;
+  g.score[playerIndex] += 1;
+
+  const other = 1 - playerIndex;
+  const mine = g.score[playerIndex];
+  const theirs = g.score[other];
+  const wonGame = mine >= s.target && (mine - theirs) >= 2;
+
+  if (wonGame) {
+    s.completedGames.push({ score: [g.score[0], g.score[1]], winner: playerIndex });
+    s.gamesWon[playerIndex] += 1;
+    s.pendingGameAck = true;
+
+    if (s.gamesWon[playerIndex] >= s.gamesNeeded) {
+      s.matchComplete = true;
+      s.matchWinner = playerIndex;
+    } else {
+      const newFirstServer = 1 - g.firstServer;
+      s.currentGame = { score: [0, 0], firstServer: newFirstServer };
+    }
+  }
+
+  return s;
+}
+
+function abandonCurrentGame(state){
+  if (state.matchComplete) return state;
+  const s = deepClone(state);
+  const newFirstServer = 1 - s.currentGame.firstServer;
+  s.currentGame = { score: [0, 0], firstServer: newFirstServer };
+  return s;
+}
+
+function resetMatchKeepConfig(state){
+  return createInitialState({
+    name1: state.players[0],
+    name2: state.players[1],
+    target: state.target,
+    formatGames: state.formatGames
+  });
+}
+
+function normalizeText(s){
+  return String(s || '')
+    .toLowerCase()
+    .replace(/[^\w\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function levenshtein(a, b){
+  a = a || ''; b = b || '';
+  const m = a.length, n = b.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+  const dp = [];
+  for (let i = 0; i <= m; i++) { dp.push(new Array(n + 1).fill(0)); dp[i][0] = i; }
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
+    }
+  }
+  return dp[m][n];
+}
+
+function similarity(a, b){
+  a = a || ''; b = b || '';
+  const maxLen = Math.max(a.length, b.length);
+  if (maxLen === 0) return 1;
+  return 1 - levenshtein(a, b) / maxLen;
+}
+
+const PHONETIC_MAP = {
+  a: ['a', 'ay', 'eh'], b: ['b', 'bee'], c: ['c', 'see', 'cee'], d: ['d', 'dee'],
+  e: ['e', 'ee'], f: ['f', 'ef'], g: ['g', 'gee'], h: ['h', 'aitch', 'h8'],
+  i: ['i', 'eye'], j: ['j', 'jay'], k: ['k', 'kay'], l: ['l', 'el'],
+  m: ['m', 'em'], n: ['n', 'en'], o: ['o', 'oh'], p: ['p', 'pee'],
+  q: ['q', 'cue', 'queue'], r: ['r', 'ar'], s: ['s', 'es'], t: ['t', 'tee'],
+  u: ['u', 'you', 'yu'], v: ['v', 'vee'], w: ['w', 'doubleu', 'double u'],
+  x: ['x', 'ex'], y: ['y', 'why'], z: ['z', 'zee', 'zed']
+};
+
+function stripLeadingPlayerWord(text){
+  return text.replace(/^(the\s+player|player)\s+/, '').trim();
+}
+
+function matchNumber(identifier){
+  const first = (identifier.split(' ')[0] || '');
+  if (first === '1' || first === 'one') return 0;
+  if (first === '2' || first === 'two' || first === 'to' || first === 'too') return 1;
+  return null;
+}
+
+function matchInitial(identifier, names){
+  const l0 = (names[0] || '').trim().charAt(0).toLowerCase();
+  const l1 = (names[1] || '').trim().charAt(0).toLowerCase();
+  if (!l0 || !l1 || l0 === l1) return null;
+  const first = (identifier.split(' ')[0] || '');
+  const spellings0 = PHONETIC_MAP[l0] || [l0];
+  const spellings1 = PHONETIC_MAP[l1] || [l1];
+  const m0 = first === l0 || spellings0.indexOf(first) !== -1;
+  const m1 = first === l1 || spellings1.indexOf(first) !== -1;
+  if (m0 && !m1) return 0;
+  if (m1 && !m0) return 1;
+  return null;
+}
+
+function parseVoiceCommand(transcriptRaw, name1, name2){
+  const transcript = normalizeText(transcriptRaw);
+  const names = [name1 || 'Player 1', name2 || 'Player 2'];
+  const namesLower = names.map(n => n.toLowerCase());
+
+  const triggerMatch = transcript.match(/\bscore\s+(.+)/);
+  if (!triggerMatch) {
+    return { matched: false, playerIndex: null, reason: 'no-trigger' };
+  }
+
+  let identifier = triggerMatch[1].trim();
+  identifier = stripLeadingPlayerWord(identifier);
+  identifier = identifier.replace(/^for\s+/, '').trim();
+
+  const nameHits = namesLower.map(n => !!n && transcript.indexOf(n) !== -1);
+  const nameHitCount = nameHits.filter(Boolean).length;
+  if (nameHitCount === 1) {
+    return { matched: true, playerIndex: nameHits[0] ? 0 : 1, reason: 'full-name' };
+  }
+
+  const numIdx = matchNumber(identifier);
+  if (numIdx !== null) return { matched: true, playerIndex: numIdx, reason: 'number' };
+
+  const initIdx = matchInitial(identifier, names);
+  if (initIdx !== null) return { matched: true, playerIndex: initIdx, reason: 'initial' };
+
+  const sim0 = similarity(identifier, namesLower[0]);
+  const sim1 = similarity(identifier, namesLower[1]);
+  const best = sim0 >= sim1 ? { idx: 0, val: sim0, other: sim1 } : { idx: 1, val: sim1, other: sim0 };
+  if (best.val >= 0.5 && best.val > best.other) {
+    return { matched: true, playerIndex: best.idx, reason: 'fuzzy', similarity: best.val };
+  }
+
+  return { matched: false, playerIndex: null, reason: 'no-match' };
+}
+
+  /* ===== Paddle Call app / DOM layer ===== */
+  /* ---------- element refs ---------- */
+  const screenSetup = document.getElementById('screen-setup');
+  const screenMatch = document.getElementById('screen-match');
+
+  const p1NameInput = document.getElementById('p1NameInput');
+  const p2NameInput = document.getElementById('p2NameInput');
+  const formatSeg = document.getElementById('formatSeg');
+  const targetSeg = document.getElementById('targetSeg');
+  const voiceToggle = document.getElementById('voiceToggle');
+  const listenSeg = document.getElementById('listenSeg');
+  const listeningModeBlock = document.getElementById('listeningModeBlock');
+  const voiceUnsupportedNote = document.getElementById('voiceUnsupportedNote');
+  const startMatchBtn = document.getElementById('startMatchBtn');
+
+  const settingsBtn = document.getElementById('settingsBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const fullscreenBtn = document.getElementById('fullscreenBtn');
+  const vsP1 = document.getElementById('vsP1');
+  const vsP2 = document.getElementById('vsP2');
+  const gameLabel = document.getElementById('gameLabel');
+  const tallyP1 = document.getElementById('tallyP1');
+  const tallyP2 = document.getElementById('tallyP2');
+  const listeningPill = document.getElementById('listeningPill');
+
+  const halfP1 = document.getElementById('halfP1');
+  const halfP2 = document.getElementById('halfP2');
+  const nameP1 = document.getElementById('nameP1');
+  const nameP2 = document.getElementById('nameP2');
+  const scoreP1 = document.getElementById('scoreP1');
+  const scoreP2 = document.getElementById('scoreP2');
+  const gamesP1 = document.getElementById('gamesP1');
+  const gamesP2 = document.getElementById('gamesP2');
+  const serveDotP1 = document.getElementById('serveDotP1');
+  const serveDotP2 = document.getElementById('serveDotP2');
+  const glowP1 = document.getElementById('glowP1');
+  const glowP2 = document.getElementById('glowP2');
+  const ball = document.getElementById('ball');
+
+  const ticker = document.getElementById('ticker');
+  const undoBtn = document.getElementById('undoBtn');
+  const micBtn = document.getElementById('micBtn');
+  const newGameBtn = document.getElementById('newGameBtn');
+
+  const overlayGameComplete = document.getElementById('overlayGameComplete');
+  const gcWinnerName = document.getElementById('gcWinnerName');
+  const gcFinalScore = document.getElementById('gcFinalScore');
+  const gcNextGameBtn = document.getElementById('gcNextGameBtn');
+
+  const overlayMatchComplete = document.getElementById('overlayMatchComplete');
+  const mcWinnerName = document.getElementById('mcWinnerName');
+  const mcFinalTally = document.getElementById('mcFinalTally');
+  const mcGamesList = document.getElementById('mcGamesList');
+  const mcNewMatchBtn = document.getElementById('mcNewMatchBtn');
+
+  const overlaySettings = document.getElementById('overlaySettings');
+  const setP1Name = document.getElementById('setP1Name');
+  const setP2Name = document.getElementById('setP2Name');
+  const setVoiceToggle = document.getElementById('setVoiceToggle');
+  const setListenSeg = document.getElementById('setListenSeg');
+  const setListeningModeBlock = document.getElementById('setListeningModeBlock');
+  const setVoiceUnsupportedNote = document.getElementById('setVoiceUnsupportedNote');
+  const setGamesList = document.getElementById('setGamesList');
+  const setApplyBtn = document.getElementById('setApplyBtn');
+  const setResetMatchBtn = document.getElementById('setResetMatchBtn');
+  const setCloseBtn = document.getElementById('setCloseBtn');
+
+  /* ---------- global app state ---------- */
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognitionSupported = !!SR;
+  const synthSupported = 'speechSynthesis' in window;
+
+  let voiceEnabled = true;
+  let listenMode = 'continuous'; // 'continuous' | 'push'
+
+  let state = null;
+  let history = [];
+
+  let recognition = null;
+  let isListening = false;
+  let intentionalStop = true;
+  let pausedForSpeech = false;
+  let isSpeaking = false;
+
+  /* ---------- setup screen wiring ---------- */
+  function attachSegmented(container, onChange){
+    container.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        if (btn.disabled) return;
+        container.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        if (onChange) onChange(btn.getAttribute('data-value'));
+      });
+    });
+  }
+  function activeSegValue(container){
+    const active = container.querySelector('button.active');
+    return active ? active.getAttribute('data-value') : null;
+  }
+
+  attachSegmented(formatSeg);
+  attachSegmented(targetSeg);
+  attachSegmented(listenSeg, v => { listenMode = v; });
+  attachSegmented(setListenSeg, v => { listenMode = v; if (state) applyListeningModeChange(); });
+
+  voiceToggle.addEventListener('click', ()=>{
+    if (voiceToggle.disabled) return;
+    const nowActive = !voiceToggle.classList.contains('active');
+    voiceToggle.classList.toggle('active', nowActive);
+    voiceToggle.setAttribute('aria-checked', String(nowActive));
+  });
+
+  if (!recognitionSupported) {
+    voiceUnsupportedNote.hidden = false;
+    setVoiceUnsupportedNote.hidden = false;
+    voiceToggle.classList.remove('active');
+    voiceToggle.disabled = true;
+    listenSeg.querySelectorAll('button').forEach(b=>b.disabled=true);
+    setVoiceToggle.disabled = true;
+    setListenSeg.querySelectorAll('button').forEach(b=>b.disabled=true);
+    voiceEnabled = false;
+  }
+
+  startMatchBtn.addEventListener('click', startMatch);
+
+  function startMatch(){
+    const n1 = (p1NameInput.value.trim() || 'Player 1').slice(0, 16);
+    const n2 = (p2NameInput.value.trim() || 'Player 2').slice(0, 16);
+    const target = Number(activeSegValue(targetSeg)) || 11;
+    const formatGames = Number(activeSegValue(formatSeg)) || 3;
+
+    voiceEnabled = recognitionSupported && voiceToggle.classList.contains('active');
+    listenMode = activeSegValue(listenSeg) || 'continuous';
+
+    state = createInitialState({ name1: n1, name2: n2, target, formatGames });
+    history = [state];
+
+    setP1Name.value = n1;
+    setP2Name.value = n2;
+    setVoiceToggle.classList.toggle('active', voiceEnabled);
+    setVoiceToggle.setAttribute('aria-checked', String(voiceEnabled));
+    syncSegActive(setListenSeg, listenMode);
+
+    showScreen('match');
+    render();
+    resetTickerDefault();
+
+    if (voiceEnabled && listenMode === 'continuous') startListening();
+  }
+
+  function syncSegActive(container, value){
+    container.querySelectorAll('button').forEach(b=>{
+      b.classList.toggle('active', b.getAttribute('data-value') === value);
+    });
+  }
+
+  function showScreen(name){
+    screenSetup.classList.toggle('active', name === 'setup');
+    screenMatch.classList.toggle('active', name === 'match');
+  }
+
+  /* ---------- half tap handlers ---------- */
+  function wireHalf(el, playerIndex){
+    el.addEventListener('click', ()=> applyPoint(playerIndex));
+    el.addEventListener('keydown', (e)=>{
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); applyPoint(playerIndex); }
+    });
+  }
+  wireHalf(halfP1, 0);
+  wireHalf(halfP2, 1);
+
+  /* ---------- arrow-key scoring ---------- */
+  document.addEventListener('keydown', (e)=>{
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (!screenIsMatch() || overlayOpen()) return;
+
+    const tag = (e.target && e.target.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) return;
+
+    e.preventDefault();
+    applyPoint(e.key === 'ArrowLeft' ? 0 : 1);
+  });
+
+  function overlayOpen(){
+    return overlayGameComplete.classList.contains('show') ||
+           overlayMatchComplete.classList.contains('show') ||
+           overlaySettings.classList.contains('show');
+  }
+
+  function applyPoint(playerIndex){
+    if (!state || state.matchComplete || overlayOpen()) return;
+    const next = reducePoint(state, playerIndex);
+    if (next === state) return;
+    history.push(next);
+    state = next;
+
+    animatePoint(playerIndex);
+    render();
+    speakPoint(playerIndex);
+
+    if (state.pendingGameAck) {
+      setTimeout(showGameOrMatchOverlay, 550);
+    }
+  }
+
+  /* ---------- animations ---------- */
+  function animatePoint(playerIndex){
+    const scoreEl = playerIndex === 0 ? scoreP1 : scoreP2;
+    const glowEl = playerIndex === 0 ? glowP1 : glowP2;
+    scoreEl.classList.remove('bump'); void scoreEl.offsetWidth; scoreEl.classList.add('bump');
+    glowEl.classList.remove('flash'); void glowEl.offsetWidth; glowEl.classList.add('flash');
+
+    ball.hidden = false;
+    ball.classList.remove('fly-left', 'fly-right');
+    void ball.offsetWidth;
+    ball.classList.add(playerIndex === 0 ? 'fly-left' : 'fly-right');
+    setTimeout(()=>{ ball.hidden = true; }, 650);
+  }
+
+  /* ---------- rendering ---------- */
+  function render(){
+    if (!state) return;
+    vsP1.textContent = state.players[0].toUpperCase();
+    vsP2.textContent = state.players[1].toUpperCase();
+    nameP1.textContent = state.players[0].toUpperCase();
+    nameP2.textContent = state.players[1].toUpperCase();
+
+    scoreP1.textContent = state.currentGame.score[0];
+    scoreP2.textContent = state.currentGame.score[1];
+    gamesP1.textContent = state.gamesWon[0];
+    gamesP2.textContent = state.gamesWon[1];
+    tallyP1.textContent = state.gamesWon[0];
+    tallyP2.textContent = state.gamesWon[1];
+
+    const [a, b] = state.currentGame.score;
+    const deuce = !state.matchComplete && isDeuce(a, b, state.target);
+    if (deuce) {
+      gameLabel.textContent = 'DEUCE · SERVE EACH POINT';
+      gameLabel.classList.add('deuce');
+    } else {
+      const gameNum = state.matchComplete ? state.completedGames.length : state.completedGames.length + 1;
+      gameLabel.textContent = 'BO' + state.formatGames + ' · GAME ' + gameNum;
+      gameLabel.classList.remove('deuce');
+    }
+
+    const server = getServer(state);
+    serveDotP1.classList.toggle('active', server === 0);
+    serveDotP2.classList.toggle('active', server === 1);
+    serveDotP1.style.opacity = state.matchComplete ? '0' : '';
+    serveDotP2.style.opacity = state.matchComplete ? '0' : '';
+
+    undoBtn.disabled = history.length <= 1;
+    newGameBtn.disabled = state.matchComplete;
+
+    micBtn.disabled = !recognitionSupported;
+  }
+
+  function resetTickerDefault(){
+    ticker.innerHTML = voiceEnabled
+      ? 'Say &ldquo;Score [name]&rdquo; or &ldquo;Score 1 / 2&rdquo;'
+      : 'Voice scoring is off — tap a half to score';
+  }
+
+  function updateTicker(transcript, result){
+    if (result.matched) {
+      ticker.innerHTML = '<span class="tick-ok">&#10003; &ldquo;' + escapeHtml(transcript) + '&rdquo; &rarr; point for ' + escapeHtml(state.players[result.playerIndex]) + '</span>';
+    } else {
+      ticker.innerHTML = '<span class="tick-no">&ldquo;' + escapeHtml(transcript) + '&rdquo; — no match</span>';
+    }
+  }
+  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  /* ---------- overlays ---------- */
+  function showGameOrMatchOverlay(){
+    if (!state) return;
+    if (state.matchComplete) {
+      showMatchOverlay();
+    } else if (state.pendingGameAck) {
+      showGameOverlay();
+    }
+  }
+
+  function showGameOverlay(){
+    const last = state.completedGames[state.completedGames.length - 1];
+    gcWinnerName.textContent = state.players[last.winner] + ' wins the game';
+    gcFinalScore.textContent = last.score[0] + ' – ' + last.score[1];
+    overlayGameComplete.classList.add('show');
+  }
+  gcNextGameBtn.addEventListener('click', ()=>{
+    state.pendingGameAck = false;
+    overlayGameComplete.classList.remove('show');
+    render();
+  });
+
+  function showMatchOverlay(){
+    mcWinnerName.textContent = state.players[state.matchWinner] + ' wins the match!';
+    mcFinalTally.textContent = state.gamesWon[0] + ' – ' + state.gamesWon[1];
+    renderGamesList(mcGamesList);
+    overlayMatchComplete.classList.add('show');
+  }
+  mcNewMatchBtn.addEventListener('click', ()=>{
+    overlayMatchComplete.classList.remove('show');
+    manualStopListening();
+    p1NameInput.value = state.players[0];
+    p2NameInput.value = state.players[1];
+    showScreen('setup');
+  });
+
+  function renderGamesList(ulEl){
+    ulEl.innerHTML = '';
+    if (!state.completedGames.length) {
+      const li = document.createElement('li');
+      li.style.justifyContent = 'center';
+      li.style.color = 'var(--ink-faint)';
+      li.textContent = 'No games completed yet';
+      ulEl.appendChild(li);
+      return;
+    }
+    state.completedGames.forEach((g, i)=>{
+      const li = document.createElement('li');
+      const label = document.createElement('span');
+      label.textContent = 'Game ' + (i + 1);
+      const scoreSpan = document.createElement('span');
+      scoreSpan.className = 'g-winner';
+      scoreSpan.style.color = g.winner === 0 ? 'var(--p1)' : 'var(--p2)';
+      scoreSpan.textContent = state.players[g.winner] + '  ' + g.score[0] + '–' + g.score[1];
+      li.appendChild(label);
+      li.appendChild(scoreSpan);
+      ulEl.appendChild(li);
+    });
+  }
+
+  /* ---------- top bar: settings / reset / fullscreen ---------- */
+  settingsBtn.addEventListener('click', ()=>{
+    if (!state) return;
+    setP1Name.value = state.players[0];
+    setP2Name.value = state.players[1];
+    setVoiceToggle.classList.toggle('active', voiceEnabled);
+    setVoiceToggle.setAttribute('aria-checked', String(voiceEnabled));
+    syncSegActive(setListenSeg, listenMode);
+    renderGamesList(setGamesList);
+    overlaySettings.classList.add('show');
+  });
+  setCloseBtn.addEventListener('click', ()=> overlaySettings.classList.remove('show'));
+
+  setVoiceToggle.addEventListener('click', ()=>{
+    if (setVoiceToggle.disabled) return;
+    const nowActive = !setVoiceToggle.classList.contains('active');
+    setVoiceToggle.classList.toggle('active', nowActive);
+    setVoiceToggle.setAttribute('aria-checked', String(nowActive));
+  });
+
+  setApplyBtn.addEventListener('click', ()=>{
+    if (!state) return;
+    const n1 = (setP1Name.value.trim() || 'Player 1').slice(0, 16);
+    const n2 = (setP2Name.value.trim() || 'Player 2').slice(0, 16);
+    state.players[0] = n1;
+    state.players[1] = n2;
+    // keep every snapshot in history in sync for name display consistency
+    history.forEach(s => { s.players[0] = n1; s.players[1] = n2; });
+
+    const newVoiceEnabled = recognitionSupported && setVoiceToggle.classList.contains('active');
+    const newListenMode = activeSegValue(setListenSeg) || listenMode;
+    voiceEnabled = newVoiceEnabled;
+    listenMode = newListenMode;
+    applyListeningModeChange();
+
+    overlaySettings.classList.remove('show');
+    render();
+    resetTickerDefault();
+  });
+
+  setResetMatchBtn.addEventListener('click', ()=>{
+    if (!state) return;
+    const ok = confirm('Reset the entire match with the same names and settings? All game scores will be lost.');
+    if (!ok) return;
+    state = resetMatchKeepConfig(state);
+    history = [state];
+    overlaySettings.classList.remove('show');
+    overlayGameComplete.classList.remove('show');
+    overlayMatchComplete.classList.remove('show');
+    render();
+    resetTickerDefault();
+  });
+
+  function applyListeningModeChange(){
+    if (!voiceEnabled) { manualStopListening(); return; }
+    if (listenMode === 'continuous' && screenIsMatch() && !document.hidden) {
+      startListening();
+    } else if (listenMode === 'push' && isListening) {
+      manualStopListening();
+    }
+  }
+
+  resetBtn.addEventListener('click', ()=>{
+    const ok = confirm('Reset this match and return to the setup screen? All game scores will be lost.');
+    if (!ok) return;
+    manualStopListening();
+    overlayGameComplete.classList.remove('show');
+    overlayMatchComplete.classList.remove('show');
+    overlaySettings.classList.remove('show');
+    showScreen('setup');
+  });
+
+  fullscreenBtn.addEventListener('click', ()=>{
+    const pcAppEl = document.getElementById('pcApp');
+    if (!document.fullscreenElement) {
+      const req = pcAppEl.requestFullscreen;
+      if (req) req.call(pcAppEl).catch(()=>{});
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen().catch(()=>{});
+    }
+  });
+
+  /* ---------- bottom dock: undo / mic / new game ---------- */
+  undoBtn.addEventListener('click', ()=>{
+    if (history.length <= 1) return;
+    history.pop();
+    state = history[history.length - 1];
+    overlayGameComplete.classList.remove('show');
+    overlayMatchComplete.classList.remove('show');
+    render();
+  });
+
+  newGameBtn.addEventListener('click', ()=>{
+    if (!state || state.matchComplete) return;
+    const hasPoints = state.currentGame.score[0] > 0 || state.currentGame.score[1] > 0;
+    if (hasPoints) {
+      const ok = confirm("Start a new game? The current game's score will be discarded and not recorded.");
+      if (!ok) return;
+    }
+    const next = abandonCurrentGame(state);
+    history.push(next);
+    state = next;
+    render();
+  });
+
+  micBtn.addEventListener('click', ()=>{
+    if (!recognitionSupported) return;
+    if (isListening) {
+      manualStopListening();
+    } else {
+      voiceEnabled = true;
+      startListening();
+    }
+  });
+
+  /* ---------- speech recognition ---------- */
+  function screenIsMatch(){ return screenMatch.classList.contains('active'); }
+
+  function initRecognition(){
+    if (!recognitionSupported) return null;
+    const r = new SR();
+    r.lang = 'en-US';
+    r.interimResults = false;
+    r.continuous = false;
+    r.onresult = onRecognitionResult;
+    r.onerror = onRecognitionError;
+    r.onend = onRecognitionEnd;
+    return r;
+  }
+
+  function startListening(){
+    if (!recognitionSupported || !voiceEnabled) return;
+    if (!recognition) recognition = initRecognition();
+    if (!recognition) return;
+    intentionalStop = false;
+    try { recognition.start(); isListening = true; updateMicUI(); }
+    catch (e) { /* already started — ignore */ }
+  }
+
+  function stopListeningInternal(){
+    isListening = false;
+    if (recognition) { try { recognition.stop(); } catch (e) {} }
+    updateMicUI();
+  }
+
+  function manualStopListening(){
+    intentionalStop = true;
+    pausedForSpeech = false;
+    if (synthSupported) window.speechSynthesis.cancel();
+    stopListeningInternal();
+  }
+
+  function updateMicUI(){
+    micBtn.classList.toggle('listening', isListening);
+    listeningPill.hidden = !(isListening && listenMode === 'continuous');
+  }
+
+  function onRecognitionResult(event){
+    if (isSpeaking) return; // belt-and-suspenders: ignore our own TTS
+    const lastResult = event.results[event.results.length - 1];
+    const transcript = lastResult[0].transcript;
+    const result = parseVoiceCommand(transcript, state ? state.players[0] : 'Player 1', state ? state.players[1] : 'Player 2');
+    updateTicker(transcript, result);
+    if (result.matched) applyPoint(result.playerIndex);
+
+    if (listenMode === 'push') {
+      intentionalStop = true;
+      stopListeningInternal();
+    }
+  }
+
+  function onRecognitionError(event){
+    if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+      voiceEnabled = false;
+      recognitionSupportedFallback();
+      return;
+    }
+    // no-speech / network / aborted etc. — let onend decide whether to restart
+  }
+
+  function recognitionSupportedFallback(){
+    ticker.innerHTML = '<span class="tick-no">Voice permission denied — use the tap buttons.</span>';
+    manualStopListening();
+    micBtn.disabled = true;
+  }
+
+  function onRecognitionEnd(){
+    isListening = false;
+    updateMicUI();
+    if (intentionalStop) return;
+    if (pausedForSpeech) return;
+    if (voiceEnabled && listenMode === 'continuous' && screenIsMatch() && !document.hidden) {
+      setTimeout(()=>{ if (!intentionalStop && !pausedForSpeech) startListening(); }, 250);
+    }
+  }
+
+  document.addEventListener('visibilitychange', ()=>{
+    if (document.hidden) {
+      if (isListening) { intentionalStop = true; stopListeningInternal(); }
+    } else {
+      if (voiceEnabled && listenMode === 'continuous' && screenIsMatch()) {
+        intentionalStop = false;
+        startListening();
+      }
+    }
+  });
+
+  /* ---------- speech synthesis (spoken confirmation) ---------- */
+  function speakPoint(playerIndex){
+    if (!voiceEnabled || !synthSupported || !state) return;
+    const name = state.players[playerIndex];
+    const score1 = state.currentGame.score[0];
+    const score2 = state.currentGame.score[1];
+    const scoreText = isDeuce(score1, score2, state.target) ? 'Deuce' : (score1 + ' to ' + score2);
+    const utter = new SpeechSynthesisUtterance('Point ' + name + '. ' + scoreText);
+
+    utter.onstart = ()=>{
+      isSpeaking = true;
+      if (isListening && listenMode === 'continuous') {
+        pausedForSpeech = true;
+        intentionalStop = false;
+        stopListeningInternal();
+      }
+    };
+    utter.onend = ()=>{
+      isSpeaking = false;
+      pausedForSpeech = false;
+      if (voiceEnabled && listenMode === 'continuous' && screenIsMatch() && !document.hidden) {
+        startListening();
+      }
+    };
+    utter.onerror = utter.onend;
+
+    try { window.speechSynthesis.cancel(); window.speechSynthesis.speak(utter); } catch (e) {}
+  }
+
+
+})();
+</script>
+
+</body>
+</html>
