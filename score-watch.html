@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GTYKNXXBF3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-GTYKNXXBF3');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TT Scoreboard">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0E3B42">
+
+<title>Scoreboard Remote for Apple Watch | Pong Home</title>
+<meta name="description" content="A free tap to score remote for table tennis, built for Apple Watch. Pick best of 3, 5, or 7, play to 11 points with a 2 point win margin, and control the match with two player buttons plus undo and reset.">
+<link rel="canonical" href="https://ponghome.com/score-watch">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pong Home">
+<meta property="og:title" content="Scoreboard Remote for Apple Watch | Pong Home">
+<meta property="og:description" content="A free tap to score remote for table tennis, built for Apple Watch. Pick best of 3, 5, or 7, play to 11 points with a 2 point win margin.">
+<meta property="og:url" content="https://ponghome.com/score-watch">
+<meta property="og:image" content="https://ponghome.com/og-image.jpg">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Scoreboard Remote for Apple Watch | Pong Home">
+<meta name="twitter:description" content="A free tap to score remote for table tennis, built for Apple Watch. Pick best of 3, 5, or 7 and play to 11.">
+<meta name="twitter:image" content="https://ponghome.com/og-image.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+<!-- AEO: SoftwareApplication schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Pong Home Scoreboard Remote",
+  "applicationCategory": "SportsApplication",
+  "operatingSystem": "watchOS, iOS, Android, Web",
+  "url": "https://ponghome.com/score-watch",
+  "description": "A tap to score table tennis remote for Apple Watch with match format selection, an 11 point win by 2 game format, undo, and reset.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "isPartOf": { "@type": "WebSite", "name": "Pong Home", "url": "https://ponghome.com/" }
+}
+</script>
+<!-- AEO: FAQ schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What match formats does the scoreboard remote support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Before the match starts you can choose best of 3, best of 5, or best of 7 games. The remote tracks how many games each player has won and declares a match winner once one side clinches the majority."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does a game end on the scoreboard remote?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A game ends when a player reaches 11 points with at least a 2 point lead. If the score reaches 10 to 10, play continues until one player leads by 2 points."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I undo a point on the scoreboard remote?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The undo button in the top right removes the last point, even if that point just finished a game, restoring the exact score and game count from before the tap."
+      }
+    }
+  ]
+}
+</script>
+<!-- AEO: BreadcrumbList -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://ponghome.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Scoreboard Remote", "item": "https://ponghome.com/score-watch" }
+  ]
+}
+</script>
+
+<style>
+  :root{
+    --bg-deep:#0E3B42;
+    --bg-deeper:#0A4952;
+    --bg-deep-soft:#14727C;
+    --mint:#00FFD1;
+    --mint-dim:#00E0B8;
+    --mint-soft:rgba(0,255,209,0.18);
+    --paper:#FAFFFB;
+    --paper-card:#FFFFFF;
+    --ink:#0A2A2F;
+    --ink-soft:#4C6B70;
+    --line-dark:rgba(255,255,255,0.16);
+    --line-light:rgba(10,42,47,0.10);
+    --shadow: 0 18px 40px rgba(6,88,96,0.22);
+    --coral:#FF6B6B;
+    --sun:#FFB020;
+  }
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none;}
+  html,body{
+    margin:0;
+    height:100%;
+    overflow:hidden;
+    font-family:'Inter',sans-serif;
+    background:var(--bg-deep);
+    color:var(--paper);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .sr-only{
+    position:absolute;
+    width:1px; height:1px;
+    padding:0; margin:-1px;
+    overflow:hidden;
+    clip:rect(0,0,0,0);
+    white-space:nowrap;
+    border:0;
+  }
+
+  h1,h2,.display{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    letter-spacing:0.01em;
+    margin:0;
+  }
+
+  .app{
+    position:fixed;
+    inset:0;
+    height:100dvh;
+    width:100vw;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ============ SETUP SCREEN ============ */
+  .setup{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:clamp(6px, 3vh, 14px);
+    padding:10px 12px;
+    background:radial-gradient(120% 100% at 50% 0%, var(--bg-deep-soft), var(--bg-deep));
+    text-align:center;
+  }
+  .setup-brand{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:clamp(20px, 8vw, 30px);
+    color:var(--mint);
+    line-height:1.02;
+  }
+  .setup-sub{
+    font-family:'JetBrains Mono', monospace;
+    font-size:clamp(9px, 3vw, 11px);
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.6);
+    margin-top:-4px;
+  }
+  .setup-label{
+    font-size:clamp(10px, 3.4vw, 12px);
+    color:var(--paper);
+    font-weight:600;
+    margin-top:4px;
+  }
+  .format-row{
+    display:flex;
+    gap:8px;
+  }
+  .format-btn{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    font-size:clamp(11px, 3.6vw, 13px);
+    color:var(--paper);
+    background:rgba(255,255,255,0.08);
+    border:2px solid var(--line-dark);
+    border-radius:14px;
+    padding:10px 6px;
+    min-width:52px;
+    line-height:1.15;
+  }
+  .format-btn small{
+    display:block;
+    font-size:8px;
+    color:rgba(255,255,255,0.5);
+    font-weight:500;
+    margin-top:2px;
+  }
+  .format-btn.selected{
+    background:var(--mint);
+    color:var(--bg-deep);
+    border-color:var(--paper);
+  }
+  .format-btn.selected small{ color:var(--bg-deep); opacity:0.7; }
+
+  .start-btn{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:clamp(14px, 4.6vw, 17px);
+    color:var(--bg-deep);
+    background:var(--mint);
+    border:2px solid var(--paper);
+    border-radius:999px;
+    padding:10px 26px;
+    margin-top:6px;
+    box-shadow:var(--shadow);
+  }
+  .start-btn:active{ background:var(--mint-dim); transform:scale(0.97); }
+
+  /* ============ GAME SCREEN ============ */
+  .game{
+    flex:1;
+    display:none;
+    flex-direction:column;
+    height:100%;
+  }
+  .game.active{ display:flex; }
+  .setup.hidden{ display:none; }
+
+  .topbar{
+    flex:0 0 auto;
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    padding:6px 6px 2px;
+    gap:4px;
+  }
+  .ctrl-btn{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    font-size:clamp(9px, 2.8vw, 10.5px);
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+    color:var(--paper);
+    background:rgba(255,255,255,0.1);
+    border:1px solid var(--line-dark);
+    border-radius:999px;
+    padding:5px 9px;
+    justify-self:start;
+  }
+  .ctrl-btn.undo{ justify-self:end; background:var(--mint); color:var(--bg-deep); border-color:var(--paper); }
+  .ctrl-btn.undo[disabled]{ opacity:0.3; }
+  .ctrl-btn:active{ transform:scale(0.94); }
+
+  .brand-center{
+    text-align:center;
+    line-height:1;
+  }
+  .brand-center .b1{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:clamp(15px, 5.2vw, 20px);
+    color:var(--mint);
+    letter-spacing:0.01em;
+  }
+  .brand-center .b2{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:600;
+    font-size:clamp(7.5px, 2.2vw, 9px);
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.55);
+    margin-top:2px;
+  }
+
+  .match-status{
+    flex:0 0 auto;
+    text-align:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:clamp(8.5px, 2.6vw, 10px);
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.55);
+    padding-bottom:2px;
+  }
+
+  .courts{
+    flex:1;
+    display:flex;
+    flex-direction:row;
+    min-height:0;
+  }
+  .half{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    padding:2px 4px;
+    cursor:pointer;
+    min-width:0;
+  }
+  .half:active{ filter:brightness(1.18); }
+  .p1{ background:linear-gradient(90deg, var(--bg-deep-soft), var(--bg-deep)); }
+  .p2{ background:linear-gradient(270deg, var(--bg-deeper), var(--bg-deep)); }
+
+  .v-divider{ width:1px; background:var(--line-dark); }
+
+  .name-row{
+    display:flex;
+    align-items:center;
+    gap:3px;
+    max-width:94%;
+  }
+  .name{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    font-size:clamp(9px, 3.6vw, 12px);
+    letter-spacing:0.01em;
+    text-transform:uppercase;
+    color:var(--mint);
+    background:transparent;
+    border:none;
+    text-align:center;
+    width:64px;
+    padding:2px 2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .name:focus{
+    outline:1px dashed var(--mint);
+    background:rgba(0,0,0,0.2);
+    border-radius:6px;
+    overflow:visible;
+  }
+  .edit-btn{
+    flex:0 0 auto;
+    width:16px; height:16px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.12);
+    border:none;
+    color:var(--paper);
+    font-size:8px;
+    line-height:16px;
+  }
+
+  .score{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:clamp(38px, 17vw, 68px);
+    line-height:1;
+    color:var(--paper);
+    margin-top:1px;
+  }
+
+  .games-won{
+    font-family:'JetBrains Mono', monospace;
+    font-size:clamp(8px, 2.6vw, 10px);
+    color:rgba(255,255,255,0.6);
+    letter-spacing:0.04em;
+    margin-top:2px;
+  }
+  .games-won b{ color:var(--mint); }
+
+  /* ============ MATCH OVER OVERLAY ============ */
+  .overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(6,32,36,0.94);
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    text-align:center;
+    padding:14px;
+    z-index:20;
+  }
+  .overlay.show{ display:flex; }
+  .overlay .trophy{ font-size:clamp(24px, 9vw, 34px); }
+  .overlay .winner{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:clamp(14px, 5vw, 18px);
+    color:var(--mint);
+  }
+  .overlay .final{
+    font-family:'JetBrains Mono', monospace;
+    font-size:clamp(9px, 3vw, 11px);
+    color:rgba(255,255,255,0.7);
+  }
+  .overlay .new-match-btn{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:clamp(11px, 3.6vw, 13px);
+    color:var(--bg-deep);
+    background:var(--mint);
+    border:2px solid var(--paper);
+    border-radius:999px;
+    padding:8px 18px;
+    margin-top:6px;
+  }
+
+  .reset-confirm{
+    position:absolute;
+    top:32px;
+    left:6px;
+    z-index:15;
+    font-family:'JetBrains Mono', monospace;
+    font-size:8px;
+    color:var(--sun);
+    background:rgba(0,0,0,0.4);
+    border-radius:6px;
+    padding:2px 6px;
+    display:none;
+  }
+  .reset-confirm.show{ display:block; }
+</style>
+</head>
+<body>
+
+<h1 class="sr-only">Table Tennis Scoreboard Remote for Apple Watch</h1>
+<p class="sr-only">
+  Pong Home's scoreboard remote is a tap to score tool built for Apple Watch. Choose best of 3, best of 5,
+  or best of 7 before the match starts. Each game is played to 11 points and must be won by at least 2
+  points. Player 1 sits on the left and Player 2 sits on the right, with a large Pong Home brand header
+  centred at the top, a reset button in the top left, and an undo button in the top right.
+</p>
+<h2 class="sr-only">Match format and scoring rules</h2>
+<p class="sr-only">
+  Tap a player's side to add one point for them. A game ends the moment a player reaches 11 points with a
+  2 point lead, and ties beyond 10 to 10 continue until that 2 point margin appears. Game wins accumulate
+  toward the chosen best of format until one player clinches the match.
+</p>
+
+<div class="app">
+
+  <!-- ============ SETUP SCREEN ============ -->
+  <section class="setup" id="setupScreen" aria-label="Match format setup">
+    <div class="setup-brand">PONG HOME</div>
+    <div class="setup-sub">Scoreboard Remote</div>
+    <div class="setup-label">Choose match format</div>
+    <div class="format-row" role="group" aria-label="Match format">
+      <button class="format-btn" data-games="3">BO3<small>1st to 2</small></button>
+      <button class="format-btn selected" data-games="5">BO5<small>1st to 3</small></button>
+      <button class="format-btn" data-games="7">BO7<small>1st to 4</small></button>
+    </div>
+    <button class="start-btn" id="startBtn">Start Match</button>
+  </section>
+
+  <!-- ============ GAME SCREEN ============ -->
+  <section class="game" id="gameScreen" aria-label="Live scoreboard">
+    <div class="topbar">
+      <button class="ctrl-btn" id="resetBtn" aria-label="Reset match">Reset</button>
+      <div class="brand-center">
+        <div class="b1">PONG HOME</div>
+        <div class="b2">Scoreboard</div>
+      </div>
+      <button class="ctrl-btn undo" id="undoBtn" disabled aria-label="Undo last point">↺ Undo</button>
+    </div>
+    <div class="reset-confirm" id="resetConfirm">Tap again to reset</div>
+    <div class="match-status" id="matchStatus">BEST OF 5 &middot; GAME 1</div>
+
+    <div class="courts">
+      <div class="half p1" id="zoneP1" role="button" tabindex="0" aria-label="Add point for Player 1">
+        <div class="name-row">
+          <input class="name" id="nameP1" value="PLAYER 1" maxlength="12" aria-label="Player 1 name" readonly>
+          <button class="edit-btn" id="editP1" aria-label="Rename Player 1">✎</button>
+        </div>
+        <div class="score" id="scoreP1">0</div>
+        <div class="games-won" id="gamesP1">Games <b>0</b></div>
+      </div>
+
+      <div class="v-divider"></div>
+
+      <div class="half p2" id="zoneP2" role="button" tabindex="0" aria-label="Add point for Player 2">
+        <div class="name-row">
+          <input class="name" id="nameP2" value="PLAYER 2" maxlength="12" aria-label="Player 2 name" readonly>
+          <button class="edit-btn" id="editP2" aria-label="Rename Player 2">✎</button>
+        </div>
+        <div class="score" id="scoreP2">0</div>
+        <div class="games-won" id="gamesP2">Games <b>0</b></div>
+      </div>
+    </div>
+
+    <div class="overlay" id="matchOverlay">
+      <div class="trophy">🏆</div>
+      <div class="winner" id="winnerText">Player 1 wins the match!</div>
+      <div class="final" id="finalScoreText">Games: 3 &ndash; 1</div>
+      <button class="new-match-btn" id="newMatchBtn">New Match</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'ph_scoreboard_remote_v2';
+
+  var defaultState = function(){
+    return {
+      screen: 'setup',
+      bestOf: 5,
+      p1: { name: 'PLAYER 1', score: 0, games: 0 },
+      p2: { name: 'PLAYER 2', score: 0, games: 0 },
+      gameNumber: 1,
+      matchOver: false,
+      matchWinner: null,
+      history: []
+    };
+  };
+
+  var state = defaultState();
+
+  function load(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        var saved = JSON.parse(raw);
+        if(saved && saved.p1 && saved.p2){ state = saved; }
+      }
+    }catch(e){}
+  }
+  function save(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+  function vibrate(ms){ if(navigator.vibrate){ try{ navigator.vibrate(ms); }catch(e){} } }
+  function gamesNeeded(bestOf){ return Math.ceil(bestOf / 2); }
+
+  // ---- DOM refs ----
+  var setupScreen = document.getElementById('setupScreen');
+  var gameScreen = document.getElementById('gameScreen');
+  var formatBtns = document.querySelectorAll('.format-btn');
+  var startBtn = document.getElementById('startBtn');
+
+  var scoreP1El = document.getElementById('scoreP1');
+  var scoreP2El = document.getElementById('scoreP2');
+  var nameP1El = document.getElementById('nameP1');
+  var nameP2El = document.getElementById('nameP2');
+  var gamesP1El = document.getElementById('gamesP1').querySelector('b');
+  var gamesP2El = document.getElementById('gamesP2').querySelector('b');
+  var undoBtn = document.getElementById('undoBtn');
+  var resetBtn = document.getElementById('resetBtn');
+  var resetConfirm = document.getElementById('resetConfirm');
+  var zoneP1 = document.getElementById('zoneP1');
+  var zoneP2 = document.getElementById('zoneP2');
+  var editP1 = document.getElementById('editP1');
+  var editP2 = document.getElementById('editP2');
+  var matchStatus = document.getElementById('matchStatus');
+  var matchOverlay = document.getElementById('matchOverlay');
+  var winnerText = document.getElementById('winnerText');
+  var finalScoreText = document.getElementById('finalScoreText');
+  var newMatchBtn = document.getElementById('newMatchBtn');
+
+  var selectedFormat = 5;
+  var resetArmed = false;
+  var resetTimer = null;
+
+  // ---- Setup screen ----
+  formatBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      formatBtns.forEach(function(b){ b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      selectedFormat = parseInt(btn.getAttribute('data-games'), 10);
+    });
+  });
+
+  startBtn.addEventListener('click', function(){
+    state = defaultState();
+    state.bestOf = selectedFormat;
+    state.screen = 'game';
+    save();
+    render();
+  });
+
+  // ---- Snapshot for undo ----
+  function snapshot(){
+    return JSON.parse(JSON.stringify({
+      p1: state.p1, p2: state.p2,
+      gameNumber: state.gameNumber,
+      matchOver: state.matchOver,
+      matchWinner: state.matchWinner
+    }));
+  }
+
+  function checkGameWin(){
+    var a = state.p1.score, b = state.p2.score;
+    var winner = null;
+    if(a >= 11 && a - b >= 2){ winner = 'p1'; }
+    else if(b >= 11 && b - a >= 2){ winner = 'p2'; }
+    if(!winner){ return; }
+
+    state[winner].games += 1;
+    var need = gamesNeeded(state.bestOf);
+    if(state[winner].games >= need){
+      state.matchOver = true;
+      state.matchWinner = winner;
+    } else {
+      state.p1.score = 0;
+      state.p2.score = 0;
+      state.gameNumber += 1;
+    }
+  }
+
+  function addPoint(player){
+    if(state.matchOver){ return; }
+    state.history.push(snapshot());
+    if(state.history.length > 300){ state.history.shift(); }
+    state[player].score += 1;
+    checkGameWin();
+    vibrate(15);
+    save();
+    render();
+  }
+
+  function undo(){
+    var prev = state.history.pop();
+    if(!prev){ return; }
+    state.p1 = prev.p1;
+    state.p2 = prev.p2;
+    state.gameNumber = prev.gameNumber;
+    state.matchOver = prev.matchOver;
+    state.matchWinner = prev.matchWinner;
+    vibrate(30);
+    save();
+    render();
+  }
+
+  function armReset(){
+    if(resetArmed){
+      state = defaultState();
+      save();
+      resetArmed = false;
+      resetConfirm.classList.remove('show');
+      if(resetTimer){ clearTimeout(resetTimer); }
+      render();
+      return;
+    }
+    resetArmed = true;
+    resetConfirm.classList.add('show');
+    resetTimer = setTimeout(function(){
+      resetArmed = false;
+      resetConfirm.classList.remove('show');
+    }, 2200);
+  }
+
+  function tapHandler(player){
+    return function(e){
+      if(e.target.closest('.edit-btn')){ return; }
+      addPoint(player);
+    };
+  }
+  zoneP1.addEventListener('click', tapHandler('p1'));
+  zoneP2.addEventListener('click', tapHandler('p2'));
+  undoBtn.addEventListener('click', function(e){ e.stopPropagation(); undo(); });
+  resetBtn.addEventListener('click', function(e){ e.stopPropagation(); armReset(); });
+  newMatchBtn.addEventListener('click', function(){
+    state = defaultState();
+    save();
+    render();
+  });
+
+  function enableRename(input, editBtn, key){
+    editBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      input.readOnly = false;
+      input.focus();
+      input.select();
+    });
+    input.addEventListener('click', function(e){ e.stopPropagation(); });
+    input.addEventListener('blur', function(){
+      input.readOnly = true;
+      var val = input.value.trim().toUpperCase() || (key === 'p1' ? 'PLAYER 1' : 'PLAYER 2');
+      state[key].name = val;
+      save();
+      render();
+    });
+    input.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ input.blur(); } });
+  }
+  enableRename(nameP1El, editP1, 'p1');
+  enableRename(nameP2El, editP2, 'p2');
+
+  // Keyboard support for desktop testing
+  document.addEventListener('keydown', function(e){
+    if(state.screen !== 'game'){ return; }
+    if(e.key === '1'){ addPoint('p1'); }
+    if(e.key === '2'){ addPoint('p2'); }
+    if(e.key === 'Backspace' || e.key === 'u'){ undo(); }
+  });
+
+  function render(){
+    if(state.screen === 'setup'){
+      setupScreen.classList.remove('hidden');
+      gameScreen.classList.remove('active');
+      return;
+    }
+    setupScreen.classList.add('hidden');
+    gameScreen.classList.add('active');
+
+    scoreP1El.textContent = state.p1.score;
+    scoreP2El.textContent = state.p2.score;
+    nameP1El.value = state.p1.name;
+    nameP2El.value = state.p2.name;
+    gamesP1El.textContent = state.p1.games;
+    gamesP2El.textContent = state.p2.games;
+    zoneP1.setAttribute('aria-label', 'Add point for ' + state.p1.name);
+    zoneP2.setAttribute('aria-label', 'Add point for ' + state.p2.name);
+    undoBtn.disabled = state.history.length === 0;
+
+    matchStatus.textContent = 'BEST OF ' + state.bestOf + ' \u00B7 GAME ' + state.gameNumber;
+
+    if(state.matchOver){
+      var winnerName = state[state.matchWinner].name;
+      winnerText.textContent = winnerName + ' wins the match!';
+      finalScoreText.textContent = 'Games: ' + state.p1.games + ' \u2013 ' + state.p2.games;
+      matchOverlay.classList.add('show');
+    } else {
+      matchOverlay.classList.remove('show');
+    }
+  }
+
+  load();
+  formatBtns.forEach(function(b){
+    b.classList.toggle('selected', parseInt(b.getAttribute('data-games'),10) === state.bestOf);
+  });
+  render();
+})();
+</script>
+
+</body>
+</html>
