@@ -1249,15 +1249,31 @@ function rowToBlade(row){
 }
 
 async function fetchGearItems(){
+  // Supabase/PostgREST caps rows per request (Max Rows setting, often 1000).
+  // Page through with the Range header so tables larger than that cap
+  // still load in full instead of silently truncating past the cap.
+  const PAGE_SIZE = 1000;
   const url = `${SUPABASE_URL}/rest/v1/gear_items?select=*&order=brand.asc,item_name.asc`;
-  const res = await fetch(url, {
-    headers: {
-      'apikey': SUPABASE_ANON_KEY,
-      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-    }
-  });
-  if (!res.ok) throw new Error(`Supabase fetch failed: ${res.status}`);
-  return res.json();
+  let allRows = [];
+  let from = 0;
+
+  while (true){
+    const to = from + PAGE_SIZE - 1;
+    const res = await fetch(url, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Range': `${from}-${to}`
+      }
+    });
+    if (!res.ok) throw new Error(`Supabase fetch failed: ${res.status}`);
+    const page = await res.json();
+    allRows = allRows.concat(page);
+    if (page.length < PAGE_SIZE) break;
+    from += PAGE_SIZE;
+  }
+
+  return allRows;
 }
 
 async function loadGearData(){
