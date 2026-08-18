@@ -1041,7 +1041,7 @@
       line-height:1.25;
     }
     .stat-num{font-size:0.66rem; width:20px;}
-    .bar-track{height:4px;}
+    .bar-track{display:none;}
     .stars{font-size:11px; letter-spacing:1px;}
     .stars-na{font-size:0.66rem;}
     .table-shell{border-radius:14px;}
@@ -1399,7 +1399,7 @@ function renderHead(){
   head.innerHTML = cfg.map(c => `<div>${c.label}</div>`).join('');
 }
 
-const BRAND_PRIORITY = ['Butterfly', 'Nittaku', 'Donic', 'Andro'];
+const BRAND_PRIORITY = ['Xiom', 'Butterfly', 'Nittaku', 'Donic', 'Andro'];
 
 function brandRank(brand){
   const idx = BRAND_PRIORITY.indexOf(brand);
