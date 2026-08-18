@@ -201,28 +201,20 @@
   .format-btn{
     font-family:'JetBrains Mono', monospace;
     font-weight:700;
-    font-size:clamp(11px, 3.6vw, 13px);
+    font-size:clamp(16px, 5.4vw, 20px);
     color:var(--paper);
     background:rgba(255,255,255,0.08);
     border:2px solid var(--line-dark);
-    border-radius:14px;
-    padding:10px 6px;
-    min-width:52px;
+    border-radius:16px;
+    padding:16px 10px;
+    min-width:64px;
     line-height:1.15;
-  }
-  .format-btn small{
-    display:block;
-    font-size:8px;
-    color:rgba(255,255,255,0.5);
-    font-weight:500;
-    margin-top:2px;
   }
   .format-btn.selected{
     background:var(--mint);
     color:var(--bg-deep);
     border-color:var(--paper);
   }
-  .format-btn.selected small{ color:var(--bg-deep); opacity:0.7; }
 
   .start-btn{
     font-family:'Baloo 2',sans-serif;
@@ -341,30 +333,12 @@
     letter-spacing:0.01em;
     text-transform:uppercase;
     color:var(--mint);
-    background:transparent;
-    border:none;
     text-align:center;
-    width:64px;
+    max-width:90%;
     padding:2px 2px;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
-  }
-  .name:focus{
-    outline:1px dashed var(--mint);
-    background:rgba(0,0,0,0.2);
-    border-radius:6px;
-    overflow:visible;
-  }
-  .edit-btn{
-    flex:0 0 auto;
-    width:16px; height:16px;
-    border-radius:50%;
-    background:rgba(255,255,255,0.12);
-    border:none;
-    color:var(--paper);
-    font-size:8px;
-    line-height:16px;
   }
 
   .score{
@@ -464,9 +438,9 @@
     <div class="setup-sub">Scoreboard Remote</div>
     <div class="setup-label">Choose match format</div>
     <div class="format-row" role="group" aria-label="Match format">
-      <button class="format-btn" data-games="3">BO3<small>1st to 2</small></button>
-      <button class="format-btn selected" data-games="5">BO5<small>1st to 3</small></button>
-      <button class="format-btn" data-games="7">BO7<small>1st to 4</small></button>
+      <button class="format-btn" data-games="3">BO3</button>
+      <button class="format-btn selected" data-games="5">BO5</button>
+      <button class="format-btn" data-games="7">BO7</button>
     </div>
     <button class="start-btn" id="startBtn">Start Match</button>
   </section>
@@ -487,8 +461,7 @@
     <div class="courts">
       <div class="half p1" id="zoneP1" role="button" tabindex="0" aria-label="Add point for Player 1">
         <div class="name-row">
-          <input class="name" id="nameP1" value="PLAYER 1" maxlength="12" aria-label="Player 1 name" readonly>
-          <button class="edit-btn" id="editP1" aria-label="Rename Player 1">✎</button>
+          <div class="name" id="nameP1" aria-label="Player 1 name">PLAYER 1</div>
         </div>
         <div class="score" id="scoreP1">0</div>
         <div class="games-won" id="gamesP1">Games <b>0</b></div>
@@ -498,8 +471,7 @@
 
       <div class="half p2" id="zoneP2" role="button" tabindex="0" aria-label="Add point for Player 2">
         <div class="name-row">
-          <input class="name" id="nameP2" value="PLAYER 2" maxlength="12" aria-label="Player 2 name" readonly>
-          <button class="edit-btn" id="editP2" aria-label="Rename Player 2">✎</button>
+          <div class="name" id="nameP2" aria-label="Player 2 name">PLAYER 2</div>
         </div>
         <div class="score" id="scoreP2">0</div>
         <div class="games-won" id="gamesP2">Games <b>0</b></div>
@@ -567,8 +539,6 @@
   var resetConfirm = document.getElementById('resetConfirm');
   var zoneP1 = document.getElementById('zoneP1');
   var zoneP2 = document.getElementById('zoneP2');
-  var editP1 = document.getElementById('editP1');
-  var editP2 = document.getElementById('editP2');
   var matchStatus = document.getElementById('matchStatus');
   var matchOverlay = document.getElementById('matchOverlay');
   var winnerText = document.getElementById('winnerText');
@@ -668,8 +638,7 @@
   }
 
   function tapHandler(player){
-    return function(e){
-      if(e.target.closest('.edit-btn')){ return; }
+    return function(){
       addPoint(player);
     };
   }
@@ -682,26 +651,6 @@
     save();
     render();
   });
-
-  function enableRename(input, editBtn, key){
-    editBtn.addEventListener('click', function(e){
-      e.stopPropagation();
-      input.readOnly = false;
-      input.focus();
-      input.select();
-    });
-    input.addEventListener('click', function(e){ e.stopPropagation(); });
-    input.addEventListener('blur', function(){
-      input.readOnly = true;
-      var val = input.value.trim().toUpperCase() || (key === 'p1' ? 'PLAYER 1' : 'PLAYER 2');
-      state[key].name = val;
-      save();
-      render();
-    });
-    input.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ input.blur(); } });
-  }
-  enableRename(nameP1El, editP1, 'p1');
-  enableRename(nameP2El, editP2, 'p2');
 
   // Keyboard support for desktop testing
   document.addEventListener('keydown', function(e){
@@ -722,8 +671,8 @@
 
     scoreP1El.textContent = state.p1.score;
     scoreP2El.textContent = state.p2.score;
-    nameP1El.value = state.p1.name;
-    nameP2El.value = state.p2.name;
+    nameP1El.textContent = state.p1.name;
+    nameP2El.textContent = state.p2.name;
     gamesP1El.textContent = state.p1.games;
     gamesP2El.textContent = state.p2.games;
     zoneP1.setAttribute('aria-label', 'Add point for ' + state.p1.name);
