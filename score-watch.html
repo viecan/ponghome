@@ -284,7 +284,7 @@
     flex:0 0 auto;
     text-align:center;
     font-family:'JetBrains Mono', monospace;
-    font-size:clamp(8.5px, 2.6vw, 10px);
+    font-size:clamp(17px, 5.2vw, 20px);
     letter-spacing:0.04em;
     text-transform:uppercase;
     color:rgba(255,255,255,0.55);
@@ -323,16 +323,16 @@
   .name{
     font-family:'JetBrains Mono', monospace;
     font-weight:700;
-    font-size:clamp(9px, 3.6vw, 12px);
+    font-size:clamp(16px, 7vw, 22px);
     letter-spacing:0.01em;
     text-transform:uppercase;
     color:var(--mint);
     text-align:center;
-    max-width:90%;
+    max-width:96%;
     padding:2px 2px;
     white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+    overflow:visible;
+    line-height:1.05;
   }
 
   .score{
@@ -414,7 +414,7 @@
 <p class="sr-only">
   Pong Home's scoreboard remote is a tap to score tool built for Apple Watch. Choose best of 3, best of 5,
   or best of 7 before the match starts. Each game is played to 11 points and must be won by at least 2
-  points. Player 1 sits on the left and Player 2 sits on the right, with a large Pong Home brand header
+  points. Your score sits on the left and your opponent's score sits on the right, with a large Pong Home brand header
   centred at the top, a reset button in the top left, and an undo button in the top right.
 </p>
 <h2 class="sr-only">Match format and scoring rules</h2>
@@ -452,9 +452,9 @@
     <div class="match-status" id="matchStatus">BEST OF 5 &middot; GAME 1</div>
 
     <div class="courts">
-      <div class="half p1" id="zoneP1" role="button" tabindex="0" aria-label="Add point for Player 1">
+      <div class="half p1" id="zoneP1" role="button" tabindex="0" aria-label="Add point for Me">
         <div class="name-row">
-          <div class="name" id="nameP1" aria-label="Player 1 name">PLAYER 1</div>
+          <div class="name" id="nameP1" aria-label="Your name">ME</div>
         </div>
         <div class="score" id="scoreP1">0</div>
         <div class="games-won" id="gamesP1">Games <b>0</b></div>
@@ -462,9 +462,9 @@
 
       <div class="v-divider"></div>
 
-      <div class="half p2" id="zoneP2" role="button" tabindex="0" aria-label="Add point for Player 2">
+      <div class="half p2" id="zoneP2" role="button" tabindex="0" aria-label="Add point for You">
         <div class="name-row">
-          <div class="name" id="nameP2" aria-label="Player 2 name">PLAYER 2</div>
+          <div class="name" id="nameP2" aria-label="Opponent name">YOU</div>
         </div>
         <div class="score" id="scoreP2">0</div>
         <div class="games-won" id="gamesP2">Games <b>0</b></div>
@@ -473,7 +473,7 @@
 
     <div class="overlay" id="matchOverlay">
       <div class="trophy">🏆</div>
-      <div class="winner" id="winnerText">Player 1 wins the match!</div>
+      <div class="winner" id="winnerText">Me wins the match!</div>
       <div class="final" id="finalScoreText">Games: 3 &ndash; 1</div>
       <button class="new-match-btn" id="newMatchBtn">New Match</button>
     </div>
@@ -489,8 +489,8 @@
     return {
       screen: 'setup',
       bestOf: 5,
-      p1: { name: 'PLAYER 1', score: 0, games: 0 },
-      p2: { name: 'PLAYER 2', score: 0, games: 0 },
+      p1: { name: 'ME', score: 0, games: 0 },
+      p2: { name: 'YOU', score: 0, games: 0 },
       gameNumber: 1,
       matchOver: false,
       matchWinner: null,
