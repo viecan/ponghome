@@ -17,24 +17,24 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<title>Pong Home — On-Demand Table Tennis Coaching</title>
-<meta name="description" content="Book on-demand table tennis coaching with advanced and national-level players in Toronto and New York City. Private lessons, matchmaking, and a friendly local community for all skill levels.">
+<title>Pong Home | The Digital Home of Table Tennis</title>
+<meta name="description" content="Pong Home is the digital home of table tennis, offering on-demand coaching, equipment insights, a marketplace, training guides, and more.">
 <link rel="canonical" href="https://ponghome.com/">
 <meta name="robots" content="index, follow">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pong Home">
-<meta property="og:title" content="Pong Home — On-Demand Table Tennis Coaching">
-<meta property="og:description" content="Book on-demand table tennis coaching with advanced and national-level players in Toronto and New York City. Private lessons, matchmaking, and a friendly local community for all skill levels.">
+<meta property="og:title" content="Pong Home | The Digital Home of Table Tennis">
+<meta property="og:description" content="Pong Home is the digital home of table tennis, offering on-demand coaching, equipment insights, a marketplace, training guides, and more.">
 <meta property="og:url" content="https://ponghome.com/">
 <meta property="og:image" content="https://ponghome.com/og-image.jpg">
 <meta property="og:locale" content="en_US">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Pong Home — On-Demand Table Tennis Coaching">
-<meta name="twitter:description" content="Book on-demand table tennis coaching with advanced and national-level players in Toronto and New York City.">
+<meta name="twitter:title" content="Pong Home | The Digital Home of Table Tennis">
+<meta name="twitter:description" content="Pong Home is the digital home of table tennis, offering on-demand coaching, equipment insights, a marketplace, training guides, and more.">
 <meta name="twitter:image" content="https://ponghome.com/og-image.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -498,26 +498,52 @@
   }
   .hero p.lead{
     max-width:560px;
-    margin:26px auto 38px;
+    margin:26px auto 0;
     font-size:1.08rem;
     line-height:1.65;
     color:rgba(255,255,255,0.78);
     text-align:justify;
     text-align-last:center;
   }
+  .hero p.lead.coach-lead{
+    margin-bottom:32px;
+    font-style:italic;
+  }
   @media (min-width:861px){
-    .hero p.lead{
-      max-width:800px;
+    .hero p.lead:not(.coach-lead){
+      max-width:none;
+      white-space:nowrap;
+    }
+    .hero p.lead.coach-lead{
+      max-width:700px;
+      white-space:normal;
+      text-align:justify;
+      text-align-last:center;
     }
   }
   @media (max-width:720px){
-    .hero p.lead{
+    .hero p.lead:not(.coach-lead){
       max-width:100%;
-      font-size:1.06rem;
+      font-size:1.08rem;
       line-height:1.5;
       letter-spacing:-0.006em;
-      text-align:left;
-      text-align-last:left;
+      text-align:center;
+      text-align-last:center;
+      word-spacing:normal;
+      text-wrap:pretty;
+      overflow-wrap:break-word;
+      hyphens:auto;
+      -webkit-hyphens:auto;
+      -ms-hyphens:auto;
+      margin:18px auto 0;
+    }
+    .hero p.lead.coach-lead{
+      max-width:100%;
+      font-size:1.09rem;
+      line-height:1.5;
+      letter-spacing:-0.006em;
+      text-align:justify;
+      text-align-last:center;
       word-spacing:normal;
       text-wrap:pretty;
       overflow-wrap:break-word;
@@ -1335,7 +1361,8 @@
   <header class="hero">
     <div class="hero-inner">
       <span class="hero-eyebrow location-badge">Canada - United States - Germany - France - Spain</span>
-      <h1>On-demand <br class="hero-break"><span class="white">table tennis</span> <br class="hero-break">coaching</h1>
+      <h1>The digital home of <span class="white">table tennis</span></h1>
+      <p class="lead">On-demand table tennis coaching, equipment insights, marketplace, and everything you need to play better.</p>
 
     <div class="hero-support">
       <div class="hero-support-text">
@@ -1366,10 +1393,13 @@
         </div>
       </div>
 
-      <p class="lead">Whether you’re a beginner looking to build a strong foundation, a recreational player who simply wants to stay active and improve, or an advanced player preparing for tournaments, our Pong Home coaches can help you take your game to the next level. We come to you at a time and location that works for you, focusing on technique, footwork, and match strategy to help you improve faster and play with more confidence. </p>
+      <p class="lead coach-lead">Whether you're just starting out or preparing for your next tournament, Pong Home coaches help you play better, faster. Get personalized coaching focused on technique, footwork, and strategy, delivered wherever and whenever it works for you.</p>
       <div class="hero-actions">
         <a class="btn-primary" href="#contactSection">
           Find a coach →
+        </a>
+        <a class="btn-secondary" href="/table-tennis-guides">
+          Explore Insights →
         </a>
       </div>
 
