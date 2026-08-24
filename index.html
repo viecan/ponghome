@@ -538,7 +538,7 @@
     }
     .hero p.lead.coach-lead{
       max-width:100%;
-      font-size:1.07rem;
+      font-size:1.06rem;
       line-height:1.5;
       letter-spacing:-0.006em;
       text-align:justify;
@@ -553,6 +553,25 @@
     }
     .hero{
       padding-bottom:36px;
+    }
+    .hero-actions{
+      gap:8px;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      justify-content:flex-start;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+      padding:0 4px;
+    }
+    .hero-actions::-webkit-scrollbar{display:none;}
+    .hero-actions .btn-primary,
+    .hero-actions .btn-secondary{
+      flex:0 0 auto;
+      font-size:0.78rem;
+      padding:9px 14px;
+      gap:5px;
+      white-space:nowrap;
     }
   }
   .btn-primary{
@@ -1418,6 +1437,22 @@
     .news-bar-tag{padding:6px 10px; font-size:0.56rem;}
     .news-bar-item{font-size:0.82rem;}
     .news-bar-track{gap:34px;}
+    .news-bar-track-wrap{
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+    }
+    .news-bar-track-wrap::-webkit-scrollbar{display:none;}
+    .news-bar-track{
+      animation:newsBarScroll 60s linear infinite;
+      cursor:grab;
+    }
+    .news-bar-track:active{
+      animation-play-state:paused;
+      cursor:grabbing;
+    }
   }
 
 </style>
@@ -1511,6 +1546,9 @@
         </a>
         <a class="btn-secondary" href="/table-tennis-guides">
           Explore Insights →
+        </a>
+        <a class="btn-secondary" href="/ratings">
+          Rate equipment →
         </a>
       </div>
 
