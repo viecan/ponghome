@@ -507,7 +507,6 @@
   }
   .hero p.lead.coach-lead{
     margin-bottom:32px;
-    font-style:italic;
   }
   @media (min-width:861px){
     .hero p.lead:not(.coach-lead){
@@ -524,7 +523,7 @@
   @media (max-width:720px){
     .hero p.lead:not(.coach-lead){
       max-width:100%;
-      font-size:1.08rem;
+      font-size:1.07rem;
       line-height:1.5;
       letter-spacing:-0.006em;
       text-align:center;
@@ -539,7 +538,7 @@
     }
     .hero p.lead.coach-lead{
       max-width:100%;
-      font-size:1.09rem;
+      font-size:1.07rem;
       line-height:1.5;
       letter-spacing:-0.006em;
       text-align:justify;
@@ -1327,6 +1326,100 @@
     .contact-form{padding:26px 20px;}
   }
 
+  /* ============ BREAKING NEWS BAR ============ */
+  .news-bar{
+    background:var(--bg-deeper);
+    border-bottom:1px solid rgba(0,255,209,0.16);
+    overflow:hidden;
+    position:relative;
+  }
+  .news-bar-inner{
+    display:flex;
+    align-items:center;
+    max-width:1400px;
+    margin:0 auto;
+    padding:0 0 0 0;
+  }
+  .news-bar-tag{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--mint);
+    color:var(--bg-deeper);
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:0.72rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:9px 16px;
+    white-space:nowrap;
+    z-index:2;
+  }
+  .news-bar-tag .dot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--bg-deeper);
+    animation:newsBarPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes newsBarPulse{
+    0%,100%{ opacity:1; }
+    50%{ opacity:0.25; }
+  }
+  .news-bar-track-wrap{
+    flex:1 1 auto;
+    overflow:hidden;
+    position:relative;
+    padding:9px 0;
+  }
+  .news-bar-track{
+    display:flex;
+    align-items:center;
+    gap:48px;
+    width:max-content;
+    animation:newsBarScroll 34s linear infinite;
+  }
+  .news-bar-track:hover{
+    animation-play-state:paused;
+  }
+  @keyframes newsBarScroll{
+    0%{ transform:translateX(0); }
+    100%{ transform:translateX(-50%); }
+  }
+  .news-bar-item{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    color:#fff;
+    text-decoration:none;
+    font-size:0.88rem;
+    font-weight:600;
+    white-space:nowrap;
+    transition:color 0.2s ease;
+  }
+  .news-bar-item:hover{color:var(--mint);}
+  .news-bar-item .news-bar-badge{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;
+    font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--mint);
+    border:1px solid rgba(0,255,209,0.4);
+    border-radius:999px;
+    padding:2px 9px;
+  }
+  .news-bar-item .arrow{
+    color:var(--mint);
+    font-weight:400;
+  }
+  @media (max-width:640px){
+    .news-bar-tag{padding:6px 10px; font-size:0.56rem;}
+    .news-bar-item{font-size:0.82rem;}
+    .news-bar-track{gap:34px;}
+  }
+
 </style>
 </head>
 <body>
@@ -1354,6 +1447,24 @@
     </div>
   </div>
 </nav>
+
+<div class="news-bar" role="complementary" aria-label="Featured Insights articles">
+  <div class="news-bar-inner">
+    <span class="news-bar-tag"><span class="dot" aria-hidden="true"></span> Highlights</span>
+    <div class="news-bar-track-wrap">
+      <div class="news-bar-track">
+        <a class="news-bar-item" href="/table-tennis-guides/racquetsup-expo-toronto-2027"><span class="news-bar-badge">Event</span> RacquetsUp Expo 2027 <span class="arrow">→</span></a>
+        <a class="news-bar-item" href="/table-tennis-guides/give-this-kid-a-chance"><span class="news-bar-badge">Club Culture</span> He didn't have a racket but he kept showing up <span class="arrow">→</span></a>
+        <a class="news-bar-item" href="/table-tennis-guides/do-not-play-table-tennis"><span class="news-bar-badge">Mental Game</span> Do Not Play Table Tennis <span class="arrow">→</span></a>
+        <a class="news-bar-item" href="/table-tennis-guides/table-tennis-tips-techniques-mental-game"><span class="news-bar-badge">Mental Game</span> Tips, Techniques &amp; the Mental Game <span class="arrow">→</span></a>
+        <a class="news-bar-item" href="/table-tennis-guides/racquetsup-expo-toronto-2027"><span class="news-bar-badge">Event</span> RacquetsUp Expo 2027 <span class="arrow">→</span></a>
+        <a class="news-bar-item" href="/table-tennis-guides/give-this-kid-a-chance"><span class="news-bar-badge">Club Culture</span> He didn't have a racket but he kept showing up <span class="arrow">→</span></a>
+        <a class="news-bar-item" href="/table-tennis-guides/do-not-play-table-tennis"><span class="news-bar-badge">Mental Game</span> Do Not Play Table Tennis <span class="arrow">→</span></a>
+        <a class="news-bar-item" href="/table-tennis-guides/table-tennis-tips-techniques-mental-game"><span class="news-bar-badge">Mental Game</span> Tips, Techniques &amp; the Mental Game <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ================= HOME TAB ================= -->
 <section id="home" class="tab-panel active">
