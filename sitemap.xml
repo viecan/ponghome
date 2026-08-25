@@ -260,4 +260,19 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://ponghome.com/table-tennis-guides/pickleball-in-toronto-racquetsup-expo-2027</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ponghome.com/table-tennis-guides/tennis-in-toronto-racquetsup-expo-2027</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ponghome.com/table-tennis-guides/racquet-sports-toronto-racquetsup-expo-2027</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>
