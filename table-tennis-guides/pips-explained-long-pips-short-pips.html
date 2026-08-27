@@ -596,6 +596,19 @@
     font-size:0.85rem;
     padding:22px;
   }
+.footer-follow{margin-left:6px;}
+.footer-mobile-text{display:none;}
+.footer-social-mobile{display:none;}
+.site-footer .footer-support-btn{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;font-weight:700;color:#0A4952 !important;background:var(--mint);border-radius:999px;padding:6px 14px;margin-top:10px;text-decoration:none;box-shadow:0 2px 8px rgba(0,255,209,0.3);transition:transform 0.15s ease, box-shadow 0.15s ease;}
+.footer-support-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,255,209,0.25);}
+@media (max-width:860px){
+  .footer-social{display:block;margin-top:8px;}
+  .footer-desktop-text{display:none;}
+  .footer-mobile-text{display:inline;}
+  .footer-social-desktop{display:none;}
+  .footer-social-mobile{display:inline;}
+}
+
   .site-footer a{color:var(--mint-dim); text-decoration:none;}
 
   @media (max-width:760px){
@@ -666,7 +679,7 @@
   <h1>Pips Explained: How to Play Against Long Pips and Short Pips</h1>
   <p>Pips rubber breaks all the normal spin rules, here's what long and short pips actually do to the ball, and how to adjust your game against each one.</p>
   <div class="blog-meta-row">
-    <span>Pong Home Team</span>
+    <span>Pong Home Insights Hub</span>
     <span>·</span>
     <span>Equipment</span>
     <span>·</span>
@@ -683,7 +696,7 @@
 
 <div class="article-byline">
   <div class="avatar">PH</div>
-  <div>Pong Home Team · Coach-written equipment guide</div>
+  <div>Pong Home Insights Hub · Coach-written equipment guide</div>
 </div>
 
 <article class="article-wrap">
@@ -775,8 +788,19 @@
 </section>
 
 <footer class="site-footer">
-  <div>© 2026 Pong Home. All rights reserved.</div>
-  <div>Email: <a href="mailto:contact@ponghome.com">contact@ponghome.com</a></div>
+  <span class="footer-desktop-text">© 2026 Pong Home. All rights reserved. Email: contact@ponghome.com</span><span class="footer-mobile-text">© 2026 Pong Home. All rights reserved.</span> <span class="footer-social">
+    <span class="footer-social-desktop">
+      <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" aria-label="Instagram" style="color:var(--mint-dim); display:inline-flex; vertical-align:middle; margin-left:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+      </a>
+      <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" aria-label="Facebook" style="color:var(--mint-dim); display:inline-flex; vertical-align:middle; margin-left:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+      </a>
+    </span>
+    <span class="footer-social-mobile"><span class="footer-follow">Follow us on</span> <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a></span>
+  </span>
+  <br>
+  <a class="footer-support-btn" href="https://donate.stripe.com/14AcN54S7cDL49VaQuabK01" target="_blank" rel="noopener">Enjoy the content? Give $5 to keep us going!</a>
 </footer>
 
 
