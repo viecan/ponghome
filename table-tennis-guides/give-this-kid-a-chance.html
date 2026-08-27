@@ -455,6 +455,41 @@
     line-height:1.6;
   }
   .article-cta-card .nav-cta{display:inline-flex;}
+  .cta-progress{
+    max-width:340px;
+    margin:18px auto 0;
+    text-align:left;
+  }
+  .cta-progress-labels{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:6px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .cta-progress-raised{
+    color:var(--mint);
+    font-size:0.78rem;
+    font-weight:700;
+  }
+  .cta-progress-goal{
+    color:rgba(255,255,255,0.55);
+    font-size:0.78rem;
+  }
+  .cta-progress-track{
+    width:100%;
+    height:6px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.12);
+    overflow:hidden;
+  }
+  .cta-progress-fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--mint-dim,#00c2a0),var(--mint));
+    width:35%;
+    box-shadow:0 0 8px rgba(0,255,209,0.5);
+  }
 
   /* ============ RELATED POSTS ============ */
   .related-wrap{
@@ -641,7 +676,16 @@
   <div class="article-cta-card">
     <h3>Help Give Yafet a Chance</h3>
     <p>Whether you can offer equipment, training, tournament funding, or just a bit of support, reach out and become part of Yafet's journey to the Ontario Championship.</p>
-    <a class="nav-cta" href="mailto:contact@ponghome.com?subject=Supporting%20Yafet%27s%20Table%20Tennis%20Journey">Etransfer to contact@ponghome.com</a>
+    <a class="nav-cta" href="https://donate.stripe.com/8x2eVdesHgU135R6AeabK00" target="_blank" rel="noopener">Give $10 to Yafet</a>
+    <div class="cta-progress">
+      <div class="cta-progress-labels">
+        <span class="cta-progress-raised">$70 raised</span>
+        <span class="cta-progress-goal">Goal: $200</span>
+      </div>
+      <div class="cta-progress-track">
+        <div class="cta-progress-fill"></div>
+      </div>
+    </div>
   </div>
 </div>
 
