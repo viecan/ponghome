@@ -769,6 +769,25 @@
   .footer-follow{margin-left:6px;}
   .footer-mobile-text{display:none;}
   .footer-social-mobile{display:none;}
+  .footer-support-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;
+    font-weight:600;
+    color:var(--bg-deeper);
+    background:var(--mint);
+    border-radius:999px;
+    padding:5px 12px;
+    margin-top:10px;
+    text-decoration:none;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .footer-support-btn:hover{
+    transform:translateY(-1px);
+    box-shadow:0 6px 16px rgba(0,255,209,0.25);
+  }
   @media (max-width:860px){
     .footer-social{
       display:block;
@@ -790,7 +809,7 @@
 
   .submit-equip-fab-wrap{
     display:flex;
-    justify-content:flex-end;
+    justify-content:flex-start;
     padding:0 4px;
     margin-top:36px;
     margin-bottom:0;
@@ -1151,6 +1170,8 @@
     </span>
     <span class="footer-social-mobile"><span class="footer-follow">Follow us on</span> <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a></span>
   </span>
+  <br>
+  <a class="footer-support-btn" href="https://donate.stripe.com/14AcN54S7cDL49VaQuabK01" target="_blank" rel="noopener">Find this useful? Give $5 to keep us going!</a>
 </footer>
 
 <div class="equip-modal-overlay" id="equipModalOverlay">
