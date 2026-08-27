@@ -292,6 +292,15 @@
     font-size:1.05rem;
     line-height:1.6;
   }
+  .hero-updated{
+    max-width:1080px;
+    margin:10px auto 0;
+    padding:0 24px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    color:#9CA8AA;
+    text-align:left;
+  }
 
   /* ============ CATEGORY FILTER BAR (Insights hub) ============ */
   .filter-bar-wrap{
@@ -657,6 +666,18 @@
   <h1>Table Tennis Blog</h1>
   <p>Level up your game with practical, coach-written guides on technique, equipment, strategy, and the mental side of table tennis, plus the lastest table tennis news, all-in-one place. Fresh, free content added every day. Read, learn, share with friends and play better together!</p>
 </header>
+
+<p class="hero-updated" id="heroUpdated"></p>
+
+<script>
+  (function(){
+    var el = document.getElementById('heroUpdated');
+    if(!el) return;
+    var today = new Date();
+    var formatted = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    el.textContent = 'Last updated: ' + formatted;
+  })();
+</script>
 
 <div class="filter-bar-wrap">
   <div class="filter-bar" id="filterBar" role="toolbar" aria-label="Filter guides by category">
@@ -1570,16 +1591,6 @@
       <span class="bf-eyebrow">The Full Handbook</span>
       <h2>Point Winner: The Tactical Playbook for Modern Table Tennis</h2>
       <p>A complete, chapter-by-chapter training book covering grip, stance, spin, tactics, and match strategy, free to read on Pong Home.</p>
-    </span>
-    <span class="bf-arrow">→</span>
-  </a>
-
-  <a class="book-feature-card" href="/table-tennis-guides/table-tennis-dictionary">
-    <span class="bf-icon">📚</span>
-    <span class="bf-body">
-      <span class="bf-eyebrow">Reference Guide</span>
-      <h2>The Complete Table Tennis Dictionary</h2>
-      <p>170+ terms covering equipment, grip styles, strokes, spin, tactics, rules, and competition, all in one searchable glossary.</p>
     </span>
     <span class="bf-arrow">→</span>
   </a>
