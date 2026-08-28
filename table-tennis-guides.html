@@ -1645,7 +1645,7 @@
 <script>
   // Category filter + pagination for the Insights grid. Filtering by
   // category (matched against each card's .card-tag text) narrows the
-  // set of cards, then pagination shows 10 per page on mobile, 16 per
+  // set of cards, then pagination shows 20 per page on mobile, 16 per
   // page on desktop, across whatever is currently filtered.
   (function(){
     var grid = document.querySelector('.blog-grid');
@@ -1656,13 +1656,13 @@
     var allCards = Array.prototype.slice.call(grid.querySelectorAll('a.blog-card'));
     var filteredCards = allCards;
     var activeFilter = 'all';
-    var perPage = 10;
+    var perPage = 20;
     var totalPages = 1;
     var currentPage = 1;
     var mq = window.matchMedia('(max-width:760px)');
 
     function currentPerPage(){
-      return mq.matches ? 10 : 16;
+      return mq.matches ? 20 : 16;
     }
 
     function cardCategory(card){
