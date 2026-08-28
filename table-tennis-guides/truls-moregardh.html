@@ -177,17 +177,18 @@ a{color:inherit;}
 .faq-item p:last-child{margin-bottom:0;}
 
 /* ============ CTA CARD ============ */
-.article-cta{max-width:760px;margin:16px auto 0;padding:0 24px 60px;}
-.article-cta-card{background:var(--bg-deep);border-radius:20px;padding:32px 30px;text-align:center;color:#fff;}
-.article-cta-card h3{color:var(--mint);font-size:1.2rem;margin-bottom:10px;}
-.article-cta-card p{color:rgba(255,255,255,0.7);font-size:0.93rem;max-width:440px;margin:0 auto 20px;line-height:1.6;}
-.article-cta-card .nav-cta{display:inline-flex;}
+.article-cta{max-width:520px;margin:16px auto 0;padding:0 24px 48px;}
+.article-cta-card{background:#F1F3F4;border:1px solid rgba(10,42,47,0.10);border-radius:16px;padding:22px 24px 10px;text-align:center;color:var(--ink);box-shadow:0 4px 14px rgba(10,42,47,0.05);}
+.article-cta-card h3{color:var(--ink);font-size:1.05rem;margin-bottom:8px;}
+.article-cta-card p{color:var(--ink-soft);font-size:0.85rem;max-width:380px;margin:0 auto 14px;line-height:1.5;}
+
 
 /* ============ RELATED POSTS ============ */
 .related-wrap{max-width:1000px;margin:0 auto;padding:0 24px 70px;}
 .related-wrap h3{font-size:1.1rem;color:var(--ink);margin-bottom:20px;text-align:center;}
 .related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
-.related-card{display:block;background:var(--paper-card);border:1px solid var(--line-light);border-radius:16px;padding:20px 22px;text-decoration:none;color:inherit;box-shadow:0 4px 14px rgba(10,42,47,0.05);transition:transform 0.2s ease, box-shadow 0.2s ease;}
+.related-card{display:flex;flex-direction:column;background:var(--paper-card);border:1px solid var(--line-light);border-radius:16px;padding:20px 22px;text-decoration:none;color:inherit;box-shadow:0 4px 14px rgba(10,42,47,0.05);transition:transform 0.2s ease, box-shadow 0.2s ease;}
+  .related-card .card-read{margin-top:auto;padding-top:10px;font-family:'JetBrains Mono',monospace;font-size:0.58rem;font-weight:600;color:#9CA8AA;text-align:left;}
 .related-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
 .related-card .card-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mint-dim);background:var(--mint-soft);border-radius:999px;padding:3px 10px;margin-bottom:10px;}
 .related-card h4{font-size:0.98rem;color:var(--ink);line-height:1.35;margin:0;}
@@ -225,6 +226,66 @@ a{color:inherit;}
   .blog-hero{padding:56px 20px 44px;}
 }
 
+
+  /* ---------- article newsletter box (replaces old CTA) ---------- */
+  .article-newsletter-eyebrow{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.65rem;
+    font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--bg-deeper);
+    background:rgba(10,42,47,0.08);
+    border-radius:999px;
+    padding:4px 10px;
+    margin-bottom:10px;
+  }
+  .article-newsletter-form{
+    display:flex;
+    gap:8px;
+    max-width:360px;
+    margin:0 auto;
+  }
+  .article-newsletter-input{
+    flex:1;
+    min-width:0;
+    padding:8px 12px;
+    border-radius:9px;
+    border:1px solid rgba(10,42,47,0.16);
+    background:#fff;
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:0.82rem;
+  }
+  .article-newsletter-input::placeholder{color:#9CA8AA;}
+  .article-newsletter-input:focus{outline:none; border-color:var(--bg-deep-soft);}
+  .article-newsletter-submit{
+    flex:0 0 auto;
+    appearance:none;
+    border:none;
+    border-radius:9px;
+    background:var(--bg-deeper);
+    color:#fff;
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:0.78rem;
+    padding:8px 14px;
+    cursor:pointer;
+    transition:background 0.2s ease;
+  }
+  .article-newsletter-submit:hover{background:var(--bg-deep);}
+  .article-newsletter-submit:disabled{opacity:0.6; cursor:not-allowed;}
+  .article-cta-card .article-newsletter-note{
+    margin:26px 0 0;
+    font-size:0.5rem;
+    color:#9CA8AA;
+  }
+  .article-cta-card .article-newsletter-note.error{color:var(--coral);}
+  .article-cta-card .article-newsletter-note.success{color:#1A7A5E; font-weight:600;}
+  @media (max-width:600px){
+    .article-newsletter-form{flex-direction:column;}
+  }
 </style>
 </head>
 <body>
@@ -356,9 +417,15 @@ a{color:inherit;}
 
 <div class="article-cta">
   <div class="article-cta-card">
-    <h3>Want a more creative, all court game like Moregardh?</h3>
-    <p>A Pong Home coach can help you mix pace, spin, and placement to keep opponents guessing, one on one.</p>
-    <a class="nav-cta" href="/">Book one-on-one coaching &rarr;</a>
+    <span class="article-newsletter-eyebrow">Free newsletter</span>
+    <h3>Table tennis news, deals &amp; tips, straight to your inbox</h3>
+    <p>New techniques, gear picks, mental game tips, events &amp; promotions. Always free. Unsubscribe anytime.</p>
+    <form class="article-newsletter-form" onsubmit="submitArticleNewsletter(event, this)">
+      <input type="email" class="article-newsletter-input" placeholder="you@email.com" required autocomplete="email">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+      <button type="submit" class="article-newsletter-submit">Subscribe</button>
+    </form>
+    <p class="article-newsletter-note">No spam. One email a week</p>
   </div>
 </div>
 
@@ -368,17 +435,17 @@ a{color:inherit;}
     <a class="related-card" href="/table-tennis-guides/how-to-read-spin-on-your-opponents-serve">
       <span class="card-tag">Technique</span>
       <h4>How to Read Spin on Your Opponent's Serve</h4>
-      <span class="card-read">Read the guide &rarr;</span>
+      <span class="card-read">Read more &rarr;</span>
     </a>
     <a class="related-card" href="/table-tennis-guides/ma-long">
       <span class="card-tag">Athlete</span>
       <h4>Ma Long: The Dragon Who Redefined Table Tennis Greatness</h4>
-      <span class="card-read">Read the guide &rarr;</span>
+      <span class="card-read">Read more &rarr;</span>
     </a>
     <a class="related-card" href="/table-tennis-guides/fan-zhendong-playing-style-tactics-and-equipment">
       <span class="card-tag">Athlete</span>
       <h4>Fan Zhendong: Breaking Down the Game of a Champion</h4>
-      <span class="card-read">Read the guide &rarr;</span>
+      <span class="card-read">Read more &rarr;</span>
     </a>
   </div>
 </section>
@@ -420,5 +487,51 @@ a{color:inherit;}
   })();
 </script>
 
+
+<script>
+  // Article-page newsletter box: submits to FormSubmit by AJAX (no page
+  // redirect) and swaps the card content to a thank-you message on success.
+  function submitArticleNewsletter(e, form){
+    e.preventDefault();
+    var emailInput = form.querySelector('.article-newsletter-input');
+    var submitBtn = form.querySelector('.article-newsletter-submit');
+    var card = form.closest('.article-cta-card');
+    var noteEl = card.querySelector('.article-newsletter-note');
+    var email = emailInput.value.trim();
+    if(!email) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Subscribing...';
+    noteEl.textContent = 'No spam. One email a week';
+    noteEl.className = 'article-newsletter-note';
+
+    fetch('https://formsubmit.co/ajax/viet.adops@gmail.com', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify({
+        email: email,
+        _subject: 'New Pong Home newsletter signup',
+        _template: 'table',
+        _captcha: 'false',
+        source: 'Article CTA'
+      })
+    })
+    .then(function(res){
+      if(!res.ok) throw new Error('Request failed');
+      return res.json();
+    })
+    .then(function(){
+      card.innerHTML = '<span class="article-newsletter-eyebrow">Free newsletter</span>'
+        + '<h3>You\'re on the list!</h3>'
+        + '<p>Thanks for subscribing. Keep an eye on your inbox for the next round of tips.</p>';
+    })
+    .catch(function(){
+      noteEl.textContent = 'Something went wrong. Please try again.';
+      noteEl.className = 'article-newsletter-note error';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Subscribe';
+    });
+  }
+</script>
 </body>
 </html>
