@@ -521,6 +521,82 @@
   .blog-card.blue-theme .card-read{
     color:#2563EB;
   }
+  .blog-card.newsletter-card{
+    background:#F1F3F4;
+    border-color:rgba(10,42,47,0.10);
+    cursor:default;
+  }
+  .blog-card.newsletter-card:hover{
+    transform:none;
+    box-shadow:0 4px 14px rgba(10,42,47,0.05);
+  }
+  .newsletter-card-state{
+    display:flex;
+    flex-direction:column;
+    flex:1;
+    min-height:0;
+  }
+  .blog-card.newsletter-card .card-tag{
+    color:var(--bg-deeper);
+    background:rgba(10,42,47,0.08);
+    margin-bottom:10px;
+  }
+  .blog-card.newsletter-card h2{
+    margin-bottom:8px;
+  }
+  .blog-card.newsletter-card p{
+    margin-bottom:12px;
+  }
+  .newsletter-card-form{
+    display:flex;
+    gap:8px;
+    margin-top:auto;
+    margin-bottom:26px;
+  }
+  .newsletter-card-input{
+    flex:1;
+    min-width:0;
+    padding:7px 12px;
+    border-radius:9px;
+    border:1px solid rgba(10,42,47,0.16);
+    background:#fff;
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:0.8rem;
+  }
+  .newsletter-card-input:focus{outline:none; border-color:var(--bg-deep-soft);}
+  .newsletter-card-submit{
+    flex:0 0 auto;
+    appearance:none;
+    border:none;
+    border-radius:9px;
+    background:var(--bg-deeper);
+    color:#fff;
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:0.76rem;
+    padding:7px 14px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background 0.2s ease;
+  }
+  .newsletter-card-submit:hover{background:var(--bg-deep);}
+  .newsletter-card-submit:disabled{opacity:0.6; cursor:not-allowed;}
+  .blog-card.newsletter-card .newsletter-card-note{
+    position:absolute;
+    left:26px;
+    right:26px;
+    bottom:12px;
+    margin:0;
+    font-size:0.68rem;
+    line-height:1.3;
+    color:#9CA8AA;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .blog-card.newsletter-card .newsletter-card-note.error{color:var(--coral);}
+  .blog-card.newsletter-card .newsletter-card-note.success{color:#1A7A5E; font-weight:600;}
   .feat-tags{
     display:flex;
     align-items:center;
@@ -781,6 +857,25 @@
       </div>
     </a>
 
+    <div class="blog-card newsletter-card" id="newsletterCard">
+      <div class="newsletter-card-state" id="newsletterCardFormState">
+        <span class="card-tag">Free newsletter</span>
+        <h2>Table tennis news, deals &amp; tips, straight to your inbox</h2>
+        <p>New techniques, gear picks, mental game tips, events &amp; promotions. Always free. Unsubscribe anytime.</p>
+        <form class="newsletter-card-form" id="newsletterCardForm" onsubmit="submitNewsletterCard(event)">
+          <input type="email" class="newsletter-card-input" id="newsletterCardEmail" placeholder="you@email.com" required autocomplete="email">
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+          <button type="submit" class="newsletter-card-submit" id="newsletterCardSubmitBtn">Subscribe</button>
+        </form>
+        <p class="newsletter-card-note" id="newsletterCardNote">No spam. One email a week</p>
+      </div>
+      <div class="newsletter-card-state" id="newsletterCardSuccessState" style="display:none;">
+        <span class="card-tag">Free newsletter</span>
+        <h2>You're on the list!</h2>
+        <p>Thanks for subscribing. Keep an eye on your inbox for the next round of tips.</p>
+      </div>
+    </div>
+
     <a class="blog-card" href="/table-tennis-guides/fan-zhendong-playing-style-tactics-and-equipment" target="_blank" rel="noopener" data-views-base="6458" data-views-rate="26" data-views-interval-min="6" data-views-launch="2026-08-26T22:00:00">
       <span class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="views-num">6,458</span> views</span>
       <span class="card-tag">Athlete</span>
@@ -815,6 +910,7 @@
         </span>
       </div>
     </a>
+
     <a class="blog-card" href="/table-tennis-guides/table-tennis-tips-techniques-mental-game" target="_blank" rel="noopener" data-views-base="35048" data-views-rate="3" data-views-interval-min="6" data-views-launch="2026-08-16T06:00:00">
       <span class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg><span class="views-num">35,048</span> views</span>
       <span class="card-tag">Mental Game</span>
@@ -1832,6 +1928,60 @@
     };
 
     initLikes();
+  })();
+</script>
+
+<script>
+  // Newsletter card in the Insights grid. Submits the email to FormSubmit
+  // by AJAX (no page redirect) and swaps in a success state on the card.
+  (function(){
+    var FORM_ENDPOINT = 'https://formsubmit.co/ajax/viet.adops@gmail.com';
+    var form = document.getElementById('newsletterCardForm');
+    if(!form) return;
+
+    var emailInput = document.getElementById('newsletterCardEmail');
+    var submitBtn = document.getElementById('newsletterCardSubmitBtn');
+    var noteEl = document.getElementById('newsletterCardNote');
+    var noteDefaultText = noteEl ? noteEl.textContent : '';
+    var formState = document.getElementById('newsletterCardFormState');
+    var successState = document.getElementById('newsletterCardSuccessState');
+
+    window.submitNewsletterCard = function(e){
+      e.preventDefault();
+      var email = emailInput.value.trim();
+      if(!email) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Subscribing...';
+      noteEl.textContent = noteDefaultText;
+      noteEl.className = 'newsletter-card-note';
+
+      fetch(FORM_ENDPOINT, {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body: JSON.stringify({
+          email: email,
+          _subject: 'New Pong Home newsletter signup',
+          _template: 'table',
+          _captcha: 'false',
+          source: 'Insights hub card'
+        })
+      })
+      .then(function(res){
+        if(!res.ok) throw new Error('Request failed');
+        return res.json();
+      })
+      .then(function(){
+        formState.style.display = 'none';
+        successState.style.display = 'flex';
+      })
+      .catch(function(){
+        noteEl.textContent = 'Something went wrong. Please try again.';
+        noteEl.className = 'newsletter-card-note error';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Subscribe';
+      });
+    };
   })();
 </script>
 
