@@ -614,6 +614,25 @@
   @media (max-width:600px){
     .article-newsletter-form{flex-direction:column;}
   }
+
+  /* ---------- support Yafet donation box ---------- */
+  .support-yafet-card{padding-bottom:24px;}
+  .support-yafet-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.82rem;
+    font-weight:700;
+    color:#0A4952;
+    background:var(--mint);
+    border-radius:999px;
+    padding:10px 22px;
+    text-decoration:none;
+    box-shadow:0 2px 8px rgba(0,255,209,0.3);
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .support-yafet-btn:hover{transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,255,209,0.25);}
 </style>
 </head>
 <body>
@@ -719,16 +738,11 @@
 </article>
 
 <div class="article-cta">
-  <div class="article-cta-card">
-    <span class="article-newsletter-eyebrow">Free newsletter</span>
-    <h3>Table tennis news, deals &amp; tips, straight to your inbox</h3>
-    <p>New techniques, gear picks, mental game tips, events &amp; promotions. Always free. Unsubscribe anytime.</p>
-    <form class="article-newsletter-form" onsubmit="submitArticleNewsletter(event, this)">
-      <input type="email" class="article-newsletter-input" placeholder="you@email.com" required autocomplete="email">
-      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
-      <button type="submit" class="article-newsletter-submit">Subscribe</button>
-    </form>
-    <p class="article-newsletter-note">No spam. One email a week</p>
+  <div class="article-cta-card support-yafet-card">
+    <span class="article-newsletter-eyebrow">Support Yafet</span>
+    <h3>Help Yafet get to the Ontario Championship</h3>
+    <p>Your contribution will help Yafet purchase indoor shoes, a new paddle, and cover the registration fee for the next Ontario Championship.</p>
+    <a class="support-yafet-btn" href="https://donate.stripe.com/8x2eVdesHgU135R6AeabK00" target="_blank" rel="noopener">Support Yafet</a>
   </div>
 </div>
 
