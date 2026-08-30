@@ -266,6 +266,24 @@
     text-decoration:none;
   }
   .blog-hero .breadcrumb a:hover{text-decoration:underline;}
+  .blog-hero-support-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-top:28px;
+    background:transparent;
+    color:var(--mint);
+    border:1.5px solid var(--mint);
+    padding:11px 26px;
+    border-radius:999px;
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:0.85rem;
+    text-decoration:none;
+    white-space:nowrap;
+    transition:background 0.25s ease, color 0.25s ease, transform 0.15s ease;
+  }
+  .blog-hero-support-btn:hover{background:var(--mint); color:var(--bg-deeper); transform:translateY(-1px);}
   .blog-meta-row{
     display:flex;
     justify-content:center;
@@ -553,6 +571,19 @@
     .article-wrap{padding:24px 18px 30px;}
     .blog-hero{padding:48px 20px 40px;}
     .related-grid{grid-template-columns:1fr;}
+    .support-yafet-btn{
+      display:flex;
+      width:100%;
+      max-width:280px;
+      margin:0 auto;
+      font-size:0.8rem;
+      line-height:1.35;
+      padding:12px 18px;
+      white-space:normal;
+      text-align:center;
+      justify-content:center;
+      letter-spacing:0;
+    }
   }
 
   /* ---------- article newsletter box (replaces old CTA) ---------- */
@@ -615,8 +646,20 @@
     .article-newsletter-form{flex-direction:column;}
   }
 
-  /* ---------- support Yafet donation box ---------- */
-  .support-yafet-card{padding-bottom:24px;}
+  /* ---------- support Yafet donation box (dark theme) ---------- */
+  .support-yafet-card{
+    padding-bottom:24px;
+    scroll-margin-top:calc(var(--nav-h) + 16px);
+    background:linear-gradient(160deg,var(--bg-deeper),var(--bg-deep));
+    border:1px solid rgba(0,255,209,0.3);
+    box-shadow:0 10px 28px rgba(6,88,96,0.35);
+  }
+  .support-yafet-card .article-newsletter-eyebrow{
+    color:var(--bg-deeper);
+    background:var(--mint);
+  }
+  .support-yafet-card h3{color:#fff;}
+  .support-yafet-card p{color:rgba(255,255,255,0.72);}
   .support-yafet-btn{
     display:inline-flex;
     align-items:center;
@@ -672,6 +715,7 @@
     <span>&middot;</span>
     <span>4 min read</span>
   </div>
+  <a class="blog-hero-support-btn" href="https://donate.stripe.com/8x2eVdesHgU135R6AeabK00" target="_blank" rel="noopener">Support Yafet</a>
 </header>
 
 <div class="share-bar">
@@ -738,11 +782,11 @@
 </article>
 
 <div class="article-cta">
-  <div class="article-cta-card support-yafet-card">
+  <div class="article-cta-card support-yafet-card" id="support-yafet">
     <span class="article-newsletter-eyebrow">Support Yafet</span>
     <h3>Help Yafet get to the Ontario Championship</h3>
     <p>Your contribution will help Yafet purchase indoor shoes, a new paddle, and cover the registration fee for the next Ontario Championship.</p>
-    <a class="support-yafet-btn" href="https://donate.stripe.com/8x2eVdesHgU135R6AeabK00" target="_blank" rel="noopener">Support Yafet</a>
+    <a class="support-yafet-btn" href="https://donate.stripe.com/8x2eVdesHgU135R6AeabK00" target="_blank" rel="noopener">Give $10 to help Yafet chase his dream</a>
   </div>
 </div>
 
