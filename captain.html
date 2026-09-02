@@ -412,6 +412,12 @@
     margin:8px auto 28px;
   }
   .shorts-embed .shorts-frame{
+    /* --v-ratio: the source video's own width/height ratio.
+       9/16 (0.5625) = full vertical, no crop needed.
+       A video that isn't fully vertical is wider than that (e.g. 3/4, 4/5),
+       so we bump this up per-embed to zoom past the letterbox bars
+       instead of showing them. Tune per video if bars still show. */
+    --v-ratio: 3/4;
     position:relative;
     width:100%;
     aspect-ratio:9/16;
@@ -424,9 +430,13 @@
   }
   .shorts-embed .shorts-frame iframe{
     position:absolute;
-    inset:0;
-    width:100%;
+    top:50%;
+    left:50%;
     height:100%;
+    width:auto;
+    aspect-ratio:var(--v-ratio);
+    min-width:100%;
+    transform:translate(-50%,-50%);
     border:0;
   }
   .shorts-embed figcaption{
@@ -637,11 +647,9 @@
 
 <article class="article-wrap">
 
-  <p class="lede">I'm Vince, a table tennis lover based in Toronto, Ontario, Canada.</p>
+  <p>I'm Vince, a table tennis lover based in Toronto, Ontario, Canada. My relationship with table tennis started when I was 10 years old, when I began going to a local table tennis club in Vietnam. I didn't know it at the time, but that little club would become the beginning of a lifelong passion.</p>
 
-  <p>My relationship with table tennis started when I was 10 years old, when I began going to a local table tennis club in Vietnam. I didn't know it at the time, but that little club would become the beginning of a lifelong passion.</p>
-
-  <h2>The passion never went away</h2>
+  <h2 style="margin-top:0;">The passion never went away</h2>
 
   <p>Like many Asian kids, my parents wanted me to focus on school. They wanted me to get into a good high school, attend a top university, and build a successful career.</p>
 
@@ -670,7 +678,7 @@
 
   <p>When I have free time, you'll often find me at a community centre playing with whoever happens to be there. And when I want more competitive games, I'll head to a local club and play with stronger players.</p>
 
-  <p>I've been fortunate to meet provincial-, national-, and other high-level players along the way. Training and playing with them has taught me a lot, and I'm genuinely grateful for the people I've met through this sport.</p>
+  <p>I've been fortunate to meet national-level, provincial-level, and advanced players along the way. Training and playing with them has taught me a lot, and I'm genuinely grateful for the people I've met through this sport.</p>
 
   <figure class="shorts-embed">
     <div class="shorts-frame">
@@ -737,27 +745,6 @@
   <p>I love table tennis. I love building things. And I love meeting people who are just as passionate about the sport.</p>
 
   <p>For me, Pong Home is a way to bring all three together.</p>
-
-  <hr class="article-divider">
-
-  <h2>More than a website</h2>
-
-  <p>Table tennis has been part of my life for more than two decades.</p>
-
-  <p>It has given me friends, mentors, competitors, coaches, lessons, frustrations, great memories, and countless hours at the table.</p>
-
-  <p>Pong Home is my way of giving something back to the sport that has been such a big part of my life.</p>
-
-  <ul class="bullet-list">
-    <li>I'm still just a player who loves table tennis.</li>
-    <li>I'm still learning.</li>
-    <li>I'm still testing new rubbers.</li>
-    <li>I'm still assembling rackets.</li>
-    <li>I'm still looking for stronger players to play with.</li>
-    <li>And I'm still building.</li>
-  </ul>
-
-  <p>Because as long as I love table tennis, I'll probably keep finding ways to contribute to the community around it. 🏓</p>
 
 </article>
 
