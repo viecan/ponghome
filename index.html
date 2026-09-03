@@ -806,6 +806,25 @@
     line-height:1.6;
   }
 
+  .video-embed-wrap{
+    position:relative;
+    width:100%;
+    max-width:280px;
+    aspect-ratio:9/16;
+    border-radius:18px;
+    overflow:hidden;
+    background:#000;
+    margin:0 auto;
+    align-self:start;
+  }
+  .video-embed-wrap iframe{
+    position:absolute;
+    top:0; left:0;
+    width:100%;
+    height:100%;
+    border:0;
+  }
+
   @media (max-width:860px){
     .service-grid{grid-template-columns:1fr;}
     .feature-list{grid-template-columns:1fr;}
@@ -1470,13 +1489,13 @@
   <section class="section section-light">
     <div class="section-inner">
       <span class="kicker">What we offer</span>
-      <h2 class="section-title team-title">Coaching tailored to your game,<br class="mobile-break"> at your convenience.</h2>
+      <h2 class="section-title team-title">Personalized coaching, on your schedule</h2>
 
       <div class="service-grid">
         <div class="service-copy">
-          <p>We offer personalized table tennis coaching tailored to your skill level, goals, and playing style. Our coaches come to your location, providing one on one training in a comfortable and familiar environment, with a focus on technique, footwork, and match strategy.</p>
-          <p>With flexible scheduling and one-on-one or small group sessions, we make high quality coaching convenient and accessible for players of all ages and skill levels.</p>
-          <p>For high profile clients, celebrities, and anyone who values privacy, our private, in home coaching provides a discreet and personalized training experience, allowing you to focus on your game in a comfortable and private environment.</p>
+          <p>We offer personalized table tennis coaching tailored to your skill level, goals, and playing style. Our coaches come to your location, providing one-on-one training in a comfortable and familiar environment, with a focus on technique, and match strategy.</p>
+          <p>With flexible scheduling and one-on-one or small group sessions, we make high-quality coaching convenient and accessible for players of all ages and skill levels.</p>
+          <p>For those who value privacy, including public figures, our private in-home coaching offers a discreet and personalized training experience. Train in a space where you feel comfortable, without the crowds or distractions of a traditional club. Your time, your space, your game, coaching built around you.</p>
 
           <ul class="feature-list">
             <li><span class="ico"><span class="dot"></span></span> Coaches travel to your location</li>
@@ -1486,11 +1505,8 @@
           </ul>
         </div>
 
-        <div class="service-card">
-          <h3>Ready to train with us?</h3>
-          <p>Message us with your location, your availability, and what you'd like to work on. We'll match you with the right coach and get a session on the calendar.</p>
-          <br>
-          <a class="btn-primary" href="#contactSection">Message us →</a>
+        <div class="video-embed-wrap">
+          <iframe src="https://www.youtube.com/embed/2iVBp_RC5FE" title="Pong Home table tennis coaching video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
       </div>
     </div>
