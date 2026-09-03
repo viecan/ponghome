@@ -377,10 +377,11 @@
     color:var(--mint-dim);
   }
 
+
   .chapters-wrap{
     max-width:840px;
     margin:0 auto;
-    padding:56px 24px 100px;
+    padding:0 24px 100px;
   }
 
   /* ============ PING PONG RALLY ANIMATION (Learn tab, before Chapter 1) ============ */
@@ -389,7 +390,7 @@
     border:1px solid var(--line-light);
     border-radius:22px;
     padding:22px 22px 26px;
-    margin-bottom:28px;
+    margin-bottom:20px;
     box-shadow:0 4px 14px rgba(10,42,47,0.05);
   }
   .pc-table-scene{
@@ -1818,11 +1819,11 @@
 
   /* ============ SHARE BAR ============ */
   .share-bar{
-    max-width:840px;
-    margin:0 auto;
-    padding:16px 24px 0;
+    margin:0 0 28px;
+    padding:0;
     display:flex;
     justify-content:flex-end;
+    gap:10px;
   }
   .share-btn{
     display:inline-flex;
@@ -1841,8 +1842,26 @@
   }
   .share-btn:hover{border-color:var(--mint-dim); color:var(--mint-dim); background:var(--mint-soft);}
   .share-btn svg{width:15px;height:15px;flex:0 0 auto;}
+  .download-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--bg-deep);
+    border:1px solid var(--bg-deep);
+    border-radius:999px;
+    padding:8px 16px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:0.82rem;
+    color:var(--mint);
+    text-decoration:none;
+    cursor:pointer;
+    transition:background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  }
+  .download-btn:hover{background:var(--bg-deeper); border-color:var(--bg-deeper); transform:translateY(-1px);}
+  .download-btn svg{width:15px;height:15px;flex:0 0 auto;}
   @media (max-width:760px){
-    .share-bar{padding:14px 18px 0;}
+    .share-bar{margin-bottom:22px;}
   }
 </style>
 <body>
@@ -1880,13 +1899,6 @@
     <p class="book-byline">By Pong Home</p>
   </header>
 
-  <div class="share-bar">
-    <button class="share-btn" id="shareBtn" type="button" aria-label="Share this page">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-      <span id="shareBtnLabel">Share</span>
-    </button>
-  </div>
-
   <div class="chapters-wrap">
 
     <div class="pc-anim-card">
@@ -1906,6 +1918,17 @@
         <div class="pc-ball-shadow"></div>
         <div class="pc-ball"></div>
       </div>
+    </div>
+
+    <div class="share-bar">
+      <a class="download-btn" href="/Point_Winner_Table_Tennis_Handbook.pdf" download="Point-Winner-Table-Tennis-Handbook.pdf" aria-label="Download the Point Winner handbook as a PDF">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
+        <span>Download PDF</span>
+      </a>
+      <button class="share-btn" id="shareBtn" type="button" aria-label="Share this page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <span id="shareBtnLabel">Share</span>
+      </button>
     </div>
 
     <!-- CHAPTER 1 -->
