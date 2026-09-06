@@ -336,6 +336,39 @@ a{color:inherit;}
     .lead-form{grid-template-columns:1fr;}
     .lead-form-card{padding:26px 22px;}
   }
+
+  /* ---------- Stage China video row (YouTube Shorts, side by side on desktop) ---------- */
+  .stagechina-video-row{
+    display:flex;
+    gap:16px;
+    max-width:560px;
+    margin:22px auto 26px;
+  }
+  .stagechina-video-wrap{
+    position:relative;
+    flex:1;
+    width:100%;
+    padding-bottom:177.78%; /* 9:16 vertical shorts */
+    height:0;
+    border-radius:16px;
+    overflow:hidden;
+    background:#000;
+    box-shadow:0 4px 14px rgba(10,42,47,0.12);
+  }
+  .stagechina-video-wrap iframe{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    border:0;
+  }
+  @media (max-width:640px){
+    .stagechina-video-row{
+      flex-direction:column;
+      max-width:340px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -396,6 +429,15 @@ a{color:inherit;}
 <h2>What Is Stage China</h2>
 <p>Stage China gives international players the opportunity to experience intensive table tennis training inside a professional Chinese training environment. The camp is held in Dalian, a city with a strong table tennis culture, and it is designed around one central idea: training volume alone does not create better players, so every session is built to help players find and fix the technical issues that are actually holding them back.</p>
 <p>If you have wondered why so many serious players make the trip to train in China in the first place, our guide on <a href="/table-tennis-guides/why-table-tennis-players-train-in-china">why table tennis players travel to train in China</a> covers the bigger picture. Stage China is one concrete way to put that experience into practice.</p>
+
+<div class="stagechina-video-row">
+  <div class="stagechina-video-wrap">
+    <iframe src="https://www.youtube.com/embed/70XXZ2Us7hs" title="Stage China table tennis training camp clip 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+  </div>
+  <div class="stagechina-video-wrap">
+    <iframe src="https://www.youtube.com/embed/R6Xd2RZ2s7o" title="Stage China table tennis training camp clip 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+  </div>
+</div>
 
 <h2>Camp Length and Daily Schedule</h2>
 <p>A standard Stage China camp runs for around 15 days. On table training takes up roughly 5 to 6 hours each day, split into a morning session and an afternoon session. That schedule gives players enough repetition to build new habits while still leaving room to recover between sessions, which matters over a camp that lasts more than two weeks.</p>
