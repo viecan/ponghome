@@ -1513,29 +1513,6 @@
   .tally-row .tp2{color:var(--p2);}
   .tally-row .tsep{color:var(--ink-faint); margin:0 6px;}
 
-  .listening-pill{
-    position:absolute;
-    top: calc(72px + var(--safe-t));
-    left:50%;
-    transform:translateX(-50%);
-    display:flex; align-items:center; gap:7px;
-    background:rgba(255,176,32,0.15);
-    border:1px solid rgba(255,176,32,0.5);
-    color:var(--p2);
-    font-family:'JetBrains Mono',monospace;
-    font-size:0.7rem;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    padding:6px 13px;
-    border-radius:999px;
-    z-index:25;
-  }
-  .dot-pulse{
-    width:7px; height:7px; border-radius:50%; background:var(--p2);
-    animation:dotPulse 1.2s ease-in-out infinite;
-  }
-  @keyframes dotPulse{0%,100%{opacity:1; transform:scale(1);}50%{opacity:0.4; transform:scale(0.7);}}
-
   /* ---- court ---- */
   .court{
     flex:1 1 auto;
@@ -1605,7 +1582,7 @@
   .score-digit{
     font-family:'JetBrains Mono',monospace;
     font-weight:700;
-    font-size:clamp(72px, 26vw, 170px);
+    font-size:clamp(90px, 32vw, 230px);
     line-height:1;
     color:var(--ink);
     transform:scale(1);
@@ -1693,7 +1670,7 @@
   /* short viewport shrink */
   @media (max-height:640px){
     .player-name{font-size:clamp(0.72rem, 2.6vw, 0.95rem);}
-    .score-digit{font-size:clamp(52px, 20vw, 110px);}
+    .score-digit{font-size:clamp(60px, 22vw, 130px);}
     .games-label, .tap-hint{font-size:0.64rem;}
     .name-row{gap:6px;}
   }
@@ -1861,7 +1838,7 @@
 
   @media (prefers-reduced-motion: reduce){
     .ball{display:none !important;}
-    .score-digit.bump, .glow.flash, .mic-btn.listening::before, .dot-pulse, .game-label.deuce{
+    .score-digit.bump, .glow.flash, .mic-btn.listening::before, .game-label.deuce{
       animation:none !important;
     }
     .pc-ball, .pc-ball-shadow, .pc-paddle-left, .pc-paddle-right{
@@ -2026,7 +2003,6 @@
       </div>
     </div>
 
-    <div class="listening-pill" id="listeningPill" hidden><span class="dot-pulse"></span>Listening</div>
 
     <div class="court" id="court">
       <div class="half half-p1" id="halfP1" tabindex="0" role="button" aria-label="Add point">
@@ -2135,20 +2111,6 @@
 
 </div>
 </div>
-
-<footer class="site-footer">
-  <span class="footer-desktop-text">© 2026 Pong Home. All rights reserved. Email: contact@ponghome.com</span><span class="footer-mobile-text">© 2026 Pong Home. All rights reserved.</span> <span class="footer-social">
-    <span class="footer-social-desktop">
-      <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" aria-label="Instagram" style="color:var(--mint-dim); display:inline-flex; vertical-align:middle; margin-left:8px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-      </a>
-      <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" aria-label="Facebook" style="color:var(--mint-dim); display:inline-flex; vertical-align:middle; margin-left:8px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-      </a>
-    </span>
-    <span class="footer-social-mobile"><span class="footer-follow">Follow us on</span> <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a></span>
-  </span>
-</footer>
 
 <script>
   const siteNavEl = document.querySelector('.site-nav');
@@ -2397,7 +2359,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
   const gameLabel = document.getElementById('gameLabel');
   const tallyP1 = document.getElementById('tallyP1');
   const tallyP2 = document.getElementById('tallyP2');
-  const listeningPill = document.getElementById('listeningPill');
 
   const halfP1 = document.getElementById('halfP1');
   const halfP2 = document.getElementById('halfP2');
@@ -2665,7 +2626,7 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
   function resetTickerDefault(){
     ticker.innerHTML = voiceEnabled
       ? 'Say &ldquo;Score [name]&rdquo; or &ldquo;Score 1 / 2&rdquo;'
-      : 'Voice scoring is off — tap a half to score';
+      : '';
   }
 
   function updateTicker(transcript, result){
@@ -2893,7 +2854,6 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
 
   function updateMicUI(){
     micBtn.classList.toggle('listening', isListening);
-    listeningPill.hidden = !(isListening && listenMode === 'continuous');
   }
 
   function onRecognitionResult(event){
