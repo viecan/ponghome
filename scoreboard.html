@@ -181,25 +181,6 @@
     }
   }
 
-  .flic-help-card{
-    width:100%;
-    margin:18px 0 20px;
-    padding:14px 16px;
-    border:1px solid rgba(0,240,200,0.22);
-    background:rgba(0,240,200,0.055);
-    border-radius:12px;
-    text-align:left;
-  }
-  .flic-help-title{
-    font-family:'JetBrains Mono',monospace;
-    font-size:0.72rem;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    color:var(--p1);
-    margin-bottom:6px;
-  }
-  .flic-help-copy{font-size:0.78rem; color:var(--ink-dim); margin-bottom:10px;}
-
   #scoreboard.tab-panel.active{
     display:flex;
     flex-direction:column;
@@ -378,7 +359,7 @@
   
   .game-label{
     font-family:'JetBrains Mono',monospace;
-    font-size:clamp(1.1rem, 3vw, 1.6rem);
+    font-size:clamp(2.47rem, 6.75vw, 3.6rem);
     letter-spacing:0.09em;
     text-transform:uppercase;
     color:var(--ink-dim);
@@ -388,7 +369,7 @@
   .tally-row{
     font-family:'JetBrains Mono',monospace;
     font-weight:700;
-    font-size:clamp(1.5rem, 4vw, 2.4rem);
+    font-size:clamp(3.375rem, 9vw, 5.4rem);
     margin:2px 0 0 0;
     line-height:1.2;
     display:flex;
@@ -420,13 +401,13 @@
       padding-bottom: 2px;
     }
     .game-label {
-      font-size: 0.85rem;
+      font-size: 1.92rem;
     }
     .tally-row {
-      font-size: 1.1rem;
+      font-size: 2.475rem;
     }
     .player-name {
-      font-size: clamp(1.2rem, 4vw, 1.6rem) !important;
+      font-size: clamp(1.176rem, 5.88vw, 2.254rem) !important;
     }
     .score-digit {
       font-size: clamp(60px, 22vh, 140px) !important;
@@ -468,21 +449,21 @@
 
   .name-row{
     flex:0 0 auto;
-    display:flex; align-items:center; gap:8px;
-    padding-top:2px;
+    display:flex; align-items:center; gap:12px;
+    padding-top:4px;
   }
   .serve-dot{
-    width:9px; height:9px; border-radius:50%;
+    width:14px; height:14px; border-radius:50%;
     background:currentColor;
     opacity:0.15;
     transition:opacity 0.2s ease;
   }
-  .serve-dot.active{opacity:1; box-shadow:0 0 9px currentColor;}
+  .serve-dot.active{opacity:1; box-shadow:0 0 12px currentColor;}
   .player-name{
     font-family:'Baloo 2',sans-serif;
     font-weight:700;
     text-transform:uppercase;
-    font-size:clamp(1.7rem, 6vw, 2.3rem);
+    font-size:clamp(1.666rem, 5.88vw, 2.254rem);
     letter-spacing:0.02em;
     max-width:100%;
     overflow:hidden;
@@ -660,11 +641,6 @@
           <button type="button" data-value="11" class="active">11</button>
           <button type="button" data-value="21">21</button>
         </div>
-      </div>
-
-      <div class="flic-help-card">
-        <div class="flic-help-title">Keyboard Shortcuts Active</div>
-        <div class="flic-help-copy">Arrow Left = Player 1 Point | Arrow Right = Player 2 Point | Arrow Down = Undo Last Point</div>
       </div>
 
       <button type="button" id="startMatchBtn" class="btn-start">Start Match</button>
