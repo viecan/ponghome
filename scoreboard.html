@@ -335,6 +335,7 @@
     background:var(--bg-deeper);
   }
   .topbar-left{display:flex; gap:8px; flex:0 0 auto;}
+  .topbar-right{display:flex; gap:8px; flex:0 0 auto;}
   .icon-btn{
     width:38px; height:38px;
     border-radius:50%;
@@ -346,6 +347,8 @@
     flex:0 0 auto;
   }
   .icon-btn:active{background:rgba(255,255,255,0.1);}
+  .icon-btn.muted svg path { opacity: 0.4; }
+  .icon-btn.muted { border-color: rgba(255,255,255,0.08); color: var(--ink-faint); }
 
   .topbar-center{
     flex:1 1 auto;
@@ -661,7 +664,11 @@
         <div class="tally-row"><span class="tp1" id="tallyP1">0</span><span class="tsep">—</span><span class="tp2" id="tallyP2">0</span></div>
       </div>
       
-      <div style="width: 38px; visibility: hidden;" aria-hidden="true"></div>
+      <div class="topbar-right">
+        <button type="button" class="icon-btn" id="muteBtn" aria-label="Toggle voice announcements">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+        </button>
+      </div>
     </div>
 
     <div class="court" id="court">
@@ -730,6 +737,7 @@
   };
 
   let historyStack = [];
+  let isMuted = false;
 
   const p1NameInput = document.getElementById('p1NameInput');
   const p2NameInput = document.getElementById('p2NameInput');
@@ -747,6 +755,7 @@
   const tallyP2 = document.getElementById('tallyP2');
   const gameLabel = document.getElementById('gameLabel');
   const undoBtn = document.getElementById('undoBtn');
+  const muteBtn = document.getElementById('muteBtn');
 
   const halfP1 = document.getElementById('halfP1');
   const halfP2 = document.getElementById('halfP2');
@@ -761,6 +770,22 @@
   const mcWinnerName = document.getElementById('mcWinnerName');
   const mcFinalTally = document.getElementById('mcFinalTally');
   const mcNewMatchBtn = document.getElementById('mcNewMatchBtn');
+
+  function speakScore(serverIdx, receiverIdx) {
+    if (isMuted || !('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel(); // Clear any pending speech queue
+
+    const sScore = state.currentGame.score[serverIdx];
+    const rScore = state.currentGame.score[receiverIdx];
+    const serverName = state.players[serverIdx];
+    
+    let textToSpeak = `${sScore}, ${rScore}`;
+
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    window.speechSynthesis.speak(utterance);
+  }
 
   document.querySelectorAll('#formatSeg button').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -788,6 +813,14 @@
     updateUI();
   });
 
+  muteBtn.addEventListener('click', () => {
+    isMuted = !isMuted;
+    muteBtn.classList.toggle('muted', isMuted);
+    if (isMuted && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  });
+
   function computeServer(a, b, target, firstServer){
     const deuceThreshold = target - 1;
     const p = a + b;
@@ -808,6 +841,9 @@
     state.currentGame.score[playerIndex]++;
     const s1 = state.currentGame.score[0];
     const s2 = state.currentGame.score[1];
+
+    const currentServer = computeServer(s1, s2, state.target, state.currentGame.firstServer);
+    speakScore(currentServer, 1 - currentServer);
 
     const wonGame = (state.currentGame.score[playerIndex] >= state.target) && (Math.abs(s1 - s2) >= 2);
     if (wonGame) {
