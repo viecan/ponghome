@@ -83,54 +83,8 @@
     margin:0;
   }
 
-  h1,h2,h3,h4,
-  .display,
-  .section-title,
-  .book-title,
-  .book-sub,
-  .ch-heading,
-  .subsection,
-  .city-head h3,
-  .pc-title,
-  .games-recap-title,
-  .fo-title,
-  .bracket-title,
-  .bracket-section-heading,
-  .hero-eyebrow,
-  .eyebrow,
-  .coach-cta-eyebrow,
-  .overlay-eyebrow,
-  .tagline{
-    text-wrap:balance;
-    widows:2;
-    orphans:2;
-  }
-
-  p,
-  li,
-  .service-copy p,
-  .chapter-body,
-  .chapter-body p,
-  .fo-desc,
-  .sub{
-    text-wrap:pretty;
-    widows:2;
-    orphans:2;
-  }
-
   .mono{font-family:'JetBrains Mono',monospace;}
-
   a{color:inherit;}
-
-  .dot{
-    display:inline-block;
-    width:0.32em;
-    height:0.32em;
-    border-radius:50%;
-    background:var(--mint);
-    vertical-align:middle;
-    margin-left:0.12em;
-  }
 
   .site-nav{
     position:sticky;
@@ -145,10 +99,13 @@
     padding:16px 28px;
     display:flex;
     align-items:center;
-    justify-content:space-between;
+    justify-content:center; /* Centered navigation layout */
+    position:relative;
     gap:20px;
   }
   .nav-logo{
+    position:absolute;
+    left:28px;
     display:flex;
     align-items:baseline;
     gap:2px;
@@ -159,9 +116,7 @@
     letter-spacing:0.01em;
     text-decoration:none;
   }
-  .nav-logo span.sub{
-    color:#fff;
-  }
+  .nav-logo span.sub{color:#fff;}
   .nav-tabs{
     display:flex;
     gap:6px;
@@ -190,15 +145,7 @@
     background:var(--mint);
     color:var(--bg-deeper);
   }
-  .nav-tab:not(.active):hover{
-    color:#fff;
-  }
-
-  .nav-right{
-    display:flex;
-    align-items:center;
-    gap:12px;
-  }
+  .nav-tab:not(.active):hover{color:#fff;}
 
   @media (max-width:720px){
     .nav-inner{
@@ -208,15 +155,16 @@
       justify-content:center;
     }
     .nav-logo{
-      order:1;
+      position:static;
       font-size:1.1rem;
+      margin-bottom:4px;
     }
     .nav-tabs{
-      order:3;
       flex-basis:100%;
       width:100%;
       overflow-x:auto;
       scrollbar-width:none;
+      justify-content:center;
     }
     .nav-tabs::-webkit-scrollbar{display:none;}
     .nav-tab{
@@ -224,9 +172,6 @@
       padding:7px 12px;
     }
   }
-
-  .tab-panel{display:none;}
-  .tab-panel.active{display:block;}
 
   .flic-help-card{
     width:100%;
@@ -331,25 +276,13 @@
     max-width:420px;
     text-align:center;
   }
-  .eyebrow{
-    display:inline-flex;
-    font-family:'JetBrains Mono',monospace;
-    font-size:0.72rem;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color:var(--p1);
-    background:rgba(0,240,200,0.12);
-    border:1px solid rgba(0,240,200,0.35);
-    padding:6px 14px;
-    border-radius:999px;
-    margin-bottom:18px;
-  }
   .pc-title{
-    font-size:clamp(2.2rem, 9vw, 3rem);
+    font-size:clamp(2.4rem, 9vw, 3.2rem);
     color:var(--p1);
     text-transform:uppercase;
     letter-spacing:0.01em;
     line-height:1;
+    margin-top:4px;
   }
   .tagline{
     color:var(--ink-dim);
@@ -521,12 +454,13 @@
     font-family:'Baloo 2',sans-serif;
     font-weight:700;
     text-transform:uppercase;
-    font-size:clamp(0.85rem, 3vw, 1.15rem);
+    font-size:clamp(1.7rem, 6vw, 2.3rem); /* Player names font size doubled */
     letter-spacing:0.02em;
     max-width:100%;
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
+    line-height:1.1;
   }
   .half-p1 .player-name, .half-p1 .serve-dot{color:var(--p1);}
   .half-p2 .player-name, .half-p2 .serve-dot{color:var(--p2);}
@@ -543,7 +477,7 @@
   .score-digit{
     font-family:'JetBrains Mono',monospace;
     font-weight:700;
-    font-size:clamp(90px, 32vw, 230px);
+    font-size:clamp(80px, 28vw, 210px);
     line-height:1;
     color:var(--ink);
   }
@@ -657,7 +591,6 @@
     margin-top:18px;
   }
 
-  /* Invisible input trap to keep mobile focus active for Bluetooth HID */
   .flic-trap {
     position: absolute;
     opacity: 0;
@@ -690,7 +623,6 @@
   <!-- ================= SETUP SCREEN ================= -->
   <section id="screen-setup" class="screen active">
     <div class="pc-setup-card">
-      <span class="eyebrow">Table Tennis</span>
       <h1 class="pc-title">Scoreboard</h1>
       <p class="tagline">Call the score. It keeps the count.</p>
 
@@ -735,7 +667,6 @@
 
   <!-- ================= MATCH SCREEN ================= -->
   <section id="screen-match" class="screen">
-    <!-- Hidden input to maintain Bluetooth HID focus on mobile browsers -->
     <input type="text" id="flicTrap" class="flic-trap" autocomplete="off">
 
     <div class="topbar">
@@ -878,13 +809,11 @@
     screenMatch.classList.add('active');
     updateUI();
     
-    // Focus the hidden input so mobile browser receives Bluetooth keyboard events immediately
     setTimeout(() => {
       flicTrap.focus();
     }, 100);
   });
 
-  // Keep focus on the flic trap if user taps anywhere on court
   document.getElementById('court').addEventListener('click', () => {
     if (screenMatch.classList.contains('active')) {
       flicTrap.focus();
@@ -989,8 +918,8 @@
   gcNextGameBtn.addEventListener('click', nextGame);
   mcNewMatchBtn.addEventListener('click', resetMatch);
 
-  // Robust Keydown Listener for Flic HID (checks key value, code, and keyCode)
-  window.addEventListener('keydown', (e) => {
+  // Global keydown listener binding Flic HID keys across window & document
+  const handleKeyCommand = (e) => {
     if (!screenMatch.classList.contains('active')) return;
 
     const key = e.key;
@@ -1007,7 +936,11 @@
       undoPoint();
       e.preventDefault();
     }
-  });
+  };
+
+  window.addEventListener('keydown', handleKeyCommand, true);
+  document.addEventListener('keydown', handleKeyCommand, true);
+  flicTrap.addEventListener('keydown', handleKeyCommand, true);
 
 })();
 </script>
