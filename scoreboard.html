@@ -62,12 +62,17 @@
 
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
+  html,body{height:100%;}
   body{
     margin:0;
     font-family:'Inter',sans-serif;
     background:var(--paper);
     color:var(--ink);
     -webkit-font-smoothing:antialiased;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+    min-height:100dvh;
   }
   img{max-width:100%;display:block;}
 
