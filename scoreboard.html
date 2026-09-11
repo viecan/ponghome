@@ -193,56 +193,11 @@
   .nav-tab:not(.active):hover{
     color:#fff;
   }
-  .nav-cta{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    background:transparent;
-    color:var(--mint);
-    border:1.5px solid var(--mint);
-    padding:9px 16px;
-    border-radius:999px;
-    font-weight:600;
-    font-size:0.85rem;
-    text-decoration:none;
-    white-space:nowrap;
-    transition:background 0.25s ease, color 0.25s ease;
-  }
-  .nav-cta:hover{
-    background:var(--mint);
-    color:var(--bg-deeper);
-  }
 
   .nav-right{
     display:flex;
     align-items:center;
     gap:12px;
-  }
-
-  .social-row{
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-  .social-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    border:1.5px solid rgba(255,255,255,0.22);
-    color:rgba(255,255,255,0.85);
-    background:transparent;
-    text-decoration:none;
-    transition:border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
-  }
-  .social-btn svg{width:17px;height:17px;fill:currentColor;}
-  .social-btn:hover{
-    border-color:var(--mint);
-    background:var(--mint-soft);
-    color:var(--mint);
-    transform:translateY(-2px);
   }
 
   @media (max-width:720px){
@@ -256,70 +211,22 @@
       order:1;
       font-size:1.1rem;
     }
-    .nav-right{
-      order:2;
-      gap:8px;
-    }
-    .social-btn{width:34px; height:34px;}
-    .social-btn svg{width:15px; height:15px;}
-    .nav-cta{display:none;}
     .nav-tabs{
       order:3;
       flex-basis:100%;
       width:100%;
-      flex-wrap:nowrap;
       overflow-x:auto;
-      -webkit-overflow-scrolling:touch;
-      justify-content:flex-start;
-      gap:5px;
-      background:transparent;
-      border:none;
-      padding:0;
       scrollbar-width:none;
     }
     .nav-tabs::-webkit-scrollbar{display:none;}
     .nav-tab{
-      flex:0 0 auto;
-      white-space:nowrap;
       font-size:0.74rem;
       padding:7px 12px;
-      background:rgba(255,255,255,0.06);
-      border:1px solid var(--line-dark);
-    }
-    .nav-tab.active{
-      border-color:var(--mint);
     }
   }
 
   .tab-panel{display:none;}
   .tab-panel.active{display:block;}
-
-  .footer-cta{
-    background:var(--bg-deeper);
-    color:#fff;
-    padding:80px 28px;
-    text-align:center;
-  }
-  .footer-cta h2{
-    font-size:clamp(1.8rem,4vw,2.6rem);
-    color:#fff;
-    margin-bottom:16px;
-  }
-  .footer-cta h2 .dot{background:var(--mint);}
-  .footer-cta p{
-    color:rgba(255,255,255,0.65);
-    max-width:480px;
-    margin:0 auto 32px;
-    font-size:1rem;
-  }
-  .site-footer{
-    background:var(--bg-deeper);
-    border-top:1px solid var(--line-dark);
-    color:rgba(255,255,255,0.5);
-    text-align:center;
-    font-size:0.85rem;
-    padding:22px;
-  }
 
   .flic-help-card{
     width:100%;
@@ -497,45 +404,6 @@
     background:var(--p1);
     color:var(--bg-deeper);
   }
-  .segmented button:disabled{opacity:0.35; cursor:not-allowed;}
-
-  .toggle-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-  }
-  .toggle-row > label{margin:0;}
-  .toggle-switch{
-    width:52px; height:30px;
-    border-radius:999px;
-    border:1.5px solid var(--line);
-    background:rgba(255,255,255,0.06);
-    position:relative;
-    padding:0;
-    transition:background 0.2s ease, border-color 0.2s ease;
-  }
-  .toggle-switch .knob{
-    position:absolute;
-    top:3px; left:3px;
-    width:21px; height:21px;
-    border-radius:50%;
-    background:var(--ink-dim);
-    transition:transform 0.2s ease, background 0.2s ease;
-  }
-  .toggle-switch.active{background:rgba(0,240,200,0.18); border-color:var(--p1);}
-  .toggle-switch.active .knob{transform:translateX(22px); background:var(--p1);}
-  .toggle-switch:disabled{opacity:0.35; cursor:not-allowed;}
-
-  .voice-unsupported-note{
-    font-size:0.82rem;
-    line-height:1.5;
-    color:var(--p2);
-    background:rgba(255,176,32,0.1);
-    border:1px solid rgba(255,176,32,0.3);
-    border-radius:10px;
-    padding:12px 14px;
-    margin-bottom:22px;
-  }
 
   .btn-start{
     width:100%;
@@ -563,7 +431,7 @@
     z-index:20;
     background:var(--bg-deeper);
   }
-  .topbar-left, .topbar-right{display:flex; gap:8px; flex:0 0 auto;}
+  .topbar-left{display:flex; gap:8px; flex:0 0 auto;}
   .icon-btn{
     width:38px; height:38px;
     border-radius:50%;
@@ -575,7 +443,6 @@
     flex:0 0 auto;
   }
   .icon-btn:active{background:rgba(255,255,255,0.1);}
-  .icon-btn.danger-hover:active{color:var(--danger); border-color:var(--danger);}
 
   .topbar-center{flex:1 1 auto; text-align:center; min-width:0; padding-top:2px;}
   .vs-row{
@@ -599,12 +466,6 @@
     color:var(--ink-dim);
     margin-top:3px;
   }
-  .game-label.deuce{
-    color:var(--p2);
-    animation:deucePulse 1.4s ease-in-out infinite;
-  }
-  @keyframes deucePulse{0%,100%{opacity:1;}50%{opacity:0.45;}}
-
   .tally-row{
     font-family:'JetBrains Mono',monospace;
     font-weight:700;
@@ -643,7 +504,6 @@
     .half-p1{padding-left:14px;}
     .half-p2{padding-right:14px;}
   }
-  .half:focus-visible{box-shadow:inset 0 0 0 3px rgba(255,255,255,0.4);}
 
   .name-row{
     flex:0 0 auto;
@@ -686,10 +546,7 @@
     font-size:clamp(90px, 32vw, 230px);
     line-height:1;
     color:var(--ink);
-    transform:scale(1);
   }
-  .score-digit.bump{animation:scoreBump 0.35s ease;}
-  @keyframes scoreBump{0%{transform:scale(1);}40%{transform:scale(1.18);}100%{transform:scale(1);}}
 
   .games-label{
     flex:0 0 auto;
@@ -705,55 +562,16 @@
     color:var(--ink-faint);
   }
 
-  .glow{
-    position:absolute; inset:0;
-    pointer-events:none;
-    opacity:0;
-    z-index:1;
-  }
-  .half-p1 .glow{background:radial-gradient(circle at center, var(--p1), transparent 70%);}
-  .half-p2 .glow{background:radial-gradient(circle at center, var(--p2), transparent 70%);}
-  .glow.flash{animation:glowFlash 0.5s ease-out;}
-  @keyframes glowFlash{0%{opacity:0.5;}100%{opacity:0;}}
-
-  .name-row, .score-wrapper, .games-label, .tap-hint{position:relative; z-index:2;}
-
   .net-bar{
     flex:0 0 auto;
     width:3px;
-    background:
-      repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 4px, transparent 4px 9px);
+    background:repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 4px, transparent 4px 9px);
     position:relative;
   }
   @media (orientation:portrait) and (hover:none) and (pointer:coarse){
     .net-bar{width:100%; height:3px;
       background:repeating-linear-gradient(-45deg, rgba(255,255,255,0.18) 0 4px, transparent 4px 9px);
     }
-  }
-
-  .ball{
-    position:fixed;
-    left:50%; top:50%;
-    width:14px; height:14px;
-    border-radius:50%;
-    background:#fff;
-    box-shadow:0 0 10px rgba(255,255,255,0.85), 0 0 2px #fff;
-    pointer-events:none;
-    z-index:40;
-    opacity:0;
-    transform:translate(-50%,-50%);
-  }
-  .ball.fly-left{animation:ballFlyLeft 0.6s ease-out forwards;}
-  .ball.fly-right{animation:ballFlyRight 0.6s ease-out forwards;}
-  @keyframes ballFlyLeft{
-    0%{opacity:1; transform:translate(-50%,-50%) scale(1);}
-    50%{opacity:1; transform:translate(-120%,-90%) scale(1.3);}
-    100%{opacity:0; transform:translate(-220%,-40%) scale(1.6);}
-  }
-  @keyframes ballFlyRight{
-    0%{opacity:1; transform:translate(-50%,-50%) scale(1);}
-    50%{opacity:1; transform:translate(20%,-90%) scale(1.3);}
-    100%{opacity:0; transform:translate(120%,-40%) scale(1.6);}
   }
 
   .bottom-dock{
@@ -772,13 +590,7 @@
     font-size:0.72rem;
     color:var(--ink-faint);
     text-align:center;
-    max-width:100%;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    min-height:1.2em;
   }
-
   .dock-controls{
     display:flex;
     align-items:center;
@@ -795,18 +607,6 @@
     display:flex; align-items:center; justify-content:center;
   }
   .dock-btn:disabled{opacity:0.3;}
-  .mic-btn{
-    width:66px; height:66px;
-    border-radius:50%;
-    border:none;
-    background:var(--bg-card);
-    border:2px solid var(--line);
-    color:var(--ink-dim);
-    display:flex; align-items:center; justify-content:center;
-    position:relative;
-    flex:0 0 auto;
-  }
-  .mic-btn svg{width:26px; height:26px;}
 
   .overlay{
     position:fixed; inset:0;
@@ -816,7 +616,7 @@
     align-items:center;
     justify-content:center;
     z-index:100;
-    padding:24px calc(24px + var(--safe-r)) calc(24px + var(--safe-b)) calc(24px + var(--safe-l));
+    padding:24px;
   }
   .overlay.show{display:flex;}
   .overlay-card{
@@ -826,8 +626,6 @@
     padding:34px 28px;
     max-width:420px;
     width:100%;
-    max-height:88vh;
-    overflow-y:auto;
     text-align:center;
   }
   .overlay-eyebrow{
@@ -839,11 +637,7 @@
     margin-bottom:10px;
     display:block;
   }
-  .overlay-card h2{
-    font-size:1.6rem;
-    color:var(--ink);
-    margin-bottom:10px;
-  }
+  .overlay-card h2{font-size:1.6rem; color:var(--ink); margin-bottom:10px;}
   .overlay-card .final-score{
     font-family:'JetBrains Mono',monospace;
     font-size:2.2rem;
@@ -862,40 +656,19 @@
     border-radius:12px;
     margin-top:18px;
   }
-  .overlay-btn.secondary{
-    background:transparent;
-    border:1.5px solid var(--line);
-    color:var(--ink);
+
+  /* Invisible input trap to keep mobile focus active for Bluetooth HID */
+  .flic-trap {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    height: 1px;
+    width: 1px;
   }
-  .games-recap{
-    text-align:left;
-    margin-top:20px;
-    border-top:1px solid var(--line);
-    padding-top:16px;
-  }
-  .games-recap-title{
-    font-family:'JetBrains Mono',monospace;
-    font-size:0.68rem;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color:var(--ink-dim);
-    margin-bottom:10px;
-  }
-  .games-recap-list{list-style:none; margin:0; padding:0; display:grid; gap:8px; max-height:180px; overflow-y:auto;}
-  .games-recap-list li{
-    display:flex; justify-content:space-between;
-    font-size:0.88rem;
-    background:rgba(255,255,255,0.04);
-    border-radius:8px;
-    padding:9px 12px;
-  }
-  .settings-section{text-align:left; margin-bottom:22px;}
-  .settings-section h3{font-size:0.95rem; color:var(--ink); margin-bottom:14px;}
 
   .site-nav{flex:0 0 auto;}
   .scoreboard-frame-wrap{display:flex; flex-direction:column;}
   #pcApp{flex:1 1 auto; min-height:0;}
-  .site-footer{flex:0 0 auto;}
 </style>
 </head>
 <body>
@@ -962,6 +735,9 @@
 
   <!-- ================= MATCH SCREEN ================= -->
   <section id="screen-match" class="screen">
+    <!-- Hidden input to maintain Bluetooth HID focus on mobile browsers -->
+    <input type="text" id="flicTrap" class="flic-trap" autocomplete="off">
+
     <div class="topbar">
       <div class="topbar-left">
         <button type="button" class="icon-btn" id="resetBtn" aria-label="Reset match">
@@ -978,7 +754,6 @@
 
     <div class="court" id="court">
       <div class="half half-p1" id="halfP1" tabindex="0" role="button" aria-label="Add point">
-        <div class="glow" id="glowP1"></div>
         <div class="name-row"><span class="serve-dot" id="serveDotP1"></span><span class="player-name" id="nameP1"></span></div>
         <div class="score-wrapper"><div class="score-digit" id="scoreP1">0</div></div>
         <div class="games-label">GAMES <span id="gamesP1">0</span></div>
@@ -988,18 +763,15 @@
       <div class="net-bar"></div>
 
       <div class="half half-p2" id="halfP2" tabindex="0" role="button" aria-label="Add point">
-        <div class="glow" id="glowP2"></div>
         <div class="name-row"><span class="serve-dot" id="serveDotP2"></span><span class="player-name" id="nameP2"></span></div>
         <div class="score-wrapper"><div class="score-digit" id="scoreP2">0</div></div>
         <div class="games-label">GAMES <span id="gamesP2">0</span></div>
         <div class="tap-hint">Tap to score</div>
       </div>
-
-      <div class="ball" id="ball" hidden></div>
     </div>
 
     <div class="bottom-dock">
-      <div class="ticker" id="ticker">Flic HID Connected (Press 1, 2, or Backspace)</div>
+      <div class="ticker" id="ticker">Flic HID Ready (Press 1, 2, or Backspace)</div>
       <div class="dock-controls">
         <button type="button" class="dock-btn" id="undoBtn" disabled aria-label="Undo last point">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>
@@ -1053,6 +825,7 @@
   const startMatchBtn = document.getElementById('startMatchBtn');
   const screenSetup = document.getElementById('screen-setup');
   const screenMatch = document.getElementById('screen-match');
+  const flicTrap = document.getElementById('flicTrap');
 
   const scoreP1 = document.getElementById('scoreP1');
   const scoreP2 = document.getElementById('scoreP2');
@@ -1081,7 +854,6 @@
   const mcFinalTally = document.getElementById('mcFinalTally');
   const mcNewMatchBtn = document.getElementById('mcNewMatchBtn');
 
-  // Format & Target selectors
   document.querySelectorAll('#formatSeg button').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('#formatSeg button').forEach(b => b.classList.remove('active'));
@@ -1105,6 +877,18 @@
     screenSetup.classList.remove('active');
     screenMatch.classList.add('active');
     updateUI();
+    
+    // Focus the hidden input so mobile browser receives Bluetooth keyboard events immediately
+    setTimeout(() => {
+      flicTrap.focus();
+    }, 100);
+  });
+
+  // Keep focus on the flic trap if user taps anywhere on court
+  document.getElementById('court').addEventListener('click', () => {
+    if (screenMatch.classList.contains('active')) {
+      flicTrap.focus();
+    }
   });
 
   function computeServer(a, b, target, firstServer){
@@ -1128,7 +912,6 @@
     const s1 = state.currentGame.score[0];
     const s2 = state.currentGame.score[1];
 
-    // Check game win
     const wonGame = (state.currentGame.score[playerIndex] >= state.target) && (Math.abs(s1 - s2) >= 2);
     if (wonGame) {
       state.completedGames.push({ score: [s1, s2], winner: playerIndex });
@@ -1206,17 +989,21 @@
   gcNextGameBtn.addEventListener('click', nextGame);
   mcNewMatchBtn.addEventListener('click', resetMatch);
 
-  // Global HID Keyboard Listener for Flic Button
+  // Robust Keydown Listener for Flic HID (checks key value, code, and keyCode)
   window.addEventListener('keydown', (e) => {
     if (!screenMatch.classList.contains('active')) return;
-    
-    if (e.key === '1') {
+
+    const key = e.key;
+    const code = e.code;
+    const keyCode = e.keyCode;
+
+    if (key === '1' || code === 'Digit1' || code === 'Numpad1' || keyCode === 49) {
       addPoint(0);
       e.preventDefault();
-    } else if (e.key === '2') {
+    } else if (key === '2' || code === 'Digit2' || code === 'Numpad2' || keyCode === 50) {
       addPoint(1);
       e.preventDefault();
-    } else if (e.key === 'Backspace') {
+    } else if (key === 'Backspace' || code === 'Backspace' || keyCode === 8) {
       undoPoint();
       e.preventDefault();
     }
