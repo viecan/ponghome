@@ -663,8 +663,8 @@
       </div>
 
       <div class="flic-help-card">
-        <div class="flic-help-title">HTTP Webhook Listener Active</div>
-        <div class="flic-help-copy">Listens to backend SSE streams for remote actions (p1, p2, undo).</div>
+        <div class="flic-help-title">Keyboard Shortcuts Active</div>
+        <div class="flic-help-copy">Arrow Left = Player 1 Point | Arrow Right = Player 2 Point | Arrow Down = Undo Last Point</div>
       </div>
 
       <button type="button" id="startMatchBtn" class="btn-start">Start Match</button>
@@ -902,18 +902,26 @@
     document.getElementById('serveDotP2').classList.toggle('active', server === 1);
   }
 
-  // Connect to SSE stream for HTTP webhook actions
-  if (!!window.EventSource) {
-    const source = new EventSource('/api/events');
-    source.onmessage = function(e) {
-      if (screenSetup.classList.contains('active')) {
+  // Global Keyboard listener for arrow keys
+  window.addEventListener('keydown', (e) => {
+    if (screenSetup.classList.contains('active')) {
+      if (e.key === 'Enter') {
         startMatchBtn.click();
       }
-      if (e.data === 'p1') addPoint(0);
-      if (e.data === 'p2') addPoint(1);
-      if (e.data === 'undo') undoPoint();
-    };
-  }
+      return;
+    }
+
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      addPoint(0);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      addPoint(1);
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      undoPoint();
+    }
+  });
 
   halfP1.addEventListener('pointerdown', (e) => { e.preventDefault(); addPoint(0); });
   halfP2.addEventListener('pointerdown', (e) => { e.preventDefault(); addPoint(1); });
