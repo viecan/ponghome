@@ -40,7 +40,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
     --bg-deep:#0E3B42;
@@ -619,7 +618,6 @@
   <section id="screen-setup" class="screen active">
     <div class="pc-setup-card">
       <h1 class="pc-title">Scoreboard</h1>
-      <p class="tagline">Call the score. It keeps the count.</p>
 
       <div class="pc-field-block">
         <label for="p1NameInput">Player 1</label>
@@ -955,40 +953,6 @@
   resetBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); resetMatch(); });
   gcNextGameBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); nextGame(); });
   mcNewMatchBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); resetMatch(); });
-
-  // ============= FLIC REMOTE (Supabase webhook) =============
-  // Fill these in with your Supabase project's URL and anon (public) key.
-  const REMOTE_SUPABASE_URL = 'https://rzmxciyzhxowmvhzzygx.supabase.co';
-  const REMOTE_SUPABASE_ANON_KEY = 'sb_publishable_BIQSFP4o6xJVyEHCHRj_sQ_kC2rGBNL';
-  const REMOTE_TABLE = 'scoreboard_events';
-
-  // Each device/board gets its own id so multiple scoreboards don't affect each other.
-  // Open this board as scoreboard.html?board=table1 (or whatever name you like).
-  const REMOTE_BOARD_ID = (new URLSearchParams(window.location.search).get('board') || 'default').replace(/[^a-zA-Z0-9_-]/g, '');
-
-  if (typeof supabase !== 'undefined' && REMOTE_SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-    const remoteClient = supabase.createClient(REMOTE_SUPABASE_URL, REMOTE_SUPABASE_ANON_KEY);
-
-    function handleRemoteAction(action) {
-      if (!screenMatch.classList.contains('active')) return; // ignore remote taps before a match starts
-      if (action === 'point_p1') addPoint(0);
-      else if (action === 'point_p2') addPoint(1);
-      else if (action === 'undo') undoPoint();
-    }
-
-    remoteClient
-      .channel('scoreboard-remote-' + REMOTE_BOARD_ID)
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: REMOTE_TABLE,
-        filter: `board_id=eq.${REMOTE_BOARD_ID}`
-      }, (payload) => {
-        handleRemoteAction(payload.new.action);
-      })
-      .subscribe();
-  }
-  // ============================================================
 
 })();
 </script>
