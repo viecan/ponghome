@@ -61,13 +61,9 @@
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth; height:100%;}
+  html{scroll-behavior:smooth;}
   body{
     margin:0;
-    min-height:100vh;
-    min-height:100dvh;
-    display:flex;
-    flex-direction:column;
     font-family:'Inter',sans-serif;
     background:var(--paper);
     color:var(--ink);
@@ -142,7 +138,6 @@
     position:sticky;
     top:0;
     z-index:50;
-    flex-shrink:0;
     background:var(--bg-deeper);
     border-bottom:1px solid var(--line-dark);
   }
@@ -335,7 +330,6 @@
     font-size:1rem;
   }
   .site-footer{
-    flex-shrink:0;
     background:var(--bg-deeper);
     border-top:1px solid var(--line-dark);
     color:rgba(255,255,255,0.5);
@@ -1210,18 +1204,62 @@
     border-radius:14px;
   }
 
+  .flic-help-card{
+    width:100%;
+    margin:18px 0 20px;
+    padding:14px 16px;
+    border:1px solid rgba(0,240,200,0.22);
+    background:rgba(0,240,200,0.055);
+    border-radius:12px;
+    text-align:left;
+  }
+  .flic-help-title{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--p1);
+    margin-bottom:6px;
+  }
+  .flic-help-copy{font-size:0.78rem; color:var(--ink-dim); margin-bottom:10px;}
+  .flic-help-row{
+    display:grid;
+    grid-template-columns:90px 92px 1fr;
+    align-items:center;
+    gap:8px;
+    font-size:0.78rem;
+    color:var(--ink);
+    padding:4px 0;
+  }
+  .flic-help-row span:first-child{color:var(--ink-dim);}
+  .flic-help-row kbd{
+    display:inline-block;
+    width:max-content;
+    min-width:38px;
+    padding:3px 8px;
+    border:1px solid var(--line);
+    border-bottom-width:2px;
+    border-radius:6px;
+    background:rgba(255,255,255,0.07);
+    color:var(--ink);
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    text-align:center;
+  }
+  @media (max-width:520px){
+    .flic-help-row{grid-template-columns:82px 86px 1fr; font-size:0.72rem;}
+  }
+
   /* ============ SCOREBOARD TAB ============ */
   #scoreboard.tab-panel.active{
     display:flex;
     flex-direction:column;
-    height:calc(100vh - var(--nav-h, 64px));
-    height:calc(100dvh - var(--nav-h, 64px));
+    min-height:0;
+    flex:1 1 auto;
   }
   .scoreboard-frame-wrap{
-    flex:1 1 auto;
+    flex:1;
     min-height:0;
-    display:flex;
-    flex-direction:column;
     background:var(--bg-deeper);
   }
 
@@ -1252,8 +1290,7 @@
 
   #pcApp{
     position:relative;
-    flex:1 1 auto;
-    min-height:0;
+    height:100%;
     width:100%;
     overflow:hidden;
     background:var(--bg-deeper);
@@ -1834,6 +1871,20 @@
     .pc-paddle-right{right:3%;}
   }
 
+
+  /* Viewport-safe layout: the scoreboard owns the available space between nav and footer. */
+  .site-nav{flex:0 0 auto;}
+  .scoreboard-frame-wrap{display:flex; flex-direction:column;}
+  #pcApp{flex:1 1 auto; min-height:0;}
+  .site-footer{flex:0 0 auto;}
+
+  @media (max-width:720px){
+    #scoreboard.tab-panel.active{min-height:0;}
+    #screen-setup{
+      padding-top:calc(28px + var(--safe-t));
+      padding-bottom:calc(28px + var(--safe-b));
+    }
+  }
 </style>
 <script type="application/ld+json">
 {
@@ -1920,7 +1971,7 @@
 
       <div class="pc-field-block toggle-row">
         <label for="voiceToggle" style="margin:0;">Voice Scoring</label>
-        <button type="button" id="voiceToggle" class="toggle-switch active" role="switch" aria-checked="true"><span class="knob"></span></button>
+        <button type="button" id="voiceToggle" class="toggle-switch" role="switch" aria-checked="false"><span class="knob"></span></button>
       </div>
 
       <div class="pc-field-block" id="listeningModeBlock">
@@ -1932,6 +1983,14 @@
       </div>
 
       <p class="voice-unsupported-note" id="voiceUnsupportedNote" hidden>This browser doesn't support voice recognition. You can still score every point with the tap buttons.</p>
+
+      <div class="flic-help-card" aria-label="Flic 2 setup">
+        <div class="flic-help-title">Flic 2 Button</div>
+        <div class="flic-help-copy">Use Flic Universal HID mode and assign these keyboard commands:</div>
+        <div class="flic-help-row"><span>Push</span><kbd>1</kbd><span>Player 1 point</span></div>
+        <div class="flic-help-row"><span>Double Push</span><kbd>2</kbd><span>Player 2 point</span></div>
+        <div class="flic-help-row"><span>Hold</span><kbd>Backspace</kbd><span>Undo last point</span></div>
+      </div>
 
       <button type="button" id="startMatchBtn" class="btn-start">Start Match</button>
     </div>
@@ -2382,7 +2441,7 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
   const recognitionSupported = !!SR;
   const synthSupported = 'speechSynthesis' in window;
 
-  let voiceEnabled = true;
+  let voiceEnabled = false;
   let listenMode = 'continuous'; // 'continuous' | 'push'
 
   let state = null;
@@ -2481,17 +2540,47 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
   wireHalf(halfP1, 0);
   wireHalf(halfP2, 1);
 
-  /* ---------- arrow-key scoring ---------- */
+  /* ---------- keyboard / Flic 2 HID scoring ----------
+     Configure Flic Universal as:
+       Push        -> keyboard key 1 -> Player 1 point
+       Double Push -> keyboard key 2 -> Player 2 point
+       Hold        -> Backspace      -> Undo last point
+     The same keys also work with a physical keyboard. */
   document.addEventListener('keydown', (e)=>{
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-    if (e.altKey || e.ctrlKey || e.metaKey) return;
-    if (!screenIsMatch() || overlayOpen()) return;
+    if (e.altKey || e.ctrlKey || e.metaKey || e.repeat) return;
+    if (!screenIsMatch()) return;
 
     const tag = (e.target && e.target.tagName) || '';
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) return;
 
-    e.preventDefault();
-    applyPoint(e.key === 'ArrowLeft' ? 0 : 1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (overlayOpen()) return;
+      e.preventDefault();
+      applyPoint(e.key === 'ArrowLeft' ? 0 : 1);
+      return;
+    }
+
+    if (overlayOpen()) {
+      if (e.key === 'Backspace') e.preventDefault();
+      return;
+    }
+
+    if (e.key === '1') {
+      e.preventDefault();
+      applyPoint(0);
+      return;
+    }
+
+    if (e.key === '2') {
+      e.preventDefault();
+      applyPoint(1);
+      return;
+    }
+
+    if (e.key === 'Backspace') {
+      e.preventDefault();
+      undoLastPoint();
+    }
   });
 
   function overlayOpen(){
@@ -2726,14 +2815,16 @@ function parseVoiceCommand(transcriptRaw, name1, name2){
   });
 
   /* ---------- bottom dock: undo / mic / new game ---------- */
-  undoBtn.addEventListener('click', ()=>{
+  function undoLastPoint(){
     if (history.length <= 1) return;
     history.pop();
     state = history[history.length - 1];
     overlayGameComplete.classList.remove('show');
     overlayMatchComplete.classList.remove('show');
     render();
-  });
+  }
+
+  undoBtn.addEventListener('click', undoLastPoint);
 
   newGameBtn.addEventListener('click', ()=>{
     if (!state || state.matchComplete) return;
