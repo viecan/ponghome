@@ -400,26 +400,26 @@
       flex-direction: row !important;
     }
     .topbar {
-      padding-top: 4px;
+      padding-top: 2px;
       padding-bottom: 2px;
     }
     .game-label {
-      font-size: 1.92rem;
+      font-size: 1.1rem !important;
     }
     .tally-row {
-      font-size: 2.475rem;
+      font-size: 1.6rem !important;
     }
     .player-name {
-      font-size: clamp(1.176rem, 5.88vw, 2.254rem) !important;
+      font-size: clamp(0.9rem, 3.5vw, 1.4rem) !important;
     }
     .score-digit {
-      font-size: clamp(60px, 22vh, 140px) !important;
+      font-size: clamp(45px, 16vh, 100px) !important;
     }
     .half {
-      padding: 6px 10px calc(6px + var(--safe-b)) !important;
+      padding: 4px 8px calc(4px + var(--safe-b)) !important;
     }
     .bottom-dock {
-      padding: 4px 16px calc(6px + var(--safe-b)) !important;
+      padding: 2px 12px calc(4px + var(--safe-b)) !important;
     }
     .net-bar {
       width: 3px !important;
@@ -771,13 +771,25 @@
   const mcFinalTally = document.getElementById('mcFinalTally');
   const mcNewMatchBtn = document.getElementById('mcNewMatchBtn');
 
+  function unlockAudio() {
+    if ('speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance('');
+        utterance.volume = 0;
+        window.speechSynthesis.speak(utterance);
+      } catch (e) {
+        console.error("Audio unlock error:", e);
+      }
+    }
+  }
+
   function speakScore(serverIdx, receiverIdx) {
     if (isMuted || !('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel(); // Clear any pending speech queue
+    window.speechSynthesis.cancel();
 
     const sScore = state.currentGame.score[serverIdx];
     const rScore = state.currentGame.score[receiverIdx];
-    const serverName = state.players[serverIdx];
     
     let textToSpeak = `${sScore}, ${rScore}`;
 
@@ -805,6 +817,7 @@
   });
 
   startMatchBtn.addEventListener('click', () => {
+    unlockAudio();
     state.players[0] = p1NameInput.value.trim() || p1NameInput.placeholder || 'Player 1';
     state.players[1] = p2NameInput.value.trim() || p2NameInput.placeholder || 'Player 2';
     screenSetup.classList.remove('active');
@@ -914,7 +927,6 @@
     document.getElementById('serveDotP2').classList.toggle('active', server === 1);
   }
 
-  // Global Keyboard listener for arrow keys
   window.addEventListener('keydown', (e) => {
     if (screenSetup.classList.contains('active')) {
       if (e.key === 'Enter') {
