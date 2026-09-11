@@ -370,7 +370,7 @@
 
   .topbar{
     display:flex;
-    align-items:flex-start;
+    align-items:center;
     justify-content:space-between;
     gap:10px;
     padding: calc(10px + var(--safe-t)) calc(12px + var(--safe-r)) 8px calc(12px + var(--safe-l));
@@ -391,25 +391,39 @@
   }
   .icon-btn:active{background:rgba(255,255,255,0.1);}
 
-  .topbar-center{flex:1 1 auto; text-align:center; min-width:0; padding-top:2px;}
+  /* Perfectly centered match status block */
+  .topbar-center{
+    flex:1 1 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    min-width:0;
+  }
   
   .game-label{
     font-family:'JetBrains Mono',monospace;
-    font-size:clamp(1.2rem, 3.5vw, 2.0rem);
+    font-size:clamp(1.1rem, 3vw, 1.6rem);
     letter-spacing:0.09em;
     text-transform:uppercase;
     color:var(--ink-dim);
-    margin-top:6px;
+    margin:0;
+    line-height:1.2;
   }
   .tally-row{
     font-family:'JetBrains Mono',monospace;
     font-weight:700;
-    font-size:clamp(1.8rem, 5vw, 3.2rem);
-    margin-top:8px;
+    font-size:clamp(1.5rem, 4vw, 2.4rem);
+    margin:2px 0 0 0;
+    line-height:1.2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
   .tally-row .tp1{color:var(--p1);}
   .tally-row .tp2{color:var(--p2);}
-  .tally-row .tsep{color:var(--ink-faint); margin:0 10px;}
+  .tally-row .tsep{color:var(--ink-faint); margin:0 8px;}
 
   .court{
     flex:1 1 auto;
@@ -419,12 +433,10 @@
     position:relative;
   }
   
-  /* Standard landscape media query or landscape orientation handling */
   @media (orientation:portrait) and (hover:none) and (pointer:coarse){
     .court{flex-direction:column;}
   }
 
-  /* Make sure scores appear clearly and well on a mobile landscape mode */
   @media (max-width: 950px) and (orientation: landscape) {
     .court {
       flex-direction: row !important;
@@ -434,12 +446,10 @@
       padding-bottom: 2px;
     }
     .game-label {
-      font-size: 0.9rem;
-      margin-top: 2px;
+      font-size: 0.85rem;
     }
     .tally-row {
-      font-size: 1.2rem;
-      margin-top: 2px;
+      font-size: 1.1rem;
     }
     .player-name {
       font-size: clamp(1.2rem, 4vw, 1.6rem) !important;
@@ -631,14 +641,6 @@
     margin-top:18px;
   }
 
-  .flic-trap {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-    height: 1px;
-    width: 1px;
-  }
-
   .site-nav{flex:0 0 auto;}
   .scoreboard-frame-wrap{display:flex; flex-direction:column;}
   #pcApp{flex:1 1 auto; min-height:0;}
@@ -707,8 +709,6 @@
 
   <!-- ================= MATCH SCREEN ================= -->
   <section id="screen-match" class="screen">
-    <input type="text" id="flicTrap" class="flic-trap" autocomplete="off">
-
     <div class="topbar">
       <div class="topbar-left">
         <button type="button" class="icon-btn" id="resetBtn" aria-label="Reset match">
@@ -720,6 +720,9 @@
         <div class="game-label" id="gameLabel">BO3 · GAME 1</div>
         <div class="tally-row"><span class="tp1" id="tallyP1">0</span><span class="tsep">—</span><span class="tp2" id="tallyP2">0</span></div>
       </div>
+      
+      <!-- Placeholder element to balance header grid spacing symmetrically -->
+      <div style="width: 38px; visibility: hidden;" aria-hidden="true"></div>
     </div>
 
     <div class="court" id="court">
@@ -795,7 +798,6 @@
   const startMatchBtn = document.getElementById('startMatchBtn');
   const screenSetup = document.getElementById('screen-setup');
   const screenMatch = document.getElementById('screen-match');
-  const flicTrap = document.getElementById('flicTrap');
 
   const scoreP1 = document.getElementById('scoreP1');
   const scoreP2 = document.getElementById('scoreP2');
@@ -846,16 +848,6 @@
     screenMatch.classList.add('active');
     document.body.classList.add('match-active');
     updateUI();
-    
-    setTimeout(() => {
-      flicTrap.focus();
-    }, 100);
-  });
-
-  document.getElementById('court').addEventListener('click', () => {
-    if (screenMatch.classList.contains('active')) {
-      flicTrap.focus();
-    }
   });
 
   function computeServer(a, b, target, firstServer){
@@ -955,10 +947,10 @@
   gcNextGameBtn.addEventListener('click', nextGame);
   mcNewMatchBtn.addEventListener('click', resetMatch);
 
+  // Global handler for external hardware keys / Flic HID commands
   const handleKeyCommand = (e) => {
     if (!screenMatch.classList.contains('active')) return;
 
-    // Support both modern e.key and legacy keyCodes
     const key = e.key;
     const code = e.code;
     const keyCode = e.keyCode;
@@ -979,15 +971,6 @@
   };
 
   window.addEventListener('keydown', handleKeyCommand, true);
-  document.addEventListener('keydown', handleKeyCommand, true);
-  flicTrap.addEventListener('keydown', handleKeyCommand, true);
-
-  // Keep focus locked on trap when match screen is active
-  setInterval(() => {
-    if (screenMatch.classList.contains('active') && document.activeElement !== flicTrap && !document.querySelector('.overlay.show')) {
-      flicTrap.focus();
-    }
-  }, 1000);
 
 })();
 </script>
