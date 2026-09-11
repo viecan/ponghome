@@ -92,14 +92,23 @@
     z-index:50;
     background:var(--bg-deeper);
     border-bottom:1px solid var(--line-dark);
+    transition: transform 0.3s ease, opacity 0.3s ease;
   }
+
+  /* On mobile, hide navigation bar completely when counting (match screen active) */
+  @media (max-width: 768px) {
+    body.match-active .site-nav {
+      display: none;
+    }
+  }
+
   .nav-inner{
     max-width:1180px;
     margin:0 auto;
     padding:16px 28px;
     display:flex;
     align-items:center;
-    justify-content:center; /* Centered navigation layout */
+    justify-content:center;
     position:relative;
     gap:20px;
   }
@@ -226,6 +235,8 @@
     flex:1;
     min-height:0;
     background:var(--bg-deeper);
+    display: flex;
+    flex-direction: column;
   }
 
   #pcApp{
@@ -258,6 +269,9 @@
     color:var(--ink);
     font-family:'Inter',sans-serif;
     -webkit-tap-highlight-color:transparent;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
   }
 
   .screen{display:none; height:100%; width:100%; flex-direction:column;}
@@ -378,36 +392,24 @@
   .icon-btn:active{background:rgba(255,255,255,0.1);}
 
   .topbar-center{flex:1 1 auto; text-align:center; min-width:0; padding-top:2px;}
-  .vs-row{
-    font-family:'Baloo 2',sans-serif;
-    font-weight:700;
-    font-size:0.92rem;
-    letter-spacing:0.01em;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .vs-row .vs-name.p1{color:var(--p1);}
-  .vs-row .vs-name.p2{color:var(--p2);}
-  .vs-row .vs-sep{color:var(--ink-faint); margin:0 6px; font-weight:500; font-size:0.78rem;}
-
+  
   .game-label{
     font-family:'JetBrains Mono',monospace;
-    font-size:0.68rem;
+    font-size:clamp(1.2rem, 3.5vw, 2.0rem);
     letter-spacing:0.09em;
     text-transform:uppercase;
     color:var(--ink-dim);
-    margin-top:3px;
+    margin-top:6px;
   }
   .tally-row{
     font-family:'JetBrains Mono',monospace;
     font-weight:700;
-    font-size:0.82rem;
-    margin-top:4px;
+    font-size:clamp(1.8rem, 5vw, 3.2rem);
+    margin-top:8px;
   }
   .tally-row .tp1{color:var(--p1);}
   .tally-row .tp2{color:var(--p2);}
-  .tally-row .tsep{color:var(--ink-faint); margin:0 6px;}
+  .tally-row .tsep{color:var(--ink-faint); margin:0 10px;}
 
   .court{
     flex:1 1 auto;
@@ -416,8 +418,46 @@
     min-height:0;
     position:relative;
   }
+  
+  /* Standard landscape media query or landscape orientation handling */
   @media (orientation:portrait) and (hover:none) and (pointer:coarse){
     .court{flex-direction:column;}
+  }
+
+  /* Make sure scores appear clearly and well on a mobile landscape mode */
+  @media (max-width: 950px) and (orientation: landscape) {
+    .court {
+      flex-direction: row !important;
+    }
+    .topbar {
+      padding-top: 4px;
+      padding-bottom: 2px;
+    }
+    .game-label {
+      font-size: 0.9rem;
+      margin-top: 2px;
+    }
+    .tally-row {
+      font-size: 1.2rem;
+      margin-top: 2px;
+    }
+    .player-name {
+      font-size: clamp(1.2rem, 4vw, 1.6rem) !important;
+    }
+    .score-digit {
+      font-size: clamp(60px, 22vh, 140px) !important;
+    }
+    .half {
+      padding: 6px 10px calc(6px + var(--safe-b)) !important;
+    }
+    .bottom-dock {
+      padding: 4px 16px calc(6px + var(--safe-b)) !important;
+    }
+    .net-bar {
+      width: 3px !important;
+      height: auto !important;
+      background: repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 4px, transparent 4px 9px) !important;
+    }
   }
 
   .half{
@@ -454,7 +494,7 @@
     font-family:'Baloo 2',sans-serif;
     font-weight:700;
     text-transform:uppercase;
-    font-size:clamp(1.7rem, 6vw, 2.3rem); /* Player names font size doubled */
+    font-size:clamp(1.7rem, 6vw, 2.3rem);
     letter-spacing:0.02em;
     max-width:100%;
     overflow:hidden;
@@ -677,7 +717,6 @@
       </div>
 
       <div class="topbar-center">
-        <div class="vs-row"><span class="vs-name p1" id="vsP1"></span><span class="vs-sep">vs</span><span class="vs-name p2" id="vsP2"></span></div>
         <div class="game-label" id="gameLabel">BO3 · GAME 1</div>
         <div class="tally-row"><span class="tp1" id="tallyP1">0</span><span class="tsep">—</span><span class="tp2" id="tallyP2">0</span></div>
       </div>
@@ -762,8 +801,6 @@
   const scoreP2 = document.getElementById('scoreP2');
   const nameP1 = document.getElementById('nameP1');
   const nameP2 = document.getElementById('nameP2');
-  const vsP1 = document.getElementById('vsP1');
-  const vsP2 = document.getElementById('vsP2');
   const gamesP1 = document.getElementById('gamesP1');
   const gamesP2 = document.getElementById('gamesP2');
   const tallyP1 = document.getElementById('tallyP1');
@@ -807,6 +844,7 @@
     state.players[1] = p2NameInput.value.trim() || p2NameInput.placeholder || 'Player 2';
     screenSetup.classList.remove('active');
     screenMatch.classList.add('active');
+    document.body.classList.add('match-active');
     updateUI();
     
     setTimeout(() => {
@@ -889,13 +927,12 @@
     overlayMatchComplete.classList.remove('show');
     screenMatch.classList.remove('active');
     screenSetup.classList.add('active');
+    document.body.classList.remove('match-active');
   }
 
   function updateUI() {
     nameP1.textContent = state.players[0];
     nameP2.textContent = state.players[1];
-    vsP1.textContent = state.players[0];
-    vsP2.textContent = state.players[1];
 
     scoreP1.textContent = state.currentGame.score[0];
     scoreP2.textContent = state.currentGame.score[1];
@@ -918,10 +955,10 @@
   gcNextGameBtn.addEventListener('click', nextGame);
   mcNewMatchBtn.addEventListener('click', resetMatch);
 
-  // Global keydown listener binding Flic HID keys across window & document
   const handleKeyCommand = (e) => {
     if (!screenMatch.classList.contains('active')) return;
 
+    // Support both modern e.key and legacy keyCodes
     const key = e.key;
     const code = e.code;
     const keyCode = e.keyCode;
@@ -929,18 +966,28 @@
     if (key === '1' || code === 'Digit1' || code === 'Numpad1' || keyCode === 49) {
       addPoint(0);
       e.preventDefault();
+      e.stopPropagation();
     } else if (key === '2' || code === 'Digit2' || code === 'Numpad2' || keyCode === 50) {
       addPoint(1);
       e.preventDefault();
+      e.stopPropagation();
     } else if (key === 'Backspace' || code === 'Backspace' || keyCode === 8) {
       undoPoint();
       e.preventDefault();
+      e.stopPropagation();
     }
   };
 
   window.addEventListener('keydown', handleKeyCommand, true);
   document.addEventListener('keydown', handleKeyCommand, true);
   flicTrap.addEventListener('keydown', handleKeyCommand, true);
+
+  // Keep focus locked on trap when match screen is active
+  setInterval(() => {
+    if (screenMatch.classList.contains('active') && document.activeElement !== flicTrap && !document.querySelector('.overlay.show')) {
+      flicTrap.focus();
+    }
+  }, 1000);
 
 })();
 </script>
