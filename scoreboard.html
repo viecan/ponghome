@@ -539,19 +539,12 @@
   .bottom-dock{
     flex:0 0 auto;
     display:flex;
-    flex-direction:column;
     align-items:center;
-    gap:8px;
+    justify-content:center;
     padding: 8px calc(16px + var(--safe-r)) calc(14px + var(--safe-b)) calc(16px + var(--safe-l));
     background:var(--bg-deeper);
     border-top:1px solid var(--line);
     z-index:20;
-  }
-  .ticker{
-    font-family:'JetBrains Mono',monospace;
-    font-size:0.72rem;
-    color:var(--ink-faint);
-    text-align:center;
   }
   .dock-controls{
     display:flex;
@@ -670,8 +663,8 @@
       </div>
 
       <div class="flic-help-card">
-        <div class="flic-help-title">Keyboard Remote Active</div>
-        <div class="flic-help-copy">Single Push = Left Arrow (P1), Double Push = Right Arrow (P2), Hold = Down Arrow (Undo).</div>
+        <div class="flic-help-title">HTTP Webhook Listener Active</div>
+        <div class="flic-help-copy">Listens to backend SSE streams for remote actions (p1, p2, undo).</div>
       </div>
 
       <button type="button" id="startMatchBtn" class="btn-start">Start Match</button>
@@ -714,7 +707,6 @@
     </div>
 
     <div class="bottom-dock">
-      <div class="ticker" id="ticker">Listening for Flic keyboard remote events</div>
       <div class="dock-controls">
         <button type="button" class="dock-btn" id="undoBtn" disabled aria-label="Undo last point">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>
@@ -910,31 +902,19 @@
     document.getElementById('serveDotP2').classList.toggle('active', server === 1);
   }
 
-  // Listen for Flic keyboard remote events (Arrow keys)
-  window.addEventListener('keydown', (e) => {
-    // If on setup screen, start match automatically on first remote click
-    if (screenSetup.classList.contains('active')) {
-      state.players[0] = p1NameInput.value.trim() || p1NameInput.placeholder || 'Player 1';
-      state.players[1] = p2NameInput.value.trim() || p2NameInput.placeholder || 'Player 2';
-      screenSetup.classList.remove('active');
-      screenMatch.classList.add('active');
-      document.body.classList.add('match-active');
-      updateUI();
-    }
+  // Connect to SSE stream for HTTP webhook actions
+  if (!!window.EventSource) {
+    const source = new EventSource('/api/events');
+    source.onmessage = function(e) {
+      if (screenSetup.classList.contains('active')) {
+        startMatchBtn.click();
+      }
+      if (e.data === 'p1') addPoint(0);
+      if (e.data === 'p2') addPoint(1);
+      if (e.data === 'undo') undoPoint();
+    };
+  }
 
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      addPoint(0); // Player 1 point (Single Push)
-    } else if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      addPoint(1); // Player 2 point (Double Push)
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      undoPoint(); // Undo last point (Hold)
-    }
-  });
-
-  // Manual screen pointer bindings
   halfP1.addEventListener('pointerdown', (e) => { e.preventDefault(); addPoint(0); });
   halfP2.addEventListener('pointerdown', (e) => { e.preventDefault(); addPoint(1); });
   undoBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); undoPoint(); });
