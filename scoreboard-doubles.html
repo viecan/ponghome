@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GTYKNXXBF3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GTYKNXXBF3');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<title>Doubles Scoreboard · Pong Home</title>
+<meta name="description" content="Free table tennis doubles scoreboard for 4 players and 2 teams. Automatic ITTF-style serve rotation with a clear on-screen signal for which team is serving and to whom.">
+<link rel="canonical" href="https://ponghome.com/scoreboard-doubles">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pong Home">
+<meta property="og:title" content="Doubles Scoreboard · Pong Home">
+<meta property="og:description" content="Free table tennis doubles scoreboard for 4 players and 2 teams, with automatic serve rotation and a clear signal for who serves to whom.">
+<meta property="og:url" content="https://ponghome.com/scoreboard-doubles">
+<meta property="og:image" content="https://ponghome.com/og-image.jpg">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Doubles Scoreboard · Pong Home">
+<meta name="twitter:description" content="Free 4-player table tennis doubles scoreboard with automatic serve rotation.">
+<meta name="twitter:image" content="https://ponghome.com/og-image.jpg">
+
+<!-- JSON-LD: WebApplication + FAQ (AEO) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Pong Home Doubles Scoreboard",
+  "url": "https://ponghome.com/scoreboard-doubles",
+  "applicationCategory": "SportsApplication",
+  "operatingSystem": "Any",
+  "description": "A free, on-court table tennis scoreboard for doubles matches. Tracks 2 teams of 2 players, applies the standard doubles serve rotation automatically, and displays who is serving and who is receiving at all times.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Pong Home",
+    "url": "https://ponghome.com"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does serving work in table tennis doubles?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In doubles, the first server picks any teammate as first receiver. Each turn, the previous receiver becomes the new server, and serves to the partner of the previous server. This creates a fixed 4 step rotation that repeats for the rest of the game."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How often does the serve change in table tennis doubles?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Serve changes every 2 points, the same as singles. If the score reaches 10-10 (or 20-20 in a 21-point game), the serve changes after every single point instead, following the same rotation order."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#0E3B42;
+    --bg-deeper:#0A4952;
+    --bg-deep-soft:#14727C;
+    --mint:#00FFD1;
+    --mint-dim:#00E0B8;
+    --mint-soft:rgba(0,255,209,0.18);
+    --paper:#FAFFFB;
+    --paper-card:#FFFFFF;
+    --ink:#0A2A2F;
+    --ink-soft:#4C6B70;
+    --line-dark:rgba(255,255,255,0.16);
+    --line-light:rgba(10,42,47,0.10);
+    --shadow: 0 18px 40px rgba(6,88,96,0.22);
+    --coral:#FF6B6B;
+    --sun:#FFB020;
+    --nav-h: 64px;
+  }
+
+  *{box-sizing:border-box; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;}
+  html{scroll-behavior:smooth;}
+  html,body{height:100%; overflow:hidden;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+    min-height:100dvh;
+  }
+  img{max-width:100%;display:block;}
+
+  h1,h2,h3,h4,.display{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    letter-spacing:0.01em;
+    margin:0;
+  }
+
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;}
+
+  .site-nav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--bg-deeper);
+    border-bottom:1px solid var(--line-dark);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  @media (max-width: 768px) {
+    body.match-active .site-nav {
+      display: none;
+    }
+  }
+
+  .nav-inner{
+    max-width:1180px;
+    margin:0 auto;
+    padding:16px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    gap:20px;
+  }
+  .nav-logo{
+    position:absolute;
+    left:28px;
+    display:flex;
+    align-items:baseline;
+    gap:2px;
+    color:var(--mint);
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:1.3rem;
+    letter-spacing:0.01em;
+    text-decoration:none;
+  }
+  .nav-logo span.sub{color:#fff;}
+  .nav-tabs{
+    display:flex;
+    gap:6px;
+    background:rgba(255,255,255,0.05);
+    padding:5px;
+    border-radius:999px;
+    border:1px solid var(--line-dark);
+  }
+  .nav-tab{
+    appearance:none;
+    border:none;
+    background:transparent;
+    color:rgba(255,255,255,0.7);
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:0.88rem;
+    padding:9px 18px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background 0.25s ease, color 0.25s ease;
+    white-space:nowrap;
+    text-decoration:none;
+    display:inline-block;
+  }
+  .nav-tab.active{
+    background:var(--mint);
+    color:var(--bg-deeper);
+  }
+  .nav-tab:not(.active):hover{color:#fff;}
+
+  @media (max-width:720px){
+    .nav-inner{
+      flex-wrap:wrap;
+      padding:12px 16px;
+      gap:10px;
+      justify-content:center;
+    }
+    .nav-logo{
+      position:static;
+      font-size:1.1rem;
+      margin-bottom:4px;
+    }
+    .nav-tabs{
+      flex-basis:auto;
+      width:auto;
+      max-width:100%;
+      overflow-x:auto;
+      scrollbar-width:none;
+      justify-content:center;
+    }
+    .nav-tabs::-webkit-scrollbar{display:none;}
+    .nav-tab{
+      font-size:0.74rem;
+      padding:7px 12px;
+    }
+  }
+
+  .scoreboard-frame-wrap{
+    flex:1;
+    min-height:0;
+    background:var(--bg-deeper);
+    display: flex;
+    flex-direction: column;
+  }
+
+  #pcApp{
+    --bg-deep:#0E3B42;
+    --bg-deeper:#082A30;
+    --bg-card:#123F47;
+    --p1:#00F0C8;
+    --p1-dim:#00B89C;
+    --p2:#FFB020;
+    --p2-dim:#D9930E;
+    --ink:#F3FAF9;
+    --ink-dim:rgba(243,250,249,0.62);
+    --ink-faint:rgba(243,250,249,0.4);
+    --line:rgba(255,255,255,0.14);
+    --danger:#FF6B6B;
+    --safe-t:env(safe-area-inset-top, 0px);
+    --safe-b:env(safe-area-inset-bottom, 0px);
+    --safe-l:env(safe-area-inset-left, 0px);
+    --safe-r:env(safe-area-inset-right, 0px);
+  }
+  button{font-family:inherit; cursor:pointer;}
+  input{font-family:inherit; -webkit-user-select: text; user-select: text;}
+
+  #pcApp{
+    position:relative;
+    height:100%;
+    width:100%;
+    overflow:hidden;
+    background:var(--bg-deeper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-tap-highlight-color:transparent;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+  }
+
+  .screen{display:none; height:100%; width:100%; flex-direction:column;}
+  .screen.active{display:flex;}
+
+  #screen-setup{
+    background:
+      radial-gradient(circle at 85% -10%, rgba(0,240,200,0.14), transparent 45%),
+      var(--bg-deep);
+    overflow-y:auto;
+    align-items:center;
+    padding: calc(32px + var(--safe-t)) 20px calc(48px + var(--safe-b));
+  }
+  .pc-setup-card{
+    width:100%;
+    max-width:460px;
+    text-align:center;
+  }
+  .pc-title{
+    font-size:clamp(1.9rem, 7vw, 2.7rem);
+    color:var(--p1);
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+    line-height:1;
+    margin-top:4px;
+  }
+  .tagline{
+    color:var(--ink-dim);
+    font-size:0.92rem;
+    margin:10px 0 28px;
+  }
+
+  .pc-field-block{margin-bottom:20px; text-align:left;}
+  .pc-field-block > label{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:8px;
+  }
+  .pc-field-block > .hint{
+    font-size:0.76rem;
+    color:var(--ink-faint);
+    margin-top:6px;
+  }
+  .name-input{
+    width:100%;
+    padding:14px 16px;
+    border-radius:12px;
+    border:1.5px solid var(--line);
+    background:rgba(255,255,255,0.05);
+    color:var(--ink);
+    font-size:1rem;
+    outline:none;
+    transition:border-color 0.2s ease;
+  }
+  .name-input:focus{border-color:var(--p1);}
+  .name-input::placeholder{color:var(--ink-faint);}
+
+  .dual-input-row{display:flex; gap:8px; margin-top:8px;}
+  .dual-input-row .name-input{flex:1; min-width:0;}
+
+  .team-block{
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:20px;
+  }
+  .team-block.team-a{border-color:rgba(0,240,200,0.3);}
+  .team-block.team-b{border-color:rgba(255,176,32,0.3);}
+
+  .segmented{
+    display:flex;
+    gap:6px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:5px;
+    flex-wrap:wrap;
+  }
+  .segmented button{
+    flex:1 1 auto;
+    min-width:56px;
+    background:transparent;
+    border:none;
+    color:var(--ink-dim);
+    font-weight:700;
+    font-size:0.88rem;
+    padding:11px 8px;
+    border-radius:9px;
+    transition:background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+  }
+  .segmented button.active{
+    background:var(--p1);
+    color:var(--bg-deeper);
+  }
+  .segmented button[hidden]{display:none;}
+
+  .btn-start{
+    width:100%;
+    background:var(--p1);
+    color:var(--bg-deeper);
+    border:none;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:1.05rem;
+    padding:17px;
+    border-radius:14px;
+    box-shadow:0 14px 30px rgba(0,240,200,0.22);
+    margin-top:10px;
+  }
+
+  #screen-match{ background:var(--bg-deeper); position:relative; }
+
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding: calc(10px + var(--safe-t)) calc(12px + var(--safe-r)) 8px calc(12px + var(--safe-l));
+    flex:0 0 auto;
+    z-index:20;
+    background:var(--bg-deeper);
+  }
+  .topbar-left{display:flex; gap:8px; flex:0 0 auto;}
+  .topbar-right{display:flex; gap:8px; flex:0 0 auto;}
+  .icon-btn{
+    width:38px; height:38px;
+    border-radius:50%;
+    border:1.5px solid var(--line);
+    background:rgba(255,255,255,0.04);
+    color:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.05rem;
+    flex:0 0 auto;
+  }
+  .icon-btn:active{background:rgba(255,255,255,0.1);}
+  .icon-btn.muted svg path { opacity: 0.4; }
+  .icon-btn.muted { border-color: rgba(255,255,255,0.08); color: var(--ink-faint); }
+
+  .topbar-center{
+    flex:1 1 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    min-width:0;
+  }
+
+  .game-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:clamp(1.6rem, 5vw, 2.4rem);
+    letter-spacing:0.09em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin:0;
+    line-height:1.2;
+  }
+  .tally-row{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:clamp(2.2rem, 6.5vw, 3.6rem);
+    margin:2px 0 0 0;
+    line-height:1.2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .tally-row .tp1{color:var(--p1);}
+  .tally-row .tp2{color:var(--p2);}
+  .tally-row .tsep{color:var(--ink-faint); margin:0 8px;}
+
+  .serve-strip{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    margin-top:6px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:clamp(0.72rem, 2.6vw, 0.92rem);
+    letter-spacing:0.03em;
+    color:var(--ink);
+    background:rgba(0,255,209,0.10);
+    border:1px solid rgba(0,255,209,0.35);
+    padding:5px 12px;
+    border-radius:999px;
+    max-width:100%;
+    overflow:hidden;
+  }
+  .serve-strip span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .serve-strip .serve-arrow{color:var(--mint); flex:0 0 auto;}
+  #serveFromName{color:var(--p1); font-weight:700;}
+  #serveToName{color:var(--p2); font-weight:700;}
+
+  .court{
+    flex:1 1 auto;
+    display:flex;
+    flex-direction:row;
+    min-height:0;
+    position:relative;
+  }
+
+  @media (max-width: 950px) and (orientation: landscape) {
+    .court {
+      flex-direction: row !important;
+    }
+    .topbar {
+      padding-top: 2px;
+      padding-bottom: 2px;
+    }
+    .game-label {
+      font-size: 1rem !important;
+    }
+    .tally-row {
+      font-size: 1.4rem !important;
+    }
+    .team-label{ font-size: 0.6rem !important; }
+    .player-row .player-name {
+      font-size: clamp(0.8rem, 3vw, 1.15rem) !important;
+    }
+    .score-digit {
+      font-size: clamp(40px, 14vh, 90px) !important;
+    }
+    .half {
+      padding: 4px 8px calc(4px + var(--safe-b)) !important;
+    }
+    .bottom-dock {
+      padding: 2px 12px calc(4px + var(--safe-b)) !important;
+    }
+    .net-bar {
+      width: 3px !important;
+      height: auto !important;
+      background: repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 4px, transparent 4px 9px) !important;
+    }
+  }
+
+  .half{
+    flex:1 1 0;
+    min-width:0; min-height:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    padding: 10px 14px calc(10px + var(--safe-b));
+    outline:none;
+    overflow:hidden;
+    cursor:pointer;
+    gap:4px;
+  }
+  .half:active {
+    background: rgba(255,255,255,0.03);
+  }
+  .half-p1{padding-left: calc(14px + var(--safe-l));}
+  .half-p2{padding-right: calc(14px + var(--safe-r));}
+
+  .team-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .players-col{
+    flex:0 0 auto;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    align-items:center;
+    padding-top:2px;
+    max-width:100%;
+  }
+  .player-row{
+    display:flex; align-items:center; gap:9px;
+    max-width:100%;
+  }
+  .serve-dot{
+    width:13px; height:13px; border-radius:50%; flex:0 0 auto;
+    background:currentColor;
+    opacity:0.15;
+    transition:opacity 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .serve-dot.serving{opacity:1; box-shadow:0 0 12px currentColor;}
+  .serve-dot.receiving{
+    opacity:1;
+    background:transparent;
+    box-shadow:inset 0 0 0 2px currentColor;
+  }
+  .player-name{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    text-transform:uppercase;
+    font-size:clamp(1.05rem, 4.4vw, 1.5rem);
+    letter-spacing:0.02em;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    line-height:1.15;
+  }
+  .half-p1 .player-name, .half-p1 .serve-dot, .half-p1 .team-label{color:var(--p1);}
+  .half-p2 .player-name, .half-p2 .serve-dot, .half-p2 .team-label{color:var(--p2);}
+  .half-p1 .team-label, .half-p2 .team-label{color:var(--ink-faint);}
+
+  .score-wrapper{
+    flex:1;
+    min-height:0;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .score-digit{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:clamp(64px, 22vw, 180px);
+    line-height:1;
+    color:var(--ink);
+  }
+
+  .games-label{
+    flex:0 0 auto;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    color:var(--ink-dim);
+    margin-bottom:2px;
+  }
+  .tap-hint{
+    flex:0 0 auto;
+    font-size:0.72rem;
+    color:var(--ink-faint);
+  }
+
+  .net-bar{
+    flex:0 0 auto;
+    width:3px;
+    background:repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 4px, transparent 4px 9px);
+    position:relative;
+  }
+
+  /* ============================================================
+     FORCE-LANDSCAPE MODE
+     While a match is live, phones held upright (portrait) get the
+     whole app rotated 90deg into landscape via CSS transform.
+     This is a pure-CSS technique (no Screen Orientation Lock API,
+     no fullscreen requirement) so it works the same way on iOS
+     Safari and Android Chrome, where the native orientation-lock
+     API is either unsupported (iOS) or fullscreen-only (Android).
+     Container query units (cqw/cqh) are used for text sizing so
+     fonts scale to the *visual* rotated box instead of the raw
+     (still-portrait) viewport, which vw/vh cannot see through a
+     transform.
+  ============================================================ */
+  @media (hover:none) and (pointer:coarse) and (orientation:portrait){
+    body.match-active .scoreboard-frame-wrap{
+      position:fixed;
+      inset:0;
+      overflow:hidden;
+    }
+    body.match-active #pcApp{
+      position:fixed;
+      top:0;
+      left:100%;
+      width:100vh;
+      height:100vw;
+      width:100dvh;
+      height:100dvw;
+      transform-origin:0 0;
+      transform:rotate(90deg);
+      container-type:size;
+      container-name:pcapp;
+    }
+    body.match-active .court{flex-direction:row;}
+    body.match-active .game-label{font-size:clamp(0.85rem, 4.6cqh, 1.4rem);}
+    body.match-active .tally-row{font-size:clamp(1.2rem, 6cqh, 2.1rem);}
+    body.match-active .serve-strip{font-size:clamp(0.62rem, 2.8cqh, 0.8rem); padding:4px 10px;}
+    body.match-active .team-label{font-size:clamp(0.55rem, 2.4cqh, 0.68rem);}
+    body.match-active .player-name{font-size:clamp(0.8rem, 4.8cqh, 1.25rem);}
+    body.match-active .score-digit{font-size:clamp(48px, 24cqh, 110px);}
+    body.match-active .topbar{padding-top:2px; padding-bottom:2px;}
+    body.match-active .half{padding-top:4px; padding-bottom:4px; gap:2px;}
+    body.match-active .players-col{gap:2px;}
+    body.match-active .net-bar{
+      width:3px; height:auto;
+      background:repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 4px, transparent 4px 9px);
+    }
+  }
+
+  .bottom-dock{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 8px calc(16px + var(--safe-r)) calc(14px + var(--safe-b)) calc(16px + var(--safe-l));
+    background:var(--bg-deeper);
+    border-top:1px solid var(--line);
+    z-index:20;
+  }
+  .dock-controls{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:22px;
+  }
+  .dock-btn{
+    width:46px; height:46px;
+    border-radius:50%;
+    border:1.5px solid var(--line);
+    background:rgba(255,255,255,0.04);
+    color:var(--ink);
+    font-size:1.15rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .dock-btn:disabled{opacity:0.3;}
+
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(5,20,23,0.86);
+    backdrop-filter:blur(3px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:24px;
+  }
+  .overlay.show{display:flex;}
+  .overlay-card{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:34px 28px;
+    max-width:420px;
+    width:100%;
+    text-align:center;
+  }
+  .overlay-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--p1);
+    margin-bottom:10px;
+    display:block;
+  }
+  .overlay-card h2{font-size:1.5rem; color:var(--ink); margin-bottom:10px;}
+  .overlay-card .final-score{
+    font-family:'JetBrains Mono',monospace;
+    font-size:2.2rem;
+    font-weight:700;
+    color:var(--p1);
+    margin:14px 0;
+  }
+  .overlay-btn{
+    width:100%;
+    background:var(--p1);
+    color:var(--bg-deeper);
+    border:none;
+    font-weight:700;
+    font-size:1rem;
+    padding:15px;
+    border-radius:12px;
+    margin-top:18px;
+  }
+
+  .sr-only{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">PONG<span class="sub">·HOME</span></a>
+    <div class="nav-tabs" role="tablist">
+      <a class="nav-tab" href="/">Home</a>
+      <a class="nav-tab" href="/tournament">Arena</a>
+      <a class="nav-tab" href="/scoreboard">Singles</a>
+      <a class="nav-tab active" href="/scoreboard-doubles" aria-current="page">Doubles</a>
+    </div>
+  </div>
+</nav>
+
+<div class="scoreboard-frame-wrap">
+<div id="pcApp">
+
+  <!-- ================= SETUP SCREEN ================= -->
+  <section id="screen-setup" class="screen active">
+    <div class="pc-setup-card">
+      <h1 class="pc-title">Doubles Scoreboard</h1>
+      <p class="tagline">4 players, 2 teams, automatic serve rotation.</p>
+
+      <div class="team-block team-a">
+        <div class="pc-field-block" style="margin-bottom:12px;">
+          <label for="teamAInput">Team A name</label>
+          <input type="text" id="teamAInput" class="name-input" maxlength="20" placeholder="Team A">
+        </div>
+        <div class="pc-field-block" style="margin-bottom:0;">
+          <label>Team A players</label>
+          <div class="dual-input-row">
+            <input type="text" id="a1NameInput" class="name-input" maxlength="14" placeholder="A1">
+            <input type="text" id="a2NameInput" class="name-input" maxlength="14" placeholder="A2">
+          </div>
+        </div>
+      </div>
+
+      <div class="team-block team-b">
+        <div class="pc-field-block" style="margin-bottom:12px;">
+          <label for="teamBInput">Team B name</label>
+          <input type="text" id="teamBInput" class="name-input" maxlength="20" placeholder="Team B">
+        </div>
+        <div class="pc-field-block" style="margin-bottom:0;">
+          <label>Team B players</label>
+          <div class="dual-input-row">
+            <input type="text" id="b1NameInput" class="name-input" maxlength="14" placeholder="B1">
+            <input type="text" id="b2NameInput" class="name-input" maxlength="14" placeholder="B2">
+          </div>
+        </div>
+      </div>
+
+      <div class="pc-field-block">
+        <label>Match Format</label>
+        <div class="segmented" id="formatSeg">
+          <button type="button" data-value="1">Bo1</button>
+          <button type="button" data-value="3" class="active">Bo3</button>
+          <button type="button" data-value="5">Bo5</button>
+          <button type="button" data-value="7">Bo7</button>
+        </div>
+      </div>
+
+      <div class="pc-field-block">
+        <label>Points to Win</label>
+        <div class="segmented" id="targetSeg">
+          <button type="button" data-value="11" class="active">11</button>
+          <button type="button" data-value="21">21</button>
+        </div>
+      </div>
+
+      <div class="pc-field-block">
+        <label>First server</label>
+        <div class="segmented" id="firstServerSeg">
+          <button type="button" data-slot="A1" class="active">A1</button>
+          <button type="button" data-slot="A2">A2</button>
+          <button type="button" data-slot="B1">B1</button>
+          <button type="button" data-slot="B2">B2</button>
+        </div>
+      </div>
+
+      <div class="pc-field-block">
+        <label>First receiver</label>
+        <div class="segmented" id="firstReceiverSeg">
+          <button type="button" data-slot="A1">A1</button>
+          <button type="button" data-slot="A2">A2</button>
+          <button type="button" data-slot="B1" class="active">B1</button>
+          <button type="button" data-slot="B2">B2</button>
+        </div>
+        <p class="hint">Serve then follows the standard doubles order: the receiver becomes the next server, serving to the first server's partner, then that player's partner, and back to the start. Every 2 points, or every point from 10-10.</p>
+      </div>
+
+      <button type="button" id="startMatchBtn" class="btn-start">Start Match</button>
+    </div>
+  </section>
+
+  <!-- ================= MATCH SCREEN ================= -->
+  <section id="screen-match" class="screen">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button type="button" class="icon-btn" id="resetBtn" aria-label="Reset match">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7"></path><polyline points="21 3 21 9 15 9"></polyline></svg>
+        </button>
+      </div>
+
+      <div class="topbar-center">
+        <div class="game-label" id="gameLabel">BO3 · GAME 1</div>
+        <div class="tally-row"><span class="tp1" id="tallyP1">0</span><span class="tsep">-</span><span class="tp2" id="tallyP2">0</span></div>
+        <div class="serve-strip" id="serveStrip">
+          <span id="serveFromName">A1</span>
+          <svg class="serve-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          <span id="serveToName">B1</span>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <button type="button" class="icon-btn" id="muteBtn" aria-label="Toggle voice announcements">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="court" id="court">
+      <div class="half half-p1" id="halfP1" role="button" aria-label="Add point Team A">
+        <div class="team-label" id="teamLabelA">TEAM A</div>
+        <div class="players-col">
+          <div class="player-row"><span class="serve-dot" id="dotA1"></span><span class="player-name" id="nameA1"></span></div>
+          <div class="player-row"><span class="serve-dot" id="dotA2"></span><span class="player-name" id="nameA2"></span></div>
+        </div>
+        <div class="score-wrapper"><div class="score-digit" id="scoreA">0</div></div>
+        <div class="games-label">GAMES <span id="gamesA">0</span></div>
+        <div class="tap-hint">Tap to score</div>
+      </div>
+
+      <div class="net-bar"></div>
+
+      <div class="half half-p2" id="halfP2" role="button" aria-label="Add point Team B">
+        <div class="team-label" id="teamLabelB">TEAM B</div>
+        <div class="players-col">
+          <div class="player-row"><span class="serve-dot" id="dotB1"></span><span class="player-name" id="nameB1"></span></div>
+          <div class="player-row"><span class="serve-dot" id="dotB2"></span><span class="player-name" id="nameB2"></span></div>
+        </div>
+        <div class="score-wrapper"><div class="score-digit" id="scoreB">0</div></div>
+        <div class="games-label">GAMES <span id="gamesB">0</span></div>
+        <div class="tap-hint">Tap to score</div>
+      </div>
+    </div>
+
+    <div class="bottom-dock">
+      <div class="dock-controls">
+        <button type="button" class="dock-btn" id="undoBtn" disabled aria-label="Undo last point">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= OVERLAYS ================= -->
+  <div class="overlay" id="overlayGameComplete">
+    <div class="overlay-card">
+      <span class="overlay-eyebrow">Game complete</span>
+      <h2 id="gcWinnerName">-</h2>
+      <div class="final-score" id="gcFinalScore">0 - 0</div>
+      <button type="button" class="overlay-btn" id="gcNextGameBtn">Next Game</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlayMatchComplete">
+    <div class="overlay-card">
+      <span class="overlay-eyebrow">🏆 Match complete</span>
+      <h2 id="mcWinnerName">-</h2>
+      <div class="final-score" id="mcFinalTally">0 - 0</div>
+      <button type="button" class="overlay-btn" id="mcNewMatchBtn">New Match</button>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<h1 class="sr-only">Doubles Table Tennis Scoreboard for 2 Teams of 2 Players</h1>
+<p class="sr-only">Free on-court doubles scoreboard from Pong Home. Enter 4 player names, pick the first server and receiver, and the app tracks scores, games, and the doubles serve rotation automatically, showing which team is serving and to which player.</p>
+
+<script>
+(function(){
+  'use strict';
+
+  const SLOTS = ['A1','A2','B1','B2'];
+  function teamOf(slot){ return slot[0]; }        // 'A' or 'B'
+  function partnerOf(slot){ return slot[0] + (slot[1] === '1' ? '2' : '1'); }
+
+  let state = {
+    names: { A1:'A1', A2:'A2', B1:'B1', B2:'B2' },
+    teamNames: ['Team A', 'Team B'],
+    target: 11,
+    formatGames: 3,
+    gamesNeeded: 2,
+    rotation: ['A1','B1','A2','B2'], // [X,Y,Z,W] fixed order for the whole match
+    currentGame: { score: [0, 0], firstTurn: 0 },
+    completedGames: [],
+    gamesWon: [0, 0],
+    matchComplete: false
+  };
+
+  let historyStack = [];
+  let isMuted = false;
+  let firstServerSlot = 'A1';
+  let firstReceiverSlot = 'B1';
+
+  const teamAInput = document.getElementById('teamAInput');
+  const teamBInput = document.getElementById('teamBInput');
+  const a1NameInput = document.getElementById('a1NameInput');
+  const a2NameInput = document.getElementById('a2NameInput');
+  const b1NameInput = document.getElementById('b1NameInput');
+  const b2NameInput = document.getElementById('b2NameInput');
+  const startMatchBtn = document.getElementById('startMatchBtn');
+  const screenSetup = document.getElementById('screen-setup');
+  const screenMatch = document.getElementById('screen-match');
+
+  const scoreA = document.getElementById('scoreA');
+  const scoreB = document.getElementById('scoreB');
+  const nameEls = { A1:document.getElementById('nameA1'), A2:document.getElementById('nameA2'), B1:document.getElementById('nameB1'), B2:document.getElementById('nameB2') };
+  const dotEls  = { A1:document.getElementById('dotA1'),  A2:document.getElementById('dotA2'),  B1:document.getElementById('dotB1'),  B2:document.getElementById('dotB2') };
+  const teamLabelA = document.getElementById('teamLabelA');
+  const teamLabelB = document.getElementById('teamLabelB');
+  const gamesA = document.getElementById('gamesA');
+  const gamesB = document.getElementById('gamesB');
+  const tallyP1 = document.getElementById('tallyP1');
+  const tallyP2 = document.getElementById('tallyP2');
+  const gameLabel = document.getElementById('gameLabel');
+  const serveFromName = document.getElementById('serveFromName');
+  const serveToName = document.getElementById('serveToName');
+  const undoBtn = document.getElementById('undoBtn');
+  const muteBtn = document.getElementById('muteBtn');
+
+  const halfP1 = document.getElementById('halfP1');
+  const halfP2 = document.getElementById('halfP2');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const overlayGameComplete = document.getElementById('overlayGameComplete');
+  const gcWinnerName = document.getElementById('gcWinnerName');
+  const gcFinalScore = document.getElementById('gcFinalScore');
+  const gcNextGameBtn = document.getElementById('gcNextGameBtn');
+
+  const overlayMatchComplete = document.getElementById('overlayMatchComplete');
+  const mcWinnerName = document.getElementById('mcWinnerName');
+  const mcFinalTally = document.getElementById('mcFinalTally');
+  const mcNewMatchBtn = document.getElementById('mcNewMatchBtn');
+
+  function unlockAudio() {
+    if ('speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance('');
+        utterance.volume = 0;
+        window.speechSynthesis.speak(utterance);
+      } catch (e) {
+        console.error("Audio unlock error:", e);
+      }
+    }
+  }
+
+  function speakScore(servingTeamIdx, receivingTeamIdx) {
+    if (isMuted || !('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const sScore = state.currentGame.score[servingTeamIdx];
+    const rScore = state.currentGame.score[receivingTeamIdx];
+    const utterance = new SpeechSynthesisUtterance(`${sScore}, ${rScore}`);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function labelFor(slot, input){
+    return (input.value.trim() || slot);
+  }
+
+  function refreshSlotButtonLabels(){
+    const map = { A1:a1NameInput, A2:a2NameInput, B1:b1NameInput, B2:b2NameInput };
+    SLOTS.forEach(slot => {
+      const text = labelFor(slot, map[slot]);
+      document.querySelectorAll('[data-slot="'+slot+'"]').forEach(btn => btn.textContent = text);
+    });
+  }
+  [a1NameInput,a2NameInput,b1NameInput,b2NameInput].forEach(inp => inp.addEventListener('input', refreshSlotButtonLabels));
+
+  // ---- First server / first receiver pickers ----
+  const firstServerSeg = document.getElementById('firstServerSeg');
+  const firstReceiverSeg = document.getElementById('firstReceiverSeg');
+
+  function syncReceiverOptions(){
+    const serverTeam = teamOf(firstServerSlot);
+    let firstValid = null;
+    firstReceiverSeg.querySelectorAll('button').forEach(btn => {
+      const slot = btn.dataset.slot;
+      const sameTeam = teamOf(slot) === serverTeam;
+      btn.hidden = sameTeam;
+      if (!sameTeam && !firstValid) firstValid = slot;
+    });
+    if (teamOf(firstReceiverSlot) === serverTeam) {
+      firstReceiverSlot = firstValid;
+      firstReceiverSeg.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.slot === firstReceiverSlot));
+    }
+  }
+
+  firstServerSeg.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      firstServerSeg.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      firstServerSlot = btn.dataset.slot;
+      syncReceiverOptions();
+    });
+  });
+  firstReceiverSeg.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.hidden) return;
+      firstReceiverSeg.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      firstReceiverSlot = btn.dataset.slot;
+    });
+  });
+  syncReceiverOptions();
+
+  document.querySelectorAll('#formatSeg button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#formatSeg button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.formatGames = parseInt(btn.dataset.value, 10);
+      state.gamesNeeded = Math.ceil(state.formatGames / 2);
+    });
+  });
+
+  document.querySelectorAll('#targetSeg button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#targetSeg button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.target = parseInt(btn.dataset.value, 10);
+    });
+  });
+
+  startMatchBtn.addEventListener('click', () => {
+    unlockAudio();
+    state.names.A1 = labelFor('A1', a1NameInput);
+    state.names.A2 = labelFor('A2', a2NameInput);
+    state.names.B1 = labelFor('B1', b1NameInput);
+    state.names.B2 = labelFor('B2', b2NameInput);
+    state.teamNames = [ teamAInput.value.trim() || 'Team A', teamBInput.value.trim() || 'Team B' ];
+
+    const X = firstServerSlot;
+    const Y = firstReceiverSlot;
+    const Z = partnerOf(X);
+    const W = partnerOf(Y);
+    state.rotation = [X, Y, Z, W];
+    state.currentGame = { score: [0, 0], firstTurn: 0 };
+
+    screenSetup.classList.remove('active');
+    screenMatch.classList.add('active');
+    document.body.classList.add('match-active');
+    updateUI();
+  });
+
+  muteBtn.addEventListener('click', () => {
+    isMuted = !isMuted;
+    muteBtn.classList.toggle('muted', isMuted);
+    if (isMuted && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  });
+
+  // Turn index into state.rotation (0-3). Server changes every 2 points,
+  // every 1 point once both teams have reached target-1 (deuce).
+  function computeTurn(a, b, target, firstTurn){
+    const deuceThreshold = target - 1;
+    const p = a + b;
+    if (!(a >= deuceThreshold && b >= deuceThreshold)) {
+      return (firstTurn + Math.floor(p / 2)) % 4;
+    }
+    const deuceStartP = 2 * deuceThreshold;
+    const turnAtDeuce = (firstTurn + Math.floor(deuceStartP / 2)) % 4;
+    return (turnAtDeuce + (p - deuceStartP)) % 4;
+  }
+
+  function addPoint(teamIdx) {
+    if (state.matchComplete) return;
+
+    historyStack.push(JSON.parse(JSON.stringify(state)));
+    undoBtn.disabled = false;
+
+    state.currentGame.score[teamIdx]++;
+    const s1 = state.currentGame.score[0];
+    const s2 = state.currentGame.score[1];
+
+    const turn = computeTurn(s1, s2, state.target, state.currentGame.firstTurn);
+    const serverSlot = state.rotation[turn];
+    const receiverSlot = state.rotation[(turn + 1) % 4];
+    const servingTeamIdx = teamOf(serverSlot) === 'A' ? 0 : 1;
+    const receivingTeamIdx = 1 - servingTeamIdx;
+    speakScore(servingTeamIdx, receivingTeamIdx);
+
+    const wonGame = (state.currentGame.score[teamIdx] >= state.target) && (Math.abs(s1 - s2) >= 2);
+    if (wonGame) {
+      state.completedGames.push({ score: [s1, s2], winner: teamIdx });
+      state.gamesWon[teamIdx]++;
+
+      if (state.gamesWon[teamIdx] >= state.gamesNeeded) {
+        state.matchComplete = true;
+        mcWinnerName.textContent = state.teamNames[teamIdx] + " Wins the Match!";
+        mcFinalTally.textContent = `${state.gamesWon[0]} - ${state.gamesWon[1]}`;
+        overlayMatchComplete.classList.add('show');
+      } else {
+        gcWinnerName.textContent = state.teamNames[teamIdx] + " Wins Game " + state.completedGames.length;
+        gcFinalScore.textContent = `${s1} - ${s2}`;
+        overlayGameComplete.classList.add('show');
+      }
+    }
+
+    updateUI();
+  }
+
+  function undoPoint() {
+    if (historyStack.length === 0) return;
+    state = historyStack.pop();
+    if (historyStack.length === 0) undoBtn.disabled = true;
+    overlayGameComplete.classList.remove('show');
+    overlayMatchComplete.classList.remove('show');
+    updateUI();
+  }
+
+  function nextGame() {
+    overlayGameComplete.classList.remove('show');
+    const newFirstTurn = (state.currentGame.firstTurn + 1) % 4;
+    state.currentGame = { score: [0, 0], firstTurn: newFirstTurn };
+    updateUI();
+  }
+
+  function resetMatch() {
+    state.currentGame = { score: [0, 0], firstTurn: 0 };
+    state.completedGames = [];
+    state.gamesWon = [0, 0];
+    state.matchComplete = false;
+    historyStack = [];
+    undoBtn.disabled = true;
+    overlayGameComplete.classList.remove('show');
+    overlayMatchComplete.classList.remove('show');
+    screenMatch.classList.remove('active');
+    screenSetup.classList.add('active');
+    document.body.classList.remove('match-active');
+  }
+
+  function updateUI() {
+    SLOTS.forEach(slot => { nameEls[slot].textContent = state.names[slot]; });
+    teamLabelA.textContent = state.teamNames[0];
+    teamLabelB.textContent = state.teamNames[1];
+
+    scoreA.textContent = state.currentGame.score[0];
+    scoreB.textContent = state.currentGame.score[1];
+    gamesA.textContent = state.gamesWon[0];
+    gamesB.textContent = state.gamesWon[1];
+    tallyP1.textContent = state.gamesWon[0];
+    tallyP2.textContent = state.gamesWon[1];
+
+    gameLabel.textContent = `BO${state.formatGames} · GAME ${state.completedGames.length + 1}`;
+
+    const turn = computeTurn(state.currentGame.score[0], state.currentGame.score[1], state.target, state.currentGame.firstTurn);
+    const serverSlot = state.rotation[turn];
+    const receiverSlot = state.rotation[(turn + 1) % 4];
+
+    SLOTS.forEach(slot => {
+      dotEls[slot].classList.toggle('serving', slot === serverSlot);
+      dotEls[slot].classList.toggle('receiving', slot === receiverSlot);
+    });
+    serveFromName.textContent = state.names[serverSlot];
+    serveToName.textContent = state.names[receiverSlot];
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (screenSetup.classList.contains('active')) {
+      if (e.key === 'Enter') {
+        startMatchBtn.click();
+      }
+      return;
+    }
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      addPoint(0);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      addPoint(1);
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      undoPoint();
+    }
+  });
+
+  halfP1.addEventListener('pointerdown', (e) => { e.preventDefault(); addPoint(0); });
+  halfP2.addEventListener('pointerdown', (e) => { e.preventDefault(); addPoint(1); });
+  undoBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); undoPoint(); });
+  resetBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); resetMatch(); });
+  gcNextGameBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); nextGame(); });
+  mcNewMatchBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); resetMatch(); });
+
+  refreshSlotButtonLabels();
+})();
+</script>
+</body>
+</html>
