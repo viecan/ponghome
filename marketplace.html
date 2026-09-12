@@ -2760,8 +2760,38 @@
     font-size:0.85rem;
     color:var(--ink-soft);
     line-height:1.55;
-    margin:10px 0;
+    margin:10px 0 2px;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:3;
+    overflow:hidden;
   }
+  .mkt-desc.mkt-desc-expanded{
+    display:block;
+    -webkit-line-clamp:unset;
+    overflow:visible;
+  }
+  .mkt-desc-toggle{
+    display:none;
+    align-items:center;
+    gap:4px;
+    background:none;
+    border:none;
+    padding:0;
+    margin:0 0 10px;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:0.72rem;
+    color:var(--mint-dim);
+    cursor:pointer;
+  }
+  .mkt-desc-toggle svg{
+    width:11px;
+    height:11px;
+    flex-shrink:0;
+    transition:transform 0.2s ease;
+  }
+  .mkt-desc-toggle.mkt-desc-toggle-open svg{transform:rotate(180deg);}
   .mkt-contact-row{
     display:flex;
     align-items:center;
@@ -3617,7 +3647,7 @@
         <div class="mkt-meta">${escapeHtml(l.city)} · ${dateStr}</div>
         <div class="mkt-meta">Seller: <strong>${escapeHtml(l.seller_name || 'N/A')}</strong></div>
         ${l.category ? `<div class="mkt-meta">Category: ${escapeHtml(l.category)}</div>` : ''}
-        ${l.description ? `<div class="mkt-desc">${escapeHtml(l.description)}</div>` : ''}
+        ${l.description ? `<div class="mkt-desc" id="mkt-desc-${l.id}">${escapeHtml(l.description)}</div><button type="button" class="mkt-desc-toggle" data-id="${l.id}"><span class="mkt-desc-toggle-label">Show more</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>` : ''}
         <div class="mkt-contact-row">
           ${ctaHtml(l)}
         </div>
@@ -3772,6 +3802,22 @@
         const id = btn.getAttribute('data-id');
         const title = btn.getAttribute('data-title') || 'Check out this listing';
         openShareMenu(btn, id, title);
+      };
+    });
+    document.querySelectorAll('.mkt-desc').forEach(desc => {
+      const toggle = desc.nextElementSibling;
+      if (toggle && toggle.classList.contains('mkt-desc-toggle') && desc.scrollHeight > desc.clientHeight + 1) {
+        toggle.style.display = 'inline-flex';
+      }
+    });
+    document.querySelectorAll('.mkt-desc-toggle').forEach(btn => {
+      btn.onclick = () => {
+        const id = btn.getAttribute('data-id');
+        const desc = document.getElementById(`mkt-desc-${id}`);
+        if (!desc) return;
+        const expanded = desc.classList.toggle('mkt-desc-expanded');
+        btn.classList.toggle('mkt-desc-toggle-open', expanded);
+        btn.querySelector('.mkt-desc-toggle-label').textContent = expanded ? 'Show less' : 'Show more';
       };
     });
   }
