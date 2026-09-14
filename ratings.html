@@ -1202,7 +1202,9 @@
     </span>
     <span class="footer-social-mobile"><span class="footer-follow">Follow us on</span> <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Instagram</a> · <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" style="color:var(--mint-dim);">Facebook</a></span>
   </span>
- </footer>
+  <br>
+  <a class="footer-support-btn" href="https://donate.stripe.com/14AcN54S7cDL49VaQuabK01" target="_blank" rel="noopener">Find this useful? Give $5 to keep us going!</a>
+</footer>
 
 <div class="equip-modal-overlay" id="equipModalOverlay">
   <div class="equip-modal">
@@ -1470,7 +1472,45 @@ function sortByBrandPriority(items){
   });
 }
 
+let renderToken = 0;
+
+function buildRowHTML(item, keys){
+  const statCells = keys.map(k => {
+    const isOverall = k === 'Overall';
+    if (isOverall){
+      const official = starsForOverall(item[k]);
+      const displayStars = official !== null ? official : 0;
+      const pct = (displayStars / 5) * 100;
+      const hits = [1,2,3,4,5].map(v => `<span class="star-hit" data-value="${v}"></span>`).join('');
+      const titleText = official !== null ? `Rated ${official} / 5 — tap to rate this item` : 'Tap to rate this item';
+      return `<div class="overall-cell">
+        <span class="stars rate-stars" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" data-type="${escapeAttr(item.Type || '')}" title="${titleText}">
+          <span class="stars-fill" style="width:${pct}%"></span>
+          ${hits}
+        </span>
+        <button class="rate-label" onclick="openRateModal(this)" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" data-type="${escapeAttr(item.Type || '')}" aria-label="Rate this item">Rate</button>
+      </div>`;
+    }
+    const {pct, display, na} = barFill(item[k]);
+    return `<div>
+      <div class="stat">
+        <span class="stat-num">${display}</span>
+        <span class="bar-track"><span class="bar-fill ${na?'na':''}" style="width:${pct}%"></span></span>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div class="row" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" data-type="${escapeAttr(item.Type || '')}">
+    <div class="row-main cols">
+      <div class="cell-brand">${escapeHtml(item.Brand)}</div>
+      <div class="cell-name">${escapeHtml(item.ItemName)}</div>
+      ${statCells}
+    </div>
+  </div>`;
+}
+
 function render(){
+  const myToken = ++renderToken;
   const data = getDataset();
   const brand = document.getElementById('brandFilter').value;
   const query = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -1496,43 +1536,32 @@ function render(){
   const MAX_ROWS = 400;
   const shown = filtered.slice(0, MAX_ROWS);
 
-  rowsEl.innerHTML = shown.map(item => {
-    const statCells = keys.map(k => {
-      const isOverall = k === 'Overall';
-      if (isOverall){
-        const official = starsForOverall(item[k]);
-        const displayStars = official !== null ? official : 0;
-        const pct = (displayStars / 5) * 100;
-        const hits = [1,2,3,4,5].map(v => `<span class="star-hit" data-value="${v}"></span>`).join('');
-        const titleText = official !== null ? `Rated ${official} / 5 — tap to rate this item` : 'Tap to rate this item';
-        return `<div class="overall-cell">
-          <span class="stars rate-stars" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" data-type="${escapeAttr(item.Type || '')}" title="${titleText}">
-            <span class="stars-fill" style="width:${pct}%"></span>
-            ${hits}
-          </span>
-          <button class="rate-label" onclick="openRateModal(this)" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" data-type="${escapeAttr(item.Type || '')}" aria-label="Rate this item">Rate</button>
-        </div>`;
+  // Paint the first chunk immediately so the table feels instant even for
+  // large brands (e.g. Butterfly's 275 blades vs Xiom's 81), then build the
+  // rest in small batches on animation frames instead of blocking the main
+  // thread with one giant innerHTML write.
+  const FIRST_CHUNK = 40;
+  const BATCH_SIZE = 80;
+
+  rowsEl.innerHTML = shown.slice(0, FIRST_CHUNK).map(item => buildRowHTML(item, keys)).join('');
+
+  let cursor = FIRST_CHUNK;
+  function renderNextBatch(){
+    if (myToken !== renderToken) return; // a newer render() call superseded this one
+    if (cursor >= shown.length){
+      if (filtered.length > MAX_ROWS){
+        rowsEl.insertAdjacentHTML('beforeend', `<div class="empty-state">Showing first ${MAX_ROWS} of ${filtered.length} — narrow your search to see more.</div>`);
       }
-      const {pct, display, na} = barFill(item[k]);
-      return `<div>
-        <div class="stat">
-          <span class="stat-num">${display}</span>
-          <span class="bar-track"><span class="bar-fill ${na?'na':''}" style="width:${pct}%"></span></span>
-        </div>
-      </div>`;
-    }).join('');
+      return;
+    }
+    const batch = shown.slice(cursor, cursor + BATCH_SIZE);
+    rowsEl.insertAdjacentHTML('beforeend', batch.map(item => buildRowHTML(item, keys)).join(''));
+    cursor += BATCH_SIZE;
+    requestAnimationFrame(renderNextBatch);
+  }
 
-    return `<div class="row" data-brand="${escapeAttr(item.Brand)}" data-name="${escapeAttr(item.ItemName)}" data-type="${escapeAttr(item.Type || '')}">
-      <div class="row-main cols">
-        <div class="cell-brand">${escapeHtml(item.Brand)}</div>
-        <div class="cell-name">${escapeHtml(item.ItemName)}</div>
-        ${statCells}
-      </div>
-    </div>`;
-  }).join('');
-
-  if (filtered.length > MAX_ROWS){
-    rowsEl.insertAdjacentHTML('beforeend', `<div class="empty-state">Showing first ${MAX_ROWS} of ${filtered.length} — narrow your search to see more.</div>`);
+  if (shown.length > FIRST_CHUNK){
+    requestAnimationFrame(renderNextBatch);
   }
 }
 
