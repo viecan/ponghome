@@ -3231,7 +3231,7 @@
 
   function hourlyIncrement(dateKey, hourIndex) {
     const seed = hashSeed(`${dateKey}-${hourIndex}`);
-    return 176 + (seed % 121); // 176..296 inclusive (2x of 88..148)
+    return 355 + (seed % 181); // 355..535 inclusive, keeps the day landing close to 8100 rising to 19000
   }
 
   function getEasternMinutesInfo(date) {
@@ -3250,7 +3250,7 @@
 
   function computeDailyVisits() {
     const RESET_MINUTE = 7 * 60; // 7:00 AM Eastern
-    const BASE_VISITS = 2950; // start-of-day value
+    const BASE_VISITS = 8100; // start-of-day value
     const { dateKey, minutesSinceMidnight } = getEasternMinutesInfo(new Date());
     const minutesSinceReset = minutesSinceMidnight - RESET_MINUTE;
     if (minutesSinceReset < 0) return BASE_VISITS;
