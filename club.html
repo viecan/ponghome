@@ -175,10 +175,14 @@
 
   .feature-list{list-style:none; margin:0; padding:0; display:grid; gap:10px;}
   .feature-list li{
-    display:flex; align-items:center; gap:12px; font-size:0.96rem; color:var(--ink-soft);
-    background:rgba(14,59,66,0.03); border:1px solid var(--line-light); border-radius:14px; padding:13px 16px;
+    display:flex; align-items:flex-start; gap:10px; font-size:0.96rem; color:var(--ink-soft);
+    background:rgba(14,59,66,0.03); border:1px solid var(--line-light); border-radius:14px; padding:14px 16px;
+    line-height:1.5;
   }
-  .feat-ico{font-size:1.15rem; flex:0 0 auto;}
+  .feat-ico{font-size:1.15rem; flex:0 0 auto; line-height:1.4;}
+  @media (min-width:761px){
+    .feature-list{grid-template-columns:repeat(2, 1fr);}
+  }
 
   /* ---- card ---- */
   .card{
@@ -192,6 +196,9 @@
   }
   .row{display:flex; gap:12px; flex-wrap:wrap;}
   .row > div{flex:1; min-width:140px;}
+  @media (max-width:600px){
+    .row > div{flex:1 1 100%; min-width:0;}
+  }
   select, input[type=date], input[type=text], input[type=email], input[type=tel]{
     width:100%; padding:9px 12px; border-radius:10px; border:1px solid var(--line-light);
     background:var(--paper); color:var(--ink); font-size:0.9rem; font-family:'Inter',sans-serif;
@@ -228,6 +235,7 @@
     padding:24px 28px; text-align:center; font-size:0.82rem;
   }
   .site-footer a{color:var(--mint-dim); font-weight:600;}
+  .footer-links{display:block; margin-top:8px;}
 </style>
 </head>
 <body>
@@ -378,9 +386,11 @@
 </div>
 
 <footer class="site-footer">
-  © 2026 Pong Home. All rights reserved. ·
-  <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener">Instagram</a> ·
-  <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener">Facebook</a>
+  © 2026 Pong Home. All rights reserved.
+  <span class="footer-links">
+    <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener">Instagram</a> ·
+    <a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener">Facebook</a>
+  </span>
 </footer>
 
 <script>
