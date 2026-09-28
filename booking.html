@@ -90,17 +90,6 @@
 
   .hero h1 .welcome{color:#C7D0D2;}
 
-  @media (max-width:600px){
-    input[type=date]{
-      width:100%;
-      max-width:100%;
-      min-width:0;
-      display:block;
-      font-size:0.84rem;
-      padding:9px 8px;
-    }
-  }
-
   /* ---- hero ---- */
   .hero{
     background: radial-gradient(circle at 82% -10%, rgba(0,240,200,0.16), transparent 45%), var(--bg-deep);
@@ -227,10 +216,24 @@
   }
   select:focus, input:focus{outline:2px solid var(--mint-dim); outline-offset:1px;}
 
-  .rate-note{
-    margin-top:12px; font-size:0.82rem; color:var(--ink-soft);
-    background:var(--mint-soft); border:1px solid rgba(0,224,184,0.35);
-    padding:8px 12px; border-radius:10px; display:inline-block;
+  .hero h1 .by-dill{font-size:0.5em;}
+
+  /* ---- mobile only ---- */
+  @media (max-width:600px){
+    .hero h1 .by-dill{display:block; line-height:1.2; margin-top:6px;}
+
+    /* keep the date field inside the form border (iOS/Android native date inputs ignore width) */
+    .row > div{min-width:0; max-width:100%;}
+    input[type=date]{
+      display:block;
+      -webkit-appearance:none; appearance:none;
+      width:100%; max-width:100%; min-width:0;
+      min-height:40px;
+      font-size:0.9rem; padding:9px 12px;
+      text-align:left;
+    }
+    input[type=date]::-webkit-date-and-time-value{text-align:left; min-width:0;}
+    input[type=date]::-webkit-calendar-picker-indicator{margin:0;}
   }
 
   .contact-fields{margin-top:14px; padding-top:14px; border-top:1px solid var(--line-light);}
@@ -279,7 +282,7 @@
     <div class="hero-grid">
       <div>
         <span class="hero-eyebrow"><span class="mono">●</span> Book a Table</span>
-        <h1><span class="welcome">Welcome to</span><br><span class="white">Pong Home by the Dill</span></h1>
+        <h1><span class="welcome">Welcome to</span><br><span class="white">Pong Home <span class="by-dill">by the Dill</span></span></h1>
         <p>Book a table by the hour and enjoy a convenient, comfortable space to play, practice, and train at your own pace. Whether you're looking for a quick after-work session, focused training, or a casual game with friends, Pong Home is here for you.</p>
         <div class="hero-address">📍 32 Colville Rd, North York, ON M6M 2Y4</div>
       </div>
@@ -295,8 +298,6 @@
 
 <div class="section">
   <div class="section-inner">
-    <p style="font-size:1.02rem; max-width:760px; margin-bottom: 1.5rem;">Whether you&rsquo;re dropping by for a quick game after work, getting in some serious practice, or playing with friends, Pong Home gives you the flexibility to play your way. Book a table by the hour and enjoy a dedicated space without the commitment of a traditional club membership.</p>
-
     <ul class="feature-list">
       <li><span class="feat-ico">🏓</span>Dedicated table tennis tables for quality play</li>
       <li><span class="feat-ico">💡</span>Excellent lighting so you can see the ball clearly</li>
@@ -315,12 +316,11 @@
       <div class="card">
         <table class="rates-table">
           <thead>
-            <tr><th>Time</th><th>Rate</th></tr>
+            <tr><th>Rate</th><th>Price</th></tr>
           </thead>
           <tbody>
-            <tr><td>Monday &ndash; Friday, 9 AM &ndash; 5 PM</td><td class="rate-pill">$15 / table / hour</td></tr>
-            <tr><td>Monday &ndash; Friday, 5 PM &ndash; 12 AM</td><td class="rate-pill">$19 / table / hour</td></tr>
-            <tr><td>Saturday &ndash; Sunday</td><td class="rate-pill">$19 / table / hour</td></tr>
+            <tr><td>Standard rate</td><td class="rate-pill">$19 / table / hour</td></tr>
+            <tr><td>Off-peak rate<br><span style="font-size:0.78rem; color:var(--ink-soft);">Monday &ndash; Friday, 9AM&ndash;5PM</span></td><td class="rate-pill">$15 / table / hour</td></tr>
           </tbody>
         </table>
       </div>
@@ -369,31 +369,21 @@
         </div>
       </div>
 
-      <div class="rate-note" id="rateNote"></div>
-
       <div class="contact-fields">
         <div class="row">
           <div>
             <input type="text" id="name" placeholder="Full name" required>
           </div>
           <div>
-             <input type="tel" id="phone" placeholder="Phone (optional)" required>
+             <input type="tel" id="phone" placeholder="Phone number" autocomplete="tel" required>
           </div>
           <div>
-            <input type="email" id="email" placeholder="Email address (optional)">
+            <input type="email" id="email" placeholder="Email address (optional)" autocomplete="email">
           </div>
         </div>
       </div>
 
-<a
-  class="btn-primary"
-  id="bookBtn"
-  href="https://buy.stripe.com/00w5kD70favD35RbUyabK0l"
-  target="_blank"
-  rel="noopener"
->
-  Go to Payment
-</a>
+<button type="button" class="btn-primary" id="bookBtn">Reserve a table</button>
       
       <div class="status-msg" id="statusMsg"></div>
     </div>
@@ -426,12 +416,12 @@
 
 <script>
 const BOOKING_ENDPOINT = 'https://formsubmit.co/ajax/viet.adops@gmail.com';
+const STRIPE_URL = 'https://buy.stripe.com/00w5kD70favD35RbUyabK0l';
 
 const dateEl = document.getElementById('date');
 const tableCountEl = document.getElementById('tableCount');
 const durationEl = document.getElementById('duration');
 const startTimeEl = document.getElementById('startTime');
-const rateNoteEl = document.getElementById('rateNote');
 const nameEl = document.getElementById('name');
 const emailEl = document.getElementById('email');
 const phoneEl = document.getElementById('phone');
@@ -503,21 +493,6 @@ function totalRate(start, duration){
 
 const TAX_RATE = 0.13;
 
-function updateRateNote(){
-  const start = startTimeEl.value === '' ? null : parseFloat(startTimeEl.value);
-  if(start===null){
-    rateNoteEl.textContent = 'No available start times left for this date and duration.';
-    return;
-  }
-  const duration = currentDuration();
-  const count = currentTableCount();
-  const subtotal = totalRate(start, duration) * count;
-  const tax = subtotal * TAX_RATE;
-  const total = subtotal + tax;
-  const end = start + duration;
-  rateNoteEl.textContent = `${fmtHour(start)} \u2013 ${fmtHour(end)} (${duration} hr${duration>1?'s':''}) \u00d7 ${count} table${count>1?'s':''} = $${subtotal.toFixed(2)} + 13% tax ($${tax.toFixed(2)}) = $${total.toFixed(2)} total.`;
-}
-
 function renderStartTimes(){
   const taken = loadTaken();
   const allSlots = slotsForDate(dateEl.value);
@@ -549,7 +524,6 @@ function renderStartTimes(){
     bookBtn.disabled = false;
   }
   statusEl.classList.remove('show');
-  updateRateNote();
 }
 
 function setStatus(message, kind){
@@ -558,10 +532,16 @@ function setStatus(message, kind){
   statusEl.classList.add(kind, 'show');
 }
 
+let lastLeadAt = 0;
+
 bookBtn.addEventListener('click', ()=>{
   if(startTimeEl.value === '') return;
-  if(!nameEl.value || !emailEl.value){
-    setStatus('Please enter your name and email so we can confirm your booking.', 'err');
+  if(!nameEl.value.trim() || !phoneEl.value.trim()){
+    setStatus('Please enter your name and phone number so we can confirm your booking.', 'err');
+    return;
+  }
+  if(emailEl.value && !emailEl.checkValidity()){
+    setStatus('Please enter a valid email address or leave it blank.', 'err');
     return;
   }
 
@@ -573,54 +553,40 @@ bookBtn.addEventListener('click', ()=>{
   const total = subtotal + tax;
   const end = start + duration;
 
-  bookBtn.disabled = true;
-  bookBtn.textContent = 'Sending…';
+  // Action 1: send the lead to email (skip if the same click was just sent)
+  if(Date.now() - lastLeadAt > 5000){
+    lastLeadAt = Date.now();
+    const lead = new FormData();
+    lead.append('_subject', `New table booking lead: ${dateEl.value}, ${fmtHour(start)}\u2013${fmtHour(end)}`);
+    lead.append('_captcha', 'false');
+    lead.append('_template', 'table');
+    lead.append('name', nameEl.value.trim());
+    lead.append('phone', phoneEl.value.trim());
+    if(emailEl.value) lead.append('email', emailEl.value.trim());
+    lead.append('date', dateEl.value);
+    lead.append('start_time', fmtHour(start));
+    lead.append('end_time', fmtHour(end));
+    lead.append('duration_hours', duration);
+    lead.append('tables_requested', count);
+    lead.append('estimated_total', `$${total.toFixed(2)} (incl. 13% tax)`);
 
-  const payload = {
-    _subject: `New table booking request — ${dateEl.value}, ${fmtHour(start)}\u2013${fmtHour(end)}`,
-    name: nameEl.value,
-    email: emailEl.value,
-    phone: phoneEl.value || 'Not provided',
-    date: dateEl.value,
-    start_time: fmtHour(start),
-    end_time: fmtHour(end),
-    duration_hours: duration,
-    tables_requested: count,
-    subtotal: `$${subtotal.toFixed(2)}`,
-    tax_13pct: `$${tax.toFixed(2)}`,
-    estimated_total: `$${total.toFixed(2)}`
-  };
+    fetch(BOOKING_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: lead,
+      keepalive: true
+    }).catch(err => console.warn('Lead email failed', err));
+  }
 
-  fetch(BOOKING_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify(payload)
-  })
-  .then(res => { if(!res.ok) throw new Error('Request failed'); return res.json(); })
-  .then(() => {
-    const taken = loadTaken();
-    const steps = duration * 2;
-    for(let i=0; i<steps; i++){
-      const h = start + i*0.5;
-      taken[h] = (taken[h] || 0) + count;
-    }
-    saveTaken(taken);
-    setStatus(`Request sent! We\u2019ll confirm ${count} table${count>1?'s':''} on ${dateEl.value}, ${fmtHour(start)}\u2013${fmtHour(end)}, by email shortly.`, 'ok');
-    renderStartTimes();
-  })
-  .catch(() => {
-    setStatus('Something went wrong sending your request. Please email viet.adops@gmail.com directly.', 'err');
-  })
-  .finally(() => {
-    bookBtn.disabled = false;
-    bookBtn.textContent = 'Send booking request';
-  });
+  // Action 2: open the Stripe payment page
+  const win = window.open(STRIPE_URL, '_blank');
+  if(win){ win.opener = null; } else { window.location.href = STRIPE_URL; }
+  setStatus('Opening the secure payment page\u2026', 'ok');
 });
 
 dateEl.addEventListener('change', renderStartTimes);
 tableCountEl.addEventListener('change', renderStartTimes);
 durationEl.addEventListener('change', renderStartTimes);
-startTimeEl.addEventListener('change', updateRateNote);
 
 renderStartTimes();
 </script>
