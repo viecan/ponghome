@@ -1399,12 +1399,10 @@
   .proof-inner{max-width:1100px; margin:0 auto; text-align:center;}
   .proof-inner h2{font-size:clamp(1.5rem,3vw,2.1rem); margin:8px 0 6px; color:#fff;}
   .proof-sub{color:rgba(255,255,255,0.72); max-width:none; margin:0 auto 32px; font-size:1rem; line-height:1.6;}
-  .proof-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
+  
   .proof-card{background:rgba(255,255,255,0.06); border:1px solid var(--line-dark); border-radius:16px; padding:22px 14px; transition:transform .2s ease, border-color .2s ease;}
   .proof-card:hover{transform:translateY(-3px); border-color:rgba(0,255,209,0.45);}
-  .proof-card.featured{grid-column:1 / -1; background:rgba(0,255,209,0.08); border-color:rgba(0,255,209,0.35); padding:26px 18px;}
   .proof-num{font-size:clamp(1.9rem,4vw,2.8rem); font-weight:800; color:var(--mint); line-height:1.1; font-variant-numeric:tabular-nums;}
-  .proof-card.featured .proof-num{font-size:clamp(2.4rem,6vw,3.8rem);}
   .proof-label{margin-top:6px; font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.8);}
   .proof-note{margin-top:8px; font-size:0.92rem; color:rgba(255,255,255,0.7); line-height:1.5;}
   .proof-note a{color:var(--mint); text-decoration:underline;}
@@ -1412,12 +1410,28 @@
   .proof-partner a{color:var(--mint); font-weight:600; text-decoration:none; border-bottom:1px solid var(--mint-dim);}
   .proof-partner{margin:44px 0 18px;}
   .proof-cta{margin-bottom:24px; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; padding:14px 30px; font-size:1rem;}
+  .proof-grid{display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:16px; align-items:stretch;}
+  .proof-card{display:flex; flex-direction:column; justify-content:center;}
+  .proof-card.featured{background:rgba(0,255,209,0.12); border:1.5px solid var(--mint); box-shadow:0 0 28px rgba(0,255,209,0.18);}
+  .proof-card.featured .proof-num{font-size:clamp(2.2rem,3.6vw,3.1rem);}
+  .proof-card .l-short,.proof-note .n-short{display:none;}
+  @media (max-width:860px){
+    .proof-section{padding:40px 16px;}
+    .proof-sub{margin-bottom:22px; font-size:0.95rem;}
+    .proof-grid{grid-template-columns:repeat(3,1fr); gap:8px;}
+    .proof-card{padding:14px 6px; border-radius:12px;}
+    .proof-card.featured{grid-column:1 / -1; padding:16px 12px;}
+    .proof-card.featured .proof-num{font-size:2.3rem;}
+    .proof-num{font-size:1.3rem;}
+    .proof-label{font-size:0.58rem; letter-spacing:0.05em; margin-top:4px;}
+    .proof-card .l-full,.proof-note .n-full{display:none;}
+    .proof-card .l-short,.proof-note .n-short{display:inline;}
+    .proof-note{margin-top:6px; font-size:0.8rem;}
+  }
   .proof-logos{margin-top:12px;}
-  .proof-logos-img{display:block; margin:0 auto; width:100%; max-width:640px; height:auto; opacity:0.9;}
+  .proof-logos-img{display:block; margin:0 auto; width:100%; max-width:448px; height:auto; opacity:0.9;}
   @media (max-width:768px){ .proof-logos-img{max-width:90%;} }
   @media (min-width:900px){ .proof-sub{white-space:nowrap;} }
-  @media (max-width:860px){ .proof-grid{grid-template-columns:repeat(2,1fr);} }
-  @media (max-width:420px){ .proof-grid{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
@@ -1829,20 +1843,20 @@
       <div class="proof-grid">
         <div class="proof-card featured">
           <div class="proof-num"><span class="count" data-target="140000">0</span>+</div>
-          <div class="proof-label">Members &middot; World Table Tennis Forum</div>
-          <p class="proof-note">The world's largest Facebook group for table tennis lovers. <a href="https://www.facebook.com/groups/1567336910190131" target="_blank" rel="noopener">Join the group</a></p>
+          <div class="proof-label"><span class="l-full">Members &middot; World Table Tennis Forum</span><span class="l-short">World Table Tennis Forum</span></div>
+          <p class="proof-note"><span class="n-full">The world's largest Facebook group for table tennis lovers.</span><span class="n-short">World's largest table tennis group</span> <a href="https://www.facebook.com/groups/1567336910190131" target="_blank" rel="noopener">Join the group</a></p>
         </div>
         <div class="proof-card">
-          <div class="proof-num"><span class="count" data-target="20000">0</span>+</div>
-          <div class="proof-label">Instagram followers</div>
+          <div class="proof-num"><span class="count" data-target="18000">0</span>+</div>
+          <div class="proof-label"><span class="l-full">Instagram followers</span><span class="l-short">Instagram</span></div>
         </div>
         <div class="proof-card">
           <div class="proof-num"><span class="count" data-target="12000">0</span>+</div>
-          <div class="proof-label">Facebook followers</div>
+          <div class="proof-label"><span class="l-full">Facebook followers</span><span class="l-short">Facebook</span></div>
         </div>
-        <div class="proof-card" style="grid-column:span 2;">
+        <div class="proof-card">
           <div class="proof-num"><span class="count" data-target="300000">0</span>+</div>
-          <div class="proof-label">YouTube views per month</div>
+          <div class="proof-label"><span class="l-full">YouTube views per month</span><span class="l-short">YouTube / mo</span></div>
         </div>
       </div>
       <p class="proof-partner">Interested in reaching our audience?</p>
