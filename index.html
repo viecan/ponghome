@@ -1908,9 +1908,8 @@
           <div class="proof-label"><span class="l-full">Followers on Facebook</span><span class="l-short">Followers on Facebook</span></div>
         </div>
         <div class="proof-card">
-          <div class="proof-num"><span class="count" data-target="10000">0</span>+</div>
-          <div class="proof-label"><span class="l-full">YouTube subscribers</span><span class="l-short">YouTube subs</span></div>
-          <div class="proof-extra"><strong>1M</strong> views / month</div>
+          <div class="proof-num"><span class="count" data-target="300000">0</span>+</div>
+          <div class="proof-label"><span class="l-full">Views on YouTube / week</span><span class="l-short">Views on YouTube / week</span></div>
         </div>
       </div>
       <p class="proof-partner">Interested in reaching our audience?</p>
@@ -2161,17 +2160,17 @@
   (function(){
     const counters = document.querySelectorAll('#socialProof .count');
     if (!counters.length) return;
-    const fmt = n => n.toLocaleString('en-US');
+    const fmt = (n, short) => short ? (n >= 1e6 ? (n / 1e6) + 'M' : n >= 1000 ? Math.round(n / 1000) + 'K' : String(n)) : n.toLocaleString('en-US');
     function run(el){
       const target = +el.dataset.target, dur = 1800, t0 = performance.now();
       (function step(t){
         const p = Math.min((t - t0) / dur, 1), eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = fmt(Math.round(target * eased));
+        el.textContent = fmt(Math.round(target * eased), el.dataset.format === 'short');
         if (p < 1) requestAnimationFrame(step);
       })(t0);
     }
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)){
-      counters.forEach(el => el.textContent = fmt(+el.dataset.target));
+      counters.forEach(el => el.textContent = fmt(+el.dataset.target, el.dataset.format === 'short'));
       return;
     }
     const io = new IntersectionObserver((entries, obs) => {
