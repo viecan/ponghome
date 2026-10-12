@@ -256,6 +256,15 @@
   .status-msg.ok{background:rgba(10,143,82,0.10); color:var(--ok);}
   .status-msg.err{background:rgba(194,76,76,0.10); color:var(--err);}
 
+
+  /* ---- maintenance banner ---- */
+  .maint-banner{
+    background:var(--mint); color:var(--bg-deeper); text-align:center;
+    padding:12px 20px; font-weight:700; font-size:0.95rem; line-height:1.4;
+    border-bottom:1px solid rgba(10,73,82,0.2);
+  }
+  .maint-banner span{font-weight:500;}
+
   /* ---- footer (matches ponghome.com) ---- */
   .site-footer{
     background:var(--bg-deeper); color:rgba(255,255,255,0.75);
@@ -278,6 +287,8 @@
     </div>
   </div>
 </nav>
+
+<div class="maint-banner" role="status">🛠️ Our facility is under maintenance. <span>We're opening soon!</span></div>
 
 <div class="hero">
   <div class="hero-inner">
@@ -385,7 +396,7 @@
         </div>
       </div>
 
-<button type="button" class="btn-primary" id="bookBtn">Reserve a table</button>
+<button type="button" class="btn-primary" id="bookBtn" disabled aria-disabled="true">Reserve a table</button>
       
       <div class="status-msg" id="statusMsg"></div>
     </div>
@@ -523,7 +534,7 @@ function renderStartTimes(){
     if(valid.includes(parseFloat(prevValue))){
       startTimeEl.value = prevValue;
     }
-    bookBtn.disabled = false;
+    bookBtn.disabled = true; // under maintenance
   }
   statusEl.classList.remove('show');
 }
@@ -537,6 +548,7 @@ function setStatus(message, kind){
 let lastLeadAt = 0;
 
 bookBtn.addEventListener('click', ()=>{
+  return; // under maintenance
   if(startTimeEl.value === '') return;
   if(!nameEl.value.trim() || !phoneEl.value.trim()){
     setStatus('Please enter your name and phone number so we can confirm your booking.', 'err');
