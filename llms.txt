@@ -28,11 +28,22 @@ The Discount Center is a directory of promo codes and discount offers from table
 
 - [Discount Center](https://ponghome.com/discount): Browse table tennis store promo codes by region or store, copy a code before you check out.
 
+## Book a Table (Pong Home by the Dill)
+
+- [Booking](https://ponghome.com/booking): Reserve a table at the Pong Home club. Standard rate $19 per table per hour, off-peak rate $15 per table per hour (Mon to Fri, 9 AM to 5 PM).
+
 ## Tools
 
 - [Tools](https://ponghome.com/tools): Free Arena tournament bracket generator and on-court digital Scoreboard app.
 - [Scoreboard](https://ponghome.com/scoreboard): Free voice-scored digital scoreboard for on-court table tennis matches.
+- [Doubles Scoreboard](https://ponghome.com/scoreboard-doubles): Free doubles scoreboard for 4 players and 2 teams with automatic ITTF style serve rotation.
+- [Scoreboard Remote for Apple Watch](https://ponghome.com/score-watch): Free tap to score remote for table tennis on Apple Watch, best of 3, 5, or 7.
 - [Arena](https://ponghome.com/tournament): Free table tennis tournament bracket generator.
+
+## About and Partnerships
+
+- [Meet Vince, the Founder](https://ponghome.com/captain): The story of Pong Home's founder, a lifelong table tennis player based in Toronto.
+- [Partner with Pong Home](https://ponghome.com/partnership): Sponsored articles, featured placements, social posts, video creation, marketplace listings, and Gear Index banner ads.
 
 ## Guides (Insights)
 
@@ -40,7 +51,6 @@ The Discount Center is a directory of promo codes and discount offers from table
 - [Robot Olympics: Will Humans Still Play Sports in the Future?](https://ponghome.com/table-tennis-guides/robot-olympics-will-humans-still-play-sports-in-the-future): Why competition, emotion, and human physical limits mean people will keep playing sports as robots and AI take over more repetitive work.
 - [What Is KaiQiuWang? China's Table Tennis Rating App Explained](https://ponghome.com/table-tennis-guides/what-is-kaiqiuwang-app): An honest look at KaiQiuWang, the ChinaTT rating and community platform, its features, its rating system, and how it likely makes money.
 - [Pong Home x PingPoint Partnership: Our Test Kit and First Game on Camera](https://ponghome.com/table-tennis-guides/pingpoint-pong-home-partnership): Pong Home is testing PingPoint's cloud-based scorekeeping hardware, with unboxing footage of the PingPoint test kit and a real game scored live with the PingPoint button and app.
-- [PingPoint Review: The Cloud-Based Scorekeeping and Analytics App for Table Tennis](https://ponghome.com/table-tennis-guides/pingpoint-table-tennis-app-review): An independent look at PingPoint, a table tennis scorekeeper and analytics app with smartwatch scoring, ELO ratings, and club tools.
 - [Fan Zhendong: Breaking Down the Game of a Champion](https://ponghome.com/table-tennis-guides/fan-zhendong-playing-style-tactics-and-equipment): Fan Zhendong's explosive two wing attacking style, match tactics, career achievements, and current equipment setup, including his move back to DHS Hurricane 3.
 - [Ma Long: The Dragon Who Redefined Table Tennis Greatness](https://ponghome.com/table-tennis-guides/ma-long): Ma Long's complete all round playing style, match tactics, career achievements, and equipment setup, from the double career Grand Slam to his DHS rubber choices.
 - [Tomokazu Harimoto: Japan's Fearless Prodigy Taking on the World](https://ponghome.com/table-tennis-guides/tomokazu-harimoto): Tomokazu Harimoto's lightning fast playing style, match tactics, career achievements, and equipment setup, from his record breaking rise to his Butterfly gear.
@@ -49,20 +59,13 @@ The Discount Center is a directory of promo codes and discount offers from table
 - [Hugo Calderano: The Brazilian Redefining What the Americas Can Achieve](https://ponghome.com/table-tennis-guides/hugo-calderano): Hugo Calderano's explosive attacking style, historic 2025 World Cup title, career achievements, and Butterfly equipment setup.
 - [Timo Boll: The Gentleman Who Held Off China for Two Decades](https://ponghome.com/table-tennis-guides/timo-boll): Timo Boll's all round left handed game, oldest ever world number 1 ranking, seven Olympic Games, 2025 retirement, and current Butterfly Dignics 09c setup on both wings.
 - [Table Tennis for Hope: Canada's Ping Pong Fundraiser for Cancer Research](https://ponghome.com/table-tennis-guides/table-tennis-for-hope-canada-cancer-fundraiser): How Table Tennis for Hope raises funds for the Canadian Cancer Society through table tennis tournaments in New Brunswick and Newfoundland and Labrador, with 100 percent of proceeds going to CCS.
-- [Stage China: International Table Tennis Training Camp in Dalian](https://ponghome.com/table-tennis-guides/stage-china-table-tennis-training-camp-dalian): Stage China is a 15 day training camp in Dalian, China, with individual correction, Challenge Matches against local players, and full board from 100 euro per day.
 - [The Mental Difference Between Good Players and Great Players](https://ponghome.com/table-tennis-guides/mental-difference-between-good-and-great-players): What separates good table tennis players from great ones mentally, including focus under pressure, mistake recovery, and decision making.
 - [Why More Table Tennis Players Are Traveling to Train in China](https://ponghome.com/table-tennis-guides/why-table-tennis-players-train-in-china): Why players travel to Chinese table tennis camps, what the coaching and training intensity are like, what it costs, and whether it's worth it.
 - [RacquetsUp Expo 2027](https://ponghome.com/table-tennis-guides/racquetsup-expo-toronto-2027): Pong Home's partner event guide for RacquetsUp Expo, Toronto's racquet sports expo running February 19 to 21, 2027 at the Enercare Centre, covering the agenda, spectator pass prices, sponsorship tiers, and exhibitor booth packages.
-- [Pickleball, Tennis, Table Tennis, and Badminton Meet in Toronto at RacquetsUp Expo 2027](https://ponghome.com/table-tennis-guides/pickleball-tennis-table-tennis-toronto-2027): A look at the pickleball, tennis, table tennis, and badminton programming at RacquetsUp Expo 2027, Toronto's multi sport racquet weekend this February.
-- [Pickleball in Toronto: Your Guide to RacquetsUp Expo 2027](https://ponghome.com/table-tennis-guides/pickleball-in-toronto-racquetsup-expo-2027): A pickleball focused guide to RacquetsUp Expo 2027 in Toronto, covering live pickleball courts, paddle demos, Toronto pickleball locations, and how table tennis fits into the same weekend.
-- [Tennis in Toronto: Your Guide to RacquetsUp Expo 2027](https://ponghome.com/table-tennis-guides/tennis-in-toronto-racquetsup-expo-2027): A tennis focused guide to RacquetsUp Expo 2027 in Toronto, covering live tennis courts, racquet demos, stringing, Toronto tennis clubs and courts, and how table tennis fits into the same weekend.
 - [All 6 Racquet Sports in Toronto: RacquetsUp Expo 2027](https://ponghome.com/table-tennis-guides/racquet-sports-toronto-racquetsup-expo-2027): A full breakdown of tennis, table tennis, pickleball, padel, squash, and badminton at RacquetsUp Expo 2027, Toronto's biggest multi sport racquet weekend this February.
-- [RacquetsUp Expo 2027 Promo Code: Save 10% on Tickets](https://ponghome.com/table-tennis-guides/racquetsup-expo-promo-code-tickets): The Pong Home promo code and discount code for RacquetsUp Expo 2027 tickets, covering day pass, weekend pass, junior pass, group pass, and VIP pass pricing.
-- [RacquetsUp Expo 2027 Promo Code: Save 15% on Tickets](https://ponghome.com/table-tennis-guides/racquetsup-expo-promo-code-15-off): The Pong Home 15% promo code and discount code for RacquetsUp Expo 2027 tickets, covering day pass, weekend pass, junior pass, group pass, and VIP pass pricing.
 - [A Broken Racket. A Big Dream.](https://ponghome.com/table-tennis-guides/give-this-kid-a-chance): The story of Yafet, a 12 year old Toronto table tennis player, and Pong Home's effort to raise support for his training and tournament costs.
 - [Yafet’s Table Tennis Journey: One Step Closer to His Dreams](https://ponghome.com/table-tennis-guides/yafet-progress-update-new-racket-paying-off): An update on Yafet's progress after a coaching session with coach Ayush at One Yonge Community Centre in Toronto, with thanks to Yafet's father for his continued support.
 - [Zhang Jike Joins PongBot as Global Brand Ambassador, in Partnership with Pong Home](https://ponghome.com/table-tennis-guides/zhang-jike-pongbot-global-brand-ambassador): Grand Slam champion Zhang Jike signs on as PongBot's global brand ambassador, backing the OMNI PRO training robot and a limited black gold commemorative edition. Pong Home has partnered with PongBot, so readers save 5 percent with code PH05.
-- [Do Not Play Table Tennis](https://ponghome.com/table-tennis-guides/do-not-play-table-tennis): A contrarian look at why you should not play table tennis, covering the fitness, reflex, social, and stress relief benefits along the way.
 - [How to Forehand Loop in Table Tennis: A Step-by-Step Guide](https://ponghome.com/table-tennis-guides/how-to-forehand-loop-table-tennis): How to build a proper forehand loop, from stance and brushing angle to a drill progression for backspin and topspin balls.
 - [How to Smash in Table Tennis: Timing, Technique, and Common Mistakes](https://ponghome.com/table-tennis-guides/how-to-smash-in-table-tennis): How to time and place a table tennis smash, plus the most common mistakes that send it into the net or off the table.
 - [Table Tennis Chop Defense: How to Beat Loopers and Hitters](https://ponghome.com/table-tennis-guides/table-tennis-chop-defense-guide): How to build an effective chop defense using positioning, spin variation, and tactics against loopers and hitters.
@@ -70,9 +73,7 @@ The Discount Center is a directory of promo codes and discount offers from table
 - [Ping Pong vs Table Tennis: Is There Actually a Difference?](https://ponghome.com/table-tennis-guides/ping-pong-vs-table-tennis-difference): Where the names ping pong and table tennis come from, and why one feels casual while the other feels competitive.
 - [How to Choose the Right Table Tennis Blade for Your Playing Style](https://ponghome.com/table-tennis-guides/how-to-choose-a-table-tennis-blade): How blade construction, speed category, and handle shape combine to shape the right table tennis blade for your style.
 - [Table Tennis Ball Guide: 40mm Sizes, Star Ratings, and Materials Explained](https://ponghome.com/table-tennis-guides/table-tennis-ball-guide-sizes-star-ratings): What table tennis ball size, star ratings, and poly versus celluloid materials mean, and which balls to buy.
-- [Best Table Tennis Tables for Home Use: What to Look for Before You Buy](https://ponghome.com/table-tennis-guides/best-table-tennis-tables-for-home-use): A buying guide to home table tennis tables covering thickness, indoor versus outdoor builds, and foldable features.
 - [Table Tennis Warm-Up Routine: 6 Steps Before Every Match](https://ponghome.com/table-tennis-guides/table-tennis-warm-up-routine-before-a-match): A six-step physical warm-up routine for table tennis, covering cardio, dynamic stretching, and progressive hitting.
-- [Table Tennis vs Badminton: Which Racket Sport Should You Try](https://ponghome.com/table-tennis-guides/table-tennis-vs-badminton-comparison): A comparison of table tennis and badminton covering space requirements, physical demands, and skill ceiling.
 - [Buying Used Table Tennis Equipment: A Buyer's Checklist](https://ponghome.com/table-tennis-guides/buying-used-table-tennis-equipment-checklist): A buyer's checklist for used blades and rubber, covering cracks, wear, bounce testing, and fair pricing.
 - [How to Choose Your First Table Tennis Rubber](https://ponghome.com/table-tennis-guides/how-to-choose-your-first-table-tennis-rubber): How rubber speed, spin, control, and sponge thickness affect play, and how to choose a first rubber.
 - [Pre-Match Routines: How Competitive Players Prepare to Win](https://ponghome.com/table-tennis-guides/pre-match-routines-for-competitive-players): Seven pre-match habits competitive players use to warm up, focus, and reduce nerves before matches.
@@ -95,8 +96,14 @@ The Discount Center is a directory of promo codes and discount offers from table
 - [Every Table Tennis Player's Excuses After Losing](https://ponghome.com/table-tennis-guides/table-tennis-excuses-after-losing): A lighthearted look at the most familiar excuses players reach for after a loss, and what's usually really going on.
 - [The Different Types of Players at Every Table Tennis Club](https://ponghome.com/table-tennis-guides/types-of-players-at-every-table-tennis-club): Player archetypes found at nearly every club, from the Sandbagger to the Warm-Up Legend.
 - [When Your Partner Misses an Easy Ball in Doubles](https://ponghome.com/table-tennis-guides/doubles-partner-misses-easy-ball): How to react, and not react, when a doubles partner misses an easy ball, and how to fix coverage gaps.
-- [When Your Opponent Says "I'm Just Warming Up"](https://ponghome.com/table-tennis-guides/opponent-says-im-just-warming-up): The mental game behind this classic mid-match line, and how to stay focused whether it's gamesmanship or genuine.
 - [How to Improve Your Backhand](https://ponghome.com/table-tennis-guides/how-to-improve-your-backhand): Backhand drive and loop technique, grip, and drills.
 - [How to Improve Your Footwork](https://ponghome.com/table-tennis-guides/improve-your-table-tennis-footwork): Footwork patterns, stance, and movement drills.
 - [Wood vs. Carbon Blades](https://ponghome.com/table-tennis-guides/table-tennis-blade-comparison-wood-vs-carbon): Comparison of blade construction types and how to choose one.
+- [Victas Becomes Equipment Sponsor of the Pong Home Coaching Team](https://ponghome.com/table-tennis-guides/victas-sponsorship): Victas is now the official equipment sponsor of the Pong Home coaching team, with rubbers like the V>22 Double Extra, V>15 Sticky, Curl P1V, and Spinpips D1.
+- [Why Some Table Tennis Players Look Unorthodox but Are Extremely Effective](https://ponghome.com/table-tennis-guides/why-unorthodox-table-tennis-technique-works): Why unorthodox technique can work, and why timing, feel, and repeatability matter more than a textbook stroke.
 - [Tips, Techniques & the Mental Game](https://ponghome.com/table-tennis-guides/table-tennis-tips-techniques-mental-game): Pre-match routines and mental toughness training.
+
+## Optional
+
+- [Point Winner Handbook (PDF)](https://ponghome.com/Point_Winner_Table_Tennis_Handbook.pdf): Downloadable tactical playbook for modern table tennis.
+- [Sitemap](https://ponghome.com/sitemap.xml): Full list of public pages.

@@ -1,55 +1,90 @@
-# Standard web crawlers
+# Pong Home robots.txt
+# All crawlers, including AI answer engines, may crawl public pages.
+# /pay is a transactional page and is kept out of search.
+# Disallow is repeated per group because a named bot ignores the * group.
+
 User-agent: *
 Allow: /
+Disallow: /pay
 
-# AI answer engines / LLM crawlers — explicitly allowed for AEO
-# (citations in ChatGPT, Perplexity, Claude, Google AI Overviews, etc.)
 User-agent: GPTBot
 Allow: /
+Disallow: /pay
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /pay
 
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /pay
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /pay
 
 User-agent: Claude-User
 Allow: /
+Disallow: /pay
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /pay
 
 User-agent: anthropic-ai
 Allow: /
+Disallow: /pay
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /pay
 
 User-agent: Perplexity-User
 Allow: /
+Disallow: /pay
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /pay
 
 User-agent: GoogleOther
 Allow: /
+Disallow: /pay
 
 User-agent: CCBot
 Allow: /
+Disallow: /pay
 
 User-agent: Applebot
 Allow: /
+Disallow: /pay
 
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /pay
 
 User-agent: Amazonbot
 Allow: /
+Disallow: /pay
 
 User-agent: Bytespider
 Allow: /
+Disallow: /pay
 
 User-agent: Meta-ExternalAgent
 Allow: /
+Disallow: /pay
+
+User-agent: DuckAssistBot
+Allow: /
+Disallow: /pay
+
+User-agent: cohere-ai
+Allow: /
+Disallow: /pay
+
+User-agent: MistralAI-User
+Allow: /
+Disallow: /pay
 
 Sitemap: https://ponghome.com/sitemap.xml
