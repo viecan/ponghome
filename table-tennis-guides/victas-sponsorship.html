@@ -144,7 +144,6 @@ a{color:inherit;}
 /* ============ BYLINE ============ */
 .article-byline{max-width:760px;margin:0 auto;padding:14px 24px 8px;display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--ink-soft);}
 .article-byline .avatar{width:36px;height:36px;border-radius:50%;background:var(--bg-deep);color:var(--mint);display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',sans-serif;font-weight:800;font-size:0.95rem;flex:0 0 auto;}
-.article-updated{max-width:760px;margin:0 auto;padding:0 24px 10px;font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:#9CA8AA;}
 
 /* ============ ARTICLE BODY ============ */
 .article-wrap{max-width:760px;margin:0 auto;padding:40px 24px 40px;}
@@ -348,7 +347,6 @@ a{color:inherit;}
   <div>Pong Home Insights Hub &middot; Gear and equipment coverage</div>
 </div>
 
-<p class="article-updated" id="articleUpdated"></p>
 
 <article class="article-wrap">
 
@@ -504,17 +502,6 @@ a{color:inherit;}
   <br>
   <a class="footer-support-btn" href="https://buy.stripe.com/bJebJ15WbbzHayjaQuabK0c" target="_blank" rel="noopener">Enjoy the content? Give $2 to keep us going!</a>
 </footer>
-
-<script>
-  (function(){
-    var el = document.getElementById('articleUpdated');
-    if(!el) return;
-    var today = new Date();
-    var formatted = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    var mins = Math.floor(Math.random() * (49 - 5 + 1)) + 5;
-    el.textContent = 'Last updated: ' + mins + ' minutes ago, ' + formatted;
-  })();
-</script>
 
 <script>
   (function(){
