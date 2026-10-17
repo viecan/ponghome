@@ -306,6 +306,7 @@
     }
     .social-btn{width:34px; height:34px;}
     .social-btn svg{width:15px; height:15px;}
+    .nav-right .social-row{display:none;}
     .nav-cta{display:none;}
     .nav-tabs{
       order:3;
@@ -1183,8 +1184,7 @@
       display:none;
     }
     .footer-social{
-      display:block;
-      margin-top:8px;
+      display:none;
     }
     .footer-desktop-text{
       display:none;
@@ -1444,6 +1444,10 @@
   .ig-inner h2{font-size:clamp(1.5rem,3vw,2.1rem); margin:8px 0 6px; color:var(--ink);}
   .ig-sub{color:var(--ink-soft); margin:0 0 30px; font-size:1rem;}
   .ig-sub a{color:var(--bg-deep-soft); font-weight:600; text-decoration:none;}
+  .ig-sub a.ig-sub-icon{display:inline-flex; vertical-align:middle; margin-left:6px; transition:opacity .2s ease, transform .2s ease;}
+  .ig-sub a.ig-sub-icon:hover{opacity:.7; transform:translateY(-1px);}
+  .ig-sub .ig-br{display:none;}
+  @media (max-width:720px){ .ig-sub{line-height:1.9;} .ig-sub .ig-br{display:inline;} }
   .ig-row{display:grid; grid-template-columns:repeat(5,1fr); gap:16px; text-align:left;}
   .ig-card{background:#fff; border:1px solid var(--line-light); border-radius:14px; overflow:hidden; box-shadow:0 8px 22px rgba(6,88,96,0.10); transition:transform .2s ease, box-shadow .2s ease;}
   .ig-card:hover{transform:translateY(-4px); box-shadow:0 14px 30px rgba(6,88,96,0.18);}
@@ -1928,7 +1932,7 @@
   <section class="ig-section" id="instagramPosts">
     <div class="ig-inner">
       <span class="kicker">Follow us on social media</span>
-      <p class="ig-sub">Join 20,000+ players and fans who follow <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener">@pong_home</a></p>
+      <p class="ig-sub">Join 40,000+ players and fans<br class="ig-br"> who follow us on <a class="ig-sub-icon" href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" aria-label="Pong Home on Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a> <a class="ig-sub-icon" href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" aria-label="Pong Home on Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a></p>
       <div class="ig-row">
         <article class="ig-card">
           <header class="ig-head">
