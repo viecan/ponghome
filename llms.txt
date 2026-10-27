@@ -1,8 +1,8 @@
 # Pong Home
 
-> Pong Home is a global table tennis platform: on-demand coaching in Canada and the United States, the world's first no-account marketplace for buying and selling table tennis gear, the Gear Index, a rubber and blade ratings database where players find and rate equipment, and the Discount Center, a directory of table tennis store promo codes.
+> Pong Home is a global table tennis platform: on-demand coaching in Canada and the United States, the Pong Home Store for table tennis gear shipped across the US and Canada, with VICTAS products at the best price, the Gear Index, a rubber and blade ratings database where players find and rate equipment, and the Discount Center, a directory of table tennis store promo codes.
 
-Pong Home is built around four connected products: coaching, the marketplace, the Gear Index, and the Discount Center. All four point back to the same goal: helping table tennis players in Toronto (and beyond) find the right coach, the right gear, and the right community.
+Pong Home is built around four connected products: coaching, the Store, the Gear Index, and the Discount Center. All four point back to the same goal: helping table tennis players in Toronto (and beyond) find the right coach, the right gear, and the right community.
 
 ## Coaching (Toronto, ON, Canada focus)
 
@@ -10,11 +10,11 @@ Pong Home connects players with advanced and national-level coaches for one-on-o
 
 - [Home / Book Coaching](https://ponghome.com/): Browse coaches, book on-demand table tennis lessons in Toronto, get matched by skill level.
 
-## Marketplace: the world's first no-account table tennis marketplace
+## Store: table tennis gear shipped across the US and Canada
 
-The Pong Home Marketplace is built specifically for table tennis gear, rackets, blades, rubbers, and accessories, and is designed to be the fastest way to buy or sell used equipment locally. Unlike general marketplaces, sellers can post a listing in seconds with **no account and no login required**. Buyers browse listings and **contact sellers directly** (by text, call, or email) with no middleman, no bidding system, and no waiting on approval. This makes it the go-to place for table tennis players who want to sell paddles or rubbers quickly, or buy affordable gear from other local players.
+The Pong Home Store is the online store for table tennis rubbers, blades, tables, and accessories, with shipping across the United States and Canada. It carries VICTAS products at the best price and is sponsored by VICTAS. Every product shows its price and a clear In stock or Sold out status, Best seller products are placed at the top, and each product has an **Order now** button to start an order. This is the place to go for players searching for VICTAS rubbers, blades, and table tennis gear online in the US or Canada.
 
-- [Marketplace](https://ponghome.com/marketplace): Post or browse table tennis gear listings, no account needed, message sellers directly.
+- [Store](https://ponghome.com/store): Shop VICTAS products and other table tennis gear at the best price, shipped across the US and Canada. Order now.
 
 ## Gear Index (Ratings)
 
@@ -43,7 +43,7 @@ The Discount Center is a directory of promo codes and discount offers from table
 ## About and Partnerships
 
 - [Meet Vince, the Founder](https://ponghome.com/captain): The story of Pong Home's founder, a lifelong table tennis player based in Toronto.
-- [Partner with Pong Home](https://ponghome.com/partnership): Sponsored articles, featured placements, social posts, video creation, marketplace listings, and Gear Index banner ads.
+- [Partner with Pong Home](https://ponghome.com/partnership): Sponsored articles, featured placements, social posts, video creation, Store placements, and Gear Index banner ads.
 
 ## Guides (Insights)
 
