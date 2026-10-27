@@ -513,7 +513,7 @@
     text-align-last:center;
   }
   .hero p.lead.coach-lead{
-    margin-bottom:32px;
+    margin-bottom:0;
   }
   @media (min-width:861px){
     .hero p.lead:not(.coach-lead){
@@ -556,7 +556,7 @@
       hyphens:auto;
       -webkit-hyphens:auto;
       -ms-hyphens:auto;
-      margin:18px auto 26px;
+      margin:18px auto 0;
     }
     .hero{
       padding-bottom:36px;
@@ -570,7 +570,7 @@
       scrollbar-width:none;
       -ms-overflow-style:none;
       padding:0 4px;
-      margin-bottom:32px;
+      margin-bottom:48px;
     }
     .hero-actions::-webkit-scrollbar{display:none;}
     .hero-actions .btn-primary,
@@ -619,9 +619,15 @@
     border-color:var(--mint);
     background:rgba(0,240,200,0.08);
   }
+  .hero-cta-mobile-only{
+    display:none;
+  }
   @media (max-width:720px){
     .hero-cta-desktop-only{
       display:none;
+    }
+    .hero-cta-mobile-only{
+      display:inline-flex;
     }
   }
   .hero-actions{
@@ -630,7 +636,7 @@
     justify-content:center;
     flex-wrap:wrap;
     margin-top:36px;
-    margin-bottom:24px;
+    margin-bottom:44px;
   }
   @media (min-width:721px){
     .hero-actions{
@@ -1500,8 +1506,8 @@
       <button class="nav-tab active" data-tab-link="home" role="tab" aria-selected="true">Home</button>
       <a class="nav-tab" href="/table-tennis-guides">Insights</a>
       <a class="nav-tab" href="/ratings">Gear Index</a>
-      <a class="nav-tab" href="/store">Store</a>
       <a class="nav-tab" href="/scoreboard">Scoreboard</a>
+      <a class="nav-tab" href="/store">Store</a>
     </div>
     <div class="nav-right">
       <div class="social-row">
@@ -1563,7 +1569,10 @@
         <a class="btn-primary" href="#contactSection">
           Find a coach →
         </a>
-        <a class="btn-secondary" href="/table-tennis-guides">
+        <a class="btn-secondary hero-cta-mobile-only" href="/ratings">
+          Rate Equipment →
+        </a>
+        <a class="btn-secondary hero-cta-desktop-only" href="/table-tennis-guides">
           Explore Insights →
         </a>
         <a class="btn-secondary hero-cta-desktop-only" href="/ratings">
@@ -1572,8 +1581,6 @@
       </div>
 
       <p class="lead coach-lead">From young players building a strong foundation to busy professionals and public figures who value privacy and flexibility, Pong Home coaches help every player elevate their game. Train on your schedule, at a location that works for you, with coaching tailored to your goals.</p>
-      <div class="hero-support">
-      </div>
 
 
 
