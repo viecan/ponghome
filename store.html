@@ -3155,7 +3155,7 @@
   .st-card.dim .st-media{opacity:.55;}
   .st-media{position:relative;aspect-ratio:4/3;background:linear-gradient(135deg,var(--bg-deep-soft),var(--bg-deep));display:flex;align-items:center;justify-content:center;cursor:zoom-in;}
   .st-media.noimg{cursor:default;}
-  .st-media img{width:100%;height:100%;object-fit:cover;}
+  .st-media img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;}
   .st-media svg{width:34%;height:auto;opacity:.9;}
   .st-tag,.st-state{position:absolute;top:12px;font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;}
   .st-tag{left:12px;background:rgba(10,73,82,.9);color:var(--mint);}
@@ -3205,7 +3205,7 @@
   @media (max-width:640px){
     .st-hero{padding:24px 18px 20px;}
     .st-wrap{padding:28px 16px 40px;}
-    .st-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
+    .st-grid{grid-template-columns:1fr;gap:16px;}
     .st-body{padding:12px 12px 14px;}
     .st-body h3{font-size:.95rem;}
     .st-price{font-size:1.1rem;}
@@ -3456,7 +3456,7 @@
     const soldOut = s === 'Sold' || s === 'Cancelled';
     const imgs = Array.isArray(p.image_url) ? p.image_url : (p.image_url ? [p.image_url] : []);
     const cover = imgs[0]
-      ? `<img src="${esc(toCdnUrl(imgs[0], false))}" onerror="this.onerror=null;this.src='${esc(imgs[0])}';" alt="${esc(p.title)}" loading="lazy" />`
+      ? `<img src="${esc(toCdnUrl(imgs[0], false))}" onerror="this.onerror=null;this.src='${esc(imgs[0])}';" onload="if(!this.naturalWidth&&!this.dataset.fb){this.dataset.fb=1;this.src='${esc(imgs[0])}';}" alt="${esc(p.title)}" decoding="async" />`
       : BALL;
     const stateTag = s === 'Cancelled' ? '<span class="st-state">Hidden</span>' : '';
     const thumbs = imgs.slice(1).map(u => `<img class="mkt-img-thumb" src="${esc(toCdnUrl(u, true))}" data-full="${esc(toCdnUrl(u, false))}" onerror="this.onerror=null;this.src=this.dataset.full;" alt="More photos" loading="lazy" />`).join('');
