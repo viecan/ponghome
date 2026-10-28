@@ -3185,6 +3185,8 @@
   .st-actions{margin-top:auto;padding-top:12px;display:flex;gap:8px;}
   .st-order{flex:1;text-align:center;background:var(--mint);color:var(--bg-deeper);font-weight:700;font-size:.9rem;padding:12px 16px;border-radius:999px;text-decoration:none;box-shadow:0 8px 18px rgba(0,240,200,.22);transition:background .15s ease;}
   .st-order:hover{background:var(--mint-dim);}
+  button.st-order{border:0;cursor:pointer;font-family:inherit;}
+  button.st-order:disabled{opacity:.7;cursor:wait;}
   .st-order.off{background:rgba(10,42,47,.08);color:var(--ink-soft);box-shadow:none;pointer-events:none;}
   .st-share{width:44px;height:44px;flex-shrink:0;border-radius:50%;border:1px solid var(--line-light);background:#fff;color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;}
   .st-share:hover{border-color:var(--mint-dim);color:var(--bg-deep-soft);}
@@ -3492,6 +3494,8 @@
     const thumbs = imgs.slice(1).map(u => `<img class="mkt-img-thumb" src="${esc(toCdnUrl(u, true))}" data-full="${esc(toCdnUrl(u, false))}" onerror="this.onerror=null;this.src=this.dataset.full;" alt="More photos" loading="lazy" />`).join('');
     const cta = soldOut
       ? `<span class="st-order off">Sold out</span>`
+      : p.pay_method === 'stripe'
+      ? `<button type="button" class="st-order st-buy" data-id="${p.id}">Buy now</button>`
       : `<a class="st-order" href="${esc(orderHref(p))}"${/^https?:/i.test(p.seller_contact || '') ? ' target="_blank" rel="noopener"' : ''}>Order now</a>`;
     const opts = Object.keys(STATUS_LABEL).map(k => `<option value="${k}"${(k === s || (k === 'Available' && s === 'Pending')) ? ' selected' : ''}>${STATUS_LABEL[k]}</option>`).join('');
     return `
@@ -3602,6 +3606,24 @@
         c.addEventListener('drop', e => { e.preventDefault(); const id = dragId; dragId = null; if (id) saveOrder(id, c.dataset.id); });
       });
     }
+    wrap.querySelectorAll('.st-buy').forEach(btn => btn.onclick = async () => {
+      const label = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Redirecting…';
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+          method: 'POST',
+          headers: headers({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ product_id: btn.dataset.id })
+        });
+        const out = await res.json();
+        if (!res.ok || !out.url) throw new Error(out.error || 'Checkout unavailable');
+        window.location.href = out.url;
+      } catch (e) {
+        console.error('Store: checkout failed', e);
+        toast('Sorry, checkout is unavailable right now. Please try again.');
+        btn.disabled = false; btn.textContent = label;
+      }
+    });
     checkDesc();
     const more = document.getElementById('st-more');
     if (more) more.onclick = () => { const y = window.scrollY; shown += PAGE_SIZE; render(); window.scrollTo(0, y); };
@@ -3674,7 +3696,8 @@
         <div style="flex:1;"><label class="field-label">Currency</label><select class="text-input" id="st-f-cur">${curs.map(c => `<option>${esc(c)}</option>`).join('')}</select></div>
       </div>
       <div class="field-block"><label class="field-label">Seller</label><input class="text-input" id="st-f-seller" placeholder="Default: ${STORE_NAME}" /></div>
-      <div class="field-block"><label class="field-label">Order link or contact (optional)</label><input class="text-input" id="st-f-contact" placeholder="Email, phone or link. Default: ${ORDER_CONTACT}" /></div>
+      <div class="field-block"><label class="field-label">How do customers order?</label><select class="text-input" id="st-f-method"><option value="link">Option 1: Link or contact</option><option value="stripe">Option 2: Stripe checkout (Buy now)</option></select></div>
+      <div class="field-block" id="st-f-contact-wrap"><label class="field-label">Order link or contact (optional)</label><input class="text-input" id="st-f-contact" placeholder="Email, phone or link. Default: ${ORDER_CONTACT}" /></div>
       <div class="field-block"><label class="field-label">Description (optional)</label><textarea class="text-area" id="st-f-desc" placeholder="Specs, sizes, what is included"></textarea></div>
       <div class="field-block"><label class="field-label">Photos (up to 3, JPG, PNG or WebP, 3MB max each)${edit ? '. Choosing a file replaces that photo.' : ''}</label>
         ${slot(0)}${slot(1)}${slot(2)}</div>
@@ -3690,8 +3713,12 @@
       $('st-f-cur').value = p.currency || 'CAD';
       $('st-f-seller').value = p.seller_name || '';
       $('st-f-contact').value = p.seller_contact || '';
+      $('st-f-method').value = p.pay_method === 'stripe' ? 'stripe' : 'link';
       $('st-f-desc').value = p.description || '';
     }
+    const syncMethod = () => { $('st-f-contact-wrap').style.display = $('st-f-method').value === 'stripe' ? 'none' : ''; };
+    $('st-f-method').onchange = syncMethod;
+    syncMethod();
     const drawPrev = i => {
       const el = $('st-prev-' + i);
       el.innerHTML = keep[i] ? `<img src="${esc(keep[i])}" alt="Photo ${i + 1}" /><button type="button" class="btn-small btn-ghost" data-rm="${i}">Remove</button>` : '';
@@ -3723,7 +3750,8 @@
           title, price: Number(price), currency: $('st-f-cur').value,
           category: $('st-f-cat').value, brand: $('st-f-brand').value,
           seller_name: $('st-f-seller').value.trim() || STORE_NAME,
-          seller_contact: $('st-f-contact').value.trim() || ORDER_CONTACT,
+          pay_method: $('st-f-method').value,
+          seller_contact: $('st-f-method').value === 'stripe' ? ORDER_CONTACT : ($('st-f-contact').value.trim() || ORDER_CONTACT),
           description: $('st-f-desc').value.trim() || null,
           image_url: urls.length ? urls : null
         };
@@ -3748,6 +3776,11 @@
   if (location.hash === '#owner') openOwnerAccess();
   updateMaint();
   fetchProducts();
+  try {
+    const q = new URLSearchParams(location.search).get('checkout');
+    if (q === 'success') toast('Thank you! Your payment was received. We will email you shortly.');
+    else if (q === 'cancel') toast('Checkout canceled. You have not been charged.');
+  } catch (e) {}
 })();
 </script>
 </body>
