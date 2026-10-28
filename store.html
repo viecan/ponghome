@@ -3124,15 +3124,33 @@
   .st-count{font-size:.85rem;color:var(--ink-soft);}
   .st-tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
   .st-tools .text-input{width:auto;}
-  .st-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px;}
-  .st-chip{font-family:'Inter',sans-serif;font-weight:600;font-size:.82rem;color:var(--ink);background:#fff;border:1px solid var(--line-light);padding:8px 16px;border-radius:999px;cursor:pointer;transition:all .15s ease;}
-  .st-chip:hover{border-color:var(--mint-dim);background:var(--mint-soft);}
-  .st-chip.active{background:var(--bg-deep);color:var(--mint);border-color:var(--bg-deep);}
-  .st-chip i{font-style:normal;opacity:.6;margin-left:4px;}
+  .st-filters{background:#fff;border:1px solid var(--line-light);border-radius:14px;padding:6px 16px;margin-bottom:24px;}
+  .st-frow{display:flex;align-items:center;gap:14px;padding:9px 0;}
+  .st-frow + .st-frow{border-top:1px solid var(--line-light);}
+  .st-flabel{flex:0 0 46px;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);}
+  .st-chips{display:flex;gap:6px;flex-wrap:wrap;min-width:0;}
+  .st-chip{font-family:'Inter',sans-serif;font-weight:600;font-size:.78rem;line-height:1;color:var(--ink);background:transparent;border:1px solid transparent;padding:7px 12px;border-radius:8px;cursor:pointer;transition:all .15s ease;white-space:nowrap;}
+  .st-chip:hover{background:var(--mint-soft);}
+  .st-chip.active{background:var(--bg-deep);color:var(--mint);}
+  .st-chip i{font-style:normal;opacity:.55;margin-left:5px;font-weight:500;font-size:.72rem;}
+  @media (max-width:600px){
+    .st-filters{padding:4px 12px;}
+    .st-frow{gap:10px;}
+    .st-flabel{flex-basis:40px;}
+    .st-chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;}
+    .st-chips::-webkit-scrollbar{display:none;}
+  }
+  .st-more{display:flex;justify-content:center;margin:28px 0 8px;}
+  .st-more-btn{font-family:'Inter',sans-serif;font-weight:600;font-size:.9rem;color:var(--ink);background:#fff;border:1px solid var(--line-light);padding:12px 28px;border-radius:999px;cursor:pointer;transition:all .15s ease;}
+  .st-more-btn:hover{border-color:var(--mint-dim);background:var(--mint-soft);}
+  .st-more-btn i{font-style:normal;opacity:.6;margin-left:8px;font-size:.8rem;}
 
   .st-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px;}
   .st-card{background:#fff;border:1px solid var(--line-light);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 14px rgba(10,42,47,.05);transition:transform .2s ease,box-shadow .2s ease;}
   .st-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+  .st-card.ownerdrag{cursor:grab;}
+  .st-card.dragging{opacity:.4;}
+  .st-card.drag-over{outline:3px dashed var(--mint);outline-offset:-3px;}
   .st-card.hl{outline:3px solid var(--mint);}
   .st-card.dim .st-media{opacity:.55;}
   .st-media{position:relative;aspect-ratio:4/3;background:linear-gradient(135deg,var(--bg-deep-soft),var(--bg-deep));display:flex;align-items:center;justify-content:center;cursor:zoom-in;}
@@ -3231,8 +3249,6 @@
     <div id="storeWrap"><!-- Rendered by JS --></div>
   </div>
 
-
-  <p class="st-note">Questions about an item? <a href="mailto:contact@ponghome.com">Email us</a></p>
 </section>
 
 <footer class="site-footer">
@@ -3261,10 +3277,8 @@
 
   const SUPABASE_URL = 'https://rzmxciyzhxowmvhzzygx.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_BIQSFP4o6xJVyEHCHRj_sQ_kC2rGBNL';
-  const TABLE = 'ph_marketplace';           // same table as before; store products are tagged cta_type = 'Order now'
-  const STORE_CTA = 'Order now';
+  const TABLE = 'ph_marketplace';           // all rows in this table are store products
   const STORE_NAME = 'Pong Home';
-  const STORE_CITY = 'Toronto (GTA)';
   const ORDER_CONTACT = 'contact@ponghome.com';
   const OWNER_HASH = '643ee984f4c05832a3d18dacf28cf938eed79750fd8b155fa13fa7ac118afed5';       // SHA-256 of the owner code
 
@@ -3273,15 +3287,17 @@
   const CATS = [['Rubber','Rubbers'],['Blade','Blades'],['Table','Tables'],['Accessories','Accessories']];
   const STATUS_LABEL = { Available: 'In stock', Sold: 'Sold out', Cancelled: 'Hidden' };
   const PAGE_SIZE = 24;
+  const BRANDS = ['VICTAS', 'Butterfly', 'Nittaku', 'Others'];
   const BALL = '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" fill="#fff"/><circle cx="32" cy="32" r="26" fill="none" stroke="#00FFD1" stroke-width="3"/><path d="M18 22c4-5 10-7 16-6" stroke="#00FFD1" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/></svg>';
 
   let products = [], loaded = false, loadError = '';
-  let filters = { name: '', category: '', sort: 'new' };
-  let page = 1;
+  let filters = { name: '', category: '', brand: '', sort: 'new' };
+  let shown = PAGE_SIZE;
   let owner = false;
   try { owner = sessionStorage.getItem('st_owner') === '1'; } catch (e) {}
 
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const brandOf = p => { const b = String(p.brand || '').trim().toLowerCase(); return BRANDS.slice(0, 3).find(x => x.toLowerCase() === b) || 'Others'; };
   const status = p => p.status || 'Available';
   const catLabel = v => (CATS.find(c => c[0] === v) || [v, v || 'Gear'])[1];
 
@@ -3312,13 +3328,12 @@
 
   async function fetchProducts() {
     try {
-      const filter = `(cta_type.eq.${STORE_CTA},is_sponsored.is.true,is_recommended.is.true,seller_name.ilike.*Pong Home*,seller_name.ilike.*Victas*,seller_name.ilike.*Joola*,seller_name.ilike.*Butterfly*)`;
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?select=*&or=${encodeURIComponent(filter)}`, { headers: headers() });
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?select=*`, { headers: headers() });
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
       products = await res.json();
       loaded = true; loadError = '';
       const id = new URLSearchParams(location.search).get('product');
-      if (id) { const i = getFiltered().findIndex(p => String(p.id) === id); if (i > -1) page = Math.floor(i / PAGE_SIZE) + 1; }
+      if (id) { const i = getFiltered().findIndex(p => String(p.id) === id); if (i > -1) shown = Math.max(shown, (Math.floor(i / PAGE_SIZE) + 1) * PAGE_SIZE); }
     } catch (e) {
       loadError = e.message || String(e);
       console.error('Store: failed to load products', loadError);
@@ -3380,21 +3395,52 @@
     return `${SUPABASE_URL}/storage/v1/object/public/listing-images/${path}`;
   }
 
+  const ord = p => (p.sort_order == null ? Infinity : Number(p.sort_order));
+  const orderCmp = (a, b) => {
+    const h = (status(a) === 'Cancelled') - (status(b) === 'Cancelled');
+    if (h) return h;
+    const d = ord(a) - ord(b);
+    if (d && !isNaN(d)) return d;
+    return new Date(b.created_at) - new Date(a.created_at);
+  };
+
+  async function saveOrder(draggedId, targetId) {
+    const view = getFiltered().map(p => String(p.id));
+    const from = view.indexOf(draggedId), to = view.indexOf(targetId);
+    if (from < 0 || to < 0 || from === to) return;
+    view.splice(to, 0, view.splice(from, 1)[0]);
+    const all = products.slice().sort(orderCmp);
+    const inView = new Set(view);
+    let k = 0;
+    const next = all.map(p => inView.has(String(p.id)) ? products.find(x => String(x.id) === view[k++]) : p);
+    const changed = [];
+    next.forEach((p, i) => { const v = (i + 1) * 10; if (p.sort_order !== v) { changed.push([p, v]); } });
+    const prev = changed.map(([p]) => p.sort_order);
+    changed.forEach(([p, v]) => { p.sort_order = v; });
+    render();
+    try {
+      await Promise.all(changed.map(([p, v]) => fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?id=eq.${p.id}`, {
+        method: 'PATCH',
+        headers: headers({ 'Content-Type': 'application/json', Prefer: 'return=minimal' }),
+        body: JSON.stringify({ sort_order: v })
+      }).then(r => { if (!r.ok) throw new Error('save failed'); })));
+      toast('Order saved');
+    } catch (e) {
+      changed.forEach(([p], i) => { p.sort_order = prev[i]; });
+      render();
+      toast('Could not save order');
+    }
+  }
+
   function getFiltered() {
     const q = filters.name.toLowerCase();
     let out = products.filter(p =>
       (owner || status(p) !== 'Cancelled') &&
       (!filters.category || p.category === filters.category) &&
+      (!filters.brand || brandOf(p) === filters.brand) &&
       (!q || (p.title || '').toLowerCase().includes(q))
     );
-    const cmp = {
-      new: (a, b) => new Date(b.created_at) - new Date(a.created_at),
-      low: (a, b) => Number(a.price) - Number(b.price),
-      high: (a, b) => Number(b.price) - Number(a.price)
-    }[filters.sort];
-    out.sort(cmp);
-    const rank = p => (status(p) === 'Cancelled' ? 4 : status(p) === 'Sold' ? 2 : 0) + ((p.is_sponsored || p.is_recommended) ? 0 : 1);
-    return out.sort((a, b) => rank(a) - rank(b));
+    return out.sort(orderCmp);
   }
 
   function orderHref(p) {
@@ -3412,20 +3458,21 @@
     const cover = imgs[0]
       ? `<img src="${esc(toCdnUrl(imgs[0], false))}" onerror="this.onerror=null;this.src='${esc(imgs[0])}';" alt="${esc(p.title)}" loading="lazy" />`
       : BALL;
-    const stateTag = s === 'Cancelled' ? '<span class="st-state">Hidden</span>' : (p.is_sponsored || p.is_recommended) ? '<span class="st-state best">Best seller</span>' : '';
+    const stateTag = s === 'Cancelled' ? '<span class="st-state">Hidden</span>' : '';
     const thumbs = imgs.slice(1).map(u => `<img class="mkt-img-thumb" src="${esc(toCdnUrl(u, true))}" data-full="${esc(toCdnUrl(u, false))}" onerror="this.onerror=null;this.src=this.dataset.full;" alt="More photos" loading="lazy" />`).join('');
     const cta = soldOut
       ? `<span class="st-order off">Sold out</span>`
       : `<a class="st-order" href="${esc(orderHref(p))}"${/^https?:/i.test(p.seller_contact || '') ? ' target="_blank" rel="noopener"' : ''}>Order now</a>`;
     const opts = Object.keys(STATUS_LABEL).map(k => `<option value="${k}"${(k === s || (k === 'Available' && s === 'Pending')) ? ' selected' : ''}>${STATUS_LABEL[k]}</option>`).join('');
     return `
-      <article class="st-card${soldOut ? ' dim' : ''}" id="st-p-${p.id}">
+      <article class="st-card${soldOut ? ' dim' : ''}${owner ? ' ownerdrag' : ''}" id="st-p-${p.id}"${owner ? ' draggable="true"' : ''} data-id="${p.id}">
         <div class="st-media${imgs[0] ? '' : ' noimg'}"${imgs[0] ? ` data-full="${esc(toCdnUrl(imgs[0], false))}"` : ''}>
-          ${cover}<span class="st-tag">${esc(catLabel(p.category))}</span>${stateTag}
+          ${cover}${stateTag}
         </div>
         <div class="st-body">
           <h3>${esc(p.title)}</h3>
           <div class="st-pricerow"><div class="st-price">$${Number(p.price).toLocaleString()}<small>${esc(p.currency || 'CAD')}</small></div><span class="st-stock ${soldOut ? 'out' : 'in'}">${soldOut ? 'Sold out' : 'In stock'}</span></div>
+          <div class="st-seller">Brand: <strong>${esc(brandOf(p))}</strong></div>
           <div class="st-seller">Seller: <strong>${esc(p.seller_name || 'Pong Home')}</strong></div>
           ${p.description ? `<div class="st-desc">${esc(p.description)}</div>` : ''}
           ${thumbs ? `<div class="st-thumbs">${thumbs}</div>` : ''}
@@ -3438,16 +3485,9 @@
       </article>`;
   }
 
-  function pagerHtml(cur, total) {
-    if (total <= 1) return '';
-    const nums = [];
-    for (let i = 1; i <= total; i++) if (i === 1 || i === total || Math.abs(i - cur) <= 1) nums.push(i);
-    const btns = nums.map((n, i) => (i && n - nums[i - 1] > 1 ? '<span class="mkt-page-ellipsis">…</span>' : '') +
-      `<button class="mkt-page-num${n === cur ? ' active' : ''}" data-page="${n}">${n}</button>`).join('');
-    return `<nav class="mkt-pagination" aria-label="Store pagination"><div class="mkt-page-controls">
-      <button class="mkt-page-nav" id="st-prev" ${cur === 1 ? 'disabled' : ''}>&larr; Prev</button>
-      <div class="mkt-page-numbers">${btns}</div>
-      <button class="mkt-page-nav" id="st-next" ${cur === total ? 'disabled' : ''}>Next &rarr;</button></div></nav>`;
+  function seeMoreHtml(shownCount, total) {
+    if (shownCount >= total) return '';
+    return `<div class="st-more"><button class="st-more-btn" id="st-more">See more<i>${total - shownCount} left</i></button></div>`;
   }
 
   function render() {
@@ -3455,19 +3495,23 @@
     if (loadError) { wrap.innerHTML = `<div class="mkt-error-box">We could not load the store right now. Please refresh and try again.<br><small>${esc(loadError)}</small></div>`; return; }
     const visible = products.filter(p => owner || status(p) !== 'Cancelled');
     const filtered = getFiltered();
-    const total = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-    page = Math.min(Math.max(1, page), total);
-    const items = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+    const items = filtered.slice(0, shown);
     const counts = {};
     visible.forEach(p => counts[p.category] = (counts[p.category] || 0) + 1);
-    const chip = (v, label, n) => `<button class="st-chip${filters.category === v ? ' active' : ''}" data-cat="${v}">${label}<i>${n}</i></button>`;
+    const bcounts = {};
+    visible.forEach(p => { const k = brandOf(p); bcounts[k] = (bcounts[k] || 0) + 1; });
+    const bchip = (v, label, n) => `<button class="st-chip${filters.brand === v ? ' active' : ''}" data-brand="${v}">${label}</button>`;
+    const chip = (v, label, n) => `<button class="st-chip${filters.category === v ? ' active' : ''}" data-cat="${v}">${label}</button>`;
     wrap.innerHTML = `
       ${owner ? `<div class="st-owner-bar"><span>Owner mode</span><button class="btn-small" id="st-add">Add product</button><button class="btn-small btn-ghost" id="st-lock">Lock</button></div>` : ''}
-      <div class="st-head"><h2>Shop all gear</h2><div class="st-count">${filtered.length} product${filtered.length === 1 ? '' : 's'}</div></div>
-      <div class="st-chips">${chip('', 'All', visible.length)}${CATS.filter(c => counts[c[0]]).map(c => chip(c[0], c[1], counts[c[0]])).join('')}</div>
+      <div class="st-filters">
+        <div class="st-frow"><span class="st-flabel">Type</span><div class="st-chips">${chip('', 'All', visible.length)}${CATS.filter(c => counts[c[0]]).map(c => chip(c[0], c[1], counts[c[0]])).join('')}</div></div>
+        <div class="st-frow"><span class="st-flabel">Brand</span><div class="st-chips">${bchip('', 'All', visible.length)}${BRANDS.map(v => bchip(v, v, bcounts[v] || 0)).join('')}</div></div>
+      </div>
       <div class="st-grid">${items.length ? items.map(cardHtml).join('') : '<div class="st-empty">No products here yet. Check back soon or try another category.</div>'}</div>
-      ${pagerHtml(page, total)}`;
-    wrap.querySelectorAll('.st-chip').forEach(b => b.onclick = () => { filters.category = b.dataset.cat; page = 1; render(); });
+      ${seeMoreHtml(items.length, filtered.length)}`;
+    wrap.querySelectorAll('.st-chip[data-cat]').forEach(b => b.onclick = () => { filters.category = b.dataset.cat; shown = PAGE_SIZE; render(); });
+    wrap.querySelectorAll('.st-chip[data-brand]').forEach(b => b.onclick = () => { filters.brand = b.dataset.brand; shown = PAGE_SIZE; render(); });
     wrap.querySelectorAll('.st-media[data-full]').forEach(m => m.onclick = () => openLightbox(m.dataset.full));
     wrap.querySelectorAll('.mkt-img-thumb').forEach(i => i.onclick = () => openLightbox(i.dataset.full || i.src));
     wrap.querySelectorAll('.st-share').forEach(b => b.onclick = () => shareProduct(b.dataset.id, b.dataset.title));
@@ -3476,11 +3520,19 @@
       catch (err) { toast('Could not update status'); }
       render();
     });
-    const go = n => { page = n; render(); wrap.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
-    const prev = document.getElementById('st-prev'), next = document.getElementById('st-next');
-    if (prev) prev.onclick = () => go(page - 1);
-    if (next) next.onclick = () => go(page + 1);
-    wrap.querySelectorAll('.mkt-page-num').forEach(b => b.onclick = () => go(Number(b.dataset.page)));
+    if (owner) {
+      let dragId = null;
+      wrap.querySelectorAll('.st-card img').forEach(i => i.setAttribute('draggable', 'false'));
+      wrap.querySelectorAll('.st-card.ownerdrag').forEach(c => {
+        c.addEventListener('dragstart', e => { dragId = c.dataset.id; c.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', dragId); } catch (x) {} });
+        c.addEventListener('dragend', () => { c.classList.remove('dragging'); wrap.querySelectorAll('.drag-over').forEach(x => x.classList.remove('drag-over')); });
+        c.addEventListener('dragover', e => { if (dragId && dragId !== c.dataset.id) { e.preventDefault(); c.classList.add('drag-over'); } });
+        c.addEventListener('dragleave', () => c.classList.remove('drag-over'));
+        c.addEventListener('drop', e => { e.preventDefault(); const id = dragId; dragId = null; if (id) saveOrder(id, c.dataset.id); });
+      });
+    }
+    const more = document.getElementById('st-more');
+    if (more) more.onclick = () => { const y = window.scrollY; shown += PAGE_SIZE; render(); window.scrollTo(0, y); };
     const add = document.getElementById('st-add'), lock = document.getElementById('st-lock');
     if (add) add.onclick = openForm;
     if (lock) lock.onclick = () => { owner = false; try { sessionStorage.removeItem('st_owner'); } catch (e) {} render(); };
@@ -3535,6 +3587,7 @@
       <h2>Add product</h2>
       <div class="field-block"><label class="field-label">Product name</label><input class="text-input" id="st-f-title" placeholder="e.g. Butterfly Timo Boll ALC blade" /></div>
       <div class="field-block"><label class="field-label">Category</label><select class="text-input" id="st-f-cat">${catOpts}</select></div>
+      <div class="field-block"><label class="field-label">Brand</label><select class="text-input" id="st-f-brand">${BRANDS.map(v => `<option>${v}</option>`).join('')}</select></div>
       <div class="field-block field-row">
         <div style="flex:2;"><label class="field-label">Price</label><input class="text-input" id="st-f-price" type="number" min="0" step="0.01" placeholder="80" /></div>
         <div style="flex:1;"><label class="field-label">Currency</label><select class="text-input" id="st-f-cur"><option>CAD</option><option>USD</option><option>EUR</option></select></div>
@@ -3565,10 +3618,10 @@
         const urls = [];
         for (const f of files) urls.push(await uploadImage(f));
         await postProduct({
-          title, city: STORE_CITY, price: Number(price), currency: $('st-f-cur').value, condition: 'new',
-          category: $('st-f-cat').value, seller_contact: $('st-f-contact').value.trim() || ORDER_CONTACT,
-          seller_name: STORE_NAME, cta_type: STORE_CTA, description: $('st-f-desc').value.trim() || null,
-          status: 'Available', negotiable: false, image_url: urls.length ? urls : null
+          title, price: Number(price), currency: $('st-f-cur').value, condition: 'new',
+          category: $('st-f-cat').value, brand: $('st-f-brand').value, seller_contact: $('st-f-contact').value.trim() || ORDER_CONTACT,
+          seller_name: STORE_NAME, description: $('st-f-desc').value.trim() || null,
+          status: 'Available', image_url: urls.length ? urls : null
         });
         b.remove(); toast('Product added'); await fetchProducts();
       } catch (e) {
