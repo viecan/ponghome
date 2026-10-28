@@ -3547,15 +3547,15 @@
     el.innerHTML = `<div class="st-maint-card">${BALL}<h2>Store under maintenance</h2><p>We are getting the store ready for you. Thanks for your patience.</p><div class="st-maint-date">Opening November 10</div><div class="st-maint-code"><input class="text-input" id="stMaintCode" type="password" inputmode="numeric" autocomplete="off" placeholder="Access code" /><button type="button" class="btn-small" id="stMaintGo">Enter</button></div><div class="mkt-form-error" id="stMaintErr"></div></div>`;
     const go = async () => {
       let ok = false;
-      const v = document.getElementById('stMaintCode').value.trim();
+      const v = el.querySelector('#stMaintCode').value.trim();
       try { ok = (await sha256(v)) === MAINT_HASH; } catch (e) {}
-      if (!ok) { document.getElementById('stMaintErr').textContent = 'Incorrect code.'; return; }
+      if (!ok) { el.querySelector('#stMaintErr').textContent = 'Incorrect code.'; return; }
       maintOff = true;
       try { sessionStorage.setItem('st_maint_off', '1'); } catch (e) {}
       updateMaint();
     };
-    document.getElementById('stMaintGo').onclick = go;
-    document.getElementById('stMaintCode').onkeydown = e => { if (e.key === 'Enter') go(); };
+    el.querySelector('#stMaintGo').onclick = go;
+    el.querySelector('#stMaintCode').onkeydown = e => { if (e.key === 'Enter') go(); };
     document.body.appendChild(el);
     document.body.style.overflow = 'hidden';
   }
