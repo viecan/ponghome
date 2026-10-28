@@ -3164,7 +3164,7 @@
   .st-state.sold{background:var(--coral);color:#fff;}
   .st-state.res{background:var(--sun);color:#3a2600;}
   .st-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1;}
-  .st-body h3{font-size:1.08rem;}
+  .st-body h3{font-size:1.08rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;}
   .st-price{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.3rem;color:var(--bg-deep-soft);}
   .st-seller{font-size:.82rem;color:var(--ink-soft);}
   .st-seller strong{color:var(--ink);}
@@ -3175,7 +3175,12 @@
   .st-stock.out{color:#c24444;background:rgba(255,107,107,.14);}
   .st-price small{font-size:.7rem;color:var(--ink-soft);font-weight:600;margin-left:4px;}
   .st-cond{font-size:.78rem;color:var(--ink-soft);}
-  .st-desc{font-size:.85rem;color:var(--ink-soft);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .st-descwrap{min-height:calc(.85rem * 1.5 * 3 + 22px);}
+  .st-desc{font-size:.85rem;color:var(--ink-soft);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line;}
+  .st-desc.open{display:block;-webkit-line-clamp:unset;overflow:visible;}
+  .st-descbtn{background:none;border:0;padding:4px 0 0;font-family:'Inter',sans-serif;font-weight:700;font-size:.8rem;color:var(--bg-deep-soft);cursor:pointer;}
+  .st-descbtn:hover{text-decoration:underline;}
+  .st-thumbs{min-height:56px;}
   .st-thumbs{display:flex;gap:6px;margin-top:4px;}
   .st-actions{margin-top:auto;padding-top:12px;display:flex;gap:8px;}
   .st-order{flex:1;text-align:center;background:var(--mint);color:var(--bg-deeper);font-weight:700;font-size:.9rem;padding:12px 16px;border-radius:999px;text-decoration:none;box-shadow:0 8px 18px rgba(0,240,200,.22);transition:background .15s ease;}
@@ -3213,7 +3218,8 @@
     .st-body{padding:12px 12px 14px;}
     .st-body h3{font-size:.95rem;}
     .st-price{font-size:1.1rem;}
-    .st-desc{display:none;}
+    .st-media{aspect-ratio:2/1;}
+    .st-descwrap{min-height:calc(.85rem * 1.5 * 3 + 22px);}
     .st-order{padding:11px 8px;font-size:.84rem;}
     .st-share{display:none;}
     .st-tools .text-input{flex:1 1 100%;}
@@ -3490,8 +3496,8 @@
           <div class="st-pricerow"><div class="st-price">$${Number(p.price).toLocaleString()}<small>${esc(p.currency || 'CAD')}</small></div><span class="st-stock ${soldOut ? 'out' : 'in'}">${soldOut ? 'Sold out' : 'In stock'}</span></div>
           <div class="st-seller">Brand: <strong>${esc(brandOf(p))}</strong></div>
           <div class="st-seller">Seller: <strong>${esc(p.seller_name || 'Pong Home')}</strong></div>
-          ${p.description ? `<div class="st-desc">${esc(p.description)}</div>` : ''}
-          ${thumbs ? `<div class="st-thumbs">${thumbs}</div>` : ''}
+          <div class="st-descwrap">${p.description ? `<div class="st-desc">${esc(p.description)}</div><button type="button" class="st-descbtn" hidden>See more</button>` : ''}</div>
+          <div class="st-thumbs">${thumbs}</div>
           ${owner ? `<div class="st-own-row"><select class="text-input st-own-status" data-id="${p.id}">${opts}</select><button type="button" class="btn-small st-edit" data-id="${p.id}">Edit</button></div>` : ''}
           <div class="st-actions">
             ${cta}
@@ -3505,6 +3511,16 @@
     if (shownCount >= total) return '';
     return `<div class="st-more"><button class="st-more-btn" id="st-more">See more<i>${total - shownCount} left</i></button></div>`;
   }
+
+  function checkDesc() {
+    wrap.querySelectorAll('.st-descwrap').forEach(w => {
+      const d = w.querySelector('.st-desc'), btn = w.querySelector('.st-descbtn');
+      if (!d || !btn) return;
+      if (!btn.onclick) btn.onclick = () => { const o = d.classList.toggle('open'); btn.textContent = o ? 'See less' : 'See more'; };
+      if (!d.classList.contains('open')) btn.hidden = !(d.scrollHeight > d.clientHeight + 1);
+    });
+  }
+  window.addEventListener('resize', () => checkDesc());
 
   function render() {
     if (!loaded && !loadError) { wrap.innerHTML = '<div class="st-empty">Loading products&hellip;</div>'; return; }
@@ -3547,6 +3563,7 @@
         c.addEventListener('drop', e => { e.preventDefault(); const id = dragId; dragId = null; if (id) saveOrder(id, c.dataset.id); });
       });
     }
+    checkDesc();
     const more = document.getElementById('st-more');
     if (more) more.onclick = () => { const y = window.scrollY; shown += PAGE_SIZE; render(); window.scrollTo(0, y); };
     const add = document.getElementById('st-add'), lock = document.getElementById('st-lock');
