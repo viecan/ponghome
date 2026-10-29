@@ -177,9 +177,9 @@
     max-width:1180px;
     margin:0 auto;
     padding:16px 28px;
-    display:flex;
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
     align-items:center;
-    justify-content:space-between;
     gap:20px;
   }
   .nav-logo{
@@ -250,6 +250,7 @@
   .nav-right{
     display:flex;
     align-items:center;
+    justify-content:flex-end;
     gap:12px;
   }
 
@@ -291,6 +292,7 @@
 
   @media (max-width:720px){
     .nav-inner{
+      display:flex;
       flex-wrap:wrap;
       padding:12px 16px;
       gap:10px;
@@ -315,7 +317,7 @@
       flex-wrap:nowrap;
       overflow-x:auto;
       -webkit-overflow-scrolling:touch;
-      justify-content:flex-start;
+      justify-content:center;
       gap:5px;
       background:transparent;
       border:none;
@@ -999,6 +1001,24 @@
   }
   .city-collapse[open] .chevron{
     transform:rotate(180deg);
+  }
+  .coach-more{
+    display:none;
+    margin:0 auto 22px;
+    padding:9px 20px;
+    border-radius:999px;
+    border:1px solid var(--mint);
+    background:transparent;
+    color:var(--mint);
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.75rem;
+    cursor:pointer;
+    transition:background 0.2s ease;
+  }
+  .coach-more:hover{background:var(--mint-soft);}
+  @media (min-width:861px){
+    .city-collapse .coach-card.extra-row{display:none;}
+    .city-collapse.has-extra .coach-more{display:block;}
   }
   .city-collapse .coach-grid{
     padding:4px 22px 22px;
@@ -1769,9 +1789,9 @@
 
         <details class="city-collapse">
           <summary>
-            <span class="city-flag">🌍</span>
+            <span class="city-flag">🇪🇺</span>
             <h3>Europe</h3>
-            <span class="city-count">4 coaches</span>
+            <span class="city-count">5 coaches</span>
             <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </summary>
           <div class="coach-grid">
@@ -1824,6 +1844,57 @@
               </div>
             </div>
             <p class="coach-role">Serie A1 Coach, International Camp Director - Stage China <a class="coach-ig-link" href="https://www.instagram.com/coachliu.tt/" target="_blank" rel="noopener" aria-label="Liu Wenyu on Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a></p>
+          </div>
+
+          <div class="coach-card featured">
+            <div class="coach-top">
+              <div class="coach-identity" style="align-items:flex-start;">
+                <img class="coach-avatar" src="data:image/jpeg;base64,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" alt="Anastasia T">
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                  <span class="coach-name">Anastasia T</span>
+                  <span class="coach-location" style="align-self:flex-start;font-size:0.468rem;padding:2.4px 6px;">Moscow, Russia</span>
+                </div>
+              </div>
+            </div>
+            <p class="coach-role">Personal coach, fundamentals development <a class="coach-ig-link" href="https://www.instagram.com/_tonastya_/" target="_blank" rel="noopener" aria-label="Anastasia T on Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a></p>
+          </div>
+
+          </div>
+        </details>
+
+        <details class="city-collapse">
+          <summary>
+            <span class="city-flag">🌏</span>
+            <h3>Asia &amp; Middle East</h3>
+            <span class="city-count">2 coaches</span>
+            <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="coach-grid">
+
+          <div class="coach-card featured">
+            <div class="coach-top">
+              <div class="coach-identity" style="align-items:flex-start;">
+                <img class="coach-avatar" src="data:image/jpeg;base64,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" alt="Ademola A">
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                  <span class="coach-name">Ademola A</span>
+                  <span class="coach-location" style="align-self:flex-start;font-size:0.468rem;padding:2.4px 6px;">Dubai, UAE</span>
+                </div>
+              </div>
+            </div>
+            <p class="coach-role">Professional coach, technique development <a class="coach-ig-link" href="https://www.instagram.com/coach__ademola/" target="_blank" rel="noopener" aria-label="Ademola A on Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a></p>
+          </div>
+
+          <div class="coach-card featured">
+            <div class="coach-top">
+              <div class="coach-identity" style="align-items:flex-start;">
+                <img class="coach-avatar" src="data:image/jpeg;base64,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" alt="Seonil Ra">
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                  <span class="coach-name">Seonil Ra</span>
+                  <span class="coach-location" style="align-self:flex-start;font-size:0.468rem;padding:2.4px 6px;">Incheon, South Korea</span>
+                </div>
+              </div>
+            </div>
+            <p class="coach-role">Coach, intensive training, technique development <a class="coach-ig-link" href="https://www.instagram.com/seonil_ra/" target="_blank" rel="noopener" aria-label="Seonil Ra on Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a></p>
           </div>
 
           </div>
@@ -2230,8 +2301,42 @@
   } else {
     document.querySelectorAll('.team-accordion details.city-collapse').forEach(d => d.setAttribute('open', ''));
   }
+  /* ---------- Desktop: show only the first row of coaches per location ---------- */
+  (function(){
+    const mq = window.matchMedia('(min-width:861px)');
+    const sections = document.querySelectorAll('.team-accordion details.city-collapse');
+    sections.forEach(d => {
+      const grid = d.querySelector('.coach-grid');
+      if (!grid) return;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'coach-more';
+      grid.after(btn);
+      d._expanded = false;
+      btn.addEventListener('click', () => { d._expanded = !d._expanded; layout(d); });
+      d._btn = btn;
+    });
+    function layout(d){
+      const grid = d.querySelector('.coach-grid');
+      const cards = Array.from(grid.children);
+      cards.forEach(c => c.classList.remove('extra-row'));
+      d.classList.remove('has-extra');
+      if (!mq.matches || !d.open) return;
+      const top0 = cards[0] ? cards[0].offsetTop : 0;
+      const extra = cards.filter(c => c.offsetTop > top0 + 4);
+      if (!extra.length) return;
+      d.classList.add('has-extra');
+      d._btn.textContent = d._expanded ? 'Show less' : 'Show more';
+      if (!d._expanded) extra.forEach(c => c.classList.add('extra-row'));
+    }
+    function all(){ sections.forEach(layout); }
+    sections.forEach(d => d.addEventListener('toggle', () => layout(d)));
+    window.addEventListener('resize', all);
+    mq.addEventListener('change', all);
+    window.addEventListener('load', all);
+    all();
+  })();
 </script>
-
 
 </body>
 </html>
