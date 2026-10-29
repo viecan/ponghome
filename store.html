@@ -3175,6 +3175,12 @@
   .st-stock.out{color:#c24444;background:rgba(255,107,107,.14);}
   .st-price small{font-size:.7rem;color:var(--ink-soft);font-weight:600;margin-left:4px;}
   .st-cond{font-size:.78rem;color:var(--ink-soft);}
+  .st-colors{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.8rem;color:var(--ink-soft);margin-top:2px;}
+  .st-swatch{width:22px;height:22px;padding:0;border-radius:50%;background:var(--sw);border:2px solid #fff;box-shadow:0 0 0 1px rgba(10,42,47,.25);cursor:pointer;}
+  .st-swatch.on{box-shadow:0 0 0 2px var(--bg-deep);}
+  .st-colorname{font-size:.78rem;font-weight:600;color:var(--ink);}
+  .st-f-checks{display:flex;gap:16px;flex-wrap:wrap;}
+  .st-f-checks label{display:flex;align-items:center;gap:6px;font-size:.9rem;cursor:pointer;}
   .st-detailbtn{display:none;background:none;border:0;padding:2px 0;text-align:left;font-family:'Inter',sans-serif;font-weight:700;font-size:.76rem;color:var(--bg-deep-soft);cursor:pointer;}
   .st-detail{display:none;}
   .st-detail h4{font-size:.9rem;line-height:1.3;margin:0;padding-right:34px;}
@@ -3323,6 +3329,10 @@
   const STATUS_LABEL = { Available: 'In stock', Sold: 'Sold out', Cancelled: 'Hidden' };
   const PAGE_SIZE = 24;
   const BRANDS = ['VICTAS', 'Butterfly', 'Nittaku', 'Others'];
+  const COLORS = [['Black', '#1a1a1a'], ['Red', '#d62828'], ['Blue', '#1d4ed8']];
+  const picked = {};   // product id -> color the visitor chose
+  const colorsOf = p => Array.isArray(p.colors) ? COLORS.map(c => c[0]).filter(c => p.colors.includes(c)) : [];
+  const pickedColor = p => { const cs = colorsOf(p); return !cs.length ? '' : (cs.includes(picked[p.id]) ? picked[p.id] : cs[0]); };
   const BALL = '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" fill="#fff"/><circle cx="32" cy="32" r="26" fill="none" stroke="#00FFD1" stroke-width="3"/><path d="M18 22c4-5 10-7 16-6" stroke="#00FFD1" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/></svg>';
 
   let products = [], loaded = false, loadError = '';
@@ -3493,8 +3503,10 @@
   function orderHref(p) {
     const c = (p.seller_contact || ORDER_CONTACT).trim();
     if (/^https?:\/\//i.test(c)) return c;
-    const msg = `Hi Pong Home, I would like to order: ${p.title} ($${p.price} ${p.currency || 'CAD'}).`;
-    if (c.includes('@')) return `mailto:${c}?subject=${encodeURIComponent('Order: ' + p.title)}&body=${encodeURIComponent(msg)}`;
+    const col = pickedColor(p);
+    const name = p.title + (col ? ` (${col})` : '');
+    const msg = `Hi Pong Home, I would like to order: ${name} ($${p.price} ${p.currency || 'CAD'}).`;
+    if (c.includes('@')) return `mailto:${c}?subject=${encodeURIComponent('Order: ' + name)}&body=${encodeURIComponent(msg)}`;
     return `sms:${c}`;
   }
 
@@ -3524,6 +3536,7 @@
           <div class="st-pricerow"><div class="st-price">$${Number(p.price).toLocaleString()}<small>${esc(p.currency || 'CAD')}</small></div><span class="st-stock ${soldOut ? 'out' : 'in'}">${soldOut ? 'Sold out' : 'In stock'}</span></div>
           <div class="st-seller">Brand: <strong>${esc(brandOf(p))}</strong></div>
           <div class="st-seller">Seller: <strong>${esc(p.seller_name || 'Pong Home')}</strong></div>
+          ${colorsOf(p).length ? `<div class="st-colors" data-id="${p.id}"><span>Color</span>${colorsOf(p).map(c => `<button type="button" class="st-swatch${pickedColor(p) === c ? ' on' : ''}" data-color="${c}" style="--sw:${COLORS.find(x => x[0] === c)[1]}" aria-label="${c}" title="${c}"></button>`).join('')}<b class="st-colorname">${pickedColor(p)}</b></div>` : ''}
           <button type="button" class="st-detailbtn">See details</button>
           <div class="st-descwrap">${p.description ? `<div class="st-desc">${esc(p.description)}</div><button type="button" class="st-descbtn" hidden>See more</button>` : ''}</div>
           <div class="st-thumbs">${thumbs}</div>
@@ -3630,7 +3643,7 @@
         const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
           method: 'POST',
           headers: headers({ 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ product_id: btn.dataset.id })
+          body: JSON.stringify({ product_id: btn.dataset.id, color: pickedColor(products.find(x => String(x.id) === btn.dataset.id) || {}) })
         });
         const out = await res.json();
         if (!res.ok || !out.url) throw new Error(out.error || 'Checkout unavailable');
@@ -3640,6 +3653,15 @@
         toast('Sorry, checkout is unavailable right now. Please try again.');
         btn.disabled = false; btn.textContent = label;
       }
+    });
+    wrap.querySelectorAll('.st-swatch').forEach(sw => sw.onclick = () => {
+      const row = sw.closest('.st-colors'), pr = products.find(x => String(x.id) === row.dataset.id);
+      if (!pr) return;
+      picked[pr.id] = sw.dataset.color;
+      row.querySelectorAll('.st-swatch').forEach(x => x.classList.toggle('on', x === sw));
+      row.querySelector('.st-colorname').textContent = sw.dataset.color;
+      const a = sw.closest('.st-card').querySelector('a.st-order');
+      if (a) a.href = orderHref(pr);
     });
     wrap.querySelectorAll('.st-detailbtn').forEach(btn => btn.onclick = () => btn.closest('.st-card').querySelector('.st-detail').classList.add('open'));
     wrap.querySelectorAll('.st-detailx').forEach(btn => btn.onclick = () => btn.closest('.st-detail').classList.remove('open'));
@@ -3728,6 +3750,8 @@
         <div style="flex:1;"><label class="field-label">Category</label><select class="text-input" id="st-f-cat">${catOpts}</select></div>
         <div style="flex:1;"><label class="field-label">Brand</label><select class="text-input" id="st-f-brand">${BRANDS.map(v => `<option>${v}</option>`).join('')}</select></div>
       </div>
+      <div class="field-block" id="st-f-colors-wrap"><label class="field-label">Available colors (customers choose one)</label>
+        <div class="st-f-checks">${COLORS.map(c => `<label><input type="checkbox" class="st-f-color" value="${c[0]}" /> ${c[0]}</label>`).join('')}</div></div>
       <div class="field-block field-row">
         <div style="flex:2;"><label class="field-label">Price</label><input class="text-input" id="st-f-price" type="number" min="0" step="0.01" placeholder="80" /></div>
         <div style="flex:1;"><label class="field-label">Currency</label><select class="text-input" id="st-f-cur">${curs.map(c => `<option>${esc(c)}</option>`).join('')}</select></div>
@@ -3751,9 +3775,13 @@
       $('st-f-seller').value = p.seller_name || '';
       $('st-f-contact').value = p.seller_contact || '';
       $('st-f-method').value = p.pay_method === 'stripe' ? 'stripe' : 'link';
+      colorsOf(p).forEach(c => { const el = b.querySelector(`.st-f-color[value="${c}"]`); if (el) el.checked = true; });
       $('st-f-desc').value = p.description || '';
     }
     const syncMethod = () => { $('st-f-contact-wrap').style.display = $('st-f-method').value === 'stripe' ? 'none' : ''; };
+    const syncColors = () => { $('st-f-colors-wrap').style.display = $('st-f-cat').value === 'Rubber' ? '' : 'none'; };
+    $('st-f-cat').onchange = syncColors;
+    syncColors();
     $('st-f-method').onchange = syncMethod;
     syncMethod();
     const drawPrev = i => {
@@ -3774,6 +3802,9 @@
       if (!title || price === '') { err.textContent = 'Please add a product name and price.'; return; }
       if (picked.some(f => /heic|heif/i.test(f.type) || /\.(heic|heif)$/i.test(f.name))) { err.textContent = 'HEIC photos are not supported. Please use JPG, PNG or WebP.'; return; }
       if (picked.some(f => f.size > 3 * 1024 * 1024)) { err.textContent = 'Each photo must be 3MB or smaller.'; return; }
+      const isRubber = $('st-f-cat').value === 'Rubber';
+      const colors = isRubber ? Array.from(b.querySelectorAll('.st-f-color:checked')).map(x => x.value) : [];
+      if (isRubber && !colors.length) { err.textContent = 'Please choose at least one color for this rubber.'; return; }
       const btn = $('st-f-submit');
       const label = btn.textContent;
       btn.disabled = true; btn.textContent = 'Saving…'; err.textContent = '';
@@ -3787,6 +3818,7 @@
           title, price: Number(price), currency: $('st-f-cur').value,
           category: $('st-f-cat').value, brand: $('st-f-brand').value,
           seller_name: $('st-f-seller').value.trim() || STORE_NAME,
+          colors: colors.length ? colors : null,
           pay_method: $('st-f-method').value,
           seller_contact: $('st-f-method').value === 'stripe' ? ORDER_CONTACT : ($('st-f-contact').value.trim() || ORDER_CONTACT),
           description: $('st-f-desc').value.trim() || null,
