@@ -3175,6 +3175,12 @@
   .st-stock.out{color:#c24444;background:rgba(255,107,107,.14);}
   .st-price small{font-size:.7rem;color:var(--ink-soft);font-weight:600;margin-left:4px;}
   .st-cond{font-size:.78rem;color:var(--ink-soft);}
+  .st-detailbtn{display:none;background:none;border:0;padding:2px 0;text-align:left;font-family:'Inter',sans-serif;font-weight:700;font-size:.76rem;color:var(--bg-deep-soft);cursor:pointer;}
+  .st-detail{display:none;}
+  .st-detail h4{font-size:.9rem;line-height:1.3;margin:0;padding-right:34px;}
+  .st-detail-text{font-size:.8rem;line-height:1.5;color:var(--ink-soft);white-space:pre-line;}
+  .st-detailx{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;border:1px solid var(--line-light);background:#fff;color:var(--ink);font-size:1.2rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .btn-small.st-del{color:#b3261e;border-color:rgba(179,38,30,.4);background:#fff;}
   .st-descwrap{min-height:calc(.85rem * 1.5 * 3 + 22px);}
   .st-desc{font-size:.85rem;color:var(--ink-soft);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line;}
   .st-desc.open{display:block;-webkit-line-clamp:unset;overflow:visible;}
@@ -3223,15 +3229,24 @@
   .st-empty{grid-column:1/-1;text-align:center;color:var(--ink-soft);padding:50px 10px;}
   @media (max-width:640px){
     .st-hero{padding:24px 18px 20px;}
-    .st-wrap{padding:28px 16px 40px;}
-    .st-grid{grid-template-columns:1fr;gap:16px;}
-    .st-body{padding:12px 12px 14px;}
-    .st-body h3{font-size:.95rem;}
-    .st-price{font-size:1.1rem;}
-    .st-media{aspect-ratio:2/1;}
-    .st-descwrap{min-height:calc(.85rem * 1.5 * 3 + 22px);}
-    .st-order{padding:11px 8px;font-size:.84rem;}
+    .st-wrap{padding:28px 12px 40px;}
+    .st-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+    .st-card{border-radius:14px;position:relative;}
+    .st-media{aspect-ratio:4/3;}
+    .st-body{padding:10px 10px 12px;gap:3px;}
+    .st-body h3{font-size:.84rem;}
+    .st-price{font-size:.98rem;}
+    .st-price small{font-size:.6rem;margin-left:2px;}
+    .st-pricerow{gap:6px;}
+    .st-stock{font-size:.64rem;padding:3px 7px;}
+    .st-seller{font-size:.72rem;}
+    .st-descwrap,.st-thumbs{display:none;}
+    .st-detailbtn{display:block;}
+    .st-detail.open{display:flex;position:absolute;inset:0;z-index:3;flex-direction:column;gap:8px;background:#fff;padding:14px 12px;overflow-y:auto;}
+    .st-order{padding:10px 6px;font-size:.8rem;}
     .st-share{display:none;}
+    .st-own-row{flex-wrap:wrap;}
+    .st-own-status{flex:1 1 100%;}
     .st-tools .text-input{flex:1 1 100%;}
   }
 </style>
@@ -3500,6 +3515,7 @@
     const opts = Object.keys(STATUS_LABEL).map(k => `<option value="${k}"${(k === s || (k === 'Available' && s === 'Pending')) ? ' selected' : ''}>${STATUS_LABEL[k]}</option>`).join('');
     return `
       <article class="st-card${soldOut ? ' dim' : ''}${owner ? ' ownerdrag' : ''}" id="st-p-${p.id}"${owner ? ' draggable="true"' : ''} data-id="${p.id}">
+        <div class="st-detail"><button type="button" class="st-detailx" aria-label="Close details">&times;</button><h4>${esc(p.title)}</h4><div class="st-detail-text">${p.description ? esc(p.description) : 'No description.'}</div></div>
         <div class="st-media${imgs[0] ? '' : ' noimg'}"${imgs[0] ? ` data-full="${esc(toCdnUrl(imgs[0], false))}"` : ''}>
           ${cover}${stateTag}
         </div>
@@ -3508,9 +3524,10 @@
           <div class="st-pricerow"><div class="st-price">$${Number(p.price).toLocaleString()}<small>${esc(p.currency || 'CAD')}</small></div><span class="st-stock ${soldOut ? 'out' : 'in'}">${soldOut ? 'Sold out' : 'In stock'}</span></div>
           <div class="st-seller">Brand: <strong>${esc(brandOf(p))}</strong></div>
           <div class="st-seller">Seller: <strong>${esc(p.seller_name || 'Pong Home')}</strong></div>
+          <button type="button" class="st-detailbtn">See details</button>
           <div class="st-descwrap">${p.description ? `<div class="st-desc">${esc(p.description)}</div><button type="button" class="st-descbtn" hidden>See more</button>` : ''}</div>
           <div class="st-thumbs">${thumbs}</div>
-          ${owner ? `<div class="st-own-row"><select class="text-input st-own-status" data-id="${p.id}">${opts}</select><button type="button" class="btn-small st-edit" data-id="${p.id}">Edit</button></div>` : ''}
+          ${owner ? `<div class="st-own-row"><select class="text-input st-own-status" data-id="${p.id}">${opts}</select><button type="button" class="btn-small st-edit" data-id="${p.id}">Edit</button><button type="button" class="btn-small st-del" data-id="${p.id}">Delete</button></div>` : ''}
           <div class="st-actions">
             ${cta}
             <button class="st-share" data-id="${p.id}" data-title="${esc(p.title)}" aria-label="Share this product"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button>
@@ -3624,6 +3641,26 @@
         btn.disabled = false; btn.textContent = label;
       }
     });
+    wrap.querySelectorAll('.st-detailbtn').forEach(btn => btn.onclick = () => btn.closest('.st-card').querySelector('.st-detail').classList.add('open'));
+    wrap.querySelectorAll('.st-detailx').forEach(btn => btn.onclick = () => btn.closest('.st-detail').classList.remove('open'));
+    wrap.querySelectorAll('.st-del').forEach(btn => btn.onclick = async () => {
+      const pr = products.find(x => String(x.id) === btn.dataset.id);
+      if (!pr || !confirm(`Delete "${pr.title}"? This cannot be undone.`)) return;
+      btn.disabled = true;
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?id=eq.${pr.id}`, { method: 'DELETE', headers: headers({ Prefer: 'return=representation' }) });
+        if (!res.ok) throw new Error(await res.text());
+        const rows = await res.json();
+        if (!rows.length) throw new Error('No permission to delete. Add a delete policy in Supabase.');
+        products = products.filter(x => x !== pr);
+        toast('Product deleted');
+        render();
+      } catch (e) {
+        console.error('Store: delete failed', e);
+        toast('Could not delete: ' + (e.message || 'unknown error'));
+        btn.disabled = false;
+      }
+    });
     checkDesc();
     const more = document.getElementById('st-more');
     if (more) more.onclick = () => { const y = window.scrollY; shown += PAGE_SIZE; render(); window.scrollTo(0, y); };
@@ -3679,7 +3716,7 @@
     const b = document.createElement('div');
     b.className = 'mkt-modal-backdrop';
     const catOpts = CATS.map(c => `<option value="${c[0]}">${c[1]}</option>`).join('');
-    const curs = ['CAD', 'USD', 'EUR'];
+    const curs = ['CAD', 'USD'];
     if (edit && p.currency && !curs.includes(p.currency)) curs.push(p.currency);
     const keep = edit ? (Array.isArray(p.image_url) ? p.image_url.slice(0, 3) : (p.image_url ? [p.image_url] : [])) : [];
     while (keep.length < 3) keep.push(null);
