@@ -3108,7 +3108,7 @@
   .st-hero::before{content:'';position:absolute;right:-90px;bottom:-120px;width:320px;height:320px;border-radius:50%;border:2px solid rgba(0,255,209,.14);box-shadow:inset 0 0 0 28px rgba(0,255,209,.04);pointer-events:none;}
   .st-hero>*{position:relative;}
   .st-eyebrow{display:inline-block;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mint);border:1px solid var(--mint-soft);background:rgba(0,255,209,.08);padding:6px 14px;border-radius:999px;margin:0;}
-  .arena-hero .st-tagline{margin:14px auto 0;max-width:none;color:#fff;font-weight:600;font-size:clamp(.95rem,2.4vw,1.2rem);}
+  .arena-hero .st-tagline{margin:14px auto 0;max-width:none;color:#fff;font-weight:400;font-size:clamp(.95rem,2.4vw,1.2rem);}
   .st-hero-title{font-size:clamp(2.1rem,6vw,3.5rem);color:#fff;line-height:1.05;margin:0 auto 16px;max-width:760px;}
   .st-hero-title span{color:var(--mint);}
   .arena-hero .st-hero-sub{max-width:560px;margin-bottom:24px;}
@@ -3153,9 +3153,9 @@
   .st-card.drag-over{outline:3px dashed var(--mint);outline-offset:-3px;}
   .st-card.hl{outline:3px solid var(--mint);}
   .st-card.dim .st-media{opacity:.55;}
-  .st-media{position:relative;aspect-ratio:4/3;background:linear-gradient(135deg,var(--bg-deep-soft),var(--bg-deep));display:flex;align-items:center;justify-content:center;cursor:zoom-in;}
-  .st-media.noimg{cursor:default;}
-  .st-media img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;}
+  .st-media{position:relative;height:170px;background:#fff;border-bottom:1px solid var(--line-light);display:flex;align-items:center;justify-content:center;cursor:zoom-in;}
+  .st-media.noimg{cursor:default;background:linear-gradient(135deg,var(--bg-deep-soft),var(--bg-deep));border-bottom:0;}
+  .st-media img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;padding:8px;box-sizing:border-box;background:#fff;}
   .st-media svg{width:34%;height:auto;opacity:.9;}
   .st-tag,.st-state{position:absolute;top:12px;font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;}
   .st-tag{left:12px;background:rgba(10,73,82,.9);color:var(--mint);}
@@ -3238,7 +3238,7 @@
     .st-wrap{padding:28px 12px 40px;}
     .st-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
     .st-card{border-radius:14px;position:relative;}
-    .st-media{aspect-ratio:4/3;}
+    .st-media{height:120px;}
     .st-body{padding:10px 10px 12px;gap:3px;}
     .st-body h3{font-size:.84rem;}
     .st-price{font-size:.98rem;}
@@ -3538,7 +3538,7 @@
           <div class="st-seller">Seller: <strong>${esc(p.seller_name || 'Pong Home')}</strong></div>
           ${colorsOf(p).length ? `<div class="st-colors" data-id="${p.id}"><span>Color</span>${colorsOf(p).map(c => `<button type="button" class="st-swatch${pickedColor(p) === c ? ' on' : ''}" data-color="${c}" style="--sw:${COLORS.find(x => x[0] === c)[1]}" aria-label="${c}" title="${c}"></button>`).join('')}<b class="st-colorname">${pickedColor(p)}</b></div>` : ''}
           <button type="button" class="st-detailbtn">See details</button>
-          <div class="st-descwrap">${p.description ? `<div class="st-desc">${esc(p.description)}</div><button type="button" class="st-descbtn" hidden>See more</button>` : ''}</div>
+          <div class="st-descwrap">${p.description ? `<div class="st-desc">${esc(p.description)}</div><button type="button" class="st-descbtn" hidden>See details</button>` : ''}</div>
           <div class="st-thumbs">${thumbs}</div>
           ${owner ? `<div class="st-own-row"><select class="text-input st-own-status" data-id="${p.id}">${opts}</select><button type="button" class="btn-small st-edit" data-id="${p.id}">Edit</button><button type="button" class="btn-small st-del" data-id="${p.id}">Delete</button></div>` : ''}
           <div class="st-actions">
@@ -3558,7 +3558,7 @@
     wrap.querySelectorAll('.st-descwrap').forEach(w => {
       const d = w.querySelector('.st-desc'), btn = w.querySelector('.st-descbtn');
       if (!d || !btn) return;
-      if (!btn.onclick) btn.onclick = () => { const o = d.classList.toggle('open'); btn.textContent = o ? 'See less' : 'See more'; };
+      if (!btn.onclick) btn.onclick = () => { const o = d.classList.toggle('open'); btn.textContent = o ? 'Hide details' : 'See details'; };
       if (!d.classList.contains('open')) btn.hidden = !(d.scrollHeight > d.clientHeight + 1);
     });
   }
