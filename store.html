@@ -3351,7 +3351,7 @@
   const CATS = [['Rubber','Rubbers'],['Blade','Blades'],['Table','Tables'],['Accessories','Accessories']];
   const STATUS_LABEL = { Available: 'In stock', Sold: 'Sold out', Cancelled: 'Hidden' };
   const PAGE_SIZE = 24;
-  const BRANDS = ['VICTAS', 'Butterfly', 'Nittaku', 'Others'];
+  const BRANDS = ['VICTAS', 'Butterfly', 'Nittaku', 'Joola', 'Tibhar', 'Xiom', 'Donic', 'DHS', 'Others'];
   const COLORS = [['Black', '#1a1a1a'], ['Red', '#d62828'], ['Blue', '#1d4ed8']];
   const picked = {};   // product id -> color the visitor chose
   const colorsOf = p => Array.isArray(p.colors) ? COLORS.map(c => c[0]).filter(c => p.colors.includes(c)) : [];
@@ -3365,7 +3365,7 @@
   try { owner = sessionStorage.getItem('st_owner') === '1'; } catch (e) {}
 
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const brandOf = p => { const b = String(p.brand || '').trim().toLowerCase(); return BRANDS.slice(0, 3).find(x => x.toLowerCase() === b) || 'Others'; };
+  const brandOf = p => { const b = String(p.brand || '').trim().toLowerCase(); return BRANDS.slice(0, -1).find(x => x.toLowerCase() === b) || 'Others'; };
   const status = p => p.status || 'Available';
   const catLabel = v => (CATS.find(c => c[0] === v) || [v, v || 'Gear'])[1];
 
@@ -3716,7 +3716,7 @@
       ${owner ? `<div class="st-owner-bar"><span>Owner mode</span><button class="btn-small" id="st-add">Add product</button><button class="btn-small btn-ghost" id="st-lock">Lock</button></div>` : ''}
       <div class="st-filters">
         <div class="st-frow"><span class="st-flabel">Type</span><div class="st-chips">${chip('', 'All', visible.length)}${CATS.filter(c => counts[c[0]]).map(c => chip(c[0], c[1], counts[c[0]])).join('')}</div></div>
-        <div class="st-frow"><span class="st-flabel">Brand</span><div class="st-chips">${bchip('', 'All', visible.length)}${BRANDS.map(v => bchip(v, v, bcounts[v] || 0)).join('')}</div></div>
+        <div class="st-frow"><span class="st-flabel">Brand</span><div class="st-chips">${bchip('', 'All', visible.length)}${BRANDS.filter(v => bcounts[v] || filters.brand === v).map(v => bchip(v, v, bcounts[v] || 0)).join('')}</div></div>
       </div>
       <div class="st-grid">${items.length ? items.map(cardHtml).join('') : '<div class="st-empty">No products here yet. Check back soon or try another category.</div>'}</div>
       ${seeMoreHtml(items.length, filtered.length)}`;
