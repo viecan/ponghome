@@ -3180,6 +3180,8 @@
   .st-stock.out{color:#c24444;background:rgba(255,107,107,.14);}
   .st-price small{font-size:.7rem;color:var(--ink-soft);font-weight:600;margin-left:4px;}
   .st-cond{font-size:.78rem;color:var(--ink-soft);}
+  .st-pricewrap{display:flex;flex-direction:column;gap:1px;min-width:0;}
+  .st-taxnote{font-size:.68rem;font-weight:600;color:var(--ink-soft);}
   .st-colors{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.8rem;color:var(--ink-soft);margin-top:2px;}
   .st-swatch{width:22px;height:22px;padding:0;border-radius:50%;background:var(--sw);border:2px solid #fff;box-shadow:0 0 0 1px rgba(10,42,47,.25);cursor:pointer;}
   .st-swatch.on{box-shadow:0 0 0 2px var(--bg-deep);}
@@ -3351,9 +3353,10 @@
   const CATS = [['Rubber','Rubbers'],['Blade','Blades'],['Table','Tables'],['Accessories','Accessories']];
   const STATUS_LABEL = { Available: 'In stock', Sold: 'Sold out', Cancelled: 'Hidden' };
   const PAGE_SIZE = 24;
-  const BRANDS = ['VICTAS', 'Butterfly', 'Nittaku', 'Joola', 'Tibhar', 'Xiom', 'Donic', 'DHS', 'PongHome', 'PongBot', 'Others'];
+  const BRANDS = ['VICTAS', 'Butterfly', 'Nittaku', 'Joola', 'Tibhar', 'Xiom', 'Donic', 'DHS', 'Others'];
   const COLORS = [['Black', '#1a1a1a'], ['Red', '#d62828'], ['Blue', '#1d4ed8']];
   const picked = {};   // product id -> color the visitor chose
+  const isPH = p => /pong\s*home/i.test(p.seller_name || 'Pong Home');
   const colorsOf = p => Array.isArray(p.colors) ? COLORS.map(c => c[0]).filter(c => p.colors.includes(c)) : [];
   const pickedColor = p => { const cs = colorsOf(p); return !cs.length ? '' : (cs.includes(picked[p.id]) ? picked[p.id] : cs[0]); };
   const BALL = '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" fill="#fff"/><circle cx="32" cy="32" r="26" fill="none" stroke="#00FFD1" stroke-width="3"/><path d="M18 22c4-5 10-7 16-6" stroke="#00FFD1" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/></svg>';
@@ -3556,7 +3559,7 @@
         </div>
         <div class="st-body">
           <h3>${esc(p.title)}</h3>
-          <div class="st-pricerow"><div class="st-price">$${Number(p.price).toLocaleString(undefined, { minimumFractionDigits: Number.isInteger(Number(p.price)) ? 0 : 2 })}<small>${esc(p.currency || 'CAD')}</small></div><span class="st-stock ${soldOut ? 'out' : 'in'}">${soldOut ? 'Sold out' : 'In stock'}</span></div>
+          <div class="st-pricerow"><div class="st-pricewrap"><div class="st-price">$${Number(p.price).toLocaleString(undefined, { minimumFractionDigits: Number.isInteger(Number(p.price)) ? 0 : 2 })}<small>${esc(p.currency || 'CAD')}</small></div>${isPH(p) ? '<span class="st-taxnote">Tax included</span>' : ''}</div><span class="st-stock ${soldOut ? 'out' : 'in'}">${soldOut ? 'Sold out' : 'In stock'}</span></div>
           <div class="st-seller">Brand: <strong>${esc(brandOf(p))}</strong></div>
           <div class="st-seller">Seller: <strong>${esc(p.seller_name || 'Pong Home')}</strong></div>
           ${colorsOf(p).length ? `<div class="st-colors" data-id="${p.id}"><span>Color</span>${colorsOf(p).map(c => `<button type="button" class="st-swatch${pickedColor(p) === c ? ' on' : ''}" data-color="${c}" style="--sw:${COLORS.find(x => x[0] === c)[1]}" aria-label="${c}" title="${c}"></button>`).join('')}<b class="st-colorname">${pickedColor(p)}</b></div>` : ''}
@@ -3659,7 +3662,7 @@
             <button type="button" class="st-cart-rm" data-act="rm" aria-label="Remove">&times;</button></div>`;
         }).join('')}</div>
         <div class="st-cart-total"><span>Total</span><strong>$${money(total)} ${cur}</strong></div>
-        <p class="st-cart-note">Your shipping address is collected on the next page.</p>
+        <p class="st-cart-note">${lines.every(l => isPH(l.p)) ? 'Tax included. ' : ''}Your shipping address is collected on the next page.</p>
         <div class="mkt-form-error" id="stCartErr"></div>
         <div class="mkt-modal-actions"><button class="btn-small btn-ghost" data-act="close">Continue shopping</button><button class="btn-small" data-act="checkout">Checkout</button></div></div>`;
     };
