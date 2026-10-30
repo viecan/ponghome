@@ -3250,14 +3250,6 @@
   .st-note{text-align:center;font-size:.85rem;color:var(--ink-soft);padding:22px 24px 30px;margin:0;}
   .st-note a{color:var(--bg-deep-soft);font-weight:600;}
 
-  .st-maint{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(5,20,23,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
-  .st-maint-card{max-width:440px;width:100%;background:#fff;border-radius:22px;padding:34px 28px 30px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.35);}
-  .st-maint-card svg{width:56px;height:56px;margin:0 auto 14px;}
-  .st-maint-card h2{font-size:1.5rem;margin-bottom:10px;}
-  .st-maint-card p{color:var(--ink-soft);line-height:1.6;font-size:.98rem;}
-  .st-maint-code{display:flex;gap:8px;margin-top:20px;}
-  .st-maint-code .text-input{flex:1;min-width:0;}
-  .st-maint-date{display:inline-block;margin-top:16px;background:var(--bg-deep);color:var(--mint);font-weight:700;font-size:.9rem;padding:9px 18px;border-radius:999px;}
   .st-owner-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--mint-soft);border:1px dashed var(--mint-dim);border-radius:14px;padding:10px 14px;margin-bottom:18px;font-size:.82rem;font-weight:600;}
   .st-owner-bar span{flex:1;}
   .st-owner-trigger{cursor:default;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;-webkit-user-select:none;}
@@ -3707,38 +3699,7 @@
     document.body.appendChild(b);
   }
 
-  const MAINT_HASH = '6460662e217c7a9f899208dd70a2c28abdea42f128666a9b78e6c0c064846493';   // SHA-256 of the code that hides the maintenance notice
-  let maintOff = false;
-  try { maintOff = sessionStorage.getItem('st_maint_off') === '1'; } catch (e) {}
-  const MAINT_OPEN_ON = new Date(2026, 10, 10);   // November 10, 2026 (local time). Set to null to switch the notice off.
-  function updateMaint() {
-    let el = document.getElementById('stMaint');
-    const on = MAINT_OPEN_ON && new Date() < MAINT_OPEN_ON && !owner && !maintOff;
-    if (!on) { if (el) el.remove(); document.body.style.overflow = ''; return; }
-    if (el) return;
-    el = document.createElement('div');
-    el.id = 'stMaint';
-    el.className = 'st-maint';
-    el.setAttribute('role', 'dialog');
-    el.setAttribute('aria-modal', 'true');
-    el.innerHTML = `<div class="st-maint-card">${BALL}<h2>Store under maintenance</h2><p>We are getting the store ready for you. Thanks for your patience.</p><div class="st-maint-date">Opening November 10</div><div class="st-maint-code"><input class="text-input" id="stMaintCode" type="password" inputmode="numeric" autocomplete="off" placeholder="Access code" /><button type="button" class="btn-small" id="stMaintGo">Enter</button></div><div class="mkt-form-error" id="stMaintErr"></div></div>`;
-    const go = async () => {
-      let ok = false;
-      const v = el.querySelector('#stMaintCode').value.trim();
-      try { ok = (await sha256(v)) === MAINT_HASH; } catch (e) {}
-      if (!ok) { el.querySelector('#stMaintErr').textContent = 'Incorrect code.'; return; }
-      maintOff = true;
-      try { sessionStorage.setItem('st_maint_off', '1'); } catch (e) {}
-      updateMaint();
-    };
-    el.querySelector('#stMaintGo').onclick = go;
-    el.querySelector('#stMaintCode').onkeydown = e => { if (e.key === 'Enter') go(); };
-    document.body.appendChild(el);
-    document.body.style.overflow = 'hidden';
-  }
-
   function render() {
-    updateMaint();
     updateCartBtn();
     if (!loaded && !loadError) { wrap.innerHTML = '<div class="st-empty">Loading products&hellip;</div>'; return; }
     if (loadError) { wrap.innerHTML = `<div class="mkt-error-box">We could not load the store right now. Please refresh and try again.<br><small>${esc(loadError)}</small></div>`; return; }
@@ -3995,7 +3956,6 @@
 
   document.querySelectorAll('.st-owner-trigger').forEach(el => el.onclick = openOwnerAccess);
   if (location.hash === '#owner') openOwnerAccess();
-  updateMaint();
   fetchProducts();
   try {
     const q = new URLSearchParams(location.search).get('checkout');
