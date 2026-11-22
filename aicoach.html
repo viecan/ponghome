@@ -310,7 +310,7 @@ canvas.chart{background:var(--panel2)}
   .kpi{padding:10px 8px}.kpi .v{font-size:18px}.kpi .l{font-size:11px;line-height:1.25}
   #p-strokes table{font-size:12px}
   #p-strokes th,#p-strokes td{padding:7px 4px}
-  #p-strokes th:nth-child(7),#p-strokes td:nth-child(7),#p-strokes th:nth-child(8),#p-strokes td:nth-child(8){display:none}
+  #p-strokes th:nth-child(8),#p-strokes td:nth-child(8),#p-strokes th:nth-child(9),#p-strokes td:nth-child(9){display:none}
   .rec,.tactic{padding:12px}
   .rec p,.tactic ol,.tactic ul{font-size:13.5px}
   canvas.chart{height:160px}
@@ -334,8 +334,8 @@ canvas.chart{background:var(--panel2)}
       <a class="nav-tab" href="/">Home</a>
       <a class="nav-tab" href="/table-tennis-guides">Insights</a>
       <a class="nav-tab" href="/ratings">Gear Index</a>
-      <a class="nav-tab active" href="/aicoach" aria-current="page">AI Coach</a>
       <a class="nav-tab" href="/scoreboard">Scoreboard</a>
+      <a class="nav-tab active" href="/aicoach" aria-current="page">AI Coach</a>
     </div>
     <div class="nav-right">
       <div class="social-row">
@@ -429,6 +429,8 @@ canvas.chart{background:var(--panel2)}
       <option value="heavy">Max accuracy (heavy model, 20 fps)</option>
     </select>
     <label class="toggle"><input type="checkbox" id="showSkel" checked> Show skeleton on playback</label>
+    <label class="toggle"><input type="checkbox" id="showNotes" checked> Show coaching notes &amp; stats on video</label>
+    <label class="toggle"><input type="checkbox" id="preciseSpd" checked> Precise stroke &amp; ball speed (adds a short extra pass)</label>
     <div class="note">
       <span class="guidelink" data-guide>📷 Open camera setup guide</span><br>
       <b>Best results:</b>
@@ -539,7 +541,7 @@ canvas.chart{background:var(--panel2)}
             <div id="summaryText" style="font-size:14.5px"></div>
             <div class="row" style="margin-top:12px">
               <button class="ghost noexport" id="pdfBtn2">📄 Download PDF</button>
-              <button class="ghost noexport" id="dlJson">⬇ Download data (JSON)</button>
+              <button class="ghost noexport" id="vidBtn2">🎬 Download video with skeleton</button>
             </div>
           </div>
         </div>
@@ -560,7 +562,7 @@ canvas.chart{background:var(--panel2)}
       <div class="card">
         <h2>Detected Strokes</h2>
         <p style="font-size:12.5px;color:var(--muted);margin-top:0">Click a row to jump the video to that stroke.</p>
-        <div style="overflow:auto"><table><thead><tr><th>#</th><th>Time</th><th>Side</th><th>Racket speed</th><th>Elbow at contact</th><th>Trunk rotation</th><th>Knee bend</th><th>Recovery</th><th>Grade</th></tr></thead><tbody id="strokeRows"></tbody></table></div>
+        <div style="overflow:auto"><table><thead><tr><th>#</th><th>Time</th><th>Side</th><th>Hand km/h</th><th>Ball km/h (est.)</th><th>Elbow at contact</th><th>Trunk rotation</th><th>Knee bend</th><th>Recovery</th><th>Grade</th></tr></thead><tbody id="strokeRows"></tbody></table></div>
       </div>
     </div>
 
@@ -836,12 +838,10 @@ overlay.onclick = e => {
   choose(pool.sort((a, b) => Math.hypot(a.hip.x - x, a.hip.y - y) - Math.hypot(b.hip.x - x, b.hip.y - y))[0]);
 };
 $('#analyzeBtn').onclick = analyze;
-$('#dlJson').onclick = () => {
-  const blob = new Blob([JSON.stringify({ report, settings: settings() }, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'tt-analysis.json'; a.click();
-};
+$('#vidBtn2').onclick = () => exportVideo('skeleton');
 
 function loadVideo(f) {
+  videoFps.v = 0;
   frames = []; report = null; me = null; candidates = []; $('#results').classList.add('hidden'); $('#live').classList.remove('on');
   $('#analyzeBtn').disabled = true; $('#picker').classList.remove('hidden');
   video.src = URL.createObjectURL(f);
@@ -1091,6 +1091,7 @@ async function analyze() {
     setBar(1);
     if (frames.length < fps * 2) throw new Error(stopReq ? 'Stopped too early. Let it analyze at least a few seconds of play.' : 'Could not detect a player clearly. Try a clip with the full body visible and better lighting.');
     report = buildReport(frames, s, fps);
+    if ($('#preciseSpd').checked && report.strokes.length && !stopReq) await refineSpeeds(report, clm);
     renderAll();
     $('#live').classList.add('on');
     setTimeout(() => scrollToEl($('#results')), 200);
@@ -1139,10 +1140,154 @@ function drawSkeleton(lm, live, stroke, ctx = octx, W = overlay.width, H = overl
     octx.fillText(`${stroke.side === 'FH' ? 'FOREHAND' : 'BACKHAND'} #${stroke.n}  ${stroke.grade}`, W * 0.03, H * 0.08);
   }
 }
+/* ---------------- Precise speed pass: re-sample each stroke at the video's own frame rate ---------------- */
+async function videoFps() {
+  if (videoFps.v) return videoFps.v;
+  if (!video.requestVideoFrameCallback) return (videoFps.v = 30);
+  const keep = video.currentTime, times = [];
+  await new Promise(res => {
+    const cb = (n, md) => { times.push(md.mediaTime); if (times.length < 14) video.requestVideoFrameCallback(cb); else res(); };
+    video.requestVideoFrameCallback(cb); video.play().catch(res); setTimeout(res, 1800);
+  });
+  video.pause();
+  const d = times.slice(1).map((t, i) => t - times[i]).filter(x => x > 0.003 && x < 0.2).sort((a, b) => a - b);
+  videoFps.v = d.length ? Math.min(240, Math.max(15, Math.round(1 / d[d.length >> 1]))) : 30;
+  await seek(keep); return videoFps.v;
+}
+async function refineSpeeds(r, clm) {
+  const R = $('#hand').value === 'right', WR = R ? 16 : 15;
+  const fpsV = await videoFps(), dt = Math.max(1 / fpsV, 1 / 60);
+  const list = r.strokes.slice(0, 40);
+  for (let k = 0; k < list.length; k++) {
+    if (stopReq) break;
+    const st = list[k], f0 = frames[st.i];
+    setStatus(`Measuring stroke speed ${k + 1}/${list.length} at ${fpsV} fps...`); setBar(k / list.length);
+    const box = expandBox(boxFromLm(f0.lm) || [0, 0, 1, 1], 1.6, 1.35);
+    let hip = { x: (f0.lm[23][0] + f0.lm[24][0]) / 2, y: (f0.lm[23][1] + f0.lm[24][1]) / 2 };
+    const samp = []; let lastKey = '';
+    for (let t = st.t - 0.15; t <= st.t + 0.1; t += dt) {
+      await seek(Math.max(0, t));
+      const res = detectCrop(clm, box), idx = pickPose(res, hip, true);
+      if (idx < 0) continue;
+      const L = res.landmarks[idx], Wd = res.worldLandmarks[idx];
+      const key = L[WR].x.toFixed(5) + L[WR].y.toFixed(5); if (key === lastKey) continue; lastKey = key; // duplicate frame
+      const sw = Math.hypot(L[11].x - L[12].x, L[11].y - L[12].y) || 0.05;
+      samp.push({ t, x: L[WR].x / sw, y: L[WR].y / sw, w: [Wd[WR].x, Wd[WR].y, Wd[WR].z] });
+      hip = mid(L[23], L[24]);
+    }
+    if (samp.length < 4) continue;
+    let peak = 0;
+    for (let n = 2; n < samp.length; n++) {      // 2 frame spacing smooths landmark noise
+      const a = samp[n - 2], b = samp[n], tt = b.t - a.t; if (tt <= 0) continue;
+      const v2 = Math.hypot(b.x - a.x, b.y - a.y) * r.m.SWm / tt, v3d = len(sub(b.w, a.w)) / tt;
+      peak = Math.max(peak, Math.max(v2, v3d) * 3.6);
+    }
+    if (peak > 3 && peak < 130) { st.handKmh = peak; setStrokeSpeeds(st); }
+  }
+  speedSummary(r.m, r.strokes);
+}
+
+/* ---------------- Coaching overlay (app playback + exported video) ---------------- */
+function nearestIdx(t) {
+  let lo = 0, hi = frames.length - 1;
+  while (lo < hi) { const m = (lo + hi) >> 1; frames[m].t < t ? lo = m + 1 : hi = m; }
+  if (lo > 0 && Math.abs(frames[lo - 1].t - t) < Math.abs(frames[lo].t - t)) lo--;
+  return lo;
+}
+function wrapText(ctx, text, maxW) {
+  const words = text.split(' '), lines = []; let cur = '';
+  words.forEach(w => { const tt = cur ? cur + ' ' + w : w; if (ctx.measureText(tt).width > maxW && cur) { lines.push(cur); cur = w; } else cur = tt; });
+  if (cur) lines.push(cur); return lines;
+}
+function panel(ctx, x, y, w, h, r, fill) {
+  ctx.fillStyle = fill; ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h);
+  ctx.fill();
+}
+function drawCoach(ctx, W, H, t, clear = true) {
+  if (clear) ctx.clearRect(0, 0, W, H);
+  if (!report || !frames.length) return;
+  const i = nearestIdx(t), f = frames[i], P = report.per[i];
+  const near = f && Math.abs(f.t - t) < 0.2;
+  const R = $('#hand').value === 'right', WR = R ? 16 : 15, EL = R ? 14 : 13, KN = R ? 26 : 25;
+  const fs = Math.round(Math.max(W, H) / 52), good = '#00FFD1', warn = '#FFB020', bad = '#FF6B6B';
+  const colBand = (v, lo, hi) => v >= lo && v <= hi ? good : (v >= lo - 15 && v <= hi + 15 ? warn : bad);
+  ctx.save(); ctx.textBaseline = 'alphabetic';
+  if (near) {
+    // racket hand trail (last 0.4 s)
+    const trail = []; for (let k = i; k >= 0 && t - frames[k].t < 0.4; k--) if (frames[k].lm[WR][2] > .3) trail.push(frames[k].lm[WR]);
+    for (let k = 1; k < trail.length; k++) {
+      ctx.strokeStyle = `rgba(0,255,209,${(1 - k / trail.length) * .85})`; ctx.lineWidth = Math.max(3, W / 160) * (1 - k / trail.length * .6);
+      ctx.beginPath(); ctx.moveTo(trail[k - 1][0] * W, trail[k - 1][1] * H); ctx.lineTo(trail[k][0] * W, trail[k][1] * H); ctx.stroke();
+    }
+    drawSkeleton(f.lm, false, null, ctx, W, H, false);
+    // joint angle tags
+    const tag = (j, txt, c) => {
+      if (f.lm[j][2] < .3) return;
+      ctx.font = `700 ${Math.round(fs * .8)}px Inter, sans-serif`;
+      const x = f.lm[j][0] * W + fs * .6, y = f.lm[j][1] * H, tw = ctx.measureText(txt).width;
+      panel(ctx, x - 4, y - fs * .85, tw + 10, fs * 1.1, 6, 'rgba(10,42,47,.78)');
+      ctx.fillStyle = c; ctx.fillText(txt, x + 1, y);
+    };
+    if (P.knee != null) tag(KN, `knee ${P.knee.toFixed(0)}°`, colBand(P.knee, 115, 150));
+    tag(EL, `elbow ${P.elbow.toFixed(0)}°`, colBand(P.elbow, 85, 135));
+    // footstep flashes
+    (report.m.steps || []).filter(q => t - q.t >= 0 && t - q.t < 0.3).forEach(q => {
+      const js = q.f === 0 ? [27] : q.f === 1 ? [28] : [27, 28];
+      js.forEach(j => { if (f.lm[j][2] < .3) return; const a = 1 - (t - q.t) / 0.3;
+        ctx.strokeStyle = `rgba(255,176,32,${a})`; ctx.lineWidth = Math.max(3, W / 250);
+        ctx.beginPath(); ctx.arc(f.lm[j][0] * W, f.lm[j][1] * H, fs * (0.6 + (1 - a)), 0, 7); ctx.stroke(); });
+    });
+  }
+  // live stats panel (top left)
+  const done = report.strokes.filter(s => s.t <= t);
+  const lines = [
+    ['Knee', P && P.knee != null ? P.knee.toFixed(0) + '°' : 'n/a', P && P.knee != null ? colBand(P.knee, 115, 150) : '#fff'],
+    ['Trunk lean', P ? P.lean.toFixed(0) + '°' : 'n/a', P ? colBand(P.lean, 12, 35) : '#fff'],
+    ['Hand speed', P ? P.kmh.toFixed(0) + ' km/h' : 'n/a', '#fff'],
+    ['Strokes', `${done.length}  (FH ${done.filter(s => s.side === 'FH').length} / BH ${done.filter(s => s.side === 'BH').length})`, '#fff'],
+    ['Footwork', `${report.m.stepsPerMin.toFixed(0)} steps/min`, '#fff']
+  ];
+  const lf = Math.round(fs * .78), lh = lf * 1.45, pw = lf * 16, ph = lh * lines.length + lf * 2.2;
+  panel(ctx, fs * .6, fs * .6, pw, ph, lf * .7, 'rgba(10,42,47,.72)');
+  ctx.font = `800 ${lf}px "JetBrains Mono", monospace`; ctx.fillStyle = good; ctx.fillText('PONG HOME AI COACH', fs * 1.1, fs * .6 + lf * 1.5);
+  lines.forEach(([k, v, c], n) => {
+    const y = fs * .6 + lf * 2.2 + lh * (n + 1) - lh * .25;
+    ctx.font = `500 ${lf}px Inter, sans-serif`; ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.fillText(k, fs * 1.1, y);
+    ctx.font = `700 ${lf}px Inter, sans-serif`; ctx.fillStyle = c; ctx.fillText(v, fs * 1.1 + lf * 7.2, y);
+  });
+  // stroke callout (shows for ~1.4 s after each stroke)
+  const st = report.strokes.filter(s => t - s.t >= -0.08 && t - s.t < 1.4).pop();
+  if (st) {
+    const cf = Math.round(fs * .95), maxW = Math.min(W * .92, cf * 30);
+    ctx.font = `600 ${Math.round(cf * .85)}px Inter, sans-serif`;
+    const tipLines = wrapText(ctx, '💡 ' + strokeTip(st), maxW - cf * 1.6);
+    const statTxt = `Hand ${st.handKmh.toFixed(0)} km/h · Ball ≈ ${st.ballKmh.toFixed(0)} km/h (est.) · Elbow ${st.elbow.toFixed(0)}° · Turn ${st.rot.toFixed(0)}°`;
+    const statLines = wrapText(ctx, statTxt, maxW - cf * 1.6);
+    const h1 = cf * 1.5, h2 = cf * 1.18 * statLines.length + cf * .1, boxH = h1 + h2 + tipLines.length * cf * 1.15 + cf * .9;
+    // place the box where it covers the player least: bottom centre, bottom right, top right
+    const bb = near ? boxFromLm(f.lm) : null;
+    const spots = [[(W - maxW) / 2, H - boxH - fs * 2.6], [W - maxW - fs * .6, H - boxH - fs * 2.6], [W - maxW - fs * .6, fs * .6]];
+    const overlap = ([sx, sy]) => !bb ? 0 : Math.max(0, Math.min(sx + maxW, bb[2] * W) - Math.max(sx, bb[0] * W)) * Math.max(0, Math.min(sy + boxH, bb[3] * H) - Math.max(sy, bb[1] * H));
+    const [x, y] = spots.reduce((a, b) => overlap(b) < overlap(a) - 1 ? b : a);
+    const sc = st.side === 'FH' ? bad : warn;
+    panel(ctx, x, y, maxW, boxH, cf * .6, 'rgba(10,42,47,.82)');
+    ctx.fillStyle = sc; ctx.fillRect(x, y, cf * .3, boxH);
+    ctx.font = `800 ${Math.round(cf * 1.1)}px "Baloo 2", Inter, sans-serif`; ctx.fillStyle = sc;
+    ctx.fillText(`${st.side === 'FH' ? 'FOREHAND' : 'BACKHAND'} #${st.n}`, x + cf * .9, y + h1);
+    const gtxt = `Grade ${st.grade}`; ctx.fillStyle = st.score >= 72 ? good : st.score >= 58 ? warn : bad;
+    ctx.fillText(gtxt, x + maxW - cf * .8 - ctx.measureText(gtxt).width, y + h1);
+    ctx.font = `600 ${Math.round(cf * .85)}px Inter, sans-serif`; ctx.fillStyle = '#fff';
+    statLines.forEach((ln, n) => ctx.fillText(ln, x + cf * .9, y + h1 + cf * 1.18 * (n + 1)));
+    ctx.fillStyle = good; tipLines.forEach((ln, n) => ctx.fillText(ln, x + cf * .9, y + h1 + h2 + cf * 1.15 * (n + 1)));
+  }
+  ctx.restore();
+}
 function overlayLoop() {
   const st0 = $('#stage').classList;
   if (frames.length && !analyzing && !st0.contains('picking') && !st0.contains('marking')) {
-    if ($('#showSkel').checked) {
+    if ($('#showSkel').checked && $('#showNotes').checked) drawCoach(octx, overlay.width, overlay.height, video.currentTime);
+    else if ($('#showSkel').checked) {
       const f = nearestFrame(video.currentTime);
       const st = report?.strokes.find(s => Math.abs(s.t - video.currentTime) < 0.35);
       drawSkeleton(f && Math.abs(f.t - video.currentTime) < 0.2 ? f.lm : null, false, st);
@@ -1163,7 +1308,7 @@ function updateLive() {
   $('#lvKnee').textContent = p.knee ? p.knee.toFixed(0) + '°' : 'n/a';
   $('#lvElbow').textContent = p.elbow.toFixed(0) + '°';
   $('#lvLean').textContent = p.lean.toFixed(0) + '°';
-  $('#lvSpeed').textContent = p.spd.toFixed(1);
+  $('#lvSpeed').textContent = (p.kmh || 0).toFixed(0) + ' km/h';
   $('#lvCount').textContent = report.strokes.filter(s => s.t <= t).length + ' / ' + report.strokes.length;
 }
 /* ---------------- Export: video with skeleton ---------------- */
@@ -1189,8 +1334,8 @@ async function exportVideo(mode = 'skeleton') {
     const draw = () => {
       cx.drawImage(video, 0, 0, cv.width, cv.height);
       if (cut) return;
-      const t = video.currentTime, f = nearestFrame(t), st = report.strokes.find(s => Math.abs(s.t - t) < 0.35);
-      drawSkeleton(f && Math.abs(f.t - t) < 0.2 ? f.lm : null, false, st, cx, cv.width, cv.height, false);
+      const t = video.currentTime;
+      drawCoach(cx, cv.width, cv.height, t, false);
       const fs = Math.round(Math.max(cv.width, cv.height) / 55);
       cx.font = `bold ${fs}px sans-serif`; cx.fillStyle = 'rgba(0,0,0,.55)';
       const tag = `Pong Home AI Coach · Score ${report.overall} · Strokes ${report.strokes.filter(s => s.t <= t).length}`;
@@ -1321,7 +1466,9 @@ function buildReport(F, s, fps) {
       wx: l[WR][0] / shW, wy: l[WR][1] / shW, wvis: l[WR][2],
       hx: (l[23][0] + l[24][0]) / 2, hy: (l[23][1] + l[24][1]) / 2, hs: shW,
       nose: l[0][0], ax: (l[27][0] + l[28][0]) / 2,
-      footL: [l[27][0] / shW, l[27][1] / shW], footR: [l[28][0] / shW, l[28][1] / shW]
+      footL: [l[27][0] / shW, l[27][1] / shW], footR: [l[28][0] / shW, l[28][1] / shW],
+      fl: l[27], fr: l[28], hipL: l[23], hipR: l[24],
+      w3: w[WR], swm: len(sub(w[11], w[12]))
     };
   });
   // unwrap yaw angles
@@ -1334,6 +1481,14 @@ function buildReport(F, s, fps) {
   });
   spd = smooth(spd, 1);
   per.forEach((p, i) => p.spd = spd[i]);
+  // real world speed: shoulder width in metres from 3D pose, 3D wrist speed catches motion toward/away from camera
+  const SWm = median(per.map(p => p.swm).filter(v => v > 0.15 && v < 0.7)) || 0.36;
+  const maxDtS = 2.6 / (fps || 15);
+  const v3 = smooth(per.map((p, i) => {
+    if (!i) return 0; const dt = p.t - per[i - 1].t; if (dt <= 0 || dt > maxDtS) return 0;
+    return len(sub(p.w3, per[i - 1].w3)) / dt;
+  }), 1);
+  per.forEach((p, i) => p.kmh = Math.min(130, Math.max(v3[i], spd[i] * SWm) * 3.6));
 
   // stroke detection: local peaks above adaptive threshold
   const thr = Math.max(median(spd) * 2.2, 3.0);
@@ -1362,7 +1517,9 @@ function buildReport(F, s, fps) {
     let j = st.i; while (j < per.length - 1 && spd[j] > st.speed * 0.35 && per[j].t - st.t < 1.2) j++;
     st.recovery = per[j].t - st.t;
     st.lean = p.lean;
+    st.handKmh = Math.max(...win(st.t, -0.1, 0.1).map(q => q.kmh), p.kmh);
   });
+  strokes.forEach(setStrokeSpeeds);
 
   // grade each stroke
   const elbowBand = { FH: [85, 135], BH: [80, 140] };
@@ -1390,32 +1547,118 @@ function buildReport(F, s, fps) {
     avgSpeed: avg(strokes.map(s => s.speed)),
     fhShare: strokes.length ? fh.length / strokes.length : 0
   };
-  // footwork: lateral hip travel and foot activity normalised by shoulder width
-  const hx = per.map(p => p.hx / p.hs);
-  m.lateralRange = Math.max(...hx) - Math.min(...hx);
-  let footTravel = 0; for (let i = 1; i < per.length; i++) footTravel += Math.hypot(per[i].footL[0] - per[i-1].footL[0], per[i].footL[1] - per[i-1].footL[1]) + Math.hypot(per[i].footR[0] - per[i-1].footR[0], per[i].footR[1] - per[i-1].footR[1]);
-  m.footActivity = footTravel / dur;
+  // ---------- footwork (robust to tracking jitter, gaps and pauses between points) ----------
+  {
+    const AR = (video.videoWidth && video.videoHeight) ? video.videoWidth / video.videoHeight : 1; // x in height units
+    const SW = median(per.map(p => p.hs).filter(v => v > 0.01)) || 0.1;                       // typical shoulder width
+    const step = 1 / (fps || 15), maxDt = step * 2.6;
+    const smoothPts = pts => pts.map((_, i) => {          // 5 frame median filter removes landmark jitter
+      const w = pts.slice(Math.max(0, i - 2), i + 3).filter(Boolean);
+      if (w.length < 2 || !pts[i]) return pts[i] ? [...pts[i]] : null;
+      const xs = w.map(q => q[0]).sort((a, b) => a - b), ys = w.map(q => q[1]).sort((a, b) => a - b);
+      return [xs[xs.length >> 1], ys[ys.length >> 1]];
+    });
+    const toPt = (lm, minVis = 0.5) => lm && (lm[2] ?? 1) >= minVis ? [lm[0] * AR / SW, lm[1] / SW] : null;
+    const L = smoothPts(per.map(p => toPt(p.fl))), Rf = smoothPts(per.map(p => toPt(p.fr)));
+    const H = smoothPts(per.map(p => toPt([(p.hipL[0] + p.hipR[0]) / 2, (p.hipL[1] + p.hipR[1]) / 2, Math.min(p.hipL[2] ?? 1, p.hipR[2] ?? 1)], 0.3)));
+    const visShare = per.filter((_, i) => L[i] && Rf[i]).length / per.length;
+    m.feetVisible = visShare >= 0.35;
+    // foot speed in shoulder widths per second (skip gaps and tracking jumps)
+    const speeds = pts => pts.map((q, i) => {
+      if (!i || !q || !pts[i - 1]) return 0;
+      const dt = per[i].t - per[i - 1].t; if (dt <= 0 || dt > maxDt) return 0;
+      const d = Math.hypot(q[0] - pts[i - 1][0], q[1] - pts[i - 1][1]);
+      return d > 1.2 ? 0 : d / dt;
+    });
+    const src = m.feetVisible ? [L, Rf] : [H];
+    const steps = [];
+    src.forEach((pts, fi) => {
+      const v = smooth(speeds(pts), 1), thr = Math.max(m.feetVisible ? 0.8 : 0.5, median(v.filter(x => x > 0)) * 2.5);
+      // noise floor of this clip: quiet-moment displacement (25th percentile), so jitter is not counted as steps
+      const d3 = pts.map((q, i) => q && pts[i - 3] ? Math.hypot(q[0] - pts[i - 3][0], q[1] - pts[i - 3][1]) : null).filter(x => x != null).sort((x, y) => x - y);
+      const noise = d3.length ? d3[Math.floor(d3.length * 0.25)] : 0;
+      const minDisp = Math.max(m.feetVisible ? 0.1 : 0.06, noise * 3);
+      let last = -9;
+      for (let i = 1; i < v.length - 1; i++) {
+        if (v[i] < thr || v[i] < v[i - 1] || v[i] < v[i + 1] || per[i].t - last < 0.3) continue;
+        // confirm a real displacement around the peak, not a single noisy frame
+        const a = pts[Math.max(0, i - 3)], b = pts[Math.min(pts.length - 1, i + 3)];
+        if (a && b && Math.hypot(b[0] - a[0], b[1] - a[1]) > minDisp) { steps.push({ t: per[i].t, f: m.feetVisible ? fi : -1 }); last = per[i].t; }
+      }
+    });
+    steps.sort((a, b) => a.t - b.t); m.steps = steps;
+    const mins = Math.max(dur / 60, 1 / 6);
+    m.stepsPerMin = steps.length / mins;
+    // share of 1 second windows that contain at least one step ("feet alive")
+    const nWin = Math.max(1, Math.floor(dur)); let act = 0;
+    for (let k = 0; k < nWin; k++) { const a = per[0].t + k, b = a + 1; if (steps.some(q => q.t >= a && q.t < b)) act++; }
+    m.activeShare = act / nWin;
+    // court coverage: 5th to 95th percentile of hip position (left/right and in/out)
+    const hp = H.filter(Boolean), pct = (arr, q) => { const a = [...arr].sort((x, y) => x - y); return a.length ? a[Math.min(a.length - 1, Math.floor(q * a.length))] : 0; };
+    const hxs = hp.map(q => q[0]), hys = hp.map(q => q[1]);
+    m.coverage = hp.length > 5 ? Math.hypot(pct(hxs, .95) - pct(hxs, .05), (pct(hys, .95) - pct(hys, .05)) * 0.6) : 0;
+    // adjustment between consecutive strokes (only real rally gaps, ignore pauses between points)
+    const gaps = strokes.slice(1).map((st, k) => [strokes[k].t, st.t]).filter(([a, b]) => b - a <= 2.5);
+    const adj = gaps.map(([a, b]) => {
+      const seg = H.filter((q, i) => q && per[i].t >= a && per[i].t <= b);
+      if (seg.length < 2) return null;
+      const xs = seg.map(q => q[0]), ys = seg.map(q => q[1]);
+      return Math.hypot(Math.max(...xs) - Math.min(...xs), (Math.max(...ys) - Math.min(...ys)) * 0.6);
+    }).filter(v => v != null);
+    m.adjust = adj.length ? median(adj) : null;
+    m.footActivity = m.stepsPerMin;           // kept for older references
+    m.lateralRange = m.coverage;
+  }
   // balance: head over base (nose x vs ankle centre, in shoulder widths) and hip bounce
   m.headOffset = avg(per.map(p => Math.abs(p.nose - p.ax) / p.hs));
   m.bounce = std(per.map(p => p.hy / p.hs));
-  // feet moving between strokes vs arm only
-  const between = strokes.slice(1).map((s, k) => { const a = strokes[k]; const seg = per.filter(p => p.t > a.t && p.t < s.t); if (seg.length < 2) return 0; const xs = seg.map(p => p.hx / p.hs); return Math.max(...xs) - Math.min(...xs); });
-  m.adjust = avg(between);
 
   const lvl = { beginner: 0.8, intermediate: 0.9, advanced: 1, elite: 1.08 }[s.level];
   const defensive = s.style === 'defender';
+  m.SWm = SWm; speedSummary(m, strokes);
   const scores = {
     'Ready stance & knee bend': Math.round((band(m.knee, defensive ? 125 : 118, 150, 30) * .6 + band(m.stance, 1.25, 1.9, 0.6) * .4)),
     'Posture & balance': Math.round(band(m.lean, 12, 35, 18) * .5 + band(m.headOffset, 0, 0.45, 0.6) * .5),
     'Trunk & hip rotation': Math.round((fh.length ? band(m.rotFH, 32 * lvl, 90, 30) : 65) * .7 + (bh.length ? band(m.rotBH, 12, 60, 20) : 65) * .3),
     'Arm mechanics': Math.round((fh.length ? band(m.elbowFH, 85, 135, 40) : 65) * .6 + (bh.length ? band(m.elbowBH, 80, 140, 40) : 65) * .4),
-    'Footwork & positioning': Math.round(band(m.footActivity, 2.2 * lvl, 12, 2) * .5 + band(m.adjust, 0.12, 2, 0.15) * .5),
+    'Footwork & positioning': footScore(m, lvl, s),
     'Recovery & tempo': Math.round(band(m.recovery, 0, 0.42 / lvl, 0.5) * .6 + band(m.tempo, s.vtype === 'match' ? 15 : 35, 120, s.vtype === 'match' ? 15 : 30) * .4),
     'Consistency': Math.round(band(m.speedCV, 0, 0.22, 0.35) * .5 + band(m.elbowCV, 0, 0.12, 0.2) * .5)
   };
   if (s.vtype === 'shadow') scores['Recovery & tempo'] = Math.round(band(m.recovery, 0, 0.42, 0.5));
   const overall = Math.round(avg(Object.values(scores)));
   return { per, strokes, m, scores, overall, dur, fps, settings: s };
+}
+
+// Footwork score: only rewards movement (never punishes moving a lot), always gives a base score.
+function footScore(m, lvl, s) {
+  const ramp = (v, lo, hi) => clamp((v - lo) / (hi - lo) * 100);
+  const stepsS = ramp(m.stepsPerMin, 8, 55 * lvl);
+  const activeS = ramp(m.activeShare, 0.12, 0.7);
+  const covS = ramp(m.coverage, 0.12, (s.vtype === 'shadow' ? 1.0 : 1.2) * lvl);
+  const adjS = m.adjust == null ? activeS : ramp(m.adjust, 0.03, 0.3 * lvl);
+  const raw = stepsS * .35 + activeS * .25 + adjS * .2 + covS * .2;
+  return Math.round(15 + raw * 0.85);   // 15 minimum when the player is tracked
+}
+
+// Racket head is ~25 cm beyond the wrist and swings faster than the hand; a topspin/drive leaves
+// the racket a bit faster than the racket head. Both factors are typical estimates, not measurements.
+function setStrokeSpeeds(st) { st.racketKmh = st.handKmh * 1.35; st.ballKmh = st.racketKmh * 1.15; }
+function speedSummary(m, strokes) {
+  const hs = strokes.map(s => s.handKmh), bs = strokes.map(s => s.ballKmh);
+  m.handAvg = avg(hs); m.handTop = hs.length ? Math.max(...hs) : 0;
+  m.ballAvg = avg(bs); m.ballTop = bs.length ? Math.max(...bs) : 0;
+}
+function strokeTip(st) {
+  const t = [];
+  if (st.knee != null && st.knee > 155) t.push('Bend your knees more');
+  if (st.side === 'FH' && st.rot < 30) t.push('Turn waist and hips into the ball');
+  if (st.side === 'BH' && st.rot < 10) t.push('Add a small waist turn');
+  if (st.elbow > 150) t.push('Arm too straight, keep elbow bent');
+  else if (st.elbow < 70) t.push('Too cramped, make space from the ball');
+  if (st.recovery > 0.5) t.push('Recover to ready position faster');
+  if (t.length) return t.slice(0, 2).join(' · ');
+  return st.grade === 'A' ? 'Excellent stroke, repeat this feeling!' : 'Good shape, stay compact and balanced';
 }
 
 /* ---------------- Recommendations engine ---------------- */
@@ -1469,10 +1712,21 @@ function buildRecs(r) {
     `Backhand elbow angle at contact is ${m.elbowBH.toFixed(0)}°.`,
     'Keep the elbow in front of the body as a pivot, about 90 to 120° at contact, and let the forearm do the work.',
     'Backhand push to backhand flick transitions, 3 × 15 reps.');
-  if (m.footActivity < 2.2 || m.adjust < 0.12) add('Footwork & positioning', 'Move your feet more between shots',
-    'Your hips barely shift between strokes, which means you are reaching with the arm instead of adjusting position.',
-    'Use small adjustment steps after every shot, split step as the opponent strikes, and use the shuffle step for lateral movement.',
+  if (!m.feetVisible) add('Footwork & positioning', 'Feet not clearly visible: footwork is estimated',
+    'Your feet were hidden or cut off in much of the clip, so footwork was estimated from hip movement only.',
+    'Film with your whole body in frame, feet included, from behind or 45° behind (see the camera setup guide).', null);
+  if (m.stepsPerMin < 25) add('Footwork & positioning', 'Move your feet more between shots',
+    `About ${m.stepsPerMin.toFixed(0)} foot steps per minute were detected. Active players usually make 35 or more in rallies, so you are likely reaching with the arm instead of moving into position.`,
+    'Take small adjustment steps after every shot, split step as the opponent strikes, and use the shuffle step for lateral movement.',
     'Two point footwork (FH from middle, FH from wide) 3 × 1 min; then random multiball with 1 ball every 1.2 s.');
+  if (m.activeShare < 0.45) add('Footwork & positioning', 'Keep your feet alive with a split step',
+    `Your feet were moving in only ${(m.activeShare * 100).toFixed(0)}% of the rally time. Flat footed moments make your first step late.`,
+    'Stay on the balls of your feet and do a small split step (a light hop) just as the opponent contacts the ball.',
+    'Shadow footwork: 6 × 30s of split step plus one shuffle left or right on a partner\'s clap.');
+  if (m.coverage < 0.35 && s.vtype !== 'shadow') add('Footwork & positioning', 'Cover more of the table with your feet',
+    `Your hips moved only about ${m.coverage.toFixed(2)}× shoulder width across the clip. You are staying in one spot and stretching for wide balls.`,
+    'Return to a central ready position after each shot and move your whole body to wide balls, not just the arm.',
+    'Falkenberg drill 3 × 1 min, then irregular multiball to wide forehand and wide backhand.');
   if (m.recovery > 0.5) add('Recovery & tempo', 'Recover to ready position faster',
     `Average recovery after contact is ${m.recovery.toFixed(2)}s. In fast rallies you will be late on the next ball.`,
     'Shorter follow through on drives, relax the arm right after contact and return the racket to neutral in front of the body.',
@@ -1590,14 +1844,16 @@ function renderAll() {
   const m = r.m, fh = r.strokes.filter(s => s.side === 'FH').length, bh = r.strokes.length - fh;
   const k = [[r.strokes.length, 'Strokes detected'], [`${fh} / ${bh}`, 'Forehand / Backhand'], [m.tempo.toFixed(0) + '/min', 'Stroke tempo'],
     [m.knee.toFixed(0) + '°', 'Avg knee angle'], [m.stance.toFixed(2) + '×', 'Stance / shoulder width'], [m.lean.toFixed(0) + '°', 'Trunk lean'],
-    [(m.rotFH || 0).toFixed(0) + '°', 'FH trunk rotation'], [(m.elbowFH || 0).toFixed(0) + '°', 'FH elbow at contact'], [m.recovery.toFixed(2) + 's', 'Avg recovery']];
+    [(m.rotFH || 0).toFixed(0) + '°', 'FH trunk rotation'], [(m.elbowFH || 0).toFixed(0) + '°', 'FH elbow at contact'], [m.recovery.toFixed(2) + 's', 'Avg recovery'], [m.stepsPerMin.toFixed(0) + '/min', 'Foot steps'],
+    [m.handTop.toFixed(0) + ' km/h', 'Top hand speed'], [m.ballAvg.toFixed(0) + ' km/h', 'Avg ball speed (est.)'], [m.ballTop.toFixed(0) + ' km/h', 'Top ball speed (est.)'],
+    [(m.activeShare * 100).toFixed(0) + '%', 'Feet active time'], [m.coverage.toFixed(2) + '×', 'Court coverage (shoulder widths)']];
   $('#kpis').innerHTML = k.map(([v, l]) => `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
   $('#bars').innerHTML = Object.entries(r.scores).map(([kk, v]) => `<div class="b"><div class="top"><span>${kk}</span><b style="color:${col(v)}">${v}</b></div><div class="track"><div class="fill" style="width:${v}%;background:${col(v)}"></div></div></div>`).join('');
   const recs = buildRecs(r);
   const pl = { 1: 'High priority', 2: 'Medium', 3: 'Keep it up' };
   $('#recs').innerHTML = recs.map(x => `<div class="rec p${x.p}"><div class="h"><span>${x.title}</span><span class="tag">${pl[x.p]} · ${x.area}</span></div><p><b>What we saw:</b> ${x.why}</p><p><b>How to fix:</b> ${x.fix}</p>${x.drill ? `<div class="drill">🏓 <b>Drill:</b> ${x.drill}</div>` : ''}</div>`).join('');
   renderTactics();
-  $('#strokeRows').innerHTML = r.strokes.map(s => `<tr data-t="${s.t}"><td>${s.n}</td><td>${fmt(s.t)}</td><td><span class="pill ${s.side.toLowerCase()}">${s.side}</span></td><td>${s.speed.toFixed(1)}</td><td>${s.elbow.toFixed(0)}°</td><td>${s.rot.toFixed(0)}°</td><td>${s.knee ? s.knee.toFixed(0) + '°' : 'n/a'}</td><td>${s.recovery.toFixed(2)}s</td><td><b style="color:${col(s.score)}">${s.grade}</b></td></tr>`).join('') || '<tr><td colspan="9">No clear strokes detected. Shadow play or a side view usually works better.</td></tr>';
+  $('#strokeRows').innerHTML = r.strokes.map(s => `<tr data-t="${s.t}"><td>${s.n}</td><td>${fmt(s.t)}</td><td><span class="pill ${s.side.toLowerCase()}">${s.side}</span></td><td>${s.handKmh.toFixed(0)}</td><td>≈${s.ballKmh.toFixed(0)}</td><td>${s.elbow.toFixed(0)}°</td><td>${s.rot.toFixed(0)}°</td><td>${s.knee ? s.knee.toFixed(0) + '°' : 'n/a'}</td><td>${s.recovery.toFixed(2)}s</td><td><b style="color:${col(s.score)}">${s.grade}</b></td></tr>`).join('') || '<tr><td colspan="10">No clear strokes detected. Shadow play or a side view usually works better.</td></tr>';
   $$('#strokeRows tr[data-t]').forEach(tr => tr.onclick = () => { video.currentTime = Math.max(0, +tr.dataset.t - 0.6); video.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
   if ($('#p-data').classList.contains('on')) drawCharts();
 }
