@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GTYKNXXBF3"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-GTYKNXXBF3');</script>
+<title>AI Coach | Free Table Tennis Video Analysis | Pong Home</title>
+<meta name="description" content="Upload a video of your table tennis and get free AI analysis of your stance, footwork, stroke technique and tactics. Runs in your browser, your video stays private.">
+<link rel="canonical" href="https://ponghome.com/aicoach">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Pong Home">
+<meta property="og:title" content="AI Coach | Table Tennis Video Analysis | Pong Home">
+<meta property="og:description" content="Free AI analysis of your table tennis technique, footwork and tactics from your own video.">
+<meta property="og:url" content="https://ponghome.com/aicoach"><meta property="og:image" content="https://ponghome.com/og-image.jpg"><meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://ponghome.com/og-image.jpg">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#0E3B42;--bg-deeper:#0A4952;--bg-deep-soft:#14727C;--mint:#00FFD1;--mint-dim:#00E0B8;--mint-soft:rgba(0,255,209,0.18);
+  --paper:#FAFFFB;--paper-card:#FFFFFF;--ink:#0A2A2F;--ink-soft:#4C6B70;--line-dark:rgba(255,255,255,0.16);--line-light:rgba(10,42,47,0.10);
+  --shadow:0 18px 40px rgba(6,88,96,0.22);--coral:#FF6B6B;--sun:#FFB020;
+  --bg:var(--paper);--panel:#FFFFFF;--panel2:#F1F8F6;--line:rgba(10,42,47,0.12);--text:var(--ink);--muted:var(--ink-soft);
+  --accent:#00C9A7;--accent-ink:#0B7F72;--accent2:#14727C;--good:#0F9F6E;--warn:#D98E00;--bad:#E5484D;--blue:#14727C;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+main{max-width:1240px;margin:0 auto;padding:32px 22px 48px}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:20px}
+@media(max-width:960px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:18px}
+.card h2{font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent2)}
+.card h3{font-size:14px;margin:14px 0 8px}
+label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
+select,input[type=text]{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;cursor:pointer;user-select:none;background:var(--panel2);color:var(--muted)}
+.chip.on{background:rgba(0,224,184,.15);border-color:var(--accent);color:var(--text)}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:26px;text-align:center;cursor:pointer;transition:.2s}
+.drop:hover,.drop.drag{border-color:var(--accent);background:rgba(0,224,184,.05)}
+.drop b{color:var(--accent)}
+button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.stage{position:relative;background:#000;border-radius:10px;overflow:hidden;margin:0 auto;max-width:100%}
+.stage video{width:100%;height:100%;display:block;object-fit:contain}
+#stageWrap.portrait{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+#stageWrap.portrait .stage{margin:0}
+#stageWrap.portrait .ctrls .row{margin-top:0!important}
+@media(max-width:700px){#stageWrap.portrait{grid-template-columns:1fr}#stageWrap.portrait .stage{margin:0 auto}}
+.live{display:none;margin-top:14px}
+.guide{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:60;display:none;overflow:auto;padding:24px}
+.guide.on{display:block}
+.guide .box{max-width:980px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+.guide h2{margin:0 0 4px;font-size:20px;color:var(--accent)}
+.gg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:16px}
+.gg .pn{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px}
+.gg .pn h3{margin:0 0 8px;font-size:14px}
+.gg svg{width:100%;height:auto;display:block}
+.gg ul{margin:8px 0 0;padding-left:18px;font-size:13px}
+.ok{color:var(--good)}.no{color:var(--bad)}
+.guidelink{display:inline-block;margin-top:10px;font-size:13px;color:var(--accent2);cursor:pointer;text-decoration:underline}
+.rangebox{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:12px}
+.rangebox .h{font-weight:700;margin-bottom:6px}
+.range{position:relative;height:34px;margin:4px 8px}
+.range .trk{position:absolute;left:0;right:0;top:14px;height:6px;background:var(--line);border-radius:3px}
+.range .sel{position:absolute;top:14px;height:6px;background:var(--accent);border-radius:3px}
+.range .cur{position:absolute;top:7px;width:2px;height:20px;background:#fff;pointer-events:none}
+.range input{position:absolute;left:-8px;width:calc(100% + 16px);top:6px;margin:0;-webkit-appearance:none;appearance:none;background:transparent;pointer-events:none;height:22px}
+.range input::-webkit-slider-runnable-track{background:transparent}
+.range input::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:16px;height:24px;border-radius:4px;background:var(--accent2);cursor:ew-resize;border:2px solid #fff}
+.range input::-moz-range-thumb{pointer-events:auto;width:12px;height:20px;border-radius:4px;background:var(--accent2);cursor:ew-resize;border:2px solid #fff}
+.rlabels{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);flex-wrap:wrap;gap:6px}
+.rlabels b{color:var(--text)}
+.rangebox .row button{padding:7px 11px;font-size:12.5px}
+.seg{display:inline-flex;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:4px;gap:4px}
+.seg div{padding:8px 14px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px}
+.seg div.on{background:var(--accent);color:#fff}
+.seg i{display:inline-block;border:2px solid currentColor;border-radius:3px}
+.fmtrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;font-size:13px;color:var(--muted)}
+.picker{background:var(--panel2);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin-top:12px}
+.picker .h{font-weight:700;margin-bottom:4px}
+.picker .row{margin-top:8px}
+.picker button.me{background:var(--good)}
+.stage.picking canvas{pointer-events:auto;cursor:pointer}
+.stage.marking canvas{pointer-events:auto;cursor:crosshair;touch-action:none}
+button.danger{background:transparent;border:1px solid var(--bad);color:var(--bad)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.busy{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:50}
+.busy div{background:var(--panel);border:1px solid var(--line);padding:20px 26px;border-radius:12px;font-size:14px;text-align:center}
+#results.pdfmode{--panel:#ffffff;--panel2:#f3f5f8;--line:#dde3ea;--text:#111;--muted:#555;color:#111;width:800px}
+#results.pdfmode .pane{display:block!important}
+#results.pdfmode .tabs,#results.pdfmode .noexport{display:none!important}
+#results.pdfmode .rec p{color:#222}
+#results.pdfmode .card{background:#fff}
+.pdfhead{display:none}#results.pdfmode .pdfhead{display:block}
+.drop.v916{aspect-ratio:9/16;max-width:300px;margin:0 auto;display:flex;flex-direction:column;justify-content:center}
+.drop.v169{aspect-ratio:16/9;display:flex;flex-direction:column;justify-content:center}
+#stageWrap.portrait .live.on{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.live .kpi .v{font-size:20px}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.empty{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;text-align:center;padding:20px}
+.progress{height:8px;background:var(--panel2);border-radius:99px;overflow:hidden;margin-top:12px}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .15s}
+.status{font-size:13px;color:var(--muted);margin-top:8px;min-height:20px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.kpi{background:var(--panel2);border-radius:10px;padding:12px;border:1px solid var(--line)}
+.kpi .v{font-size:24px;font-weight:700}
+.kpi .l{font-size:12px;color:var(--muted)}
+.overall{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.ring{width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.ring .n{font-size:34px;font-weight:800}
+.ring .t{font-size:11px;color:var(--muted)}
+.bars .b{margin:8px 0}
+.bars .top{display:flex;justify-content:space-between;font-size:13px}
+.bars .track{height:8px;background:var(--panel2);border-radius:99px;overflow:hidden;margin-top:4px}
+.bars .fill{height:100%;border-radius:99px}
+.rec{border-left:4px solid var(--accent);background:var(--panel2);border-radius:8px;padding:12px 14px;margin:10px 0}
+.rec.p1{border-color:var(--bad)}.rec.p2{border-color:var(--warn)}.rec.p3{border-color:var(--good)}
+.rec .h{display:flex;justify-content:space-between;gap:8px;font-weight:600}
+.tag{font-size:11px;padding:2px 8px;border-radius:99px;background:var(--line);color:var(--muted);white-space:nowrap}
+.rec p{margin:6px 0 0;font-size:13.5px;color:#c9d4e0}
+.rec .drill{margin-top:8px;font-size:13px;background:rgba(0,224,184,.08);border:1px solid rgba(0,224,184,.25);padding:8px 10px;border-radius:6px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--muted);font-weight:600}
+tbody tr{cursor:pointer}tbody tr:hover{background:var(--panel2)}
+.pill{padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600}
+.fh{background:rgba(0,224,184,.18);color:#FF6B6B}.bh{background:rgba(255,176,32,.2);color:#FFB020}
+canvas.chart{width:100%;height:180px;background:var(--panel2);border-radius:8px;cursor:crosshair;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tab{padding:8px 14px;border-radius:8px;cursor:pointer;background:var(--panel2);color:var(--muted);font-size:13px;font-weight:600;border:1px solid var(--line)}
+.tab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pane{display:none}.pane.on{display:block}
+.tips{font-size:12.5px;color:var(--muted);margin:0;padding-left:18px}
+.hidden{display:none!important}
+.tactic{background:var(--panel2);border-radius:8px;padding:12px 14px;margin:10px 0;border:1px solid var(--line)}
+.tactic .h{font-weight:700;color:var(--accent)}
+.tactic ol,.tactic ul{margin:6px 0 0;padding-left:20px;font-size:13.5px}
+.note{font-size:12px;color:var(--muted);background:var(--panel2);border-radius:8px;padding:10px 12px;margin-top:10px}
+.toggle{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-top:10px}
+@media print{
+  body{background:#fff;color:#000}.site-nav,.hero,.footer-cta,.site-footer,.grid>aside,#videoCard,.tabs,button{display:none!important}
+  .grid{display:block}.pane{display:block!important}.card,.rec,.tactic,.kpi{background:#fff;border-color:#ccc;color:#000}
+  .rec p,.tactic ol{color:#000}
+}
+
+/* ===== Pong Home brand layer ===== */
+h1,h2,h3,h4,.display{font-family:"Baloo 2",sans-serif;font-weight:800;letter-spacing:.01em;margin:0}
+a{color:inherit}
+.site-nav{position:sticky;top:0;z-index:50;background:var(--bg-deeper);border-bottom:1px solid var(--line-dark)}
+.nav-inner{max-width:1180px;margin:0 auto;padding:16px 28px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px}
+.nav-logo{display:flex;align-items:baseline;gap:2px;color:var(--mint);font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:.01em;text-decoration:none}
+.nav-logo span.sub{color:#fff}
+.nav-tabs{display:flex;gap:6px;background:rgba(255,255,255,.05);padding:5px;border-radius:999px;border:1px solid var(--line-dark)}
+.nav-tab{background:transparent;color:rgba(255,255,255,.7);font-family:Inter,sans-serif;font-weight:600;font-size:.88rem;padding:9px 18px;border-radius:999px;transition:background .25s,color .25s;white-space:nowrap;text-decoration:none;display:inline-block}
+.nav-tab.active{background:var(--mint);color:var(--bg-deeper)}
+.nav-tab:not(.active):hover{color:#fff}
+.nav-right{display:flex;align-items:center;justify-content:flex-end;gap:12px}
+.social-row{display:flex;gap:8px}
+.social-btn{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(255,255,255,.22);color:rgba(255,255,255,.85);text-decoration:none;transition:.2s}
+.social-btn svg{width:17px;height:17px;fill:currentColor}
+.social-btn:hover{border-color:var(--mint);background:var(--mint-soft);color:var(--mint);transform:translateY(-2px)}
+@media(max-width:720px){
+  .nav-inner{display:flex;flex-wrap:wrap;padding:12px 16px;gap:10px;justify-content:center}
+  .nav-logo{order:1;font-size:1.1rem}.nav-right{order:2}.nav-right .social-row{display:none}
+  .nav-tabs{order:3;flex-basis:100%;width:100%;overflow-x:auto;justify-content:center;gap:5px;background:transparent;border:none;padding:0;scrollbar-width:none}
+  .nav-tabs::-webkit-scrollbar{display:none}
+  .nav-tab{flex:0 0 auto;font-size:.74rem;padding:7px 12px;background:rgba(255,255,255,.06);border:1px solid var(--line-dark)}
+  .nav-tab.active{border-color:var(--mint)}
+}
+@media(max-width:380px){.nav-tab{font-size:.68rem;padding:6px 10px}}
+.hero{background:radial-gradient(circle at 82% -10%,rgba(0,240,200,.16),transparent 45%),var(--bg-deep);color:#fff;padding:36px 28px 56px;position:relative;overflow:hidden}
+.hero-inner{max-width:900px;margin:0 auto;text-align:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mint);background:var(--mint-soft);border:1px solid rgba(0,240,200,.35);padding:7px 16px;border-radius:999px}
+.hero h1{font-size:clamp(2.2rem,5.2vw,3.6rem);line-height:1.04;color:var(--mint);text-transform:uppercase;margin-top:20px}
+.hero h1 .white{color:#fff}
+.hero p.lead{max-width:640px;margin:20px auto 0;font-size:1.08rem;line-height:1.65;color:rgba(255,255,255,.78)}
+.hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:32px}
+.hero-pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.hero-pills span{font-size:.8rem;color:rgba(255,255,255,.8);border:1px solid var(--line-dark);background:rgba(255,255,255,.05);padding:6px 12px;border-radius:999px}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--mint);color:var(--bg-deeper);font-family:Inter,sans-serif;font-weight:700;font-size:.98rem;padding:15px 28px;border-radius:999px;text-decoration:none;box-shadow:0 14px 30px rgba(0,240,200,.22);transition:transform .2s,box-shadow .2s;cursor:pointer;border:0}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 34px rgba(0,240,200,.32)}
+.btn-secondary{display:inline-flex;align-items:center;gap:10px;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35);font-weight:600;font-size:.95rem;padding:13px 24px;border-radius:999px;text-decoration:none;transition:border-color .2s,background .2s;cursor:pointer;font-family:Inter,sans-serif}
+.btn-secondary:hover{border-color:var(--mint);background:rgba(0,240,200,.08)}
+@media(max-width:720px){.hero{padding:24px 18px 40px}.hero-actions .btn-primary,.hero-actions .btn-secondary{font-size:.85rem;padding:11px 18px}}
+.footer-cta{background:var(--bg-deeper);color:#fff;padding:64px 28px;text-align:center}
+.footer-cta h2{font-size:clamp(1.7rem,4vw,2.4rem);margin-bottom:14px}
+.footer-cta h2 span{color:var(--mint)}
+.footer-cta p{color:rgba(255,255,255,.65);max-width:520px;margin:0 auto 28px;font-size:1rem}
+.site-footer{background:var(--bg-deeper);border-top:1px solid var(--line-dark);color:rgba(255,255,255,.5);text-align:center;font-size:.85rem;padding:22px}
+.site-footer a{color:var(--mint-dim);margin-left:8px;text-decoration:none}
+
+/* app components restyled */
+.card{background:#fff;border:1px solid var(--line-light);border-radius:20px;padding:22px;box-shadow:0 8px 22px rgba(6,88,96,.08)}
+.card h2{font-family:"JetBrains Mono",monospace;font-size:.78rem;font-weight:700;letter-spacing:.14em;color:var(--accent-ink);margin-bottom:14px}
+.card h3{font-family:"Baloo 2",sans-serif}
+select,input[type=text]{border-radius:12px;padding:10px 12px;font-family:Inter,sans-serif;border:1px solid var(--line);background:#fff;color:var(--ink)}
+select:focus{outline:2px solid var(--mint-dim);outline-offset:1px}
+button{font-family:Inter,sans-serif;background:var(--mint);color:var(--bg-deeper);border-radius:999px;padding:11px 20px;font-weight:700;box-shadow:0 10px 22px rgba(0,240,200,.18);transition:transform .2s,box-shadow .2s}
+button:not(:disabled):hover{transform:translateY(-1px)}
+button.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line);box-shadow:none;font-weight:600}
+button.ghost:not(:disabled):hover{border-color:var(--mint-dim);background:var(--mint-soft)}
+button.danger{background:#fff;border:1.5px solid var(--coral);color:#D6453F;box-shadow:none}
+#stopBtn{background:var(--coral)!important;color:#fff}
+.chip{border-radius:999px;background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
+.chip.on{background:var(--mint-soft);border-color:var(--mint-dim);color:var(--ink);font-weight:600}
+.drop{border:2px dashed rgba(20,114,124,.35);border-radius:20px;background:var(--panel2)}
+.drop:hover,.drop.drag{border-color:var(--mint-dim);background:var(--mint-soft)}
+.drop b{color:var(--accent-ink)}
+.stage{border-radius:18px;background:var(--bg-deep)}
+.progress{background:#E3EFEC}
+.tabs{background:var(--bg-deep);padding:6px;border-radius:999px;display:inline-flex;gap:4px}
+.tab{background:transparent;border:none;color:rgba(255,255,255,.72);border-radius:999px;font-family:Inter,sans-serif}
+.tab.on{background:var(--mint);color:var(--bg-deeper)}
+@media(max-width:720px){.tabs{display:flex;overflow-x:auto;flex-wrap:nowrap}.tab{flex:0 0 auto;font-size:12px;padding:7px 11px}}
+.kpi{background:var(--panel2);border:1px solid var(--line-light);border-radius:14px}
+.kpi .v{font-family:"Baloo 2",sans-serif;font-weight:800;color:var(--ink)}
+.ring .n{font-family:"Baloo 2",sans-serif}
+.ring .t{font-family:"JetBrains Mono",monospace;letter-spacing:.1em}
+.rec{background:var(--panel2);border-radius:14px}
+.rec p{color:var(--ink)}
+.rec .drill{background:var(--mint-soft);border-color:rgba(0,224,184,.4)}
+.tag{background:#fff;border:1px solid var(--line);color:var(--ink-soft)}
+.tactic{background:var(--panel2);border-radius:14px;border:1px solid var(--line-light)}
+.tactic .h{color:var(--accent-ink);font-family:"Baloo 2",sans-serif;font-size:1.05rem}
+.fh{background:rgba(255,107,107,.15);color:#D6453F}.bh{background:rgba(255,176,32,.2);color:#A86A00}
+.note{background:var(--panel2);border:1px solid var(--line-light);color:var(--ink-soft)}
+.picker{background:var(--mint-soft);border:1px solid var(--mint-dim);border-radius:14px}
+.rangebox{background:var(--panel2);border-radius:14px}
+.range .trk{background:#D5E5E1}.range .sel{background:var(--mint-dim)}.range .cur{background:var(--bg-deep)}
+.range input::-webkit-slider-thumb{background:var(--bg-deep-soft)}
+.range input::-moz-range-thumb{background:var(--bg-deep-soft)}
+.seg{background:#fff;border-radius:999px}
+.seg div{border-radius:999px}
+.seg div.on{background:var(--mint);color:var(--bg-deeper)}
+.guidelink{color:var(--accent-ink)}
+.guide .box{background:#fff;border-radius:20px}
+.guide h2{color:var(--bg-deep);font-family:"Baloo 2",sans-serif}
+.gg .pn{background:var(--panel2);border-radius:14px}
+.gg .pn h3{font-family:"Baloo 2",sans-serif;font-size:1rem}
+.ok{color:#0F9F6E}.no{color:#D6453F}
+.busy div{background:#fff;color:var(--ink)}
+canvas.chart{background:var(--panel2)}
+#app{scroll-margin-top:90px}
+@media(max-width:720px){.nav-tabs{justify-content:safe center}}
+@media(max-width:960px){.grid>section{order:-1}main{padding:20px 14px 40px}}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">PONG<span class="sub">·HOME</span></a>
+    <div class="nav-tabs" role="tablist">
+      <a class="nav-tab" href="/">Home</a>
+      <a class="nav-tab" href="/table-tennis-guides">Insights</a>
+      <a class="nav-tab" href="/ratings">Gear Index</a>
+      <a class="nav-tab" href="/scoreboard">Scoreboard</a>
+      <a class="nav-tab active" href="/aicoach" aria-current="page">AI Coach</a>
+    </div>
+    <div class="nav-right">
+      <div class="social-row">
+        <a class="social-btn" href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener" aria-label="Pong Home on Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.97.24 2.43.4a4.9 4.9 0 0 1 1.77 1.15 4.9 4.9 0 0 1 1.15 1.77c.16.46.35 1.26.4 2.43.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.24 1.97-.4 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.46.16-1.26.35-2.43.4-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.97-.24-2.43-.4a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.16-.46-.35-1.26-.4-2.43C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.24-1.97.4-2.43a4.9 4.9 0 0 1 1.15-1.77A4.9 4.9 0 0 1 5.59 1.8c.46-.16 1.26-.35 2.43-.4C9.29 1.34 9.67 1.33 12 1.33Zm0 1.8c-3.15 0-3.5.01-4.74.07-.96.04-1.48.2-1.82.34-.46.18-.78.39-1.13.74-.35.35-.56.67-.74 1.13-.14.34-.3.86-.34 1.82C3.16 8.94 3.15 9.29 3.15 12s.01 3.06.07 4.3c.04.96.2 1.48.34 1.82.18.46.39.78.74 1.13.35.35.67.56 1.13.74.34.14.86.3 1.82.34 1.24.06 1.59.07 4.75.07s3.5-.01 4.74-.07c.96-.04 1.48-.2 1.82-.34.46-.18.78-.39 1.13-.74.35-.35.56-.67.74-1.13.14-.34.3-.86.34-1.82.06-1.24.07-1.59.07-4.3s-.01-3.06-.07-4.3c-.04-.96-.2-1.48-.34-1.82a3.05 3.05 0 0 0-.74-1.13 3.05 3.05 0 0 0-1.13-.74c-.34-.14-.86-.3-1.82-.34-1.24-.06-1.59-.07-4.75-.07Zm0 3.98a4.02 4.02 0 1 1 0 8.04 4.02 4.02 0 0 1 0-8.04Zm0 1.8a2.22 2.22 0 1 0 0 4.44 2.22 2.22 0 0 0 0-4.44Zm4.18-2.2a.94.94 0 1 1 0 1.88.94.94 0 0 1 0-1.88Z"/></svg></a>
+        <a class="social-btn" href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener" aria-label="Pong Home on Facebook"><svg viewBox="0 0 24 24"><path d="M13.5 21.9v-8.4h2.82l.42-3.28h-3.24V8.1c0-.95.26-1.6 1.63-1.6h1.74V3.6c-.3-.04-1.33-.13-2.53-.13-2.5 0-4.22 1.53-4.22 4.33v2.42H7.3v3.28h2.82v8.4h3.38Z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <span class="hero-eyebrow">● AI video analysis · Free beta</span>
+    <h1>AI <span class="white">Coach</span></h1>
+    <p class="lead">Upload a video of yourself playing. Our AI tracks your body, scores your stance, footwork and stroke technique, then gives you drills and a game plan to beat your next opponent.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#app">Analyze my video →</a>
+      <button class="btn-secondary" data-guide>📷 How to film →</button>
+    </div>
+    <div class="hero-pills"><span>🔒 Video stays on your device</span><span>📱 9:16 &amp; 16:9</span><span>📄 PDF report</span><span>🎬 Skeleton video</span></div>
+  </div>
+</section>
+
+<main id="app">
+<div class="grid">
+<aside>
+  <div class="card">
+    <h2>1 · Player Setup</h2>
+    <label>Playing hand</label>
+    <select id="hand"><option value="right">Right handed</option><option value="left">Left handed</option></select>
+    <label>Level</label>
+    <select id="level">
+      <option value="beginner">Beginner</option><option value="intermediate">Intermediate</option>
+      <option value="advanced" selected>Advanced</option><option value="elite">Elite / Competitive</option>
+    </select>
+    <label>Playing style</label>
+    <select id="style">
+      <option value="looper">Offensive looper (two winged topspin)</option>
+      <option value="fhdom">Forehand dominant attacker</option>
+      <option value="allround">All round</option>
+      <option value="close">Close to table blocker / hitter</option>
+      <option value="defender">Defender / chopper</option>
+      <option value="penhold">Penhold</option>
+    </select>
+    <label>Video type</label>
+    <select id="vtype">
+      <option value="drill">Drill / multiball / training</option>
+      <option value="match">Match play</option>
+      <option value="shadow">Shadow play (no ball)</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <h2>2 · Opponent (for tactics)</h2>
+    <label>Opponent style</label>
+    <select id="oppStyle">
+      <option value="looper">Two winged looper</option>
+      <option value="fhdom">Strong forehand, weaker backhand</option>
+      <option value="blocker">Close to table blocker</option>
+      <option value="chopper">Chopper / defender</option>
+      <option value="pips">Short pips hitter</option>
+      <option value="longpips">Long pips / anti</option>
+      <option value="penhold">Penhold (traditional backhand)</option>
+      <option value="unknown">Unknown</option>
+    </select>
+    <label>Opponent hand</label>
+    <select id="oppHand"><option value="right">Right handed</option><option value="left">Left handed</option></select>
+    <label>Known opponent weaknesses (tap all that apply)</label>
+    <div class="chips" id="oppWeak">
+      <span class="chip" data-v="wideFH">Wide forehand</span>
+      <span class="chip" data-v="middle">Middle / crossover</span>
+      <span class="chip" data-v="weakBH">Weak backhand</span>
+      <span class="chip" data-v="shortServe">Short backspin serves</span>
+      <span class="chip" data-v="longFast">Fast long serves</span>
+      <span class="chip" data-v="slowFeet">Slow footwork</span>
+      <span class="chip" data-v="heavySpin">Heavy topspin</span>
+      <span class="chip" data-v="noSpin">No spin balls</span>
+      <span class="chip" data-v="pace">Change of pace</span>
+      <span class="chip" data-v="tempo">Fast tempo rallies</span>
+      <span class="chip" data-v="pushes">Long pushes</span>
+      <span class="chip" data-v="nerves">Pressure / close scores</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>3 · Analysis Settings</h2>
+    <label>Accuracy</label>
+    <select id="model">
+      <option value="lite">Fast (lite model, 10 fps)</option>
+      <option value="full" selected>Balanced (full model, 15 fps)</option>
+      <option value="heavy">Max accuracy (heavy model, 20 fps)</option>
+    </select>
+    <label class="toggle"><input type="checkbox" id="showSkel" checked> Show skeleton on playback</label>
+    <div class="note">
+      <span class="guidelink" data-guide>📷 Open camera setup guide</span><br>
+      <b>Best results:</b>
+      <ul class="tips">
+        <li>Film from behind or side at 45°, whole body in frame (feet visible).</li>
+        <li>Vertical 9:16 phone videos work well: hold the phone upright on a tripod about 3 to 4 m away so head to feet fills most of the frame.</li>
+        <li>30 sec to 3 min clips, good lighting, 60 fps if possible.</li>
+        <li>Steady camera (tripod), avoid heavy zoom.</li>
+      </ul>
+    </div>
+  </div>
+</aside>
+
+<section>
+  <div class="card" id="videoCard">
+    <h2>Video</h2>
+    <div class="fmtrow">
+      <span>Video format:</span>
+      <div class="seg" id="fmt">
+        <div data-f="916" class="on"><i style="width:9px;height:16px"></i>9:16 Vertical</div>
+        <div data-f="169"><i style="width:16px;height:9px"></i>16:9 Horizontal</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin:-4px 0 12px"><button class="ghost" data-guide>📷 Camera setup guide (read before filming)</button></div>
+    <div id="drop" class="drop v916">
+      <div style="font-size:34px">🏓</div>
+      <div><b>Click to upload</b> or drag your video here</div>
+      <div style="font-size:12px;color:var(--muted)">MP4, MOV, WebM · processed locally, never uploaded</div>
+      <input type="file" id="file" accept="video/*" class="hidden">
+    </div>
+    <div id="stageWrap" class="hidden" style="margin-top:14px">
+      <div class="stage" id="stage">
+        <video id="video" controls playsinline muted></video>
+        <canvas id="overlay"></canvas>
+      </div>
+      <div class="ctrls">
+      <div class="rangebox" id="rangeBox">
+        <div class="h">✂ Step 1: Choose the part to analyze</div>
+        <div class="range">
+          <div class="trk"></div><div class="sel" id="rSel"></div><div class="cur" id="rCur"></div>
+          <input type="range" id="rA" min="0" max="1" step="0.1" value="0">
+          <input type="range" id="rB" min="0" max="1" step="0.1" value="1">
+        </div>
+        <div class="rlabels"><span>Start <b id="rAt">0:00.0</b></span><span>Length <b id="rLen">0:00.0</b></span><span>End <b id="rBt">0:00.0</b></span></div>
+        <div class="row" style="margin-top:8px">
+          <button class="ghost" id="setA">⇤ Set start here</button>
+          <button class="ghost" id="setB">Set end here ⇥</button>
+          <button class="ghost" id="prevBtn">▶ Preview part</button>
+          <button class="ghost" id="fullBtn">↺ Full video</button>
+          <button class="ghost" id="cutBtn">✂ Download cut clip</button>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:6px">Drag the handles or play the video and press "Set start / end here". Choosing yourself happens on the start frame.</div>
+      </div>
+      <div class="picker" id="picker">
+        <div class="h">👤 Step 2: Who is you?</div>
+        <div id="pickMsg" style="font-size:13px;color:var(--muted)">Detecting players...</div>
+        <div class="row" id="pickBtns"></div>
+        <div class="row">
+          <button class="ghost" id="rescanBtn">🔄 Detect on current frame</button>
+          <button class="ghost" id="markBtn">✋ Mark me manually</button>
+        </div>
+        <div class="row hidden" id="markRow">
+          <button class="me" id="markOk" style="background:var(--good)">✓ Confirm: this is me</button>
+          <button class="ghost" id="markCancel">Cancel</button>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px">Tip: scrub the video to a frame where both players are clearly visible, then press "Detect on current frame". Analysis starts from the frame you pick.</div>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button id="analyzeBtn" disabled>▶ Analyze my technique</button>
+        <button id="stopBtn" class="hidden" style="background:var(--bad)">⏹ Stop & use what's analyzed</button>
+        <button class="danger" id="resetBtn">🗑 Remove video & reset</button>
+        <span id="vinfo" style="font-size:12px;color:var(--muted)"></span>
+      </div>
+      <div class="toolbar">
+        <button class="ghost" id="exportVidBtn" disabled>🎬 Download video with skeleton</button>
+        <button class="ghost" id="pdfBtn" disabled>📄 Download analysis PDF</button>
+      </div>
+      <div class="progress"><div id="bar"></div></div>
+      <div class="status" id="status">Pose model loads on first use (needs internet once).</div>
+      <div class="live" id="live">
+        <div class="kpi"><div class="v" id="lvStroke">·</div><div class="l">Current stroke</div></div>
+        <div class="kpi"><div class="v" id="lvKnee">·</div><div class="l">Knee angle</div></div>
+        <div class="kpi"><div class="v" id="lvElbow">·</div><div class="l">Racket arm elbow</div></div>
+        <div class="kpi"><div class="v" id="lvLean">·</div><div class="l">Trunk lean</div></div>
+        <div class="kpi"><div class="v" id="lvSpeed">·</div><div class="l">Hand speed</div></div>
+        <div class="kpi"><div class="v" id="lvCount">·</div><div class="l">Strokes so far</div></div>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="results" class="hidden">
+    <div class="tabs">
+      <div class="tab on" data-p="overview">Overview</div>
+      <div class="tab" data-p="recs">Recommendations</div>
+      <div class="tab" data-p="tactics">Tactics</div>
+      <div class="tab" data-p="strokes">Stroke log</div>
+      <div class="tab" data-p="data">Movement charts</div>
+    </div>
+
+    <div class="card pdfhead" id="pdfHead"></div>
+    <div class="pane on" id="p-overview">
+      <div class="card">
+        <h2>Overall Assessment</h2>
+        <div class="overall">
+          <div class="ring" id="ring"><div class="n" id="overallN">0</div><div class="t">TECH SCORE</div></div>
+          <div style="flex:1;min-width:240px">
+            <div id="summaryText" style="font-size:14.5px"></div>
+            <div class="row" style="margin-top:12px">
+              <button class="ghost noexport" id="pdfBtn2">📄 Download PDF</button>
+              <button class="ghost noexport" id="dlJson">⬇ Download data (JSON)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card"><h2>Session Stats</h2><div class="kpis" id="kpis"></div></div>
+      <div class="card"><h2>Technique Breakdown</h2><div class="bars" id="bars"></div></div>
+    </div>
+
+    <div class="pane" id="p-recs">
+      <div class="card"><h2>Prioritized Recommendations</h2><div id="recs"></div></div>
+    </div>
+
+    <div class="pane" id="p-tactics">
+      <div class="card"><h2>Game Plan vs This Opponent</h2><div id="tactics"></div></div>
+    </div>
+
+    <div class="pane" id="p-strokes">
+      <div class="card">
+        <h2>Detected Strokes</h2>
+        <p style="font-size:12.5px;color:var(--muted);margin-top:0">Click a row to jump the video to that stroke.</p>
+        <div style="overflow:auto"><table><thead><tr><th>#</th><th>Time</th><th>Side</th><th>Racket speed</th><th>Elbow at contact</th><th>Trunk rotation</th><th>Knee bend</th><th>Recovery</th><th>Grade</th></tr></thead><tbody id="strokeRows"></tbody></table></div>
+      </div>
+    </div>
+
+    <div class="pane" id="p-data">
+      <div class="card">
+        <h2>Racket Hand Speed & Strokes</h2>
+        <canvas class="chart" id="chartSpeed"></canvas>
+        <div class="legend"><span><i style="background:#14727C"></i>Hand speed</span><span><i style="background:#FF6B6B"></i>Forehand</span><span><i style="background:#FFB020"></i>Backhand</span></div>
+      </div>
+      <div class="card">
+        <h2>Knee Bend & Trunk Rotation</h2>
+        <canvas class="chart" id="chartBody"></canvas>
+        <div class="legend"><span><i style="background:#00B89A"></i>Knee angle (lower = deeper)</span><span><i style="background:#0A4952"></i>Shoulder rotation</span></div>
+      </div>
+      <div class="card">
+        <h2>Court Movement (hip path, top view estimate)</h2>
+        <canvas class="chart" id="chartMove" style="height:220px"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+</main>
+
+<section class="footer-cta">
+  <h2>Want feedback from a <span>real coach</span>?</h2>
+  <p>AI spots the patterns. A Pong Home coach fixes them with you at the table, on your schedule.</p>
+  <a class="btn-primary" href="/#contactSection">Find a coach →</a>
+</section>
+<footer class="site-footer">© 2026 Pong Home. All rights reserved. AI Coach results are estimates from pose tracking.
+  <a href="https://www.instagram.com/pong_home/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/pingpong.coaching/" target="_blank" rel="noopener">Facebook</a>
+</footer>
+
+
+<div class="guide" id="guide">
+ <div class="box">
+  <div class="row" style="justify-content:space-between">
+    <div><h2>📷 Camera Setup for Accurate Analysis</h2>
+    <div style="font-size:13px;color:var(--muted)">The AI needs to see your whole body clearly. Follow these 4 rules and detection improves a lot.</div></div>
+    <button class="ghost" id="guideClose">✕ Close</button>
+  </div>
+  <div class="gg">
+
+   <div class="pn">
+    <h3>1 · Where to put the camera (top view)</h3>
+    <svg viewBox="0 0 320 300">
+      <rect x="0" y="0" width="320" height="300" rx="8" fill="#0E3B42"/>
+      <!-- table -->
+      <rect x="110" y="40" width="100" height="150" fill="#1f5fa8" stroke="#fff" stroke-width="2"/>
+      <line x1="110" y1="115" x2="210" y2="115" stroke="#fff" stroke-width="3"/>
+      <line x1="160" y1="40" x2="160" y2="190" stroke="#fff" stroke-width="1" opacity=".6"/>
+      <text x="160" y="110" fill="#cfe3ff" font-size="9" text-anchor="middle">NET</text>
+      <!-- opponent -->
+      <circle cx="160" cy="22" r="10" fill="#FFB020"/><text x="144" y="26" fill="#FFB020" font-size="10" text-anchor="end">Opponent</text>
+      <!-- you -->
+      <circle cx="160" cy="212" r="11" fill="#FF6B6B"/><text x="178" y="216" fill="#FF6B6B" font-size="11" font-weight="bold">YOU</text>
+      <!-- best camera -->
+      <path d="M160 212 L 228 278" stroke="#00E0B8" stroke-width="2" stroke-dasharray="5 4"/>
+      <path d="M160 212 L 160 286" stroke="#00E0B8" stroke-width="2" stroke-dasharray="5 4"/>
+      <rect x="218" y="270" width="22" height="14" rx="3" fill="#00E0B8"/><text x="246" y="281" fill="#00E0B8" font-size="10" font-weight="bold">BEST 45°</text>
+      <rect x="149" y="280" width="22" height="14" rx="3" fill="#00E0B8"/><text x="144" y="292" fill="#00E0B8" font-size="10" font-weight="bold" text-anchor="end">BEST behind</text>
+      <!-- ok side -->
+      <rect x="28" y="205" width="22" height="14" rx="3" fill="#FFB020"/><text x="22" y="236" fill="#FFB020" font-size="10">OK side</text>
+      <path d="M148 212 L 52 212" stroke="#FFB020" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <!-- avoid -->
+      <rect x="149" y="2" width="22" height="12" rx="3" fill="#FF6B6B" opacity=".0"/>
+      <rect x="230" y="2" width="22" height="14" rx="3" fill="#FF6B6B"/><text x="214" y="30" fill="#FF6B6B" font-size="9">AVOID: table</text>
+      <text x="214" y="41" fill="#FF6B6B" font-size="9">hides your legs</text>
+      <rect x="10" y="108" width="22" height="14" rx="3" fill="#FF6B6B"/><text x="6" y="138" fill="#FF6B6B" font-size="9">AVOID: net</text>
+      <text x="6" y="149" fill="#FF6B6B" font-size="9">side, too far</text>
+      <text x="206" y="244" fill="#8b98a9" font-size="9">3 to 4 m</text><text x="8" y="178" fill="#8b98a9" font-size="9">Right hander shown,</text><text x="8" y="190" fill="#8b98a9" font-size="9">mirror if lefty</text>
+    </svg>
+    <ul>
+      <li class="ok">Behind you, or 45° diagonal behind you on your forehand side.</li>
+      <li>Distance 3 to 4 m, so you have room to move left and right.</li>
+      <li class="no">Do not film from the opponent's end: the table blocks your legs.</li>
+    </ul>
+   </div>
+
+   <div class="pn">
+    <h3>2 · Camera height & angle (side view)</h3>
+    <svg viewBox="0 0 320 300">
+      <rect x="0" y="0" width="320" height="300" rx="8" fill="#0E3B42"/>
+      <line x1="10" y1="262" x2="310" y2="262" stroke="#2a3343" stroke-width="2"/>
+      <!-- table side -->
+      <rect x="200" y="200" width="110" height="8" fill="#1f5fa8"/><rect x="215" y="208" width="5" height="54" fill="#555"/><rect x="290" y="208" width="5" height="54" fill="#555"/>
+      <!-- player stick figure in ready stance -->
+      <g stroke="#FF6B6B" stroke-width="4" stroke-linecap="round" fill="none">
+        <circle cx="168" cy="130" r="11" fill="#FF6B6B" stroke="none"/>
+        <line x1="168" y1="141" x2="176" y2="190"/>
+        <line x1="176" y1="190" x2="160" y2="222"/><line x1="160" y1="222" x2="170" y2="260"/>
+        <line x1="176" y1="190" x2="190" y2="224"/><line x1="190" y1="224" x2="186" y2="260"/>
+        <line x1="170" y1="155" x2="192" y2="176"/><line x1="192" y1="176" x2="205" y2="168"/>
+      </g>
+      <!-- tripod + phone -->
+      <g stroke="#00E0B8" stroke-width="3"><line x1="80" y1="172" x2="65" y2="262"/><line x1="80" y1="172" x2="95" y2="262"/><line x1="80" y1="172" x2="80" y2="262"/></g>
+      <rect x="73" y="150" width="14" height="24" rx="2" fill="#00E0B8"/>
+      <!-- view cone -->
+      <path d="M87 162 L 230 100 L 230 268 Z" fill="#00E0B8" opacity=".12"/>
+      <line x1="87" y1="162" x2="230" y2="100" stroke="#00E0B8" stroke-dasharray="4 4"/>
+      <line x1="87" y1="162" x2="230" y2="268" stroke="#00E0B8" stroke-dasharray="4 4"/>
+      <!-- height marker -->
+      <line x1="16" y1="162" x2="16" y2="262" stroke="#8b98a9"/><text x="20" y="214" fill="#8b98a9" font-size="10">1.0 to</text><text x="20" y="226" fill="#8b98a9" font-size="10">1.3 m</text>
+      <text x="70" y="28" fill="#00E0B8" font-size="11" font-weight="bold">Lens at chest/waist height,</text>
+      <text x="70" y="42" fill="#00E0B8" font-size="11" font-weight="bold">pointing level, not down</text>
+    </svg>
+    <ul>
+      <li>Phone on a <b>tripod</b>, lens about chest to waist height (1.0 to 1.3 m).</li>
+      <li>Keep it level. Filming from the floor or from above distorts knee and arm angles.</li>
+      <li>Lock the phone: no hand holding, no zooming, no panning.</li>
+    </ul>
+   </div>
+
+   <div class="pn">
+    <h3>3 · Framing (9:16 vertical)</h3>
+    <svg viewBox="0 0 320 300">
+      <rect x="0" y="0" width="320" height="300" rx="8" fill="#0E3B42"/>
+      <!-- good -->
+      <rect x="30" y="20" width="120" height="214" rx="12" fill="#0A4952" stroke="#00E0B8" stroke-width="3"/>
+      <rect x="44" y="40" width="92" height="174" fill="none" stroke="#00E0B8" stroke-dasharray="4 3" opacity=".7"/>
+      <g stroke="#FF6B6B" stroke-width="4" stroke-linecap="round" fill="none">
+        <circle cx="90" cy="62" r="10" fill="#FF6B6B" stroke="none"/>
+        <line x1="90" y1="72" x2="90" y2="132"/><line x1="90" y1="132" x2="74" y2="168"/><line x1="74" y1="168" x2="76" y2="204"/>
+        <line x1="90" y1="132" x2="108" y2="168"/><line x1="108" y1="168" x2="106" y2="204"/>
+        <line x1="90" y1="88" x2="116" y2="110"/><line x1="90" y1="88" x2="66" y2="110"/>
+      </g>
+      <text x="90" y="254" fill="#00E0B8" font-size="12" font-weight="bold" text-anchor="middle">✓ GOOD</text>
+      <text x="90" y="270" fill="#8b98a9" font-size="9.5" text-anchor="middle">head to feet = 60 to 75%</text>
+      <text x="90" y="282" fill="#8b98a9" font-size="9.5" text-anchor="middle">space above head & below feet</text>
+      <!-- bad small -->
+      <rect x="180" y="20" width="56" height="100" rx="8" fill="#0A4952" stroke="#FF6B6B" stroke-width="2.5"/>
+      <g stroke="#FF6B6B" stroke-width="2" fill="none"><circle cx="208" cy="78" r="3" fill="#FF6B6B" stroke="none"/><line x1="208" y1="81" x2="208" y2="94"/><line x1="208" y1="94" x2="204" y2="104"/><line x1="208" y1="94" x2="212" y2="104"/></g>
+      <text x="208" y="134" fill="#FF6B6B" font-size="10" text-anchor="middle">✗ Too small</text>
+      <!-- bad cut -->
+      <rect x="250" y="20" width="56" height="100" rx="8" fill="#0A4952" stroke="#FF6B6B" stroke-width="2.5"/>
+      <g stroke="#FF6B6B" stroke-width="4" fill="none"><circle cx="278" cy="40" r="8" fill="#FF6B6B" stroke="none"/><line x1="278" y1="48" x2="278" y2="98"/><line x1="278" y1="98" x2="266" y2="122"/><line x1="278" y1="98" x2="290" y2="122"/></g>
+      <text x="278" y="134" fill="#FF6B6B" font-size="10" text-anchor="middle">✗ Feet cut off</text>
+      <!-- bad backlight -->
+      <rect x="180" y="150" width="56" height="100" rx="8" fill="#fff8d6" stroke="#FF6B6B" stroke-width="2.5"/>
+      <g stroke="#222" stroke-width="4" fill="none"><circle cx="208" cy="178" r="7" fill="#222" stroke="none"/><line x1="208" y1="185" x2="208" y2="220"/><line x1="208" y1="220" x2="200" y2="242"/><line x1="208" y1="220" x2="216" y2="242"/></g>
+      <text x="208" y="264" fill="#FF6B6B" font-size="10" text-anchor="middle">✗ Backlit</text>
+      <!-- bad 2 overlap -->
+      <rect x="250" y="150" width="56" height="100" rx="8" fill="#0A4952" stroke="#FF6B6B" stroke-width="2.5"/>
+      <g stroke-width="4" fill="none"><g stroke="#FFB020"><circle cx="284" cy="178" r="6" fill="#FFB020" stroke="none"/><line x1="284" y1="184" x2="284" y2="230"/></g><g stroke="#FF6B6B"><circle cx="276" cy="184" r="8" fill="#FF6B6B" stroke="none"/><line x1="276" y1="192" x2="276" y2="242"/></g></g>
+      <text x="278" y="264" fill="#FF6B6B" font-size="10" text-anchor="middle">✗ Overlap</text>
+    </svg>
+    <ul>
+      <li>Your whole body, <b>head to feet</b>, always in frame, even when you step wide.</li>
+      <li>You should fill most of the frame height. Too small = poor detection.</li>
+      <li>Avoid standing directly in line with your opponent from the camera's view.</li>
+    </ul>
+   </div>
+
+   <div class="pn">
+    <h3>4 · Light, clothes & settings</h3>
+    <svg viewBox="0 0 320 150">
+      <rect x="0" y="0" width="320" height="150" rx="8" fill="#0E3B42"/>
+      <g font-size="11" fill="#e6edf3">
+        <circle cx="30" cy="30" r="14" fill="#FFB020"/><text x="54" y="34">Light on you, not behind you</text>
+        <rect x="16" y="56" width="28" height="22" rx="3" fill="#FF6B6B"/><rect x="16" y="56" width="10" height="22" fill="#0A4952"/><text x="54" y="71">Shirt contrasts with background</text>
+        <rect x="16" y="92" width="28" height="18" rx="3" fill="none" stroke="#00FFD1" stroke-width="2"/><text x="20" y="105" font-size="8" fill="#00FFD1">60fps</text><text x="54" y="105">1080p at 60 fps (or 120 fps slow mo)</text>
+        <text x="16" y="136" fill="#8b98a9">Shorts help: the AI sees knees much better.</text>
+      </g>
+    </svg>
+    <ul>
+      <li>Bright, even light. Avoid filming toward windows or a bright wall.</li>
+      <li>Wear a shirt and shorts that stand out from the wall and floor.</li>
+      <li>Use 60 fps: fast strokes blur at 30 fps and the wrist gets lost.</li>
+      <li>Clean the lens. Keep other people out of the background.</li>
+    </ul>
+   </div>
+  </div>
+
+  <div class="note" style="margin-top:16px;font-size:13px">
+    <b>Quick checklist before you hit record:</b> ☐ tripod behind you or 45° diagonal ☐ 3 to 4 m away ☐ lens at chest height, level ☐ head to feet visible during wide steps ☐ light in front of you ☐ 60 fps.<br>
+    <b>In the app:</b> if detection still struggles, choose <b>Max accuracy</b> in Analysis Settings and use <b>✋ Mark me manually</b> to draw a box around yourself.
+  </div>
+ </div>
+</div>
+<script type="module">
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const video = $('#video'), overlay = $('#overlay'), octx = overlay.getContext('2d');
+let landmarker = null, loadedModel = null, frames = [], report = null, analyzing = false;
+let vfmt = '916', tsClock = 0, candidates = [], me = null; // me = {hip:{x,y}, t, box}
+let stopReq = false, rangeA = 0, rangeB = 0, previewing = false;
+let cropLm = null, cropModel = null, marking = null, manualBox = null, exporting = false;
+const cropCv = document.createElement('canvas'), cropCtx = cropCv.getContext('2d');
+const nextTs = (ms = 33) => (tsClock += Math.max(1, Math.round(ms)));
+
+/* ---------------- UI wiring ---------------- */
+{ const at = document.querySelector('.nav-tab.active'), tabs = document.querySelector('.nav-tabs');
+  if (at && tabs && tabs.scrollWidth > tabs.clientWidth) tabs.scrollLeft = at.offsetLeft - (tabs.clientWidth - at.offsetWidth) / 2; }
+$$('#oppWeak .chip').forEach(c => c.onclick = () => { c.classList.toggle('on'); if (report) renderTactics(); });
+['#oppStyle','#oppHand'].forEach(s => $(s).onchange = () => { if (report) renderTactics(); });
+$$('.tab').forEach(t => t.onclick = () => {
+  $$('.tab').forEach(x => x.classList.toggle('on', x === t));
+  $$('.pane').forEach(p => p.classList.toggle('on', p.id === 'p-' + t.dataset.p));
+  if (t.dataset.p === 'data') drawCharts();
+});
+const drop = $('#drop'), fileIn = $('#file');
+drop.onclick = () => fileIn.click();
+drop.ondragover = e => { e.preventDefault(); drop.classList.add('drag'); };
+drop.ondragleave = () => drop.classList.remove('drag');
+drop.ondrop = e => { e.preventDefault(); drop.classList.remove('drag'); if (e.dataTransfer.files[0]) loadVideo(e.dataTransfer.files[0]); };
+fileIn.onchange = () => fileIn.files[0] && loadVideo(fileIn.files[0]);
+$('#resetBtn').onclick = resetAll;
+$$('[data-guide]').forEach(b => b.onclick = e => { e.stopPropagation(); $('#guide').classList.add('on'); });
+$('#guideClose').onclick = () => $('#guide').classList.remove('on');
+$('#guide').onclick = e => { if (e.target.id === 'guide') $('#guide').classList.remove('on'); };
+$('#stopBtn').onclick = () => { stopReq = true; $('#stopBtn').disabled = true; setStatus('Stopping... building report from the part analyzed so far.'); };
+$('#exportVidBtn').onclick = () => exportVideo('skeleton');
+$('#cutBtn').onclick = () => exportVideo('cut');
+/* ---- range (cut) controls ---- */
+const MIN_LEN = 1;
+function updRange() {
+  const d = video.duration || 1;
+  $('#rA').max = $('#rB').max = d.toFixed(1);
+  $('#rA').value = rangeA; $('#rB').value = rangeB;
+  $('#rSel').style.left = (rangeA / d * 100) + '%'; $('#rSel').style.width = ((rangeB - rangeA) / d * 100) + '%';
+  $('#rAt').textContent = fmt2(rangeA); $('#rBt').textContent = fmt2(rangeB); $('#rLen').textContent = fmt2(rangeB - rangeA);
+}
+function setStart(t, detect = true) {
+  rangeA = Math.max(0, Math.min(t, rangeB - MIN_LEN)); updRange();
+  if (detect) detectPlayers(rangeA); else video.currentTime = rangeA;
+}
+function setEnd(t) { rangeB = Math.min(video.duration, Math.max(t, rangeA + MIN_LEN)); updRange(); }
+let rTimer = null;
+$('#rA').oninput = e => { setStart(+e.target.value, false); clearTimeout(rTimer); rTimer = setTimeout(() => detectPlayers(rangeA), 450); };
+$('#rB').oninput = e => { setEnd(+e.target.value); video.currentTime = rangeB; };
+$('#setA').onclick = () => setStart(video.currentTime);
+$('#setB').onclick = () => setEnd(video.currentTime);
+$('#fullBtn').onclick = () => { rangeB = video.duration; setStart(0); };
+$('#prevBtn').onclick = async () => { await seek(rangeA); previewing = true; $('#stage').classList.remove('picking'); if (!frames.length) octx.clearRect(0, 0, overlay.width, overlay.height); video.play(); };
+video.addEventListener('timeupdate', () => {
+  $('#rCur').style.left = (video.currentTime / (video.duration || 1) * 100) + '%';
+  if (previewing && video.currentTime >= rangeB) { video.pause(); previewing = false; video.currentTime = rangeA; }
+});
+video.addEventListener('pause', () => { if (previewing && video.currentTime < rangeB) previewing = false; });
+$('#pdfBtn').onclick = $('#pdfBtn2').onclick = exportPDF;
+$('#markBtn').onclick = startMark;
+$('#markCancel').onclick = () => endMark(false);
+$('#markOk').onclick = confirmMark;
+$$('#fmt div').forEach(d => d.onclick = () => {
+  vfmt = d.dataset.f; $$('#fmt div').forEach(x => x.classList.toggle('on', x === d));
+  drop.classList.toggle('v916', vfmt === '916'); drop.classList.toggle('v169', vfmt === '169');
+  if (video.videoWidth) applyLayout();
+});
+$('#rescanBtn').onclick = () => detectPlayers();
+overlay.onclick = e => {
+  if (!$('#stage').classList.contains('picking') || !candidates.length) return;
+  const rc = overlay.getBoundingClientRect(), x = (e.clientX - rc.left) / rc.width, y = (e.clientY - rc.top) / rc.height;
+  const inside = candidates.filter(c => x >= c.box[0] && x <= c.box[2] && y >= c.box[1] && y <= c.box[3]);
+  const pool = inside.length ? inside : candidates;
+  choose(pool.sort((a, b) => Math.hypot(a.hip.x - x, a.hip.y - y) - Math.hypot(b.hip.x - x, b.hip.y - y))[0]);
+};
+$('#analyzeBtn').onclick = analyze;
+$('#dlJson').onclick = () => {
+  const blob = new Blob([JSON.stringify({ report, settings: settings() }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'tt-analysis.json'; a.click();
+};
+
+function loadVideo(f) {
+  frames = []; report = null; me = null; candidates = []; $('#results').classList.add('hidden'); $('#live').classList.remove('on');
+  $('#analyzeBtn').disabled = true; $('#picker').classList.remove('hidden');
+  video.src = URL.createObjectURL(f);
+  drop.classList.add('hidden'); $('#stageWrap').classList.remove('hidden');
+  video.onloadedmetadata = () => {
+    overlay.width = video.videoWidth; overlay.height = video.videoHeight;
+    applyLayout(); setBar(0);
+    rangeA = 0; rangeB = video.duration; updRange();
+    $('#vinfo').textContent = `${f.name} · ${video.videoWidth}×${video.videoHeight} · ${video.duration.toFixed(1)}s`;
+  };
+  video.onloadeddata = () => detectPlayers(0);
+}
+function applyLayout() {
+  const vw = video.videoWidth, vh = video.videoHeight, portrait = vfmt === '916';
+  const stage = $('#stage');
+  stage.style.aspectRatio = `${vw} / ${vh}`; // real shape keeps skeleton aligned
+  stage.style.width = `min(100%, calc(${portrait ? 78 : 70}vh * ${(vw / vh).toFixed(4)}))`;
+  $('#stageWrap').classList.toggle('portrait', portrait);
+  const real = vh > vw ? '916' : '169';
+  if (real !== vfmt) setStatus(`Note: you selected ${vfmt === '916' ? '9:16' : '16:9'} but this video is ${real === '916' ? '9:16 vertical' : '16:9 horizontal'}. Layout follows your choice, skeleton follows the real video.`);
+}
+
+/* ---------------- Reset ---------------- */
+function resetAll() {
+  if (analyzing || exporting) { setStatus('Please wait for the current job to finish.'); return; }
+  video.pause(); video.removeAttribute('src'); video.load();
+  fileIn.value = ''; frames = []; report = null; me = null; candidates = []; manualBox = null; marking = null;
+  octx.clearRect(0, 0, overlay.width, overlay.height);
+  $('#stage').classList.remove('picking', 'marking');
+  $('#results').classList.add('hidden'); $('#live').classList.remove('on');
+  $('#stageWrap').classList.add('hidden'); drop.classList.remove('hidden');
+  $('#picker').classList.remove('hidden'); $('#markRow').classList.add('hidden'); $('#pickBtns').innerHTML = '';
+  $('#pickMsg').textContent = 'Detecting players...';
+  ['#analyzeBtn', '#exportVidBtn', '#pdfBtn'].forEach(b => $(b).disabled = true);
+  $('#vinfo').textContent = ''; setBar(0); setStatus('');
+  scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---------------- Crop detection (better for small / far players) ---------------- */
+async function getCropLandmarker(model) {
+  if (cropLm && cropModel === model) return cropLm;
+  cropLm = await createLm(model, 'IMAGE'); cropModel = model; return cropLm;
+}
+const clampBox = b => [Math.max(0, b[0]), Math.max(0, b[1]), Math.min(1, b[2]), Math.min(1, b[3])];
+function expandBox(b, fx = 1.4, fy = 1.25) {
+  const cx = (b[0] + b[2]) / 2, cy = (b[1] + b[3]) / 2;
+  const w = Math.max(0.08, (b[2] - b[0]) * fx), h = Math.max(0.12, (b[3] - b[1]) * fy);
+  return clampBox([cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2]);
+}
+function boxFromLm(L) {
+  const v = L.filter(p => (p.visibility ?? p[2] ?? 1) > 0.3);
+  const xs = v.map(p => p.x ?? p[0]), ys = v.map(p => p.y ?? p[1]);
+  return xs.length ? [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)] : null;
+}
+function detectCrop(lmk, b) {
+  const vw = video.videoWidth, vh = video.videoHeight;
+  const sx = b[0] * vw, sy = b[1] * vh, sw = (b[2] - b[0]) * vw, sh = (b[3] - b[1]) * vh;
+  if (sw < 8 || sh < 8) return { landmarks: [], worldLandmarks: [] };
+  const sc = Math.min(3, 640 / Math.max(sw, sh));
+  cropCv.width = Math.round(sw * sc); cropCv.height = Math.round(sh * sc);
+  cropCtx.drawImage(video, sx, sy, sw, sh, 0, 0, cropCv.width, cropCv.height);
+  const r = lmk.detect(cropCv);
+  return { landmarks: (r.landmarks || []).map(L => L.map(p => ({ x: b[0] + p.x * (b[2] - b[0]), y: b[1] + p.y * (b[3] - b[1]), visibility: p.visibility }))),
+    worldLandmarks: r.worldLandmarks || [] };
+}
+
+/* ---------------- Manual "mark me" ---------------- */
+function startMark() {
+  video.pause(); marking = { mode: null }; manualBox = me?.box ? [...me.box] : null;
+  $('#stage').classList.remove('picking'); $('#stage').classList.add('marking');
+  $('#markRow').classList.remove('hidden');
+  $('#pickMsg').innerHTML = '<b>Drag a box around your whole body</b> (head to feet). Drag inside the box to move it, drag outside to redraw. Then press Confirm.';
+  drawMark();
+}
+function endMark(keep) {
+  marking = null; $('#stage').classList.remove('marking'); $('#markRow').classList.add('hidden');
+  if (!keep) { manualBox = null; if (candidates.length) { $('#stage').classList.add('picking'); drawPick(); } else octx.clearRect(0, 0, overlay.width, overlay.height);
+    $('#pickMsg').textContent = me ? `Selected ${me.label}.` : 'Pick yourself, or mark yourself manually.'; }
+}
+const normPt = e => { const rc = overlay.getBoundingClientRect(); return [Math.min(1, Math.max(0, (e.clientX - rc.left) / rc.width)), Math.min(1, Math.max(0, (e.clientY - rc.top) / rc.height))]; };
+overlay.addEventListener('pointerdown', e => {
+  if (!marking) return; overlay.setPointerCapture(e.pointerId);
+  const [x, y] = normPt(e), b = manualBox;
+  if (b && x > b[0] && x < b[2] && y > b[1] && y < b[3]) marking = { mode: 'move', ox: x, oy: y, b0: [...b] };
+  else { marking = { mode: 'draw', sx: x, sy: y }; manualBox = [x, y, x, y]; }
+});
+overlay.addEventListener('pointermove', e => {
+  if (!marking?.mode) return; const [x, y] = normPt(e);
+  if (marking.mode === 'draw') manualBox = [Math.min(marking.sx, x), Math.min(marking.sy, y), Math.max(marking.sx, x), Math.max(marking.sy, y)];
+  else { const b = marking.b0, dx = Math.max(-b[0], Math.min(1 - b[2], x - marking.ox)), dy = Math.max(-b[1], Math.min(1 - b[3], y - marking.oy)); manualBox = [b[0] + dx, b[1] + dy, b[2] + dx, b[3] + dy]; }
+  drawMark();
+});
+overlay.addEventListener('pointerup', () => { if (marking) marking.mode = null; });
+function drawMark() {
+  const W = overlay.width, H = overlay.height; octx.clearRect(0, 0, W, H);
+  octx.fillStyle = 'rgba(0,0,0,.45)'; octx.fillRect(0, 0, W, H);
+  if (!manualBox) return;
+  const [x0, y0, x1, y1] = manualBox;
+  octx.clearRect(x0 * W, y0 * H, (x1 - x0) * W, (y1 - y0) * H);
+  octx.strokeStyle = '#00E0B8'; octx.lineWidth = Math.max(3, W / 220); octx.setLineDash([14, 8]);
+  octx.strokeRect(x0 * W, y0 * H, (x1 - x0) * W, (y1 - y0) * H); octx.setLineDash([]);
+  const fs = Math.round(Math.max(W, H) / 40); octx.font = `bold ${fs}px sans-serif`; octx.fillStyle = '#00E0B8';
+  octx.fillText('ME (manual)', x0 * W + 6, Math.max(fs, y0 * H - 8));
+}
+async function confirmMark() {
+  if (video.currentTime > rangeB - MIN_LEN) { $('#pickMsg').textContent = 'This frame is after the end of your selected part. Move the end handle first.'; return; }
+  if (!manualBox || (manualBox[2] - manualBox[0]) < 0.03 || (manualBox[3] - manualBox[1]) < 0.05) { $('#pickMsg').textContent = 'Draw a bigger box around your whole body first.'; return; }
+  try {
+    $('#markOk').disabled = true; $('#pickMsg').textContent = 'Finding your pose inside the box...';
+    const lmk = await getCropLandmarker($('#model').value);
+    let r = detectCrop(lmk, manualBox);
+    if (!r.landmarks.length) r = detectCrop(lmk, expandBox(manualBox, 1.3, 1.15));
+    if (!r.landmarks.length) { $('#pickMsg').innerHTML = '⚠ No body found in that box. Make it a bit larger (include head and feet) or move to a clearer frame.'; return; }
+    const cx = (manualBox[0] + manualBox[2]) / 2, cy = (manualBox[1] + manualBox[3]) / 2;
+    const L = r.landmarks.sort((a, b) => Math.hypot(mid(a[23], a[24]).x - cx, mid(a[23], a[24]).y - cy) - Math.hypot(mid(b[23], b[24]).x - cx, mid(b[23], b[24]).y - cy))[0];
+    const c = { lm: L.map(p => [p.x, p.y, p.visibility ?? 1]), hip: mid(L[23], L[24]), t: video.currentTime, box: boxFromLm(L) || manualBox,
+      label: 'You (manual)', color: '#00E0B8', manual: true };
+    candidates = [c]; endMark(true); choose(c);
+  } catch (e) { console.error(e); $('#pickMsg').textContent = '⚠ Could not run the pose model. Check your internet.'; }
+  finally { $('#markOk').disabled = false; }
+}
+
+/* ---------------- Player picker ---------------- */
+async function detectPlayers(at) {
+  if (analyzing || exporting) return;
+  const tt = at ?? video.currentTime;
+  if (tt > rangeB - MIN_LEN) { $('#pickMsg').textContent = 'That frame is after the end of your selected part. Move the end handle first.'; return; }
+  me = null; $('#analyzeBtn').disabled = true;
+  try {
+    $('#rescanBtn').disabled = true; $('#pickBtns').innerHTML = ''; $('#pickMsg').textContent = 'Detecting players on this frame...';
+    video.pause();
+    const lm = await getLandmarker($('#model').value);
+    await seek(tt);
+    const res = lm.detectForVideo(video, nextTs(500));
+    candidates = (res.landmarks || []).map((L, i) => {
+      const v = L.filter(p => (p.visibility ?? 1) > 0.3), xs = v.map(p => p.x), ys = v.map(p => p.y);
+      return { i, lm: L.map(p => [p.x, p.y, p.visibility ?? 1]), hip: mid(L[23], L[24]), t: video.currentTime,
+        box: [Math.min(...xs) - .02, Math.min(...ys) - .02, Math.max(...xs) + .02, Math.max(...ys) + .02] };
+    }).sort((a, b) => a.hip.x - b.hip.x);
+    candidates.forEach((c, k) => { c.label = candidates.length === 1 ? 'Player' : k === 0 ? 'Left player' : 'Right player'; c.color = k === 0 ? '#FF6B6B' : '#FFB020'; });
+    if (!candidates.length) { $('#pickMsg').textContent = 'No player found on this frame. Scrub to a clearer frame and press "Detect on current frame".'; drawPick(); setStatus(''); return; }
+    if (candidates.length === 1) { choose(candidates[0]); $('#pickMsg').innerHTML = 'Only one player found, selected automatically. If that is not you, scrub to another frame and detect again.'; return; }
+    $('#pickMsg').innerHTML = `${candidates.length} players found. <b>Tap yourself on the video</b> or use a button:`;
+    $('#pickBtns').innerHTML = candidates.map((c, k) => `<button data-k="${k}" style="background:${c.color}">This is me: ${c.label}</button>`).join('');
+    $$('#pickBtns button').forEach(b => b.onclick = () => choose(candidates[+b.dataset.k]));
+    $('#stage').classList.add('picking'); drawPick();
+    setStatus('Choose which player is you, then click Analyze.');
+  } catch (e) { console.error(e); $('#pickMsg').textContent = '⚠ Could not load the pose model. Check your internet and try "Detect on current frame".'; }
+  finally { $('#rescanBtn').disabled = false; }
+}
+function choose(c) {
+  me = c; candidates.forEach(x => x.me = x === c);
+  if (Math.abs(c.t - rangeA) > 0.05) { rangeA = Math.min(c.t, rangeB - MIN_LEN); updRange(); }
+  $('#stage').classList.add('picking'); drawPick();
+  $('#pickMsg').innerHTML = `✅ Selected <b>${c.label}</b> at ${fmt2(c.t)}. Only this player will be analyzed from ${fmt2(rangeA)} to ${fmt2(rangeB)}. Tap the other player to switch.`;
+  $$('#pickBtns button').forEach(b => b.classList.toggle('me', candidates[+b.dataset.k] === c));
+  $('#analyzeBtn').disabled = false;
+  setStatus('Ready. Click "Analyze my technique".');
+}
+function drawPick() {
+  const W = overlay.width, H = overlay.height; octx.clearRect(0, 0, W, H);
+  if (me) drawSkeleton(me.lm, false, null, octx, W, H, false);
+  candidates.forEach(c => {
+    const [x0, y0, x1, y1] = c.box, col = c.me ? '#00E0B8' : c.color;
+    octx.globalAlpha = c.me || !me ? 1 : 0.45;
+    octx.strokeStyle = col; octx.lineWidth = Math.max(3, W / 250); octx.setLineDash(c.me ? [] : [12, 8]);
+    octx.strokeRect(x0 * W, y0 * H, (x1 - x0) * W, (y1 - y0) * H); octx.setLineDash([]);
+    const fs = Math.round(Math.max(W, H) / 40); octx.font = `bold ${fs}px sans-serif`;
+    const txt = c.me ? 'ME ✓' : c.label; const tw = octx.measureText(txt).width;
+    octx.fillStyle = col; octx.fillRect(x0 * W, Math.max(0, y0 * H - fs * 1.4), tw + fs * .8, fs * 1.4);
+    octx.fillStyle = '#fff'; octx.fillText(txt, x0 * W + fs * .4, Math.max(fs, y0 * H - fs * .35));
+  });
+  octx.globalAlpha = 1;
+}
+const fmt2 = t => `${Math.floor(t / 60)}:${(t % 60).toFixed(1).padStart(4, '0')}`;
+const setStatus = t => $('#status').textContent = t;
+const setBar = p => $('#bar').style.width = (p * 100).toFixed(1) + '%';
+const settings = () => ({
+  hand: $('#hand').value, level: $('#level').value, style: $('#style').value, format: vfmt,
+  vtype: $('#vtype').value, oppStyle: $('#oppStyle').value, oppHand: $('#oppHand').value,
+  oppWeak: $$('#oppWeak .chip.on').map(c => c.dataset.v), model: $('#model').value
+});
+
+/* ---------------- Pose model ---------------- */
+async function getLandmarker(model) {
+  if (landmarker && loadedModel === model) return landmarker;
+  setStatus('Loading AI pose model (first time can take 10 to 30 sec)...');
+  landmarker = await createLm(model, 'VIDEO'); loadedModel = model; return landmarker;
+}
+let visionMod = null, filesetCache = null;
+async function createLm(model, mode, vision, fileset) {
+  vision = vision || visionMod || await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14');
+  fileset = fileset || filesetCache || await vision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
+  visionMod = vision; filesetCache = fileset;
+  const url = `https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_${model}/float16/1/pose_landmarker_${model}.task`;
+  const opts = d => ({ baseOptions: { modelAssetPath: url, delegate: d }, runningMode: mode, numPoses: 2,
+    minPoseDetectionConfidence: 0.45, minPosePresenceConfidence: 0.45, minTrackingConfidence: 0.5 });
+  try { return await vision.PoseLandmarker.createFromOptions(fileset, opts('GPU')); }
+  catch { return await vision.PoseLandmarker.createFromOptions(fileset, opts('CPU')); }
+}
+
+/* ---------------- Analysis loop ---------------- */
+const seek = t => new Promise(r => {
+  let done = false; const fin = () => { if (done) return; done = true; video.removeEventListener('seeked', fin); r(); };
+  video.addEventListener('seeked', fin); setTimeout(fin, 2000); video.currentTime = t;
+});
+
+async function analyze() {
+  if (analyzing) return;
+  if (!me) { setStatus('Please select which player is you first.'); return; }
+  const s = settings();
+  $('#stage').classList.remove('picking'); $('#picker').classList.add('hidden');
+  analyzing = true; stopReq = false; $('#analyzeBtn').disabled = true; frames = [];
+  $('#stopBtn').classList.remove('hidden'); $('#stopBtn').disabled = false;
+  try {
+    const lm = await getLandmarker(s.model);
+    setStatus('Loading tracking model...');
+    const clm = await getCropLandmarker(s.model);
+    const fps = { lite: 10, full: 15, heavy: 20 }[s.model];
+    const maxDur = Math.min(rangeB, me.t + 300);
+    const step = 1 / fps; video.pause();
+    let prevHip = { ...me.hip }, lastSeen = me.t;
+    const tStart = me.t, t0 = performance.now();
+    const baseBox = expandBox(me.box); let box = [...baseBox];
+    let tEnd = tStart;
+    for (let t = tStart; t < maxDur; t += step) {
+      if (stopReq) break;
+      tEnd = t;
+      await seek(t);
+      // 1) look for you inside a crop around your last position
+      let res = detectCrop(clm, box);
+      let idx = pickPose(res, prevHip, true);
+      // 2) fallback: full frame, nearest to your last position
+      if (idx < 0) { res = lm.detectForVideo(video, nextTs(step * 1000)); idx = pickPose(res, prevHip, t - lastSeen > 1.5); }
+      if (idx >= 0) { lastSeen = t; const b = boxFromLm(res.landmarks[idx]); if (b) box = expandBox(b); }
+      else { const w = Math.min(0.9, (box[2] - box[0]) * 1.1), h = Math.min(0.95, (box[3] - box[1]) * 1.1); box = clampBox([prevHip.x - w / 2, prevHip.y - h * 0.55, prevHip.x + w / 2, prevHip.y + h * 0.45]); }
+      if (idx >= 0) {
+        const L = res.landmarks[idx], W = res.worldLandmarks[idx];
+        frames.push({ t, lm: L.map(p => [p.x, p.y, p.visibility ?? 1]), w: W.map(p => [p.x, p.y, p.z]) });
+        prevHip = mid(L[23], L[24]);
+        drawSkeleton(frames[frames.length - 1].lm, true);
+      } else octx.clearRect(0, 0, overlay.width, overlay.height);
+      const p = (t - tStart) / (maxDur - tStart || 1); setBar(p);
+      const eta = ((performance.now() - t0) / 1000) * (1 - p) / Math.max(p, 0.01);
+      setStatus(`Analyzing you only... ${(p * 100).toFixed(0)}% · ${frames.length} poses tracked · ~${eta.toFixed(0)}s left`);
+    }
+    setBar(1);
+    if (frames.length < fps * 2) throw new Error(stopReq ? 'Stopped too early. Let it analyze at least a few seconds of play.' : 'Could not detect a player clearly. Try a clip with the full body visible and better lighting.');
+    report = buildReport(frames, s, fps);
+    renderAll();
+    $('#live').classList.add('on');
+    $('#exportVidBtn').disabled = false; $('#pdfBtn').disabled = false;
+    setStatus(`Done${stopReq ? ' (stopped early)' : ''}. Analyzed ${fmt2(tStart)} to ${fmt2(tEnd)}: ${frames.length} frames, ${report.strokes.length} strokes.`);
+    video.currentTime = tStart;
+  } catch (e) {
+    console.error(e); setStatus('⚠ ' + (e.message || 'Analysis failed. Check your internet connection for the first model load.'));
+  }
+  analyzing = false; $('#analyzeBtn').disabled = false; $('#stopBtn').classList.add('hidden');
+  $('#picker').classList.remove('hidden');
+  $('#pickMsg').innerHTML = `Analyzed <b>${me.label}</b>. To analyze the other player instead, scrub to a clear frame, detect, pick, and analyze again.`;
+  $('#pickBtns').innerHTML = ''; candidates = [];
+}
+
+function mid(a, b) { return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; }
+// Track only the selected player: nearest pose to last known hip. Ignore poses that jump too far
+// (likely the opponent) unless we have lost the player for a while.
+function pickPose(res, prevHip, relaxed) {
+  const n = res.landmarks?.length || 0; if (!n) return -1;
+  const best = res.landmarks.map((L, i) => ({ i, d: Math.hypot(mid(L[23], L[24]).x - prevHip.x, mid(L[23], L[24]).y - prevHip.y) }))
+    .sort((a, b) => a.d - b.d)[0];
+  return best.d <= (relaxed ? 0.35 : 0.18) ? best.i : -1;
+}
+
+/* ---------------- Drawing ---------------- */
+const BONES = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[27,31],[28,32],[15,19],[16,20]];
+function drawSkeleton(lm, live, stroke, ctx = octx, W = overlay.width, H = overlay.height, clear = true) {
+  const octx = ctx; if (clear) octx.clearRect(0, 0, W, H);
+  if (!lm) return;
+  const hand = $('#hand').value, rw = hand === 'right' ? 16 : 15, re = hand === 'right' ? 14 : 13;
+  octx.lineWidth = Math.max(3, W / 300); octx.lineCap = 'round';
+  BONES.forEach(([a, b]) => {
+    if (lm[a][2] < 0.3 || lm[b][2] < 0.3) return;
+    const arm = [rw, re].includes(a) || [rw, re].includes(b);
+    octx.strokeStyle = arm ? '#FF6B6B' : '#00FFD1';
+    octx.beginPath(); octx.moveTo(lm[a][0] * W, lm[a][1] * H); octx.lineTo(lm[b][0] * W, lm[b][1] * H); octx.stroke();
+  });
+  [0,11,12,13,14,15,16,23,24,25,26,27,28].forEach(i => {
+    if (lm[i][2] < 0.3) return;
+    octx.fillStyle = i === rw ? '#fff' : '#FFB020';
+    octx.beginPath(); octx.arc(lm[i][0] * W, lm[i][1] * H, i === rw ? W / 140 : W / 220, 0, 7); octx.fill();
+  });
+  if (stroke) {
+    octx.font = `bold ${Math.round(W / 35)}px sans-serif`; octx.fillStyle = stroke.side === 'FH' ? '#FF6B6B' : '#FFB020';
+    octx.fillText(`${stroke.side === 'FH' ? 'FOREHAND' : 'BACKHAND'} #${stroke.n}  ${stroke.grade}`, W * 0.03, H * 0.08);
+  }
+}
+function overlayLoop() {
+  const st0 = $('#stage').classList;
+  if (frames.length && !analyzing && !st0.contains('picking') && !st0.contains('marking')) {
+    if ($('#showSkel').checked) {
+      const f = nearestFrame(video.currentTime);
+      const st = report?.strokes.find(s => Math.abs(s.t - video.currentTime) < 0.35);
+      drawSkeleton(f && Math.abs(f.t - video.currentTime) < 0.2 ? f.lm : null, false, st);
+    } else octx.clearRect(0, 0, overlay.width, overlay.height);
+    updateLive();
+  }
+  requestAnimationFrame(overlayLoop);
+}
+requestAnimationFrame(overlayLoop);
+function updateLive() {
+  if (!report) return;
+  const t = video.currentTime, P = report.per;
+  let lo = 0, hi = P.length - 1;
+  while (lo < hi) { const m = (lo + hi) >> 1; P[m].t < t ? lo = m + 1 : hi = m; }
+  const p = P[lo]; if (!p) return;
+  const st = report.strokes.find(s => Math.abs(s.t - t) < 0.35);
+  $('#lvStroke').innerHTML = st ? `<span style="color:${st.side === 'FH' ? '#D6453F' : '#A86A00'}">${st.side} ${st.grade}</span>` : '·';
+  $('#lvKnee').textContent = p.knee ? p.knee.toFixed(0) + '°' : 'n/a';
+  $('#lvElbow').textContent = p.elbow.toFixed(0) + '°';
+  $('#lvLean').textContent = p.lean.toFixed(0) + '°';
+  $('#lvSpeed').textContent = p.spd.toFixed(1);
+  $('#lvCount').textContent = report.strokes.filter(s => s.t <= t).length + ' / ' + report.strokes.length;
+}
+/* ---------------- Export: video with skeleton ---------------- */
+function busy(msg) { let b = $('#busy'); if (!msg) { b?.remove(); return; } if (!b) { b = document.createElement('div'); b.id = 'busy'; b.className = 'busy'; b.innerHTML = '<div></div>'; document.body.appendChild(b); } b.firstChild.innerHTML = msg; }
+async function exportVideo(mode = 'skeleton') {
+  const cut = mode === 'cut';
+  if (exporting || analyzing || (!cut && !report)) return;
+  if (!window.MediaRecorder) { setStatus('Your browser cannot record video. Please use Chrome or Edge.'); return; }
+  exporting = true; $('#exportVidBtn').disabled = true; $('#cutBtn').disabled = true; previewing = false;
+  $('#stage').classList.remove('picking');
+  const vw = video.videoWidth, vh = video.videoHeight, sc = Math.min(1, 1920 / Math.max(vw, vh));
+  const cv = document.createElement('canvas'); cv.width = Math.round(vw * sc / 2) * 2; cv.height = Math.round(vh * sc / 2) * 2;
+  const cx = cv.getContext('2d');
+  const types = ['video/mp4;codecs=avc1.42E01E', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'];
+  const mime = types.find(t => MediaRecorder.isTypeSupported(t)) || '';
+  const stream = cv.captureStream(30), chunks = [];
+  const rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 8e6 });
+  rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+  const tA = cut ? rangeA : report.per[0].t, tB = cut ? rangeB : Math.min(video.duration, report.per[report.per.length - 1].t + 0.3);
+  const wasMuted = video.muted, wasRate = video.playbackRate;
+  try {
+    await seek(tA);
+    const draw = () => {
+      cx.drawImage(video, 0, 0, cv.width, cv.height);
+      if (cut) return;
+      const t = video.currentTime, f = nearestFrame(t), st = report.strokes.find(s => Math.abs(s.t - t) < 0.35);
+      drawSkeleton(f && Math.abs(f.t - t) < 0.2 ? f.lm : null, false, st, cx, cv.width, cv.height, false);
+      const fs = Math.round(Math.max(cv.width, cv.height) / 55);
+      cx.font = `bold ${fs}px sans-serif`; cx.fillStyle = 'rgba(0,0,0,.55)';
+      const tag = `Pong Home AI Coach · Score ${report.overall} · Strokes ${report.strokes.filter(s => s.t <= t).length}`;
+      cx.fillRect(0, cv.height - fs * 1.9, cx.measureText(tag).width + fs * 1.4, fs * 1.9);
+      cx.fillStyle = '#fff'; cx.fillText(tag, fs * .7, cv.height - fs * .6);
+    };
+    draw(); rec.start(250); video.muted = true; video.playbackRate = 1;
+    await video.play();
+    await new Promise(res => {
+      const guard = setInterval(() => { if (video.paused || video.ended) { clearInterval(guard); res(); } }, 1000);
+      const tick = () => {
+        if (!exporting) return res();
+        draw();
+        busy(`${cut ? '✂ Cutting clip' : '🎬 Recording video with skeleton'}... ${Math.round((video.currentTime - tA) / (tB - tA) * 100)}%<br><span style="font-size:12px;color:var(--muted)">Records in real time. Keep this tab open.</span>`);
+        if (video.currentTime >= tB || video.ended) return res();
+        video.requestVideoFrameCallback ? video.requestVideoFrameCallback(tick) : requestAnimationFrame(tick);
+      };
+      tick();
+    });
+    video.pause(); await new Promise(r => { rec.onstop = r; rec.stop(); });
+    const blob = new Blob(chunks, { type: mime || 'video/webm' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `${cut ? 'tt-clip-' + fmt2(tA).replace(/[:.]/g, '') + '-' + fmt2(tB).replace(/[:.]/g, '') : 'tt-analysis-skeleton'}.${(mime || 'webm').includes('mp4') ? 'mp4' : 'webm'}`; a.click();
+    setStatus(`Video downloaded (${(blob.size / 1e6).toFixed(1)} MB, ${(mime || 'webm').includes('mp4') ? 'MP4' : 'WebM'}).`);
+  } catch (e) { console.error(e); setStatus('⚠ Video export failed: ' + e.message); }
+  video.muted = wasMuted; video.playbackRate = wasRate;
+  busy(null); exporting = false; $('#exportVidBtn').disabled = !report; $('#cutBtn').disabled = false;
+  if (candidates.length) { $('#stage').classList.add('picking'); drawPick(); }
+}
+
+/* ---------------- Export: PDF ---------------- */
+const loadScript = src => new Promise((ok, no) => { if ([...document.scripts].some(s => s.src === src)) return ok(); const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = () => no(new Error('Could not load ' + src)); document.head.appendChild(s); });
+async function snapshot(t, maxW = 700) {
+  await seek(t);
+  const vw = video.videoWidth, vh = video.videoHeight, sc = Math.min(1, maxW / vw, 700 / vh);
+  const c = document.createElement('canvas'); c.width = vw * sc; c.height = vh * sc; const x = c.getContext('2d');
+  x.drawImage(video, 0, 0, c.width, c.height);
+  const f = nearestFrame(t); if (f) drawSkeleton(f.lm, false, report.strokes.find(s => Math.abs(s.t - t) < 0.2), x, c.width, c.height, false);
+  return c.toDataURL('image/jpeg', 0.85);
+}
+async function exportPDF() {
+  if (!report || exporting) return;
+  exporting = true; $('#pdfBtn').disabled = true; $('#pdfBtn2').disabled = true;
+  const res = $('#results'), keepT = video.currentTime;
+  try {
+    busy('📄 Building PDF report...');
+    await loadScript('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js');
+    await loadScript('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js');
+    const s = report.settings, sorted = [...report.strokes].sort((a, b) => b.score - a.score);
+    const shots = [];
+    if (sorted.length) shots.push(['Best stroke #' + sorted[0].n + ' (' + sorted[0].grade + ')', await snapshot(sorted[0].t)]);
+    if (sorted.length > 1) { const w = sorted[sorted.length - 1]; shots.push(['Needs work: stroke #' + w.n + ' (' + w.grade + ')', await snapshot(w.t)]); }
+    const nm = x => ({ right: 'Right handed', left: 'Left handed' }[x] || x);
+    $('#pdfHead').innerHTML = `<h2 style="font-size:22px;color:#14727C;text-transform:none;letter-spacing:0">🏓 Pong Home AI Coach · Technique Report</h2>
+      <div style="font-size:13px;color:#555">${new Date().toLocaleString()} · ${$('#vinfo').textContent}</div>
+      <div style="font-size:13px;margin-top:6px">${nm(s.hand)} · ${s.level} · ${$('#style').selectedOptions[0].text} · ${$('#vtype').selectedOptions[0].text} · Opponent: ${$('#oppStyle').selectedOptions[0].text}, ${nm($('#oppHand').value)}</div>
+      <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">${shots.map(([l, src]) => `<div style="flex:1;min-width:200px"><img src="${src}" style="width:100%;max-height:360px;object-fit:contain;border-radius:8px;background:#000"><div style="font-size:12px;color:#555;margin-top:4px">${l}</div></div>`).join('')}</div>`;
+    res.classList.add('pdfmode'); drawCharts();
+    await new Promise(r => setTimeout(r, 150));
+    const { jsPDF } = window.jspdf, pdf = new jsPDF({ unit: 'pt', format: 'a4' });
+    const PW = pdf.internal.pageSize.getWidth(), PH = pdf.internal.pageSize.getHeight(), M = 28, CW = PW - M * 2;
+    let y = M;
+    const blocks = [$('#pdfHead'), ...$$('#results .pane .card')];
+    for (let k = 0; k < blocks.length; k++) {
+      busy(`📄 Building PDF report... ${Math.round(k / blocks.length * 100)}%`);
+      const c = await html2canvas(blocks[k], { scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false });
+      const ratio = CW / c.width; let srcY = 0;
+      while (srcY < c.height) {
+        const room = PH - M - y, sliceH = Math.min(c.height - srcY, Math.floor(room / ratio));
+        if (sliceH < 60 && y > M) { pdf.addPage(); y = M; continue; }
+        const part = document.createElement('canvas'); part.width = c.width; part.height = sliceH;
+        part.getContext('2d').drawImage(c, 0, srcY, c.width, sliceH, 0, 0, c.width, sliceH);
+        pdf.addImage(part.toDataURL('image/jpeg', 0.9), 'JPEG', M, y, CW, sliceH * ratio);
+        y += sliceH * ratio + 10; srcY += sliceH;
+        if (srcY < c.height) { pdf.addPage(); y = M; }
+      }
+    }
+    const n = pdf.getNumberOfPages();
+    for (let i = 1; i <= n; i++) { pdf.setPage(i); pdf.setFontSize(8); pdf.setTextColor(140); pdf.text(`Pong Home AI Coach · ponghome.com/aicoach · page ${i} of ${n} · AI estimates from pose tracking`, M, PH - 12); }
+    pdf.save(`tt-analysis-${new Date().toISOString().slice(0, 10)}.pdf`);
+    setStatus('PDF report downloaded.');
+  } catch (e) { console.error(e); setStatus('⚠ PDF export failed: ' + e.message); }
+  res.classList.remove('pdfmode'); $('#pdfHead').innerHTML = '';
+  if ($('#p-data').classList.contains('on')) drawCharts();
+  video.currentTime = keepT;
+  busy(null); exporting = false; $('#pdfBtn').disabled = false; $('#pdfBtn2').disabled = false;
+}
+
+function nearestFrame(t) {
+  let lo = 0, hi = frames.length - 1;
+  while (lo < hi) { const m = (lo + hi) >> 1; frames[m].t < t ? lo = m + 1 : hi = m; }
+  if (lo > 0 && Math.abs(frames[lo - 1].t - t) < Math.abs(frames[lo].t - t)) lo--;
+  return frames[lo];
+}
+
+/* ---------------- Biomechanics ---------------- */
+const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const len = v => Math.hypot(...v);
+const ang3 = (a, b, c) => { const u = sub(a, b), v = sub(c, b); const d = (u[0]*v[0] + u[1]*v[1] + u[2]*v[2]) / (len(u) * len(v) || 1); return Math.acos(Math.max(-1, Math.min(1, d))) * 180 / Math.PI; };
+const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
+const median = a => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - y); return s[s.length >> 1]; };
+const std = a => { const m = avg(a); return Math.sqrt(avg(a.map(x => (x - m) ** 2))); };
+const clamp = (x, a = 0, b = 100) => Math.max(a, Math.min(b, x));
+const smooth = (a, k = 2) => a.map((_, i) => avg(a.slice(Math.max(0, i - k), i + k + 1)));
+// Score 100 inside [lo,hi], falling off linearly to 0 at distance `soft`
+const band = (v, lo, hi, soft) => v >= lo && v <= hi ? 100 : clamp(100 - (v < lo ? lo - v : v - hi) / soft * 100);
+
+function buildReport(F, s, fps) {
+  const R = s.hand === 'right';
+  const SH = R ? 12 : 11, EL = R ? 14 : 13, WR = R ? 16 : 15, OSH = R ? 11 : 12, HIP = R ? 24 : 23;
+  const per = F.map(f => {
+    const w = f.w, l = f.lm;
+    const shW = Math.hypot(l[11][0] - l[12][0], l[11][1] - l[12][1]) || 0.05;
+    const kneeL = ang3(w[23], w[25], w[27]), kneeR = ang3(w[24], w[26], w[28]);
+    const kv = [l[25][2] > .4 && l[27][2] > .4 ? kneeL : null, l[26][2] > .4 && l[28][2] > .4 ? kneeR : null].filter(x => x != null);
+    const shMid = w[11].map((v, i) => (v + w[12][i]) / 2), hipMid = w[23].map((v, i) => (v + w[24][i]) / 2);
+    const tv = sub(shMid, hipMid);
+    const lean = Math.acos(Math.max(-1, Math.min(1, -tv[1] / (len(tv) || 1)))) * 180 / Math.PI;
+    const shYaw = Math.atan2(w[12][2] - w[11][2], w[12][0] - w[11][0]) * 180 / Math.PI;
+    const hipYaw = Math.atan2(w[24][2] - w[23][2], w[24][0] - w[23][0]) * 180 / Math.PI;
+    const stance = len(sub(w[27], w[28])) / (len(sub(w[11], w[12])) || 0.35);
+    // Forehand/backhand side: project wrist onto shoulder line from body centre
+    const sv = sub(w[SH], w[OSH]), wv = sub(w[WR], shMid);
+    const proj = (sv[0]*wv[0] + sv[1]*wv[1] + sv[2]*wv[2]) / (len(sv) ** 2 || 1);
+    return {
+      t: f.t, shW, knee: kv.length ? avg(kv) : null, lean, shYaw, hipYaw, stance,
+      elbow: ang3(w[SH], w[EL], w[WR]), proj,
+      wx: l[WR][0] / shW, wy: l[WR][1] / shW, wvis: l[WR][2],
+      hx: (l[23][0] + l[24][0]) / 2, hy: (l[23][1] + l[24][1]) / 2, hs: shW,
+      nose: l[0][0], ax: (l[27][0] + l[28][0]) / 2,
+      footL: [l[27][0] / shW, l[27][1] / shW], footR: [l[28][0] / shW, l[28][1] / shW]
+    };
+  });
+  // unwrap yaw angles
+  ['shYaw', 'hipYaw'].forEach(k => { for (let i = 1; i < per.length; i++) { let d = per[i][k] - per[i - 1][k]; while (d > 180) { per[i][k] -= 360; d -= 360; } while (d < -180) { per[i][k] += 360; d += 360; } } });
+
+  // racket hand speed (shoulder widths per second)
+  let spd = per.map((p, i) => {
+    if (!i) return 0; const q = per[i - 1], dt = p.t - q.t || 1 / fps;
+    return Math.hypot(p.wx - q.wx, p.wy - q.wy) / dt;
+  });
+  spd = smooth(spd, 1);
+  per.forEach((p, i) => p.spd = spd[i]);
+
+  // stroke detection: local peaks above adaptive threshold
+  const thr = Math.max(median(spd) * 2.2, 3.0);
+  const minGap = s.vtype === 'match' ? 0.45 : 0.35;
+  const strokes = [];
+  for (let i = 2; i < per.length - 2; i++) {
+    if (spd[i] < thr || spd[i] < spd[i - 1] || spd[i] < spd[i + 1]) continue;
+    if (per[i].wvis < 0.3) continue;
+    const last = strokes[strokes.length - 1];
+    if (last && per[i].t - last.t < minGap) { if (spd[i] > last.speed) strokes.pop(); else continue; }
+    strokes.push({ i, t: per[i].t, speed: spd[i] });
+  }
+  // stroke features
+  const win = (t, a, b) => per.filter(p => p.t >= t + a && p.t <= t + b);
+  strokes.forEach((st, k) => {
+    const p = per[st.i], pre = win(st.t, -0.45, 0.15);
+    st.n = k + 1;
+    st.side = p.proj > -0.15 ? 'FH' : 'BH';
+    st.elbow = p.elbow;
+    const yaws = pre.map(q => q.shYaw), hy = pre.map(q => q.hipYaw);
+    st.rot = yaws.length ? Math.max(...yaws) - Math.min(...yaws) : 0;
+    st.hipRot = hy.length ? Math.max(...hy) - Math.min(...hy) : 0;
+    const ks = pre.map(q => q.knee).filter(x => x != null);
+    st.knee = ks.length ? Math.min(...ks) : null;
+    // recovery: time from peak until speed below 35% of peak
+    let j = st.i; while (j < per.length - 1 && spd[j] > st.speed * 0.35 && per[j].t - st.t < 1.2) j++;
+    st.recovery = per[j].t - st.t;
+    st.lean = p.lean;
+  });
+
+  // grade each stroke
+  const elbowBand = { FH: [85, 135], BH: [80, 140] };
+  strokes.forEach(st => {
+    const e = band(st.elbow, ...elbowBand[st.side], 40);
+    const r = st.side === 'FH' ? band(st.rot, 30, 90, 30) : band(st.rot, 12, 60, 20);
+    const kk = st.knee == null ? 70 : band(st.knee, 115, 150, 30);
+    const rc = band(st.recovery, 0, 0.45, 0.5);
+    st.score = Math.round(e * .3 + r * .3 + kk * .2 + rc * .2);
+    st.grade = st.score >= 85 ? 'A' : st.score >= 72 ? 'B' : st.score >= 58 ? 'C' : 'D';
+  });
+
+  const dur = per[per.length - 1].t - per[0].t || 1;
+  const fh = strokes.filter(s => s.side === 'FH'), bh = strokes.filter(s => s.side === 'BH');
+  const knees = per.map(p => p.knee).filter(x => x != null);
+  const m = {
+    knee: avg(knees), kneeStd: std(knees),
+    stance: median(per.map(p => p.stance)), lean: median(per.map(p => p.lean)),
+    rotFH: avg(fh.map(s => s.rot)), rotBH: avg(bh.map(s => s.rot)), hipRotFH: avg(fh.map(s => s.hipRot)),
+    elbowFH: avg(fh.map(s => s.elbow)), elbowBH: avg(bh.map(s => s.elbow)),
+    recovery: avg(strokes.map(s => s.recovery)),
+    speedCV: strokes.length > 2 ? std(strokes.map(s => s.speed)) / avg(strokes.map(s => s.speed)) : 0.3,
+    elbowCV: fh.length > 2 ? std(fh.map(s => s.elbow)) / avg(fh.map(s => s.elbow)) : 0.15,
+    tempo: strokes.length / dur * 60,
+    avgSpeed: avg(strokes.map(s => s.speed)),
+    fhShare: strokes.length ? fh.length / strokes.length : 0
+  };
+  // footwork: lateral hip travel and foot activity normalised by shoulder width
+  const hx = per.map(p => p.hx / p.hs);
+  m.lateralRange = Math.max(...hx) - Math.min(...hx);
+  let footTravel = 0; for (let i = 1; i < per.length; i++) footTravel += Math.hypot(per[i].footL[0] - per[i-1].footL[0], per[i].footL[1] - per[i-1].footL[1]) + Math.hypot(per[i].footR[0] - per[i-1].footR[0], per[i].footR[1] - per[i-1].footR[1]);
+  m.footActivity = footTravel / dur;
+  // balance: head over base (nose x vs ankle centre, in shoulder widths) and hip bounce
+  m.headOffset = avg(per.map(p => Math.abs(p.nose - p.ax) / p.hs));
+  m.bounce = std(per.map(p => p.hy / p.hs));
+  // feet moving between strokes vs arm only
+  const between = strokes.slice(1).map((s, k) => { const a = strokes[k]; const seg = per.filter(p => p.t > a.t && p.t < s.t); if (seg.length < 2) return 0; const xs = seg.map(p => p.hx / p.hs); return Math.max(...xs) - Math.min(...xs); });
+  m.adjust = avg(between);
+
+  const lvl = { beginner: 0.8, intermediate: 0.9, advanced: 1, elite: 1.08 }[s.level];
+  const defensive = s.style === 'defender';
+  const scores = {
+    'Ready stance & knee bend': Math.round((band(m.knee, defensive ? 125 : 118, 150, 30) * .6 + band(m.stance, 1.25, 1.9, 0.6) * .4)),
+    'Posture & balance': Math.round(band(m.lean, 12, 35, 18) * .5 + band(m.headOffset, 0, 0.45, 0.6) * .5),
+    'Trunk & hip rotation': Math.round((fh.length ? band(m.rotFH, 32 * lvl, 90, 30) : 65) * .7 + (bh.length ? band(m.rotBH, 12, 60, 20) : 65) * .3),
+    'Arm mechanics': Math.round((fh.length ? band(m.elbowFH, 85, 135, 40) : 65) * .6 + (bh.length ? band(m.elbowBH, 80, 140, 40) : 65) * .4),
+    'Footwork & positioning': Math.round(band(m.footActivity, 2.2 * lvl, 12, 2) * .5 + band(m.adjust, 0.12, 2, 0.15) * .5),
+    'Recovery & tempo': Math.round(band(m.recovery, 0, 0.42 / lvl, 0.5) * .6 + band(m.tempo, s.vtype === 'match' ? 15 : 35, 120, s.vtype === 'match' ? 15 : 30) * .4),
+    'Consistency': Math.round(band(m.speedCV, 0, 0.22, 0.35) * .5 + band(m.elbowCV, 0, 0.12, 0.2) * .5)
+  };
+  if (s.vtype === 'shadow') scores['Recovery & tempo'] = Math.round(band(m.recovery, 0, 0.42, 0.5));
+  const overall = Math.round(avg(Object.values(scores)));
+  return { per, strokes, m, scores, overall, dur, fps, settings: s };
+}
+
+/* ---------------- Recommendations engine ---------------- */
+function buildRecs(r) {
+  const { m, scores, settings: s, strokes } = r, recs = [];
+  const fh = strokes.filter(x => x.side === 'FH'), bh = strokes.filter(x => x.side === 'BH');
+  const pri = sc => sc < 55 ? 1 : sc < 75 ? 2 : 3;
+  const add = (area, title, why, fix, drill) => recs.push({ area, p: pri(scores[area]), title, why, fix, drill });
+
+  if (m.knee > 152) add('Ready stance & knee bend', 'Get lower: your knees are too straight',
+    `Average knee angle is ${m.knee.toFixed(0)}°. Advanced players usually sit around 120 to 145°. Standing tall slows your first step and pushes your strokes to be arm driven.`,
+    'Bend knees and hips like sitting on a high stool, weight on the balls of the feet, heels lightly touching. Keep this height between strokes, do not stand up after each shot.',
+    'Wall sit holds 3 × 45s, then 5 min shadow play while a partner checks you never rise above "stool height".');
+  else if (m.knee < 112) add('Ready stance & knee bend', 'Too deep: you are sitting too low',
+    `Average knee angle is ${m.knee.toFixed(0)}°. Very deep stance costs energy and slows recovery for close to table play.`,
+    'Rise slightly so you can push off quickly in both directions. Depth should come from hip hinge plus moderate knee bend.',
+    'Side to side split step drill: 3 × 30s, focus on quick explosive pushes from a medium stance.');
+  if (m.stance < 1.2) add('Ready stance & knee bend', 'Widen your base',
+    `Feet are about ${m.stance.toFixed(2)}× shoulder width. Too narrow a base reduces balance during big rotation and wide balls.`,
+    'Aim for 1.3 to 1.8× shoulder width, playing side foot slightly back (for forehand oriented stance).',
+    'Tape marks on the floor at your ideal stance width; return feet to the marks after every multiball shot.');
+  if (m.lean < 10) add('Posture & balance', 'Lean forward from the hips',
+    `Trunk lean is only ${m.lean.toFixed(0)}°. Upright posture makes you late on short balls and limits forward weight transfer.`,
+    'Hinge at the hips 15 to 30°, shoulders over knees, racket in front of the body at table height.',
+    'Short ball flick + push multiball: 20 balls, freeze in ready position after each and check shoulders are over knees.');
+  if (m.headOffset > 0.55) add('Posture & balance', 'Keep your head over your base',
+    'Your head often drifts outside your feet when striking, a sign of reaching instead of moving.',
+    'Move the feet first so the ball comes to your hitting zone, keep the head still and centred over the feet at contact.',
+    'Falkenberg drill (BH, FH from BH corner, FH from FH corner) with focus on head staying between feet.');
+  if (fh.length && m.rotFH < 32) add('Trunk & hip rotation', 'Use more body rotation on the forehand',
+    `Shoulder rotation during forehands averages ${m.rotFH.toFixed(0)}°. Power and spin should come from hips and waist, not just the arm.`,
+    'Rotate back by loading weight on the playing side leg, then drive the hip and shoulder through together. Finish with weight transferred to the other leg and chest facing the target.',
+    'Shadow forehand loop with a towel under the playing arm, 3 × 20 reps. Then multiball heavy backspin loops, focusing on hip turn first.');
+  else if (fh.length && m.rotFH > 95) add('Trunk & hip rotation', 'Over rotation on forehand',
+    `Rotation of ${m.rotFH.toFixed(0)}° is large; this delays recovery in fast rallies.`,
+    'Shorten the backswing at close range, keep rotation compact and reserve big rotation for loops against backspin or mid distance.',
+    'FH to FH counter loop at fast tempo for 2 min, keeping a compact swing.');
+  if (bh.length && m.rotBH < 10) add('Trunk & hip rotation', 'Engage the waist on backhand',
+    `Backhand shows only ${m.rotBH.toFixed(0)}° rotation, so it relies heavily on forearm.`,
+    'Small waist turn toward the backhand side, elbow in front of body, then release with forearm and wrist snap.',
+    'Backhand loop vs block, 3 × 2 min, focus on slight waist coil before each shot.');
+  if (fh.length && m.elbowFH > 145) add('Arm mechanics', 'Forehand arm too straight',
+    `Elbow angle at peak speed averages ${m.elbowFH.toFixed(0)}°. A straight arm reduces control and stresses the shoulder.`,
+    'Keep the elbow bent around 90 to 120° at contact. Contract the forearm through the ball and close the angle on follow through.',
+    'Forehand drive against block, 50 balls, racket finishes near forehead with bent elbow.');
+  else if (fh.length && m.elbowFH < 75) add('Arm mechanics', 'Forehand arm too cramped',
+    `Elbow angle at contact averages ${m.elbowFH.toFixed(0)}°. Contact is too close to the body.`,
+    'Create space: move back from the ball and contact it slightly in front and to the side of the body.',
+    'Multiball to the middle and forehand side: step out of the way before every forehand.');
+  if (bh.length && (m.elbowBH > 150 || m.elbowBH < 70)) add('Arm mechanics', 'Adjust backhand elbow position',
+    `Backhand elbow angle at contact is ${m.elbowBH.toFixed(0)}°.`,
+    'Keep the elbow in front of the body as a pivot, about 90 to 120° at contact, and let the forearm do the work.',
+    'Backhand push to backhand flick transitions, 3 × 15 reps.');
+  if (m.footActivity < 2.2 || m.adjust < 0.12) add('Footwork & positioning', 'Move your feet more between shots',
+    'Your hips barely shift between strokes, which means you are reaching with the arm instead of adjusting position.',
+    'Use small adjustment steps after every shot, split step as the opponent strikes, and use the shuffle step for lateral movement.',
+    'Two point footwork (FH from middle, FH from wide) 3 × 1 min; then random multiball with 1 ball every 1.2 s.');
+  if (m.recovery > 0.5) add('Recovery & tempo', 'Recover to ready position faster',
+    `Average recovery after contact is ${m.recovery.toFixed(2)}s. In fast rallies you will be late on the next ball.`,
+    'Shorter follow through on drives, relax the arm right after contact and return the racket to neutral in front of the body.',
+    'Fast FH and BH alternating vs block, 2 min sets. Count how many in a row you can play without stepping back.');
+  if (m.speedCV > 0.3) add('Consistency', 'Make your stroke speed more consistent',
+    `Racket speed varies about ${(m.speedCV * 100).toFixed(0)}% between strokes. Large variation usually comes from inconsistent body use.`,
+    'Find your 80% power loop and repeat it. Use the same preparation height and contact point.',
+    '100 ball challenge: FH loop vs block at 80% power, count misses, repeat until under 10.');
+  if (m.elbowCV > 0.15) add('Consistency', 'Stabilize your contact point',
+    'Your elbow angle at contact changes a lot between strokes, a sign that the contact point moves around.',
+    'Pick a fixed contact zone in front of your body and use your feet to bring the ball there.',
+    'Regular FH drill at one spot: 3 × 50 balls, focus only on identical contact point.');
+  if (fh.length && bh.length && s.style === 'looper' && m.fhShare > 0.75) add('Footwork & positioning', 'Backhand is under used',
+    `${(m.fhShare * 100).toFixed(0)}% of strokes are forehands. As a two winged looper, opponents can exploit your backhand side.`,
+    'Train a reliable backhand topspin against both backspin and block so you do not have to pivot every ball.',
+    'Backhand opening loop vs backspin multiball, 3 × 25 balls.');
+
+  // Strength positives
+  Object.entries(scores).filter(([, v]) => v >= 85).forEach(([k]) =>
+    recs.push({ area: k, p: 3, title: `Strength: ${k}`, why: `Score ${scores[k]}/100. This part of your game looks solid.`, fix: 'Maintain it and build tactics that use it.', drill: null }));
+  if (!recs.some(r => r.p < 3)) recs.unshift({ area: 'General', p: 3, title: 'Solid fundamentals detected',
+    why: 'No major mechanical issues were flagged in this clip.', fix: 'Focus on match specific training: serve plus third ball patterns, and quality under pressure.',
+    drill: 'Serve + 3rd ball attack: 10 serves of each type, attack the return within 1 step.' });
+  return recs.sort((a, b) => a.p - b.p);
+}
+
+/* ---------------- Tactics engine ---------------- */
+function buildTactics(r) {
+  const s = settings(), { m, scores } = r, T = [];
+  const strongFH = (m.fhShare > 0.6 && scores['Arm mechanics'] >= 70) || s.style === 'fhdom';
+  const goodFeet = scores['Footwork & positioning'] >= 70;
+  const fastRec = scores['Recovery & tempo'] >= 70;
+  const weak = new Set(s.oppWeak);
+  const leftyMatch = s.hand !== s.oppHand;
+  const add = (h, items) => T.push({ h, items });
+
+  const yours = [];
+  if (strongFH && goodFeet) yours.push('Your forehand and footwork are your weapon: aim to pivot and finish with the forehand from 2/3 of the table.');
+  else if (strongFH) yours.push('Your forehand is your strength but footwork limits coverage: build patterns that keep the ball to your forehand side or middle.');
+  else yours.push('Play two winged: open with the side that is ready, avoid forcing big pivots.');
+  if (!fastRec) yours.push('Recovery is slower: avoid pure speed rallies, use spin and placement variation instead of trading fast counters.');
+  if (fastRec) yours.push('Fast recovery: you can step in and take the ball early to pressure their timing.');
+  if (scores['Trunk & hip rotation'] < 60) yours.push('Your power is limited for now: win with placement (wide angles and middle) rather than outright speed.');
+  add('Your profile in this match', yours);
+
+  const plan = {
+    looper: ['Keep the ball short and low with backspin and no spin serves to stop them from opening first.',
+      'Attack their middle (playing elbow) with your first attack; loopers need space to swing.',
+      'Change rhythm: mix one slow heavy loop with one fast flat ball to break their counter loop timing.'],
+    fhdom: ['Pin their backhand early with fast long serves and deep pushes, then switch wide to the forehand when they pivot.',
+      'Never give them a slow ball to the middle; they will step around and kill it.',
+      'In rallies use the "two to backhand, one wide to forehand" pattern.'],
+    blocker: ['Use heavy, slow, spinny loops; blockers struggle to generate their own pace off slow heavy spin.',
+      'Move them: wide forehand then wide backhand. Blockers rely on standing in one spot.',
+      'Serve long and fast to the corners to stop them from attacking the serve return short.'],
+    chopper: ['Be patient: loop at 70% to the middle, then attack the floated ball hard.',
+      'Mix in drop shots after deep loops to drag them forward, then attack deep again.',
+      'Vary spin on your loops (heavy then no spin "dead" loop) to induce chop errors.',
+      'Push long and heavy occasionally to make them start the attack, then counter.'],
+    pips: ['Short pips handle flat hitting well: give them heavy backspin pushes and slow heavy loops.',
+      'Serve short backspin to their pips side, they struggle to flip heavy backspin.',
+      'Expect less spin coming back: keep your racket a bit more closed and hit through.'],
+    longpips: ['Identify the pips side early. Spin returns reversed: your topspin comes back as backspin.',
+      'Use no spin and slow topspin balls to the pips side, then attack the weak floating return.',
+      'Play to the inverted side with heavy spin; target the switch point (middle) when they twiddle.',
+      'Avoid pushing heavy backspin into the long pips (it returns as topspin you can get wrong).'],
+    penhold: ['Attack the traditional penhold backhand side and middle with heavy topspin.',
+      'Long fast serves to the backhand force them into a weak block.',
+      'Wide forehand after backhand pressure catches them out of position.'],
+    unknown: ['First 4 points: test with short backspin, long fast, side spin serves and see which return is weakest.',
+      'In rallies, test their middle, wide forehand and backhand. Repeat whatever wins two points.',
+      'Track their errors in your head and revisit the plan at 5 to 5.']
+  }[s.oppStyle];
+  add('Core game plan', plan);
+
+  const serve = [];
+  if (weak.has('shortServe')) serve.push('Short backspin serve to their forehand short zone, then loop the push deep to their backhand.');
+  if (weak.has('longFast')) serve.push('Fast long serve to the backhand corner (or the elbow), be ready to counter the block wide.');
+  if (weak.has('noSpin')) serve.push('Mix in "fake spin" no spin serves with big motion; attack their high return.');
+  if (!serve.length) serve.push('Serve short side backspin to the middle, take away their angles, then attack the 3rd ball to the wide side opposite their return.');
+  serve.push(leftyMatch ? 'Opposite handed match: the cross court diagonal is FH to FH. Use down the line to their backhand to break the pattern; serve from the middle so you can cover their wide angles.'
+    : 'Same handed match: the BH to BH diagonal decides many rallies. Win the backhand exchange, then switch line to their forehand.');
+  add('Serve & 3rd ball patterns', serve);
+
+  const rally = [];
+  if (weak.has('wideFH')) rally.push('Open to the backhand, then go wide to the forehand to stretch them.');
+  if (weak.has('middle')) rally.push('Aim every first attack to the playing elbow (crossover point).');
+  if (weak.has('weakBH')) rally.push('Keep the rally on their backhand diagonal, finish when they hang back.');
+  if (weak.has('slowFeet')) rally.push('Big switches: wide backhand, wide forehand, then middle. Make them move two steps every ball.');
+  if (weak.has('heavySpin')) rally.push('Use heavy slow loops over fast drives; give them spin, not speed.');
+  if (weak.has('pace')) rally.push('Alternate fast flat counter and slow heavy loop; never give the same ball twice.');
+  if (weak.has('tempo') && fastRec) rally.push('Stand close and take the ball at the top of the bounce to rush them.');
+  if (weak.has('tempo') && !fastRec) rally.push('They struggle with tempo, but your recovery is slower. Use quick blocks off the bounce rather than full counters.');
+  if (weak.has('pushes')) rally.push('Long heavy push to the backhand corner, then attack their weak opening loop.');
+  if (!rally.length) rally.push('Default: deep to the corners, attack the middle, and change the line after 2 to 3 balls on the same diagonal.');
+  add('Rally tactics', rally);
+
+  const mental = ['At 9 all and deuce: use your highest percentage serve and receive, no new experiments.',
+    'Between points: 5 second reset (breathe, look at racket, decide the next serve).'];
+  if (weak.has('nerves')) mental.unshift('They tighten under pressure: keep the ball in play at the end of sets and let them make the risk.');
+  add('Pressure points', mental);
+  return T;
+}
+
+/* ---------------- Rendering ---------------- */
+const col = v => v >= 80 ? 'var(--good)' : v >= 60 ? 'var(--warn)' : 'var(--bad)';
+function renderAll() {
+  const r = report;
+  $('#results').classList.remove('hidden');
+  $('#overallN').textContent = r.overall;
+  $('#ring').style.background = `radial-gradient(closest-side,var(--panel) 78%,transparent 80% 100%),conic-gradient(${col(r.overall)} ${r.overall}%,var(--panel2) 0)`;
+  const sorted = Object.entries(r.scores).sort((a, b) => b[1] - a[1]);
+  const lvl = r.overall >= 82 ? 'excellent' : r.overall >= 70 ? 'solid' : r.overall >= 55 ? 'developing' : 'needs work';
+  $('#summaryText').innerHTML = `Overall technique looks <b>${lvl}</b> for this clip. Your strongest area is <b style="color:var(--good)">${sorted[0][0]}</b> (${sorted[0][1]}), and the biggest opportunity is <b style="color:var(--bad)">${sorted[sorted.length - 1][0]}</b> (${sorted[sorted.length - 1][1]}).<br><span style="font-size:12px;color:var(--muted)">Scores are AI estimates from 2D/3D pose tracking. Camera angle affects rotation and stance readings; compare clips filmed the same way.</span>`;
+  const m = r.m, fh = r.strokes.filter(s => s.side === 'FH').length, bh = r.strokes.length - fh;
+  const k = [[r.strokes.length, 'Strokes detected'], [`${fh} / ${bh}`, 'Forehand / Backhand'], [m.tempo.toFixed(0) + '/min', 'Stroke tempo'],
+    [m.knee.toFixed(0) + '°', 'Avg knee angle'], [m.stance.toFixed(2) + '×', 'Stance / shoulder width'], [m.lean.toFixed(0) + '°', 'Trunk lean'],
+    [(m.rotFH || 0).toFixed(0) + '°', 'FH trunk rotation'], [(m.elbowFH || 0).toFixed(0) + '°', 'FH elbow at contact'], [m.recovery.toFixed(2) + 's', 'Avg recovery']];
+  $('#kpis').innerHTML = k.map(([v, l]) => `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+  $('#bars').innerHTML = Object.entries(r.scores).map(([kk, v]) => `<div class="b"><div class="top"><span>${kk}</span><b style="color:${col(v)}">${v}</b></div><div class="track"><div class="fill" style="width:${v}%;background:${col(v)}"></div></div></div>`).join('');
+  const recs = buildRecs(r);
+  const pl = { 1: 'High priority', 2: 'Medium', 3: 'Keep it up' };
+  $('#recs').innerHTML = recs.map(x => `<div class="rec p${x.p}"><div class="h"><span>${x.title}</span><span class="tag">${pl[x.p]} · ${x.area}</span></div><p><b>What we saw:</b> ${x.why}</p><p><b>How to fix:</b> ${x.fix}</p>${x.drill ? `<div class="drill">🏓 <b>Drill:</b> ${x.drill}</div>` : ''}</div>`).join('');
+  renderTactics();
+  $('#strokeRows').innerHTML = r.strokes.map(s => `<tr data-t="${s.t}"><td>${s.n}</td><td>${fmt(s.t)}</td><td><span class="pill ${s.side.toLowerCase()}">${s.side}</span></td><td>${s.speed.toFixed(1)}</td><td>${s.elbow.toFixed(0)}°</td><td>${s.rot.toFixed(0)}°</td><td>${s.knee ? s.knee.toFixed(0) + '°' : 'n/a'}</td><td>${s.recovery.toFixed(2)}s</td><td><b style="color:${col(s.score)}">${s.grade}</b></td></tr>`).join('') || '<tr><td colspan="9">No clear strokes detected. Shadow play or a side view usually works better.</td></tr>';
+  $$('#strokeRows tr[data-t]').forEach(tr => tr.onclick = () => { video.currentTime = Math.max(0, +tr.dataset.t - 0.6); video.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+  if ($('#p-data').classList.contains('on')) drawCharts();
+}
+function renderTactics() {
+  $('#tactics').innerHTML = buildTactics(report).map(t => `<div class="tactic"><div class="h">${t.h}</div><ul>${t.items.map(i => `<li>${i}</li>`).join('')}</ul></div>`).join('') +
+    '<div class="note">Tip: tap opponent weaknesses on the left panel and the plan updates instantly.</div>';
+}
+const fmt = t => `${Math.floor(t / 60)}:${(t % 60).toFixed(1).padStart(4, '0')}`;
+
+function prepCanvas(c) {
+  const d = devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight;
+  c.width = w * d; c.height = h * d; const x = c.getContext('2d'); x.setTransform(d, 0, 0, d, 0, 0); x.clearRect(0, 0, w, h); return [x, w, h];
+}
+function line(x, pts, w, h, t0, t1, lo, hi, color) {
+  x.strokeStyle = color; x.lineWidth = 1.6; x.beginPath(); let started = false;
+  pts.forEach(([t, v]) => { if (v == null) { started = false; return; } const px = (t - t0) / (t1 - t0) * w, py = h - 14 - (v - lo) / (hi - lo || 1) * (h - 28); started ? x.lineTo(px, py) : x.moveTo(px, py); started = true; });
+  x.stroke();
+}
+function drawCharts() {
+  if (!report) return;
+  const P = report.per, t0 = P[0].t, t1 = P[P.length - 1].t;
+  let [x, w, h] = prepCanvas($('#chartSpeed'));
+  const mx = Math.max(...P.map(p => p.spd)) || 1;
+  line(x, P.map(p => [p.t, p.spd]), w, h, t0, t1, 0, mx, '#14727C');
+  report.strokes.forEach(s => { const px = (s.t - t0) / (t1 - t0) * w; x.fillStyle = s.side === 'FH' ? '#FF6B6B' : '#FFB020'; x.fillRect(px - 1, 6, 2, h - 20); });
+  [x, w, h] = prepCanvas($('#chartBody'));
+  line(x, P.map(p => [p.t, p.knee]), w, h, t0, t1, 90, 180, '#00B89A');
+  const ys = P.map(p => p.shYaw), ylo = Math.min(...ys), yhi = Math.max(...ys);
+  line(x, P.map(p => [p.t, p.shYaw]), w, h, t0, t1, ylo, yhi, '#0A4952');
+  x.fillStyle = '#8b98a9'; x.font = '11px sans-serif'; x.fillText('knee 180°', 4, 12); x.fillText('90°', 4, h - 4);
+  [x, w, h] = prepCanvas($('#chartMove'));
+  const hx = P.map(p => p.hx), hy = P.map(p => p.hy);
+  const ax = [Math.min(...hx), Math.max(...hx)], ay = [Math.min(...hy), Math.max(...hy)];
+  const sc = Math.min((w - 40) / (ax[1] - ax[0] || 0.01), (h - 40) / (ay[1] - ay[0] || 0.01));
+  P.forEach((p, i) => { const a = i / P.length; x.fillStyle = `hsla(${20 + a * 150},90%,60%,.7)`; x.beginPath(); x.arc(20 + (p.hx - ax[0]) * sc, 20 + (p.hy - ay[0]) * sc, 2.5, 0, 7); x.fill(); });
+  x.fillStyle = '#8b98a9'; x.font = '11px sans-serif'; x.fillText('Start = orange, end = green. Wider spread = more court coverage.', 8, h - 6);
+  [['#chartSpeed'], ['#chartBody']].forEach(([id]) => $(id).onclick = e => { const rc = e.target.getBoundingClientRect(); video.currentTime = t0 + (e.clientX - rc.left) / rc.width * (t1 - t0); });
+}
+addEventListener('resize', () => report && $('#p-data').classList.contains('on') && drawCharts());
+</script>
+</body>
+</html>
