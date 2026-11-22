@@ -253,6 +253,77 @@ canvas.chart{background:var(--panel2)}
 #app{scroll-margin-top:90px}
 @media(max-width:720px){.nav-tabs{justify-content:safe center}}
 @media(max-width:960px){.grid>section{order:-1}main{padding:20px 14px 40px}}
+
+/* ===== Mobile friendly layer ===== */
+.grid>*{min-width:0}
+.tabs{max-width:100%}
+.gg{grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))}
+.lbl-short{display:none}
+.acc .sum{display:none}
+.legend{flex-wrap:wrap}
+.rec .h{flex-wrap:wrap}
+@media(max-width:720px){
+  .site-nav{position:static}
+  main{padding:16px 12px 32px}
+  .card{padding:16px;border-radius:16px;margin-bottom:14px}
+  select,input[type=text]{font-size:16px}
+  button,.btn-primary,.btn-secondary{min-height:44px}
+  .lbl-long{display:none}.lbl-short{display:inline}
+  /* settings accordion */
+  .acc h2{cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin:0}
+  .acc h2::after{content:"▾";font-size:14px;transition:transform .2s}
+  .acc.closed h2::after{transform:rotate(-90deg)}
+  .acc:not(.closed) h2{margin-bottom:10px}
+  .acc.closed > :not(h2){display:none}
+  .acc .sum{display:block;font-family:Inter,sans-serif;font-size:12.5px;font-weight:500;color:var(--ink-soft);letter-spacing:0;text-transform:none;margin-top:4px}
+  .acc h2 .ttl{display:block}
+  /* upload */
+  .fmtrow{gap:8px}.seg{display:flex;width:100%}.seg div{flex:1;justify-content:center;padding:9px 6px}
+  .drop.v916,.drop.v169{aspect-ratio:auto;max-width:none;padding:34px 16px}
+  /* range + picker */
+  .rangebox,.picker{padding:12px}
+  .range{height:40px}
+  .range input{height:30px;top:4px}
+  .range input::-webkit-slider-thumb{width:24px;height:32px;border-radius:6px}
+  .range input::-moz-range-thumb{width:20px;height:28px;border-radius:6px}
+  .rbtns{display:grid!important;grid-template-columns:1fr 1fr;gap:8px}
+  .rbtns button{width:100%;padding:9px 6px!important;font-size:13px!important}
+  .rbtns button:last-child{grid-column:1/-1}
+  #pickBtns:not(:empty),.pbtns,#markRow:not(.hidden){display:grid!important;grid-template-columns:1fr;gap:8px}
+  #pickBtns button,.pbtns button,#markRow button{width:100%}
+  .pbtns,#markRow{margin-top:8px}
+  /* sticky action bar */
+  #actionRow{position:sticky;bottom:0;z-index:20;background:#fff;margin:12px -16px 0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    box-shadow:0 -8px 20px rgba(6,88,96,.12);display:grid;grid-template-columns:1fr auto;gap:8px;border-top:1px solid var(--line-light)}
+  #actionRow #analyzeBtn,#actionRow #stopBtn{width:100%}
+  #actionRow:has(#stopBtn:not(.hidden)) #analyzeBtn{display:none}
+  #actionRow #vinfo{grid-column:1/-1;order:3;font-size:11px!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .toolbar{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .toolbar button{width:100%;font-size:13px;padding:10px 6px}
+  #stageWrap.portrait .live.on{grid-template-columns:repeat(3,1fr);gap:6px}
+  .live .kpi{padding:8px}.live .kpi .v{font-size:16px}.live .kpi .l{font-size:10.5px;line-height:1.2}
+  /* results */
+  .tabs{display:flex;border-radius:14px}
+  .overall{flex-direction:column;text-align:center;gap:12px}
+  .overall .row{justify-content:center}
+  .kpis{grid-template-columns:repeat(3,1fr);gap:8px}
+  .kpi{padding:10px 8px}.kpi .v{font-size:18px}.kpi .l{font-size:11px;line-height:1.25}
+  #p-strokes table{font-size:12px}
+  #p-strokes th,#p-strokes td{padding:7px 4px}
+  #p-strokes th:nth-child(7),#p-strokes td:nth-child(7),#p-strokes th:nth-child(8),#p-strokes td:nth-child(8){display:none}
+  .rec,.tactic{padding:12px}
+  .rec p,.tactic ol,.tactic ul{font-size:13.5px}
+  canvas.chart{height:160px}
+  /* guide modal full screen */
+  .guide{padding:0}
+  .guide .box{border-radius:0;padding:0 14px 20px;min-height:100%}
+  .guide-top{position:sticky;top:0;background:#fff;z-index:2;padding:14px 0 10px;border-bottom:1px solid var(--line-light);flex-wrap:nowrap!important}
+  .guide h2{font-size:18px}
+  .guide-top button{flex-shrink:0;white-space:nowrap;padding:9px 14px}
+  .gg{gap:12px;margin-top:12px}
+  .busy div{margin:0 16px}
+}
+@media(max-width:380px){.kpis{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -263,8 +334,8 @@ canvas.chart{background:var(--panel2)}
       <a class="nav-tab" href="/">Home</a>
       <a class="nav-tab" href="/table-tennis-guides">Insights</a>
       <a class="nav-tab" href="/ratings">Gear Index</a>
-      <a class="nav-tab active" href="/aicoach" aria-current="page">AI Coach</a>
       <a class="nav-tab" href="/scoreboard">Scoreboard</a>
+      <a class="nav-tab active" href="/aicoach" aria-current="page">AI Coach</a>
     </div>
     <div class="nav-right">
       <div class="social-row">
@@ -291,7 +362,7 @@ canvas.chart{background:var(--panel2)}
 <main id="app">
 <div class="grid">
 <aside>
-  <div class="card">
+  <div class="card acc">
     <h2>1 · Player Setup</h2>
     <label>Playing hand</label>
     <select id="hand"><option value="right">Right handed</option><option value="left">Left handed</option></select>
@@ -317,7 +388,7 @@ canvas.chart{background:var(--panel2)}
     </select>
   </div>
 
-  <div class="card">
+  <div class="card acc">
     <h2>2 · Opponent (for tactics)</h2>
     <label>Opponent style</label>
     <select id="oppStyle">
@@ -349,7 +420,7 @@ canvas.chart{background:var(--panel2)}
     </div>
   </div>
 
-  <div class="card">
+  <div class="card acc">
     <h2>3 · Analysis Settings</h2>
     <label>Accuracy</label>
     <select id="model">
@@ -381,11 +452,11 @@ canvas.chart{background:var(--panel2)}
         <div data-f="169"><i style="width:16px;height:9px"></i>16:9 Horizontal</div>
       </div>
     </div>
-    <div style="text-align:center;margin:-4px 0 12px"><button class="ghost" data-guide>📷 Camera setup guide (read before filming)</button></div>
+    <div style="text-align:center;margin:-4px 0 12px"><button class="ghost" data-guide>📷 Camera setup guide<span class="lbl-long"> (read before filming)</span></button></div>
     <div id="drop" class="drop v916">
       <div style="font-size:34px">🏓</div>
       <div><b>Click to upload</b> or drag your video here</div>
-      <div style="font-size:12px;color:var(--muted)">MP4, MOV, WebM · Your videos will be processed locally, we do not save or keep your videos</div>
+      <div style="font-size:12px;color:var(--muted)">MP4, MOV, WebM · processed locally, never uploaded</div>
       <input type="file" id="file" accept="video/*" class="hidden">
     </div>
     <div id="stageWrap" class="hidden" style="margin-top:14px">
@@ -402,7 +473,7 @@ canvas.chart{background:var(--panel2)}
           <input type="range" id="rB" min="0" max="1" step="0.1" value="1">
         </div>
         <div class="rlabels"><span>Start <b id="rAt">0:00.0</b></span><span>Length <b id="rLen">0:00.0</b></span><span>End <b id="rBt">0:00.0</b></span></div>
-        <div class="row" style="margin-top:8px">
+        <div class="row rbtns" style="margin-top:8px">
           <button class="ghost" id="setA">⇤ Set start here</button>
           <button class="ghost" id="setB">Set end here ⇥</button>
           <button class="ghost" id="prevBtn">▶ Preview part</button>
@@ -415,7 +486,7 @@ canvas.chart{background:var(--panel2)}
         <div class="h">👤 Step 2: Who is you?</div>
         <div id="pickMsg" style="font-size:13px;color:var(--muted)">Detecting players...</div>
         <div class="row" id="pickBtns"></div>
-        <div class="row">
+        <div class="row pbtns">
           <button class="ghost" id="rescanBtn">🔄 Detect on current frame</button>
           <button class="ghost" id="markBtn">✋ Mark me manually</button>
         </div>
@@ -425,15 +496,15 @@ canvas.chart{background:var(--panel2)}
         </div>
         <div style="font-size:12px;color:var(--muted);margin-top:8px">Tip: scrub the video to a frame where both players are clearly visible, then press "Detect on current frame". Analysis starts from the frame you pick.</div>
       </div>
-      <div class="row" style="margin-top:12px">
+      <div class="row" id="actionRow" style="margin-top:12px">
         <button id="analyzeBtn" disabled>▶ Analyze my technique</button>
         <button id="stopBtn" class="hidden" style="background:var(--bad)">⏹ Stop & use what's analyzed</button>
-        <button class="danger" id="resetBtn">🗑 Remove video & reset</button>
+        <button class="danger" id="resetBtn">🗑 <span class="lbl-long">Remove video &amp; </span>Reset</button>
         <span id="vinfo" style="font-size:12px;color:var(--muted)"></span>
       </div>
       <div class="toolbar">
-        <button class="ghost" id="exportVidBtn" disabled>🎬 Download video with skeleton</button>
-        <button class="ghost" id="pdfBtn" disabled>📄 Download analysis PDF</button>
+        <button class="ghost" id="exportVidBtn" disabled>🎬 <span class="lbl-long">Download video with skeleton</span><span class="lbl-short">Skeleton video</span></button>
+        <button class="ghost" id="pdfBtn" disabled>📄 <span class="lbl-long">Download analysis PDF</span><span class="lbl-short">PDF report</span></button>
       </div>
       <div class="progress"><div id="bar"></div></div>
       <div class="status" id="status">Pose model loads on first use (needs internet once).</div>
@@ -526,7 +597,7 @@ canvas.chart{background:var(--panel2)}
 
 <div class="guide" id="guide">
  <div class="box">
-  <div class="row" style="justify-content:space-between">
+  <div class="row guide-top" style="justify-content:space-between">
     <div><h2>📷 Camera Setup for Accurate Analysis</h2>
     <div style="font-size:13px;color:var(--muted)">The AI needs to see your whole body clearly. Follow these 4 rules and detection improves a lot.</div></div>
     <button class="ghost" id="guideClose">✕ Close</button>
@@ -681,6 +752,24 @@ const cropCv = document.createElement('canvas'), cropCtx = cropCv.getContext('2d
 const nextTs = (ms = 33) => (tsClock += Math.max(1, Math.round(ms)));
 
 /* ---------------- UI wiring ---------------- */
+const isMobile = () => matchMedia('(max-width:720px)').matches;
+// Settings accordion (mobile only)
+const accSum = [
+  () => [$('#hand').selectedOptions[0].text, $('#level').selectedOptions[0].text, $('#style').selectedOptions[0].text.split(' (')[0]].join(' · '),
+  () => { const n = $$('#oppWeak .chip.on').length; return [$('#oppStyle').selectedOptions[0].text, $('#oppHand').selectedOptions[0].text, n ? n + ' weakness' + (n > 1 ? 'es' : '') : 'no weaknesses set'].join(' · '); },
+  () => $('#model').selectedOptions[0].text.split(' (')[0] + ' accuracy'
+];
+const accCards = $$('aside .acc');
+accCards.forEach((c, i) => {
+  const h = c.querySelector('h2'); h.innerHTML = `<span><span class="ttl">${h.textContent}</span><span class="sum"></span></span>`;
+  h.onclick = () => { if (isMobile()) c.classList.toggle('closed'); };
+  if (isMobile()) c.classList.add('closed');
+});
+const updSums = () => accCards.forEach((c, i) => c.querySelector('.sum').textContent = accSum[i]());
+$$('aside select').forEach(el => el.addEventListener('change', updSums));
+$$('#oppWeak .chip').forEach(el => el.addEventListener('click', updSums));
+updSums();
+const scrollToEl = (el, block = 'start') => isMobile() && el && el.scrollIntoView({ behavior: 'smooth', block });
 { const at = document.querySelector('.nav-tab.active'), tabs = document.querySelector('.nav-tabs');
   if (at && tabs && tabs.scrollWidth > tabs.clientWidth) tabs.scrollLeft = at.offsetLeft - (tabs.clientWidth - at.offsetWidth) / 2; }
 $$('#oppWeak .chip').forEach(c => c.onclick = () => { c.classList.toggle('on'); if (report) renderTactics(); });
@@ -759,7 +848,7 @@ function loadVideo(f) {
   drop.classList.add('hidden'); $('#stageWrap').classList.remove('hidden');
   video.onloadedmetadata = () => {
     overlay.width = video.videoWidth; overlay.height = video.videoHeight;
-    applyLayout(); setBar(0);
+    applyLayout(); setBar(0); setTimeout(() => scrollToEl($('#videoCard')), 150);
     rangeA = 0; rangeB = video.duration; updRange();
     $('#vinfo').textContent = `${f.name} · ${video.videoWidth}×${video.videoHeight} · ${video.duration.toFixed(1)}s`;
   };
@@ -769,7 +858,7 @@ function applyLayout() {
   const vw = video.videoWidth, vh = video.videoHeight, portrait = vfmt === '916';
   const stage = $('#stage');
   stage.style.aspectRatio = `${vw} / ${vh}`; // real shape keeps skeleton aligned
-  stage.style.width = `min(100%, calc(${portrait ? 78 : 70}vh * ${(vw / vh).toFixed(4)}))`;
+  stage.style.width = `min(100%, calc(${isMobile() ? 64 : portrait ? 78 : 70}vh * ${(vw / vh).toFixed(4)}))`;
   $('#stageWrap').classList.toggle('portrait', portrait);
   const real = vh > vw ? '916' : '169';
   if (real !== vfmt) setStatus(`Note: you selected ${vfmt === '916' ? '9:16' : '16:9'} but this video is ${real === '916' ? '9:16 vertical' : '16:9 horizontal'}. Layout follows your choice, skeleton follows the real video.`);
@@ -1004,6 +1093,7 @@ async function analyze() {
     report = buildReport(frames, s, fps);
     renderAll();
     $('#live').classList.add('on');
+    setTimeout(() => scrollToEl($('#results')), 200);
     $('#exportVidBtn').disabled = false; $('#pdfBtn').disabled = false;
     setStatus(`Done${stopReq ? ' (stopped early)' : ''}. Analyzed ${fmt2(tStart)} to ${fmt2(tEnd)}: ${frames.length} frames, ${report.strokes.length} strokes.`);
     video.currentTime = tStart;
