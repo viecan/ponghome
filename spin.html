@@ -23,24 +23,20 @@ h1,h2,h3,.logo,.num{font-family:"Baloo 2",Inter,sans-serif}
 button{font:inherit;cursor:pointer}
 .hidden{display:none!important}
 
-/* layout: video area + control rail (right in landscape, bottom in portrait) */
+/* portrait only: video on top, buttons at the bottom */
 #app{position:fixed;inset:0;display:flex;flex-direction:column}
-#view{position:relative;flex:1;display:flex;align-items:center;justify-content:center;background:#05191c;overflow:hidden}
-.stage{position:relative;aspect-ratio:var(--ar);width:min(100%, calc((100vh - 84px - var(--sab)) * var(--ar)));max-height:100%;background:#000;touch-action:none}
+#view{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#05191c;overflow:hidden}
+.stage{position:relative;aspect-ratio:var(--ar);height:100%;max-width:100%;background:#000;touch-action:none}
 .stage video,.stage canvas{position:absolute;inset:0;width:100%;height:100%}
 .stage video{object-fit:fill}
 .rail{display:flex;gap:8px;padding:10px 12px calc(10px + var(--sab));background:var(--bg2);border-top:1px solid var(--line)}
-.rail button{flex:1;height:58px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,0.07);color:var(--ink);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px}
-.rail .go{background:var(--mint);border-color:var(--mint);color:var(--on-mint);flex:1.7}
+.rail button{flex:1;height:60px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,0.07);color:var(--ink);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px}
+.rail .go{background:var(--mint);border-color:var(--mint);color:var(--on-mint);flex:1.5}
 .rail .go.stop{background:var(--coral);border-color:var(--coral);color:#fff}
 .rail .ic{font-size:19px}
-@media (orientation:landscape){
-  #app{flex-direction:row}
-  .stage{width:min(100%, calc(100vh * var(--ar)))}
-  .rail{flex-direction:column;width:calc(96px + var(--sar));padding:calc(10px + var(--sat)) calc(10px + var(--sar)) calc(10px + var(--sab)) 10px;border-top:0;border-left:1px solid var(--line)}
-  .rail button{height:auto;flex-direction:column;gap:2px;font-size:12px;border-radius:22px}
-  .rail .go{flex:1.5}
-}
+.turn{display:none;position:fixed;inset:0;z-index:99;background:var(--bg);color:var(--mint);flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px;font-family:"Baloo 2",sans-serif;font-size:24px;font-weight:800}
+.turn small{font-family:Inter,sans-serif;font-size:15px;font-weight:500;color:var(--mute)}
+@media (orientation:landscape) and (max-height:600px){ .turn{display:flex} }
 
 /* top-left status chip */
 .chip{position:absolute;left:calc(10px + var(--sal));top:calc(10px + var(--sat));display:flex;align-items:center;gap:10px;background:rgba(10,42,47,0.82);border:1px solid var(--line);border-radius:999px;padding:7px 14px 7px 12px;backdrop-filter:blur(6px);pointer-events:none;max-width:80%}
@@ -55,27 +51,28 @@ button{font:inherit;cursor:pointer}
 .empty p{margin:0;color:var(--mute);max-width:440px;font-size:15px}
 .empty button{margin-top:6px;background:var(--mint);color:var(--on-mint);border:0;border-radius:999px;padding:12px 22px;font-weight:700}
 .empty .lnk{background:transparent;color:var(--mint);padding:4px 10px}
+.toast{position:absolute;left:4%;right:4%;bottom:14px;background:rgba(10,42,47,0.94);border:1px solid var(--sun);color:var(--ink);border-radius:18px;padding:12px 16px;font-size:15px;display:none;pointer-events:none}
+.toast b{color:var(--sun)}
 .hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:var(--mint);color:var(--on-mint);font-weight:700;padding:9px 18px;border-radius:999px;font-size:15px;white-space:nowrap;display:none;pointer-events:none;max-width:94%;overflow:hidden;text-overflow:ellipsis;box-shadow:0 8px 24px rgba(0,0,0,.35)}
 
 /* big result card, readable from the other end of the table */
 .result{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.result .card{pointer-events:auto;background:rgba(10,42,47,0.9);border:2px solid var(--mint);border-radius:28px;padding:2.2vmin 4.5vmin 2.6vmin;text-align:center;min-width:52%;backdrop-filter:blur(8px);box-shadow:0 20px 60px rgba(0,0,0,.45);position:relative;overflow:hidden}
-.result .lbl{font-weight:700;color:var(--mint);font-size:max(14px,3.2vmin);letter-spacing:.08em}
-.result .row{display:flex;align-items:stretch;justify-content:center;gap:5vmin;margin-top:1.4vmin}
-.result .stat{min-width:22vmin}
-.result .k{font-weight:700;color:var(--mute);font-size:max(12px,2.6vmin);letter-spacing:.1em}
+.result .card{pointer-events:auto;background:rgba(10,42,47,0.92);border:2px solid var(--mint);border-radius:28px;padding:4vw 5vw 5vw;text-align:center;width:min(92%,520px);backdrop-filter:blur(8px);box-shadow:0 20px 60px rgba(0,0,0,.45);position:relative;overflow:hidden}
+.result .lbl{font-weight:700;color:var(--mint);font-size:max(14px,4vw);letter-spacing:.08em}
+.result .row{display:flex;align-items:stretch;justify-content:center;gap:5vw;margin-top:3vw}
+.result .stat{flex:1}
+.result .k{font-weight:700;color:var(--mute);font-size:max(12px,3.4vw);letter-spacing:.1em}
 .result .sep{width:2px;background:var(--line)}
-.result .big{font-family:"Baloo 2",sans-serif;font-weight:800;line-height:.95;font-size:max(54px,19vmin)}
-.result .unit{font-weight:600;color:var(--mute);font-size:max(14px,3.6vmin);margin-top:.4vmin}
-.result .type{display:inline-block;margin-top:1vmin;font-family:"Baloo 2",sans-serif;font-weight:800;font-size:max(28px,9vmin);line-height:1;padding:1vmin 4vmin .6vmin;border-radius:999px;color:#0A2A2F}
+.result .big{font-family:"Baloo 2",sans-serif;font-weight:800;line-height:.95;font-size:min(22vw,130px)}
+.result .unit{font-weight:600;color:var(--mute);font-size:max(13px,3.6vw)}
+.result .type{display:inline-block;margin-top:2vw;font-family:"Baloo 2",sans-serif;font-weight:800;font-size:min(12vw,68px);line-height:1;padding:2vw 6vw 1.2vw;border-radius:999px;color:#0A2A2F}
 .result .type.top{background:var(--top)}.result .type.back{background:var(--back)}.result .type.low{background:var(--flat)}.result .type.unk{background:var(--sun)}
-.result .note{color:var(--mute);font-size:max(12px,2.4vmin);margin-top:1.2vmin}
+.result .note{color:var(--mute);font-size:max(12px,3.4vw);margin-top:2vw}
 .result .bar{position:absolute;left:0;bottom:0;height:6px;background:var(--mint);width:100%;transform-origin:left}
 
 /* sheets */
 .sheet{position:fixed;inset:0;z-index:50;background:rgba(5,25,28,0.6);display:flex;align-items:flex-end}
 .sheet .in{background:var(--bg);width:100%;max-height:88vh;overflow:auto;border-radius:24px 24px 0 0;padding:18px 18px calc(22px + var(--sab));border-top:1px solid var(--line)}
-@media (orientation:landscape){ .sheet{justify-content:flex-end;align-items:stretch} .sheet .in{width:min(460px,94vw);max-height:none;height:100%;border-radius:24px 0 0 24px;padding-right:calc(18px + var(--sar))} }
 .sheet h2{margin:0 0 6px;font-size:24px;display:flex;justify-content:space-between;align-items:center;color:var(--mint)}
 .sheet h4{margin:18px 0 2px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
 .x{background:rgba(255,255,255,0.08);border:0;color:var(--ink);border-radius:50%;width:40px;height:40px;font-size:18px;flex:none}
@@ -104,6 +101,7 @@ svg text{font-family:Inter,sans-serif}
 </style>
 </head>
 <body>
+<div class="turn"><div style="font-size:44px">📱</div>Please hold your phone upright<small>This app works in portrait (vertical) mode only.</small></div>
 <div id="app">
   <div id="view">
     <div class="stage" id="stage">
@@ -111,7 +109,7 @@ svg text{font-family:Inter,sans-serif}
       <canvas id="ov"></canvas>
       <div class="empty" id="empty">
         <h2>Serve Spin Tracker</h2>
-        <p>Put your phone at the corner of the table on your opponent's backhand side, front camera facing you. Then tap <b>Start</b> and <b>Calibrate</b>.</p>
+        <p>Stand your phone upright at the corner of the table on your opponent's backhand side, front camera facing you. Then tap <b>Start</b> and <b>Calibrate</b>.</p>
         <button id="eStart">Start camera</button>
         <button class="lnk" id="eSetup">How to set up</button>
       </div>
@@ -128,6 +126,7 @@ svg text{font-family:Inter,sans-serif}
         <div class="bar" id="rBar"></div>
       </div></div>
       <div class="hint" id="hint"></div>
+      <div class="toast" id="toast"></div>
     </div>
   </div>
   <div class="rail">
@@ -141,12 +140,14 @@ svg text{font-family:Inter,sans-serif}
 <div class="sheet hidden" id="menu"><div class="in">
   <h2>Serve Spin <button class="x" data-close>✕</button></h2>
   <div class="opt"><span>Camera</span><div class="seg"><button id="camFront">Front</button><button id="camBack">Back</button></div></div>
-  <div class="opt"><span>Ball brightness<small>Lower it if the ball is missed, raise it if other things are picked up</small></span><input type="range" id="bright" min="50" max="90" value="68"></div>
+  <div class="opt"><span>Ball colour</span><div class="seg"><button id="ballW">White</button><button id="ballY">Yellow</button></div></div>
+  <div class="opt"><span>Sensitivity<small>Higher finds a small or blurry ball more easily. Lower it only if random things get tracked</small></span><div class="seg"><button data-sens="1">Low</button><button data-sens="2">High</button><button data-sens="3">Max</button></div></div>
   <div class="opt"><span>Show detection<small>Thin boxes on what the app thinks could be the ball</small></span><input type="checkbox" id="debug"></div>
   <button class="sbtn pri" id="mSetup">How to set up the phone</button>
   <h4>Your serves</h4>
   <ul class="log" id="log"><li class="mute">No serves yet</li></ul>
   <h4>More</h4>
+  <button class="sbtn" id="mRec">Record a 15 s test clip</button>
   <label class="sbtn" for="file">Analyze a recorded video</label>
   <input type="file" id="file" accept="video/*" class="hidden">
   <button class="sbtn" id="mClear">Clear serve list</button>
@@ -177,9 +178,9 @@ svg text{font-family:Inter,sans-serif}
   </svg>
   <ol class="steps">
     <li><b>Corner of the table, opponent's backhand side.</b> Tripod about 50 cm behind and 30 cm outside that corner, so a serve can't hit the phone.</li>
-    <li><b>Front camera facing you</b>, phone sideways (landscape). You can read the results from where you serve.</li>
+    <li><b>Phone upright (portrait), front camera facing you.</b> You can read the results from where you serve.</li>
     <li><b>Height:</b> lens 60 to 80 cm above the table surface (about 1.4 to 1.6 m from the floor), tilted down toward your end. Lower than that and the net hides your first bounce.</li>
-    <li><b>Aim across the table</b> so your whole end of the table and both net posts are in view, plus some space above the table.</li>
+    <li><b>Aim along the table toward you</b> so your end of the table, both ends of the net and the table near the phone are all in view.</li>
     <li><b>Bright, even light.</b> Avoid a window or lamp behind you.</li>
     <li><b>Calibrate</b> (once per setup): drag to the 2 corners at your end, then the 2 ends of the net where it meets the table edge.</li>
     <li><b>Serve</b> with a white ball. The serve must bounce once on your side and once on the opponent's side. Results show for 10 seconds or until your next serve.</li>
@@ -194,7 +195,7 @@ svg text{font-family:Inter,sans-serif}
 const $=id=>document.getElementById(id);
 const vid=$('vid'), ov=$('ov'), octx=ov.getContext('2d');
 const proc=$('proc'), pctx=proc.getContext('2d',{willReadFrequently:true});
-const PW=640; let PH=360, BW=320, BH=180;
+let PW=360, PH=640, BW=180, BH=320;
 const TRAIL='#00E5FF';
 
 // table & ball physics
@@ -202,10 +203,17 @@ const LEN=2.74, NET=1.37, TW=1.525, BALL=0.04, RB=0.02;
 const G=9.81, M=0.0027, RHO=1.2, AREA=Math.PI*RB*RB, KD=RHO*0.5*AREA/(2*M);
 
 // ---------- settings ----------
-const S={cal:null, bright:68, facing:'user'};
+const S={cal:null, facing:'user', ball:'white', sens:2};
 try{ Object.assign(S, JSON.parse(localStorage.getItem('ph_serve')||'{}')); }catch(e){}
 const save=()=>{ try{ localStorage.setItem('ph_serve', JSON.stringify(S)); }catch(e){} };
-$('bright').value=S.bright; $('bright').oninput=e=>{ S.bright=+e.target.value; save(); };
+// sensitivity levels: how small a change still counts as the ball
+const SENS={1:{df:18,v:0.70,wash:30,yel:30,kick:0.7}, 2:{df:12,v:0.58,wash:20,yel:20,kick:0.5}, 3:{df:8,v:0.48,wash:13,yel:14,kick:0.4}};
+const sens=()=>SENS[S.sens]||SENS[2];
+function optButtons(){ $('ballW').classList.toggle('on',S.ball!=='yellow'); $('ballY').classList.toggle('on',S.ball==='yellow');
+  document.querySelectorAll('[data-sens]').forEach(b=>b.classList.toggle('on',+b.dataset.sens===S.sens)); }
+$('ballW').onclick=()=>{ S.ball='white'; save(); optButtons(); prevGray=null; };
+$('ballY').onclick=()=>{ S.ball='yellow'; save(); optButtons(); prevGray=null; };
+document.querySelectorAll('[data-sens]').forEach(b=>b.onclick=()=>{ S.sens=+b.dataset.sens; save(); optButtons(); });
 
 // ---------- small vector helpers ----------
 const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2], nrm=a=>Math.hypot(a[0],a[1],a[2]);
@@ -233,7 +241,7 @@ function buildCam(taps){
   if(Math.abs(h31*h32)>1e-12){ const v=-(h11*h12+h21*h22)/(h31*h32); if(v>0) f2.push(v); }
   if(Math.abs(h32*h32-h31*h31)>1e-12){ const v=(h11*h11+h21*h21-h12*h12-h22*h22)/(h32*h32-h31*h31); if(v>0) f2.push(v); }
   let f=f2.length?Math.sqrt(f2.reduce((a,b)=>a+b)/f2.length):0;
-  if(!(f>PW*0.35 && f<PW*2.5)) f=PW*0.75;          // fall back to a typical phone lens
+  const L=Math.max(PW,PH); if(!(f>L*0.3 && f<L*2.5)) f=L*0.72;          // fall back to a typical phone lens
   const k1=[h11/f,h21/f,h31], k2=[h12/f,h22/f,h32], k3=[h13/f,h23/f,h33];
   const lam=2/(nrm(k1)+nrm(k2));
   let r1=sc(k1,lam), r2=sc(k2,lam), t=sc(k3,lam);
@@ -254,14 +262,17 @@ function dExpAt(u,v){ if(!cam) return 6;
   return Math.max(2.5, Math.min(70, cam.f*BALL/Math.max(dist,0.25))); }
 
 // ---------- detection: small, white or grey, moving, ball-shaped ----------
-let prevGray=null, prevSat=null, comps=[];
+let prevGray=null, prevSat=null, prevYel=null, comps=[];
 function sizeProc(){
   const ar=(vid.videoWidth&&vid.videoHeight)?vid.videoWidth/vid.videoHeight:16/9;
-  PH=Math.round(PW/ar); BW=PW>>1; BH=PH>>1; proc.width=PW; proc.height=PH;
+  // the longer side is processed at 640 px (portrait video: 360 x 640)
+  if(ar>=1){ PW=640; PH=Math.round(640/ar); } else { PH=640; PW=Math.round(640*ar); }
+  BW=PW>>1; BH=PH>>1; proc.width=PW; proc.height=PH;
   document.documentElement.style.setProperty('--ar', ar.toFixed(4));
   ov.width=PW*2; ov.height=PH*2; prevGray=null;
-  cam = S.cal && S.cal.ph===PH ? buildCam(S.cal.taps) : null;
-  if(S.cal && S.cal.ph!==PH){ S.cal=null; save(); }
+  const fits = S.cal && S.cal.ph===PH && S.cal.pw===PW;
+  cam = fits ? buildCam(S.cal.taps) : null;
+  if(S.cal && !fits){ S.cal=null; save(); }
 }
 function ccl(bins, maxC){
   const lab=new Int32Array(BW*BH), st=[], out=[null];
@@ -280,21 +291,32 @@ function ccl(bins, maxC){
 function detect(){
   pctx.drawImage(vid,0,0,PW,PH);
   const d=pctx.getImageData(0,0,PW,PH).data;
-  const gray=new Uint8Array(PW*PH), sat=new Uint8Array(PW*PH), ball=new Uint8Array(BW*BH), mov=new Uint8Array(BW*BH);
-  const vMin=S.bright/100*255, prev=prevGray, pSat=prevSat; let on=0, mOn=0;
+  const gray=new Uint8Array(PW*PH), sat=new Uint8Array(PW*PH), yel=new Int16Array(PW*PH), hitW=new Uint8Array(PW*PH), ball=new Uint8Array(BW*BH), mov=new Uint8Array(BW*BH);
+  const K=sens(), yellow=S.ball==='yellow', vMin=K.v*255, prev=prevGray, pSat=prevSat, pYel=prevYel; let on=0, mOn=0;
   for(let i=0,p=0;i<PW*PH;i++,p+=4){
     const r=d[p], g=d[p+1], b=d[p+2], gy=(r*77+g*150+b*29)>>8; gray[i]=gy;
-    const mx=r>g?(r>b?r:b):(g>b?g:b), mn=r<g?(r<b?r:b):(g<b?g:b), st=mx?((mx-mn)*255/mx)|0:0; sat[i]=st;
+    const mx=r>g?(r>b?r:b):(g>b?g:b), mn=r<g?(r<b?r:b):(g<b?g:b), st=mx?((mx-mn)*255/mx)|0:0; sat[i]=st; yel[i]=((r+g)>>1)-b;
     if(!prev) continue;
-    const df=gy-prev[i]; if(df<18 && df>-18) continue;                 // not moving
+    const df=gy-prev[i]; if(df<K.df && df>-K.df) continue;             // not moving
     const bi=((i/PW|0)>>1)*BW+((i%PW)>>1); if(!mov[bi]){ mov[bi]=1; mOn++; }
     // ball: white/grey and bright, or a blurred ball streak that is brighter AND less colourful than what was behind it
     // (a white ball washes out the blue table; skin, a red racket or a coloured shirt do not)
-    const whiteBall = st<=56 && (mx>=vMin || df>=18);
-    const streak = df>=18 && st < pSat[i]-30;
-    if(whiteBall || streak){ if(!ball[bi]){ ball[bi]=1; on++; } }
+    let hit;
+    if(!yellow){
+      const whiteBall = st<=60 && df>=K.df && (mx>=vMin || df>=K.df*1.5);   // the ball just arrived here: brighter than before
+      const streak = df>=K.df && st < pSat[i]-K.wash;
+      hit = whiteBall || streak;
+    } else {
+      // yellow ball: red and green high, blue low (hue about 40 to 75 degrees);
+      // a blurred yellow ball makes the spot more yellow than it was before
+      const yl=yel[i], hue = mx===mn?0 : mx===r ? 60*(g-b)/(mx-mn) : mx===g ? 60*(2+(b-r)/(mx-mn)) : 400;
+      const yellowBall = yl>=55 && hue>=38 && hue<=78 && mx>=vMin*0.85 && df>=K.df;
+      const streak = df>=K.df && yl-pYel[i]>=K.yel && hue>=20 && hue<=160;
+      hit = yellowBall || streak;
+    }
+    if(hit){ hitW[i]=Math.min(255,df+10); if(!ball[bi]){ ball[bi]=1; on++; } }
   }
-  prevGray=gray; prevSat=sat; comps=[];
+  prevGray=gray; prevSat=sat; prevYel=yel; comps=[];
   if(!on || mOn>BW*BH*0.35) return [];
   const Mv=ccl(mov,5000), B=ccl(ball,300), out=[];
   for(let n=1;n<B.comps.length;n++){ const c=B.comps[n]; const dE=dExpAt(c.x,c.y); c.dE=dE;
@@ -303,39 +325,59 @@ function detect(){
     comps.push(c); if(c.ok) out.push(c);
   }
   out.sort((a,b)=>Math.abs(Math.log((a.wid+1)/(a.dE+1)))-Math.abs(Math.log((b.wid+1)/(b.dE+1))));
-  return out.slice(0,6).map(c=>({x:c.x,y:c.y,dE:c.dE}));
+  // precise centre: brightness-weighted average of the ball's own pixels (sharper than the 2x2 blocks)
+  return out.slice(0,6).map(c=>{ const R=Math.ceil(Math.max(3,c.len/2+2)); let w=0,sx=0,sy=0;
+    for(let y=Math.max(0,Math.floor(c.y-R));y<=Math.min(PH-1,Math.ceil(c.y+R));y++) for(let x=Math.max(0,Math.floor(c.x-R));x<=Math.min(PW-1,Math.ceil(c.x+R));x++){
+      const v=hitW[y*PW+x]; if(v){ w+=v; sx+=v*(x+0.5); sy+=v*(y+0.5); } }
+    return w? {x:sx/w, y:sy/w, dE:c.dE} : {x:c.x, y:c.y, dE:c.dE}; });
 }
 
 // ---------- tracker: follows one ball flight ----------
 const mpp=c=>BALL/(c.dE||6);   // metres per proc pixel near this point
 const tracker={
   pts:[], lastT:-1, hist:[],
-  reset(){ this.pts=[]; this.lastT=-1; this.hist=[]; },
+  reset(){ this.pts=[]; this.lastT=-1; },
+  clear(){ this.reset(); this.hist=[]; },
   on(){ return this.pts.length>=4; },
   add(c,t){ this.pts.push({x:c.x,y:c.y,t,dE:c.dE}); this.lastT=t; },
   step(cands,t){
     if(this.pts.length && t-this.lastT>0.15) this.flush();
+    this.hist.push({t,c:cands}); if(this.hist.length>14) this.hist.shift();   // recent frames, always kept
+    let res=null;
     if(this.pts.length){
       const p=this.pts, l=p[p.length-1], a=p[p.length-2], dt0=Math.max(l.t-a.t,1e-4);
       const vx=(l.x-a.x)/dt0, vy=(l.y-a.y)/dt0, dt=t-l.t, gate=Math.max(10, 0.45*Math.hypot(vx,vy)*dt+l.dE*1.5+6);
       const preds=[[l.x+vx*dt, l.y+vy*dt],[l.x+vx*dt, l.y-vy*dt*0.8]];   // straight on, or bounced off the table
       let best=null, bd=1e9;
       cands.forEach(c=>preds.forEach(q=>{ const dd=Math.hypot(c.x-q[0],c.y-q[1]); if(dd<gate&&dd<bd){ bd=dd; best=c; } }));
-      if(best){ this.add(best,t);
+      if(best){ this.add(best,t); res=best;
         if(p.length>=8){ const q=p.slice(-8), net=Math.hypot(q[7].x-q[0].x,q[7].y-q[0].y);
-          if(net<Math.max(10,2*q[7].dE)){ this.reset(); return null; } } }   // not getting anywhere: a wobbling body part, not a ball
-      return best;
+          if(net<Math.max(10,2*q[7].dE)){ p.splice(p.length-7); this.flush(); res=null; } }   // stopped moving: end of the flight (or a wobbling body part)
+        else if(p.length>=8 && p[p.length-1].t-p[0].t>1.6){ this.flush(); res=null; } }      // a serve is over within 1.6 s: show the result now
     }
-    // start only after 4 frames of fast, steady, ball-like motion (arms and body wobble, they never pass).
-    // One or two missed frames are allowed, because a far, small ball is not seen in every frame.
-    this.hist.push({t,c:cands}); if(this.hist.length>14) this.hist.shift();
+    // keep looking for a new flight, also while following something (it may be the wrong thing, like an arm)
+    const seed=this.findSeed(); if(!seed) return res;
+    const sp=seed.pts[3][0];
+    if(this.pts.length){
+      const l=this.pts[this.pts.length-1];
+      if(Math.hypot(sp.x-l.x,sp.y-l.y) < 2*l.dE+8) return res;                 // same thing we are already following
+      if(seed.speed < 1.5*this.speed()) return res;                            // not clearly faster: keep the current one
+      this.flush();
+    }
+    this.pts=[]; seed.pts.forEach(([c,F])=>this.add(c,F.t)); this.backfill(seed.i0); this.lastT=t;
+    onFlightStart();
+    return sp;
+  },
+  speed(){ const q=this.pts.slice(-6); if(q.length<2) return 0; const a=q[0], b=q[q.length-1];
+    return Math.hypot(b.x-a.x,b.y-a.y)*mpp(b)/Math.max(b.t-a.t,1e-3); },
+  // 4 frames (gaps allowed) of fast, steady, straight-ish motion: a flying ball. Arms and shirts wobble and never pass.
+  findSeed(){
     const H=this.hist, n=H.length; if(n<4) return null;
-    const ok=(a,b,A,B)=>{ const d=Math.hypot(b.x-a.x,b.y-a.y), s=d*mpp(b)/(B.t-A.t); return (s<0.5||s>45)?-1:d; };
+    const ok=(a,b,A,B)=>{ const d=Math.hypot(b.x-a.x,b.y-a.y), s=d*mpp(b)/(B.t-A.t); return (s<0.4||s>45)?-1:d; };
     const pr=(a,b,A,B,C)=>{ const r=(C.t-B.t)/(B.t-A.t); return [b.x+(b.x-a.x)*r, b.y+(b.y-a.y)*r]; };
-    const last=H[n-1]; let seed=null, be=1e9;
-    const lo=Math.max(0,n-6);
-    for(let i=lo;i<n-3;i++) for(let j=i+1;j<n-2;j++) for(let k=j+1;k<n-1;k++){
-      const A=H[i],B=H[j],C=H[k],D=last; if(D.t-A.t>0.26) continue;
+    const D=H[n-1]; let seed=null, be=1e9;
+    for(let i=Math.max(0,n-6);i<n-3;i++) for(let j=i+1;j<n-2;j++) for(let k=j+1;k<n-1;k++){
+      const A=H[i],B=H[j],C=H[k]; if(D.t-A.t>0.26) continue;
       for(const a of A.c) for(const b of B.c){ if(ok(a,b,A,B)<0) continue;
         for(const c of C.c){ const d2=ok(b,c,B,C); if(d2<0) continue;
           const q=pr(a,b,A,B,C), e1=Math.hypot(c.x-q[0],c.y-q[1]); if(e1>Math.max(4,0.35*d2)) continue;
@@ -343,12 +385,8 @@ const tracker={
             const q2=pr(b,c,B,C,D), e2=Math.hypot(d.x-q2[0],d.y-q2[1]); if(e2>Math.max(4,0.35*d3)) continue;
             const net=Math.hypot(d.x-a.x,d.y-a.y), path=Math.hypot(b.x-a.x,b.y-a.y)+d2+d3;
             if(net<Math.max(8,1.5*d.dE) || net<0.75*path) continue;
-            if(e1+e2<be){ be=e1+e2; seed=[[a,A],[b,B],[c,C],[d,D],i]; } } } } }
-    if(!seed) return null;
-    this.pts=[]; seed.slice(0,4).forEach(([c,F])=>this.add(c,F.t));
-    this.backfill(seed[4]); this.hist=[]; this.lastT=t;
-    onFlightStart();
-    return seed[3][0];
+            if(e1+e2<be){ be=e1+e2; seed={pts:[[a,A],[b,B],[c,C],[d,D]], i0:i, speed:net*mpp(d)/(D.t-A.t)}; } } } } }
+    return seed;
   },
   // walk back through earlier frames to recover the start of the flight (the first bounce is often before the seed)
   backfill(i0){
@@ -386,7 +424,8 @@ function findBounces(p){
     cand.push({i, t:bt, kick:(u.vy-v.vy)*m, gap:bd, x:(u.x+v.x)/2, y:(u.y+v.y)/2, cb, ca, dE:p[i].dE});
   }
   const out=[];
-  cand.forEach((e,j)=>{ if(e.kick<0.7 || e.gap>Math.max(4,1.5*e.dE)) return;
+  const kMin=sens().kick;
+  cand.forEach((e,j)=>{ if(e.kick<kMin || e.gap>Math.max(4,1.5*e.dE)) return;
     const l=cand[j-1], r=cand[j+1]; if((l&&l.kick>e.kick&&l.gap<=Math.max(4,1.5*l.dE))||(r&&r.kick>=e.kick&&r.gap<=Math.max(4,1.5*r.dE))) return;
     const w=rayZ(e.x,e.y,RB); if(w) out.push({t:e.t, cb:e.cb, ca:e.ca, X:w[0], Y:w[1], k:e.kick});
   });
@@ -418,7 +457,7 @@ function analyzeServe(p){
   // smaller = floats (backspin). Along the table the ball slows a little from air drag.
   const arc=(B1,a,vo,psi,wo,tau,T)=>{ const d=Math.log(1+KD*vo*tau)/KD; return [B1.X+d*Math.cos(psi), B1.Y+d*Math.sin(psi), RB+wo*tau-0.5*a*tau*tau]; };
   let best=null;
-  const offs=[-1/3,0,1/3].map(k=>k*dtF);
+  const offs=[0];   // bounce times are found between frames precisely; nudging them only adds error
   if(b2){
     // both bounces seen: the two spots and times fix speed and direction; only the arc height (a) is fitted
     const mid=p.filter(q=>q.t>b1.t+dtF*0.4 && q.t<b2.t-dtF*0.4);
@@ -467,14 +506,29 @@ function analyzeServe(p){
 // ---------- results ----------
 let serveNo=0, hideTimer=null, barAnim=null;
 const NAMES={top:'TOPSPIN',back:'BACKSPIN',low:'LOW SPIN',unk:'SPIN ?'};
+const WHY={
+  'Calibrate first':'<b>Calibrate first.</b> Tap Calibrate and mark the table, then serve again.',
+  'First bounce not seen':'<b>Ball seen, but not the bounce on your side.</b> Raise the phone (60 to 80 cm above the table) so the net does not hide your end.',
+  'Second bounce not seen':'<b>Missed the bounce on the far side.</b> Make sure the table near the phone is in view.',
+  'Could not follow the ball to the second bounce':'<b>Lost the ball after the first bounce.</b> Try more light, or set Sensitivity to Max in Menu.',
+  'Second bounce not on the far side':'<b>The serve did not land on the far side,</b> or the ball was lost. Try again.',
+  'Not a serve':'<b>That did not look like a serve.</b> Try again.'
+};
+let toastT=null;
+function toast(html){ const t=$('toast'); t.innerHTML=html; t.style.display='block'; clearTimeout(toastT); toastT=setTimeout(()=>t.style.display='none',5000); }
 function onFlightStart(){ setStat('Tracking…','track'); }
 function onFlightEnd(p){
   lastPath=p; lastPathAt=performance.now();
   const r=analyzeServe(p);
-  if(r.err){ setStat(r.err==='Calibrate first'?'Calibrate first':r.err+', try again','warn'); setTimeout(()=>ready(),2500); return; }
+  if(r.err){
+    // only explain failures for something that really travelled down the table (not a moving arm or shirt)
+    const net=Math.hypot(p[p.length-1].x-p[0].x, p[p.length-1].y-p[0].y);
+    if(r.err==='Calibrate first' || net>Math.max(PW,PH)*0.12){ toast(WHY[r.err]||('<b>No result.</b> '+r.err)); setStat('Serve not measured','warn'); setTimeout(()=>ready(),5000); }
+    return; }
   serveNo++; showResult(r); addLog(r); ready();
 }
 function showResult(r){
+  $('toast').style.display='none';
   $('rLbl').textContent=`SERVE #${serveNo}`;
   $('rSpeed').textContent=Math.round(r.speed*3.6);
   $('rRps').textContent = r.rps==null ? '?' : r.type==='low' ? '<'+Math.max(10,Math.round(r.rps)) : Math.round(r.rps);
@@ -539,29 +593,30 @@ ov.addEventListener('pointerup',()=>{ if(!drag) return; calTaps.push(drag); drag
   if(calTaps.length<4){ hint(`${calTaps.length+1}/4  `+CAL_STEPS[calTaps.length]); return; }
   const c=buildCam(calTaps);
   if(!c || c.C[2]<0.05){ hint('That did not look right, tap Calibrate and try again'); calTaps=[]; calMode=false; setTimeout(()=>hint(),3500); return; }
-  S.cal={taps:calTaps.slice(), ph:PH}; save(); cam=c; calTaps=[];
+  S.cal={taps:calTaps.slice(), ph:PH, pw:PW}; save(); cam=c; calTaps=[];
   hint(`Done. Camera is about ${Math.round(c.C[2]*100)} cm above the table`); setTimeout(()=>{ hint(); calMode=false; },2500); ready(); });
 $('mReset').onclick=()=>{ S.cal=null; cam=null; save(); ready(); closeSheets(); };
 
 // ---------- camera ----------
 let stream=null, running=false, fileMode=false, wake=null;
 function camButtons(){ $('camFront').classList.toggle('on',S.facing==='user'); $('camBack').classList.toggle('on',S.facing!=='user'); }
-camButtons();
+camButtons(); optButtons();
 const setFacing=f=>async()=>{ S.facing=f; save(); camButtons(); if(running){ stopCam(); await startCam(); } };
 $('camFront').onclick=setFacing('user'); $('camBack').onclick=setFacing('environment');
 async function startCam(){
   fileMode=false; vid.removeAttribute('src');
-  try{ stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:S.facing,width:{ideal:1280},height:{ideal:720},frameRate:{ideal:60}}}); }
+  try{ stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:S.facing,width:{ideal:720},height:{ideal:1280},frameRate:{ideal:60}}}); }
   catch(err){ setStat('Camera blocked, allow it in the browser','warn'); return; }
-  vid.srcObject=stream; await vid.play(); sizeProc(); tracker.reset();
+  vid.srcObject=stream; await vid.play(); sizeProc(); tracker.clear();
   try{ const tr=stream.getVideoTracks()[0], c=tr.getCapabilities?tr.getCapabilities():{};   // shorter shutter = less blur (Android)
     if(c.exposureTime && c.exposureMode && c.exposureMode.includes('manual'))
       await tr.applyConstraints({advanced:[{exposureMode:'manual',exposureTime:Math.max(c.exposureTime.min,Math.min(c.exposureTime.max,20))}]}); }catch(e){}
   try{ wake=await navigator.wakeLock.request('screen'); }catch(e){}
+  try{ if(screen.orientation && screen.orientation.lock) await screen.orientation.lock('portrait'); }catch(e){}
   $('empty').classList.add('hidden'); running=true; goBtn(); ready(); loop();
 }
 function stopCam(){ running=false; if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; vid.srcObject=null; }
-  try{ wake&&wake.release(); }catch(e){} wake=null; tracker.reset(); goBtn(); ready(); draw(); }
+  try{ wake&&wake.release(); }catch(e){} wake=null; tracker.clear(); goBtn(); ready(); draw(); }
 function goBtn(){ const b=$('bGo'); b.classList.toggle('stop',running); b.innerHTML=running?'<span class="ic">■</span><span>Stop</span>':'<span class="ic">▶</span><span>Start</span>'; }
 function loop(){ if(!running) return;
   const step=(now,meta)=>{ if(!running) return;
@@ -584,15 +639,31 @@ async function fileFps(){
 $('file').onchange=async e=>{
   const f=e.target.files[0]; if(!f) return; closeSheets(); stopCam(); fileMode=true;
   vid.srcObject=null; vid.src=URL.createObjectURL(f); await new Promise(r=>vid.onloadedmetadata=r);
-  const keep=S.cal; sizeProc(); if(!S.cal && keep && keep.ph===PH){ S.cal=keep; cam=buildCam(keep.taps); }
+  const keep=S.cal; sizeProc(); if(!S.cal && keep && keep.ph===PH && keep.pw===PW){ S.cal=keep; cam=buildCam(keep.taps); }
   $('empty').classList.add('hidden'); setStat('Reading video…','track');
-  const fps=await fileFps(); tracker.reset(); prevGray=null; const serveNo0=serveNo;
+  const fps=await fileFps(); tracker.clear(); prevGray=null; const serveNo0=serveNo;
   const n=Math.floor(vid.duration*fps);
   for(let k=0;k<n;k++){ await seek((k+0.5)/fps); tracker.step(detect(),k/fps); draw(); }
   const before=serveNo0; tracker.flush(); draw(); fileMode=false;
   const found=serveNo-before;
   if(found) setStat(`Video done: ${found} serve${found>1?'s':''} found`,'ready');
   else setStat(cam?'Video done: no serve found':'Calibrate on this video, then load it again','warn');
+};
+
+// ---------- test clip (to share for troubleshooting) ----------
+$('mRec').onclick=()=>{
+  if(!stream){ closeSheets(); toast('<b>Start the camera first,</b> then record a clip from Menu.'); return; }
+  if(!window.MediaRecorder){ toast('<b>Recording is not supported</b> in this browser.'); return; }
+  closeSheets();
+  const type=['video/mp4','video/webm;codecs=vp9','video/webm'].find(t=>MediaRecorder.isTypeSupported(t))||'';
+  const rec=new MediaRecorder(stream, type?{mimeType:type, videoBitsPerSecond:8e6}:undefined), chunks=[];
+  rec.ondataavailable=e=>{ if(e.data.size) chunks.push(e.data); };
+  rec.onstop=async()=>{ const blob=new Blob(chunks,{type:rec.mimeType||'video/mp4'}), ext=(rec.mimeType||'').includes('mp4')?'mp4':'webm';
+    const file=new File([blob],`serve-test.${ext}`,{type:blob.type});
+    try{ if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:'Serve test clip'}); return; } }catch(e){}
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=file.name; document.body.appendChild(a); a.click(); a.remove(); };
+  rec.start(); let left=15; hint(`Recording… ${left}s, serve a few times`);
+  const iv=setInterval(()=>{ left--; if(left>0) hint(`Recording… ${left}s, serve a few times`); else { clearInterval(iv); rec.stop(); hint('Clip saved'); setTimeout(()=>hint(),2000); } },1000);
 };
 
 // ---------- sheets ----------
