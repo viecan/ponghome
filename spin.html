@@ -51,6 +51,10 @@ button{font:inherit;cursor:pointer}
 .empty p{margin:0;color:var(--mute);max-width:440px;font-size:15px}
 .empty button{margin-top:6px;background:var(--mint);color:var(--on-mint);border:0;border-radius:999px;padding:12px 22px;font-weight:700}
 .empty .lnk{background:transparent;color:var(--mint);padding:4px 10px}
+.drawbar{position:absolute;left:4%;right:4%;bottom:14px;display:flex;gap:8px}
+.drawing .hint{bottom:80px}
+.drawbar button{flex:1;height:52px;border-radius:999px;border:1px solid var(--line);background:rgba(10,42,47,0.9);color:var(--ink);font-weight:700;font-size:15px}
+.drawbar .pri{background:var(--mint);border-color:var(--mint);color:var(--on-mint);flex:1.4}
 .toast{position:absolute;left:4%;right:4%;bottom:14px;background:rgba(10,42,47,0.94);border:1px solid var(--sun);color:var(--ink);border-radius:18px;padding:12px 16px;font-size:15px;display:none;pointer-events:none}
 .toast b{color:var(--sun)}
 .hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:var(--mint);color:var(--on-mint);font-weight:700;padding:9px 18px;border-radius:999px;font-size:15px;white-space:nowrap;display:none;pointer-events:none;max-width:94%;overflow:hidden;text-overflow:ellipsis;box-shadow:0 8px 24px rgba(0,0,0,.35)}
@@ -127,10 +131,12 @@ svg text{font-family:Inter,sans-serif}
       </div></div>
       <div class="hint" id="hint"></div>
       <div class="toast" id="toast"></div>
+      <div class="drawbar hidden" id="drawbar"><button id="dCancel">Cancel</button><button id="dClear">Clear</button><button class="pri" id="dDone">Done</button></div>
     </div>
   </div>
   <div class="rail">
     <button class="go" id="bGo"><span class="ic">▶</span><span>Start</span></button>
+    <button id="bDraw"><span class="ic">🖌</span><span>Draw table</span></button>
     <button id="bMenu"><span class="ic">☰</span><span>Menu</span></button>
   </div>
 </div>
@@ -144,7 +150,7 @@ svg text{font-family:Inter,sans-serif}
   <div class="opt"><span>Show detection<small>Thin boxes on what the app thinks could be the ball</small></span><input type="checkbox" id="debug"></div>
   <button class="sbtn pri" id="mSetup">How to set up the phone</button>
   <button class="sbtn" id="mFind">Find the table again</button>
-  <button class="sbtn" id="bCal">Mark the table by hand</button>
+  <button class="sbtn" id="bCal">Mark 4 table points by hand</button>
   <h4>Your serves</h4>
   <ul class="log" id="log"><li class="mute">No serves yet</li></ul>
   <h4>More</h4>
@@ -182,7 +188,7 @@ svg text{font-family:Inter,sans-serif}
     <li><b>Height:</b> lens about 50 cm above the table, tilted slightly down toward your end. Higher (up to 80 cm) shows your side of the net better.</li>
     <li><b>Aim along the table toward you</b> so your end line, the net and the long side line near the phone are in view.</li>
     <li><b>Bright, even light.</b> Avoid a window or lamp behind you.</li>
-    <li><b>Tap Start.</b> The app finds the table by itself (you see its outline for a moment and "Table found ✓"). If it can not, use Menu → Mark the table by hand.</li>
+    <li><b>Tap Start.</b> The app finds the table by itself (you see its outline for a moment and "Table found ✓"). If it can not, tap <b>Draw table</b> and brush over the table top with your finger.</li>
     <li><b>Serve</b> with a white ball. The serve must bounce once on your side and once on the opponent's side. Results show for 10 seconds or until your next serve.</li>
   </ol>
   <p class="mute">Speed is the average between the two bounces. Spin type and rev/s are estimated from how the ball curves in the air (topspin dips, backspin floats). No marks on the ball are needed.</p>
@@ -244,7 +250,7 @@ function buildCam(taps, world, strict){
   // strict (automatic table finding): both lens estimates must exist and agree, which only happens
   // when the guessed table lines match the real shape of the table
   let agree=9; if(f2.length===2) agree=Math.abs(Math.log(f2[0]/f2[1]));
-  if(strict && agree>0.35) return null;
+  if(strict && agree>(strict===2?0.6:0.35)) return null;
   let f=f2.length?Math.sqrt(f2.reduce((a,b)=>a+b)/f2.length):0;
   if(!(f>L*0.3 && f<L*2.5)){ if(strict) return null; f=L*0.72; }        // fall back to a typical phone lens
   const k1=[h11/f,h21/f,h31], k2=[h12/f,h22/f,h32], k3=[h13/f,h23/f,h33];
@@ -269,30 +275,46 @@ function dExpAt(u,v){ if(!cam) return 6;
 // ---------- automatic table finding (no manual calibration) ----------
 // 1) table colour (blue or green) and white lines, 2) straight edges, 3) try matching 4 of them to real
 // table lines (end lines, net, side lines, centre line); keep the match that fits the table's true shape.
+let lastFind=null;
 const WX=[0.02,NET,LEN-0.02], WY=[0.02,TW/2,TW-0.02];   // the blue area ends at the inside of the 2 cm white edge lines
-function findTable(){
+function findTable(user){
   if(!vid.videoWidth) return null;
   pctx.drawImage(vid,0,0,PW,PH); const d=pctx.getImageData(0,0,PW,PH).data;
-  const N=BW*BH, blue=new Uint8Array(N), green=new Uint8Array(N), white=new Uint8Array(N); let nb=0, ng=0;
+  const N=BW*BH, blue=new Uint8Array(N), green=new Uint8Array(N), white=new Uint8Array(N), vv=new Float32Array(N), ss=new Float32Array(N); let nb=0, ng=0;
   for(let y=0;y<BH;y++) for(let x=0;x<BW;x++){
     let r=0,g=0,b=0; for(const [ox,oy] of [[0,0],[1,0],[0,1],[1,1]]){ const p=((2*y+oy)*PW+2*x+ox)<<2; r+=d[p]; g+=d[p+1]; b+=d[p+2]; }
     r/=4; g/=4; b/=4; const mx=Math.max(r,g,b), mn=Math.min(r,g,b), sat=mx?(mx-mn)/mx:0, v=mx/255;
     const hue = mx===mn?0 : mx===r ? (60*(g-b)/(mx-mn)+360)%360 : mx===g ? 60*(2+(b-r)/(mx-mn)) : 60*(4+(r-g)/(mx-mn));
     const i=y*BW+x;
-    if(sat>0.25 && v>0.12){ if(hue>=180&&hue<=260){ blue[i]=1; nb++; } else if(hue>=80&&hue<170){ green[i]=1; ng++; } }
-    if(v>0.55 && sat<0.25) white[i]=1;
+    const isBlue = hue>=165&&hue<=275 && ((sat>0.18&&v>0.10) || (b>1.3*r+6&&b>=g&&v>0.05));   // blue, navy, dim or shiny blue (not grey walls)
+    const isGreen = !isBlue && hue>=80&&hue<165 && sat>0.15 && v>0.08;
+    if(isBlue){ blue[i]=1; nb++; } else if(isGreen){ green[i]=1; ng++; }
+    vv[i]=v; ss[i]=sat;
   }
-  const col = nb>=ng ? blue : green; if(Math.max(nb,ng)<N*0.04) return {err:'nocolour'};
+  let col = nb>=ng ? blue : green;
+  let picked=null;
+  if(user){
+    // you touched the table: take every table-coloured area your brush touched (sloppy brushing is fine),
+    // and ignore other blue things you did not touch (barriers, floor)
+    let bu=0,gu=0,nu=0; for(let i=0;i<N;i++){ if(user[i]){ nu++; if(blue[i]) bu++; if(green[i]) gu++; } }
+    col = bu>=gu ? blue : green; picked = Math.max(bu,gu)>=Math.max(20,nu*0.15) ? user : 'raw';
+  } else if(Math.max(nb,ng)<N*0.03){ lastFind={err:'nocolour'}; return lastFind; }
+  // white lines: clearly brighter than the table surface and not coloured
+  const tv=[]; for(let i=0;i<N;i+=7) if(col[i]) tv.push(vv[i]); tv.sort((a,b)=>a-b); const tableV=tv.length?tv[tv.length>>1]:0.3;
+  for(let i=0;i<N;i++) if(ss[i]<0.3 && vv[i]>Math.max(0.35,tableV+0.18)) white[i]=1;
   // clean up the table area (close small gaps such as the thin centre line)
   const grow=(m,k)=>{ const o=new Uint8Array(N); for(let y=0;y<BH;y++) for(let x=0;x<BW;x++){ let v=0;
       for(let dy=-k;dy<=k&&!v;dy++) for(let dx=-k;dx<=k;dx++){ const X=x+dx,Y=y+dy; if(X>=0&&Y>=0&&X<BW&&Y<BH&&m[Y*BW+X]){ v=1; break; } } o[y*BW+x]=v; } return o; };
   const shrink=(m,k)=>{ const o=new Uint8Array(N); for(let y=0;y<BH;y++) for(let x=0;x<BW;x++){ let v=1;
       for(let dy=-k;dy<=k&&v;dy++) for(let dx=-k;dx<=k;dx++){ const X=x+dx,Y=y+dy; if(X>=0&&Y>=0&&X<BW&&Y<BH&&!m[Y*BW+X]){ v=0; break; } } o[y*BW+x]=v; } return o; };
-  const closed=shrink(grow(col,1),1);
+  const closed=shrink(grow(picked==='raw'?user:col,1),1);
   const CC=ccl(closed,400), T=new Uint8Array(N); let tA=0;
-  for(let n=1;n<CC.comps.length;n++){ const c=CC.comps[n]; if(c.area<N*0.01) continue; tA+=c.area;
+  const touched=new Uint8Array(CC.comps.length);
+  if(picked && picked!=='raw'){ const cnt=new Int32Array(CC.comps.length); for(let i=0;i<N;i++) if(user[i]&&CC.lab[i]) cnt[CC.lab[i]]++;
+    for(let n=1;n<CC.comps.length;n++) touched[n]= cnt[n]>=Math.max(4,CC.comps[n].area*0.02) ? 1 : 0; }
+  for(let n=1;n<CC.comps.length;n++){ const c=CC.comps[n]; if(c.area<N*0.01) continue; if(picked && picked!=='raw' && !touched[n]) continue; tA+=c.area;
     for(let i=0;i<N;i++) if(CC.lab[i]===n) T[i]=1; }
-  if(tA<N*0.05) return {err:'small'};
+  if(tA<N*0.04){ lastFind={T,err:'small'}; return lastFind; }
   // edge evidence: white lines touching the table, plus the table's own outline (not the picture border)
   // (thin white lines inside the table, like the centre line, count too; the wide edge band counts once via the outline)
   const Tc=shrink(grow(T,2),2), E=new Uint8Array(N), pts=[];
@@ -300,7 +322,7 @@ function findTable(){
     const edge = T[i] && (!T[i-1]||!T[i+1]||!T[i-BW]||!T[i+BW]);
     const inner = white[i] && Tc[i] && !T[i];
     if(edge || inner){ E[i]=1; pts.push([x,y]); } }
-  if(pts.length<40) return {err:'noedges'};
+  if(pts.length<30){ lastFind={T,err:'noedges'}; return lastFind; }
   // straight lines (Hough), strongest first
   const NT=180, diag=Math.ceil(Math.hypot(BW,BH)), NR=2*diag+1, acc=new Int32Array(NT*NR);
   const cs=[],sn=[]; for(let t=0;t<NT;t++){ cs.push(Math.cos(t*Math.PI/NT)); sn.push(Math.sin(t*Math.PI/NT)); }
@@ -320,19 +342,22 @@ function findTable(){
       const sgn=Math.sign(Lq.nx*L0.nx+Lq.ny*L0.ny); return Math.abs(Lq.nx*BW/2+Lq.ny*BH/2-Lq.d - sgn*(L0.nx*BW/2+L0.ny*BH/2-L0.d))<5; });
     if(!dup) lines.push(L0);
   }
-  if(lines.length<4) return {err:'fewlines'};
+  if(lines.length<4){ lastFind={T,lines,err:'fewlines'}; return lastFind; }
   const meet=(A,B)=>{ const det=A.nx*B.ny-A.ny*B.nx; if(Math.abs(det)<1e-6) return null;
     return [((A.d*B.ny-B.d*A.ny)/det)*2+1, ((A.nx*B.d-B.nx*A.d)/det)*2+1]; };      // bins -> proc px
   const L=Math.max(PW,PH), inF=(u,v)=>u>=0&&v>=0&&u<PW&&v<PH;
   const onE=(u,v)=>{ const x=(u-1)/2|0, y=(v-1)/2|0; for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){ const X=x+dx,Y=y+dy; if(X>=0&&Y>=0&&X<BW&&Y<BH&&E[Y*BW+X]) return true; } return false; };
   const onT=(u,v)=>T[((v-1)/2|0)*BW+((u-1)/2|0)];
+  const onW=(u,v)=>{ const x=(u-1)/2|0, y=(v-1)/2|0; for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){ const X=x+dx,Y=y+dy; if(X>=0&&Y>=0&&X<BW&&Y<BH&&white[Y*BW+X]) return true; } return false; };
   const score=c=>{ let sc=0;
     for(const X of WX){ for(let k=0;k<=30;k++){ const q=project([X,TW*k/30,0],c); if(q&&inF(q[0],q[1])) sc+= onE(q[0],q[1]) ? (X===NET?0.6:1) : -0.3; } }
     for(const Y of WY){ for(let k=0;k<=50;k++){ const q=project([LEN*k/50,Y,0],c); if(q&&inF(q[0],q[1])) sc+= onE(q[0],q[1]) ? 1 : -0.3; } }
     for(let i=1;i<10;i++) for(let j=1;j<6;j++){ const q=project([LEN*i/10,TW*j/6,0],c); if(q&&inF(q[0],q[1])) sc+= onT(q[0],q[1])?0.5:-0.5; }
+    // the net's white top band, 15.25 cm above the table: must be where the net really is
+    for(let k=0;k<=30;k++){ const q=project([NET,-0.12+(TW+0.24)*k/30,0.1525],c); if(q&&inF(q[0],q[1])) sc+= onW(q[0],q[1]) ? 1.5 : -0.6; }
     return sc; };
-  let best=null;
   const n=Math.min(lines.length,10);
+  const search=(loose)=>{ let best=null;
   for(let a=0;a<n;a++) for(let b=a+1;b<n;b++) for(let c=b+1;c<n;c++) for(let e=c+1;e<n;e++){
     const Q=[lines[a],lines[b],lines[c],lines[e]];
     for(const [i,j,k,l] of [[0,1,2,3],[0,2,1,3],[0,3,1,2],[2,3,0,1],[1,3,0,2],[1,2,0,3]]){
@@ -342,13 +367,20 @@ function findTable(){
       for(let x1=0;x1<3;x1++) for(let x2=0;x2<3;x2++){ if(x1===x2) continue;
         for(let y1=0;y1<3;y1++) for(let y2=0;y2<3;y2++){ if(y1===y2) continue;
           const world=[[WX[x1],WY[y1]],[WX[x1],WY[y2]],[WX[x2],WY[y1]],[WX[x2],WY[y2]]];
-          const c=buildCam([P1,P2,P3,P4],world,true); if(!c) continue;
+          const c=buildCam([P1,P2,P3,P4],world,loose?2:1); if(!c) continue;
           // the phone sits near the opponent's end, 15 cm to 1.6 m above the table, outside the table
-          if(c.C[2]<0.15||c.C[2]>1.6||c.C[0]<LEN-0.6||c.C[0]>LEN+3) continue;
-          if(c.C[1]>0.3&&c.C[1]<TW-0.3&&c.C[0]<LEN+0.1) continue;
+          if(c.C[1]<-(loose?2.5:1.5)||c.C[1]>TW+(loose?2.5:1.5)) continue;          // within a couple of metres of the table's side
+          if(!loose){ if(c.C[2]<0.15||c.C[2]>1.6||c.C[0]<LEN-0.6||c.C[0]>LEN+3) continue;
+                      if(c.C[1]>0.3&&c.C[1]<TW-0.3&&c.C[0]<LEN+0.1) continue; }
+          else { if(c.C[2]<0.1||c.C[2]>2.2||c.C[0]<LEN-1.0||c.C[0]>LEN+4) continue;
+                 if(c.C[1]>0.2&&c.C[1]<TW-0.2&&c.C[0]<LEN-0.05) continue; }        // not floating above the table itself
           const sc=score(c)-c.agree*20; if(!best||sc>best.sc) best={sc,c,taps:[P1,P2,P3,P4],world};
         } } } }
-  if(!best || best.sc<25) return {err:'nomatch'};
+    return best; };
+  // strict rules first (fits the usual setup well); looser rules only if nothing fits
+  let best=search(false); if(!best||best.sc<(user?15:25)) best=search(true);
+  lastFind={T, lines, err:null};
+  if(!best || best.sc<(user?8:15)){ lastFind.err='nomatch'; return lastFind; }
   best.c=refineCam(best.c,E);
   return best;
 }
@@ -463,9 +495,9 @@ function detect(){
 // ---------- tracker: follows one ball flight ----------
 const mpp=c=>BALL/(c.dE||6);   // metres per proc pixel near this point
 const tracker={
-  pts:[], lastT:-1, hist:[],
+  pts:[], lastT:-1, hist:[], doneT:-1,
   reset(){ this.pts=[]; this.lastT=-1; },
-  clear(){ this.reset(); this.hist=[]; },
+  clear(){ this.reset(); this.hist=[]; this.doneT=-1; lastServeEnd=-1; },
   on(){ return this.pts.length>=4; },
   add(c,t){ this.pts.push({x:c.x,y:c.y,t,dE:c.dE}); this.lastT=t; },
   step(cands,t){
@@ -500,7 +532,7 @@ const tracker={
     return Math.hypot(b.x-a.x,b.y-a.y)*mpp(b)/Math.max(b.t-a.t,1e-3); },
   // 4 frames (gaps allowed) of fast, steady, straight-ish motion: a flying ball. Arms and shirts wobble and never pass.
   findSeed(){
-    const H=this.hist, n=H.length; if(n<4) return null;
+    const H=this.hist.filter(F=>F.t>this.doneT), n=H.length; if(n<4) return null;   // never reuse frames of a finished flight
     const ok=(a,b,A,B)=>{ const d=Math.hypot(b.x-a.x,b.y-a.y), s=d*mpp(b)/(B.t-A.t); return (s<0.4||s>45)?-1:d; };
     const pr=(a,b,A,B,C)=>{ const r=(C.t-B.t)/(B.t-A.t); return [b.x+(b.x-a.x)*r, b.y+(b.y-a.y)*r]; };
     const D=H[n-1]; let seed=null, be=1e9;
@@ -513,13 +545,13 @@ const tracker={
             const q2=pr(b,c,B,C,D), e2=Math.hypot(d.x-q2[0],d.y-q2[1]); if(e2>Math.max(4,0.35*d3)) continue;
             const net=Math.hypot(d.x-a.x,d.y-a.y), path=Math.hypot(b.x-a.x,b.y-a.y)+d2+d3;
             if(net<Math.max(8,1.5*d.dE) || net<0.75*path) continue;
-            if(e1+e2<be){ be=e1+e2; seed={pts:[[a,A],[b,B],[c,C],[d,D]], i0:i, speed:net*mpp(d)/(D.t-A.t)}; } } } } }
+            if(e1+e2<be){ be=e1+e2; seed={pts:[[a,A],[b,B],[c,C],[d,D]], i0:this.hist.indexOf(A), speed:net*mpp(d)/(D.t-A.t)}; } } } } }
     return seed;
   },
   // walk back through earlier frames to recover the start of the flight (the first bounce is often before the seed)
   backfill(i0){
     const H=this.hist; let p0=this.pts[0], p1=this.pts[1], miss=0;
-    for(let i=i0-1;i>=0 && miss<3;i--){ const F=H[i], dt0=p1.t-p0.t, dt=F.t-p0.t;
+    for(let i=i0-1;i>=0 && miss<3;i--){ const F=H[i]; if(F.t<=this.doneT) break; const dt0=p1.t-p0.t, dt=F.t-p0.t;
       const vx=(p1.x-p0.x)/dt0, vy=(p1.y-p0.y)/dt0;
       const preds=[[p0.x+vx*dt,p0.y+vy*dt],[p0.x+vx*dt,p0.y-vy*dt*0.8]];
       const gate=Math.max(10,0.5*Math.hypot(vx,vy)*Math.abs(dt)+p0.dE*1.5+6);
@@ -659,10 +691,10 @@ function analyzeServe(p){
 }
 
 // ---------- results ----------
-let serveNo=0, hideTimer=null, barAnim=null;
+let lastServeEnd=-1, serveNo=0, hideTimer=null, barAnim=null;
 const NAMES={top:'TOPSPIN',back:'BACKSPIN',low:'LOW SPIN',unk:'SPIN ?'};
 const WHY={
-  'Calibrate first':'<b>The table was not found yet.</b> Make sure the table is in view, or use Menu → Mark the table by hand.',
+  'Calibrate first':'<b>The table was not found yet.</b> Make sure the table is in view, or tap <b>Draw table</b> and brush over it.',
   'First bounce not seen':'<b>Ball seen, but no bounce found.</b> Make sure the table on both sides of the net is in view.',
   'Second bounce not seen':'<b>Missed the bounce on the far side.</b> Make sure the table near the phone is in view.',
   'Could not follow the ball to the second bounce':'<b>Lost the ball after the first bounce.</b> Try more light, or set Sensitivity to Max in Menu.',
@@ -673,6 +705,7 @@ let toastT=null;
 function toast(html){ const t=$('toast'); t.innerHTML=html; t.style.display='block'; clearTimeout(toastT); toastT=setTimeout(()=>t.style.display='none',5000); }
 function onFlightStart(){ setStat('Tracking…','track'); }
 function onFlightEnd(p){
+  if(p[0].t-lastServeEnd<1.5 && lastServeEnd>0) return;
   lastPath=p; lastPathAt=performance.now();
   const r=analyzeServe(p);
   if(r.err){
@@ -680,7 +713,7 @@ function onFlightEnd(p){
     const net=Math.hypot(p[p.length-1].x-p[0].x, p[p.length-1].y-p[0].y);
     if(r.err==='Calibrate first' || net>Math.max(PW,PH)*0.12){ toast(WHY[r.err]||('<b>No result.</b> '+r.err)); setStat('Serve not measured','warn'); setTimeout(()=>ready(),5000); }
     return; }
-  serveNo++; showResult(r); addLog(r); ready();
+  serveNo++; lastServeEnd=p[p.length-1].t; tracker.doneT=lastServeEnd; showResult(r); addLog(r); ready();
 }
 function showResult(r){
   $('toast').style.display='none';
@@ -717,6 +750,9 @@ function draw(){
   // table outline after calibration (only while calibrating or debugging, keeps the screen clean)
   if(cam && (calMode||debug||performance.now()<showTableUntil)){ const ring=[[0,0,0],[0,TW,0],[LEN,TW,0],[LEN,0,0],[0,0,0]].map(project).filter(Boolean).map(q=>({x:q[0],y:q[1]}));
     line(ring,'rgba(0,255,209,0.55)',2); const n=[[NET,0,0],[NET,TW,0]].map(project).filter(Boolean).map(q=>({x:q[0],y:q[1]})); line(n,'rgba(255,255,255,0.6)',2); }
+  // while looking for the table (or with Show detection on): tint what looks like table, draw the edge lines found
+  if(drawMode && paint) drawMask(paint,[0,255,209,95]);
+  else if(lastFind && (debug || (!cam && (running||fileMode)))) drawFind(sx,sy);
   if(debug) comps.forEach(c=>{ octx.strokeStyle=c.ok?'#9be27a':'rgba(255,93,93,0.4)'; octx.lineWidth=1; const r=Math.max(c.len,c.wid)/2;
     octx.strokeRect((c.x-r)*sx,(c.y-r)*sy,2*r*sx,2*r*sy); });
   // cyan ball path: only while the ball is flying, gone right after
@@ -732,11 +768,51 @@ function draw(){
     octx.strokeStyle='#00FFD1'; octx.lineWidth=3; octx.beginPath(); octx.arc(lx+L/2,ly+L/2,L/2,0,7); octx.stroke();
     octx.beginPath(); octx.moveTo(lx+L/2-16,ly+L/2); octx.lineTo(lx+L/2+16,ly+L/2); octx.moveTo(lx+L/2,ly+L/2-16); octx.lineTo(lx+L/2,ly+L/2+16); octx.stroke(); }
 }
+const findCv=document.createElement('canvas'), findCx=findCv.getContext('2d');
+function drawMask(m,rgba){ if(findCv.width!==BW||findCv.height!==BH){ findCv.width=BW; findCv.height=BH; }
+  const im=findCx.createImageData(BW,BH); for(let i=0;i<m.length;i++) if(m[i]){ const p=i<<2; im.data[p]=rgba[0]; im.data[p+1]=rgba[1]; im.data[p+2]=rgba[2]; im.data[p+3]=rgba[3]; }
+  findCx.putImageData(im,0,0); octx.save(); octx.imageSmoothingEnabled=false; octx.drawImage(findCv,0,0,ov.width,ov.height); octx.restore(); }
+function drawFind(sx,sy){
+  const F=lastFind;
+  if(F.T){ if(findCv.width!==BW||findCv.height!==BH){ findCv.width=BW; findCv.height=BH; }
+    const im=findCx.createImageData(BW,BH); for(let i=0;i<F.T.length;i++) if(F.T[i]){ const p=i<<2; im.data[p]=0; im.data[p+1]=255; im.data[p+2]=209; im.data[p+3]=70; }
+    findCx.putImageData(im,0,0); octx.save(); octx.imageSmoothingEnabled=false; octx.drawImage(findCv,0,0,ov.width,ov.height); octx.restore(); }
+  if(F.lines){ octx.strokeStyle='#FFB020'; octx.lineWidth=3;
+    F.lines.forEach(L=>{ const A=L.nx, B=L.ny, Cc=2*L.d+L.nx+L.ny, q=[];       // line in processing pixels: A x + B y = Cc
+      if(Math.abs(B)>1e-6){ q.push([0,Cc/B]); q.push([PW,(Cc-A*PW)/B]); } if(Math.abs(A)>1e-6){ q.push([Cc/A,0]); q.push([(Cc-B*PH)/A,PH]); }
+      const inn=q.filter(([x,y])=>x>=-1&&y>=-1&&x<=PW+1&&y<=PH+1); if(inn.length<2) return;
+      octx.beginPath(); octx.moveTo(inn[0][0]*sx,inn[0][1]*sy); octx.lineTo(inn[1][0]*sx,inn[1][1]*sy); octx.stroke(); }); }
+}
 function mark(x,y){ octx.strokeStyle='#FFB020'; octx.lineWidth=3; octx.beginPath(); octx.moveTo(x-18,y); octx.lineTo(x+18,y); octx.moveTo(x,y-18); octx.lineTo(x,y+18); octx.stroke(); }
 function hint(t){ const h=$('hint'); h.textContent=t||''; h.style.display=t?'block':'none'; }
 function setStat(t,cls){ $('stat').textContent=t; $('dot').className='dot '+(cls||''); }
 function ready(){ if(!running && !fileMode){ setStat('Camera off'); return; }
   if(!cam) setStat('Looking for the table…','warn'); else setStat('Ready, serve when you like','ready'); }
+
+// ---------- draw the table with your finger ----------
+let drawMode=false, paint=null, painting=false;
+const procXY=e=>{ const r=ov.getBoundingClientRect(); return [(e.clientX-r.left)/r.width*PW,(e.clientY-r.top)/r.height*PH]; };
+function brush(u,v){ const R=9;   // brush radius in 2x2 blocks (about a fingertip)
+  const cx=(u-1)/2, cy=(v-1)/2; for(let y=Math.max(0,Math.floor(cy-R));y<=Math.min(BH-1,Math.ceil(cy+R));y++) for(let x=Math.max(0,Math.floor(cx-R));x<=Math.min(BW-1,Math.ceil(cx+R));x++)
+    if((x-cx)**2+(y-cy)**2<=R*R) paint[y*BW+x]=1; }
+function startDraw(){ closeSheets(); if(!vid.videoWidth){ hint('Start the camera first'); setTimeout(()=>hint(),2000); return; }
+  hideResult(); drawMode=true; paint=new Uint8Array(BW*BH); $('drawbar').classList.remove('hidden'); $('stage').classList.add('drawing'); $('toast').style.display='none';
+  hint('Brush over the table top, then tap Done'); }
+function endDraw(){ drawMode=false; painting=false; paint=null; $('drawbar').classList.add('hidden'); $('stage').classList.remove('drawing'); hint(); }
+$('bDraw').onclick=startDraw;
+$('dCancel').onclick=()=>{ endDraw(); ready(); };
+$('dClear').onclick=()=>{ if(paint) paint.fill(0); };
+$('dDone').onclick=()=>{
+  let n=0; for(const v of paint) n+=v; if(n<BW*BH*0.02){ hint('Brush over more of the table'); return; }
+  hint('Working out the table…');
+  setTimeout(()=>{ const r=findTable(paint);
+    if(r && !r.err){ cam=r.c; S.cal={taps:r.taps, world:r.world, ph:PH, pw:PW, manual:true}; save(); endDraw(); showTableUntil=performance.now()+3000;
+      hint(`Table found ✓  phone about ${Math.round(cam.C[2]*100)} cm above it`); setTimeout(()=>hint(),3000); ready(); }
+    else { hint(); toast('<b>Could not work out the table from that.</b> Brush over the whole table top, right up to the white edge lines, including your end beyond the net.'); }
+  },30); };
+ov.addEventListener('pointerdown',e=>{ if(!drawMode) return; painting=true; ov.setPointerCapture(e.pointerId); const q=procXY(e); brush(q[0],q[1]); });
+ov.addEventListener('pointermove',e=>{ if(!drawMode||!painting) return; const q=procXY(e); brush(q[0],q[1]); });
+ov.addEventListener('pointerup',()=>{ painting=false; });
 
 // ---------- calibration ----------
 const toProc=e=>{ const r=ov.getBoundingClientRect(); return [(e.clientX-r.left)/r.width*PW,(e.clientY-r.top)/r.height*PH]; };
@@ -747,7 +823,7 @@ ov.addEventListener('pointermove',e=>{ if(drag) drag=toProc(e); });
 ov.addEventListener('pointerup',()=>{ if(!drag) return; calTaps.push(drag); drag=null;
   if(calTaps.length<4){ hint(`${calTaps.length+1}/4  `+CAL_STEPS[calTaps.length]); return; }
   const c=buildCam(calTaps);
-  if(!c || c.C[2]<0.05){ hint('That did not look right, try Mark the table by hand again'); calTaps=[]; calMode=false; setTimeout(()=>hint(),3500); return; }
+  if(!c || c.C[2]<0.05){ hint('That did not look right, try Draw table instead'); calTaps=[]; calMode=false; setTimeout(()=>hint(),3500); return; }
   S.cal={taps:calTaps.slice(), ph:PH, pw:PW, manual:true}; save(); cam=c; calTaps=[]; showTableUntil=performance.now()+3000;
   hint(`Done. Camera is about ${Math.round(c.C[2]*100)} cm above the table`); setTimeout(()=>{ hint(); calMode=false; },2500); ready(); });
 $('mFind').onclick=()=>{ closeSheets(); S.cal=null; cam=null; save(); findTries=0; ready(); };
@@ -758,10 +834,10 @@ const FIND_HELP={nocolour:'<b>Can not see the table.</b> Point the camera at the
   small:'<b>The table looks too small.</b> Move the phone closer or point it at the table.',
   noedges:'<b>Can not see the table edges.</b> Make sure the white edge lines are in view.',
   fewlines:'<b>Can not see enough of the table.</b> Show your end, the net and the side line near the phone.',
-  nomatch:'<b>Can not work out the table.</b> Show your end of the table, the net and the side line. Or use Menu → Mark the table by hand.'};
+  nomatch:'<b>Can not work out the table.</b> Tap <b>Draw table</b> and brush over the table top with your finger.'};
 function autoFind(){
   clearTimeout(findTimer);
-  if((running||fileMode) && !cam && !calMode && !tracker.on()){
+  if((running||fileMode) && !cam && !calMode && !drawMode && !tracker.on()){
     const r=findTable(); findTries++;
     if(r && !r.err){ cam=r.c; S.cal={taps:r.taps, world:r.world, ph:PH, pw:PW}; save(); showTableUntil=performance.now()+3000;
       hint(`Table found ✓  phone about ${Math.round(cam.C[2]*100)} cm above it`); setTimeout(()=>hint(),3000); ready(); }
@@ -850,7 +926,7 @@ $('mSetup').onclick=()=>{ $('menu').classList.add('hidden'); $('setup').classLis
 $('eSetup').onclick=()=>$('setup').classList.remove('hidden');
 
 // keep drawing during calibration even when idle
-(function idle(){ if(!running && (calMode||drag)) draw(); requestAnimationFrame(idle); })();
+(function idle(){ if(!running && (calMode||drag||drawMode)) draw(); requestAnimationFrame(idle); })();
 ready();
 })();
 </script>
