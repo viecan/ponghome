@@ -495,6 +495,32 @@ canvas.chart{background:var(--panel2)}
   .modeseg div{padding:7px 8px;font-size:12.5px}
   .oppmsg{font-size:12.5px}
 }
+
+/* ===== Camera warning before upload ===== */
+.camwarn{display:flex;gap:14px;align-items:flex-start;background:linear-gradient(135deg,#FFF2F4,#FFE6EB);border:2px solid #FFB8C4;border-left:8px solid #FF6B6B;
+  border-radius:16px;padding:16px 18px;margin-bottom:14px;box-shadow:0 10px 26px rgba(255,107,129,.18)}
+.cw-icon{font-size:38px;line-height:1;flex:0 0 auto;animation:cwPulse 2s ease-in-out infinite}
+@keyframes cwPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.cw-title{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.2rem;line-height:1.2;color:#B4231F}
+.camwarn p{margin:6px 0 10px;font-size:14px;line-height:1.5;color:#5A1F2A}
+.camwarn p b{color:#B4231F}
+.cw-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.cw-list span{font-size:12.5px;font-weight:600;background:#fff;border:1px solid #FFC2CC;color:#6A2632;padding:5px 10px;border-radius:999px}
+.camwarn .cw-btn{background:#FF6B6B;color:#fff;box-shadow:0 10px 22px rgba(255,107,107,.3);font-weight:800}
+body:has(#stageWrap:not(.hidden)) #camWarn{display:none}
+#camWarn ~ .pre-only:not(.fmtrow){display:none!important}
+@media(max-width:720px){.cw-list span{font-size:12px;padding:4px 9px}}
+@media(max-width:720px){.camwarn{padding:14px;gap:10px}.cw-icon{font-size:30px}.cw-title{font-size:1.08rem}.camwarn .cw-btn{width:100%}}
+@media(min-width:961px){body:not(.has-results) #videoCard>#camWarn{flex-basis:100%;margin-bottom:0}}
+
+/* ===== Highlighted key fields (playing hands) ===== */
+.keyfield{background:linear-gradient(135deg,#EFFFFA,#DDFBF2);border:2px solid #9EEBD6;border-left:6px solid #00C9A7;border-radius:12px;padding:8px 12px 10px;margin:10px 0 4px}
+.keyfield label{margin:0 0 6px!important;color:#0B5E54!important;font-weight:700;font-size:13px!important;display:flex!important;align-items:center;gap:6px;flex-wrap:wrap}
+.kf-tag{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#FF6B6B;color:#fff;padding:2px 8px;border-radius:999px}
+.keyfield select{border:2px solid #00C9A7;font-weight:700;background:#fff;box-shadow:0 4px 12px rgba(0,201,167,.15)}
+.keyfield select:focus{outline:3px solid rgba(0,201,167,.35)}
+.kf-note{font-size:11.5px;color:#6A2632;margin-top:6px;line-height:1.4}
+.sum-hand{display:inline-block;background:#DDFBF2;border:1.5px solid #00C9A7;color:#0B5E54;font-weight:800;padding:1px 8px;border-radius:999px;margin:2px 4px 2px 0}
 </style>
 </head>
 <body>
@@ -536,8 +562,10 @@ canvas.chart{background:var(--panel2)}
   <div class="ws-only" style="text-align:right;margin-bottom:10px"><button class="ghost" id="drawerClose">✕ Close settings</button></div>
   <div class="card acc">
     <h2>1 · Player Setup</h2>
-    <label>Playing hand</label>
-    <select id="hand"><option value="right">Right handed</option><option value="left">Left handed</option></select>
+    <div class="keyfield">
+      <label for="hand">✋ Your playing hand</label>
+      <select id="hand"><option value="right">Right handed</option><option value="left">Left handed</option></select>
+    </div>
     <label>Level</label>
     <select id="level">
       <option value="beginner">Beginner</option><option value="intermediate">Intermediate</option>
@@ -573,8 +601,10 @@ canvas.chart{background:var(--panel2)}
       <option value="penhold">Penhold (traditional backhand)</option>
       <option value="unknown">Unknown</option>
     </select>
-    <label>Opponent hand</label>
-    <select id="oppHand"><option value="right">Right handed</option><option value="left">Left handed</option></select>
+    <div class="keyfield">
+      <label for="oppHand">✋ Opponent's hand</label>
+      <select id="oppHand"><option value="right">Right handed</option><option value="left">Left handed</option></select>
+    </div>
     <label>Known opponent weaknesses (tap all that apply)</label>
     <div class="chips" id="oppWeak">
       <span class="chip" data-v="wideFH">Wide forehand</span>
@@ -632,6 +662,14 @@ canvas.chart{background:var(--panel2)}
   </div>
   <div class="card" id="videoCard">
     <h2>Video</h2>
+    <div class="camwarn" id="camWarn" role="alert">
+      <div class="cw-body">
+        <div class="cw-title">Important</div>
+        <p>AI Coach only works when your phone camera is placed at the <b>right angle</b>. If the camera setup is wrong, the AI cannot track you and the analysis <b>will not work</b>.</p>
+        <div class="cw-list"><span>📍 Behind you or 45° diagonal</span><span>📏 3 to 4 m away</span><span>📱 Chest height, level</span><span>🧍 Head to feet in frame</span></div>
+        <button class="cw-btn" data-guide>📷 Read the camera setup guide</button>
+      </div>
+    </div>
     <div class="fmtrow pre-only">
       <span>Video format:</span>
       <div class="seg" id="fmt">
@@ -972,8 +1010,8 @@ const nextTs = (ms = 33) => (tsClock += Math.max(1, Math.round(ms)));
 const isMobile = () => matchMedia('(max-width:720px)').matches;
 // Settings accordion (mobile only)
 const accSum = [
-  () => [$('#hand').selectedOptions[0].text, $('#level').selectedOptions[0].text, $('#style').selectedOptions[0].text.split(' (')[0]].join(' · '),
-  () => { const n = $$('#oppWeak .chip.on').length; return [$('#oppStyle').selectedOptions[0].text, $('#oppHand').selectedOptions[0].text, n ? n + ' weakness' + (n > 1 ? 'es' : '') : 'no weaknesses set'].join(' · '); },
+  () => `<span class="sum-hand">✋ ${$('#hand').selectedOptions[0].text}</span> ` + [$('#level').selectedOptions[0].text, $('#style').selectedOptions[0].text.split(' (')[0]].join(' · '),
+  () => { const n = $$('#oppWeak .chip.on').length; return `<span class="sum-hand">✋ ${$('#oppHand').selectedOptions[0].text}</span> ` + [$('#oppStyle').selectedOptions[0].text, n ? n + ' weakness' + (n > 1 ? 'es' : '') : 'no weaknesses set'].join(' · '); },
   () => $('#model').selectedOptions[0].text.split(' (')[0] + ' accuracy'
 ];
 const accCards = $$('aside .acc');
@@ -982,7 +1020,7 @@ accCards.forEach((c, i) => {
   h.onclick = () => { if (isMobile()) c.classList.toggle('closed'); };
   if (isMobile()) c.classList.add('closed');
 });
-const updSums = () => accCards.forEach((c, i) => c.querySelector('.sum').textContent = accSum[i]());
+const updSums = () => accCards.forEach((c, i) => c.querySelector('.sum').innerHTML = accSum[i]());
 $$('aside select').forEach(el => el.addEventListener('change', updSums));
 $$('#oppWeak .chip').forEach(el => el.addEventListener('click', updSums));
 updSums();
