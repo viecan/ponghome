@@ -1809,20 +1809,10 @@ async function exportVideo(mode = 'skeleton', opts = {}) {
       const t = video.currentTime;
       drawCoach(cx, cv.width, cv.height, t, false, { panelScale: opts.big ? 1.36 : 1 });
       if (opts.both && P.opp) drawOtherPlayer(cx, cv.width, cv.height, t, 1);
-      // slow motion badge + playback speed
+      // playback speed: slow motion during rallies
       const slow = inRally(t), rate = slow ? 0.5 : 1;
       if (video.playbackRate !== rate) video.playbackRate = rate;
-      if (slow) {
-        const bf = Math.round(Math.max(cv.width, cv.height) / 55), txt = '🐢 0.5×';
-        cx.font = `800 ${bf}px Inter, sans-serif`; const tw = cx.measureText(txt).width;
-        panel(cx, cv.width - tw - bf * 1.4, cv.height - bf * 1.9, tw + bf * 1.4, bf * 1.9, 0, 'rgba(0,224,184,.95)');
-        cx.fillStyle = '#0A4952'; cx.fillText(txt, cv.width - tw - bf * .7, cv.height - bf * .6);
-      }
-      const fs = Math.round(Math.max(cv.width, cv.height) / 55);
-      cx.font = `bold ${fs}px sans-serif`; cx.fillStyle = 'rgba(0,0,0,.55)';
-      const tag = `Pong Home AI Coach · Score ${report.overall} · Strokes ${report.strokes.filter(s => s.t <= t).length}`;
-      cx.fillRect(0, cv.height - fs * 1.9, cx.measureText(tag).width + fs * 1.4, fs * 1.9);
-      cx.fillStyle = '#fff'; cx.fillText(tag, fs * .7, cv.height - fs * .6);
+      drawExportFooter(cx, cv.width, cv.height, `Score ${report.overall} · Strokes ${report.strokes.filter(s => s.t <= t).length}`, slow);
     };
     draw(); rec.start(250); video.muted = true; video.playbackRate = 1;
     await video.play();
@@ -1861,6 +1851,34 @@ function rallySegments(detail = false) {
   const seg = [];
   all.forEach(o => { const l = seg[seg.length - 1]; if (l && o.t - l.last <= 2.5) l.last = o.t; else seg.push({ first: o.t, last: o.t, server: o.who }); });
   return detail ? seg.map(g => ({ ...g, a: g.first - 1.3, b: g.last + 0.6 })) : seg.map(g => [g.first - 0.8, g.last + 1.0]);
+}
+
+/* ---------------- Export footer: score tag (left), slow motion tag, ponghome.com watermark (right) ---------------- */
+function drawExportFooter(cx, W, H, tag, slow) {
+  const fs = Math.round(Math.max(W, H) / 55), rowH = fs * 1.9, base = H - fs * .6;
+  cx.save(); cx.textBaseline = 'alphabetic';
+  // left: score
+  cx.font = `700 ${fs}px Inter, sans-serif`;
+  cx.fillStyle = 'rgba(10,42,47,.72)'; cx.fillRect(0, H - rowH, cx.measureText(tag).width + fs * 1.4, rowH);
+  cx.fillStyle = '#fff'; cx.fillText(tag, fs * .7, base);
+  // right: ponghome.com watermark (always on)
+  const wf = Math.round(fs * 1.05);
+  cx.font = `800 ${wf}px "Baloo 2", Inter, sans-serif`;
+  const w1 = cx.measureText('Ponghome').width, w2 = cx.measureText('.com').width, ww = w1 + w2 + fs * 1.6;
+  const wx = W - ww;
+  cx.fillStyle = 'rgba(10,42,47,.82)'; cx.fillRect(wx, H - rowH, ww, rowH);
+  cx.fillStyle = '#00FFD1'; cx.fillRect(wx, H - rowH, Math.max(3, fs * .18), rowH);
+  cx.shadowColor = 'rgba(0,255,209,.6)'; cx.shadowBlur = fs * .5;
+  cx.fillStyle = '#FFFFFF'; cx.fillText('Ponghome', wx + fs * .8, base);
+  cx.fillStyle = '#00FFD1'; cx.fillText('.com', wx + fs * .8 + w1, base);
+  cx.shadowBlur = 0;
+  // slow motion tag sits just left of the watermark
+  if (slow) {
+    const txt = '🐢 0.5×'; cx.font = `800 ${fs}px Inter, sans-serif`; const tw = cx.measureText(txt).width + fs * 1.4;
+    cx.fillStyle = 'rgba(0,224,184,.95)'; cx.fillRect(wx - tw - fs * .3, H - rowH, tw, rowH);
+    cx.fillStyle = '#0A4952'; cx.fillText(txt, wx - tw - fs * .3 + fs * .7, base);
+  }
+  cx.restore();
 }
 
 /* ---------------- Export: PDF ---------------- */
