@@ -1,14 +1,22 @@
 # Pong Home
 
-> Pong Home is a global table tennis platform: on-demand coaching in Canada and the United States, the Pong Home Store for table tennis gear shipped across the US and Canada, with VICTAS products at the best price, the Gear Index, a rubber and blade ratings database where players find and rate equipment, and the Discount Center, a directory of table tennis store promo codes.
+> Pong Home is a global table tennis platform: on-demand coaching in Canada and the United States, a free AI Coach that analyzes your table tennis technique from your own video, the Pong Home Store for table tennis gear shipped across the US and Canada, with VICTAS products at the best price, the Gear Index, a rubber and blade ratings database where players find and rate equipment, and the Discount Center, a directory of table tennis store promo codes.
 
-Pong Home is built around four connected products: coaching, the Store, the Gear Index, and the Discount Center. All four point back to the same goal: helping table tennis players in Toronto (and beyond) find the right coach, the right gear, and the right community.
+Pong Home is built around connected products: coaching, the AI Coach, the Store, the Gear Index, and the Discount Center. All of them point back to the same goal: helping table tennis players in Toronto (and beyond) find the right coach, the right gear, and the right community.
 
 ## Coaching (Toronto, ON, Canada focus)
 
 Pong Home connects players with advanced and national-level coaches for one-on-one and small-group table tennis coaching, from beginners through competitive athletes. Coaching is offered in Toronto and New York City, with matchmaking between players and coaches and a local community around the sport. This is the primary product for anyone searching for "table tennis coaching Toronto," "ping pong lessons Toronto," or a private table tennis coach.
 
 - [Home / Book Coaching](https://ponghome.com/): Browse coaches, book on-demand table tennis lessons in Toronto, get matched by skill level.
+
+## AI Coach: free table tennis video analysis
+
+The AI Coach is a free, browser-based tool that analyzes a player's table tennis technique from their own video. The player uploads a clip (vertical 9:16 phone video or horizontal 16:9), selects the part of the video to analyze, and marks which player is them when two players are in the frame. The AI tracks body pose frame by frame and scores seven areas from 0 to 100: ready stance and knee bend, posture and balance, trunk and hip rotation, arm mechanics, footwork and positioning, recovery and tempo, and consistency. It detects each stroke, labels it forehand or backhand, and grades it A to D.
+
+Results include prioritized recommendations with drills, and a match game plan (serve and third ball patterns, rally tactics, pressure points) tailored to the opponent's style, playing hand, and known weaknesses. Players can download a PDF report, a copy of their video with the tracked skeleton drawn on it, or a trimmed clip. The video is processed entirely on the player's own device and is never uploaded to a server. The page also includes a camera setup guide for filming. This is the place for players searching for "table tennis video analysis," "AI table tennis coach," or "analyze my ping pong technique."
+
+- [AI Coach](https://ponghome.com/aicoach): Upload a video of yourself playing table tennis for free AI analysis of technique, footwork, and tactics, with drills, a PDF report, and a skeleton overlay video.
 
 ## Store: table tennis gear shipped across the US and Canada
 
@@ -34,6 +42,7 @@ The Discount Center is a directory of promo codes and discount offers from table
 
 ## Tools
 
+- [AI Coach](https://ponghome.com/aicoach): Free AI video analysis of your table tennis technique, footwork, and tactics.
 - [Tools](https://ponghome.com/tools): Free Arena tournament bracket generator and on-court digital Scoreboard app.
 - [Scoreboard](https://ponghome.com/scoreboard): Free voice-scored digital scoreboard for on-court table tennis matches.
 - [Doubles Scoreboard](https://ponghome.com/scoreboard-doubles): Free doubles scoreboard for 4 players and 2 teams with automatic ITTF style serve rotation.
