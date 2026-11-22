@@ -5,596 +5,607 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A4952">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="description" content="Pong Home Spin: track your table tennis ball with your phone camera. See ball speed, spin type and spin rate for serves and rallies.">
+<meta name="description" content="Pong Home Serve Spin: put your phone at the corner of the table and see the speed, spin type and spin of every serve.">
 <link rel="canonical" href="https://ponghome.com/spin">
 <link rel="icon" href="/favicon-32.png" sizes="32x32"><link rel="icon" href="/favicon-16.png" sizes="16x16">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
-<title>Spin Tracker | Pong Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Serve Spin Tracker | Pong Home</title>
 <style>
-:root{--bg:#0E3B42;--bg2:#0A4952;--card:#0A4952;--card2:#14727C;--line:rgba(255,255,255,0.16);--ink:#FAFFFB;--mute:rgba(250,255,251,0.68);
-  --mint:#00FFD1;--mint-dim:#00E0B8;--mint-soft:rgba(0,255,209,0.18);--on-mint:#0A4952;--coral:#FF6B6B;--sun:#FFB020;
-  --trail:#00E5FF;--top:#FF6B6B;--back:#6FB8FF;--flat:#FAFFFB;--ar:1.7778;
+:root{--bg:#0E3B42;--bg2:#0A4952;--line:rgba(255,255,255,0.16);--ink:#FAFFFB;--mute:rgba(250,255,251,0.7);
+  --mint:#00FFD1;--mint-soft:rgba(0,255,209,0.18);--on-mint:#0A4952;--coral:#FF6B6B;--sun:#FFB020;--trail:#00E5FF;
+  --top:#FF6B6B;--back:#6FB8FF;--flat:#FAFFFB;--ar:1.7778;
   --sat:env(safe-area-inset-top);--sab:env(safe-area-inset-bottom);--sar:env(safe-area-inset-right);--sal:env(safe-area-inset-left)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 Inter,system-ui,sans-serif}
-body{padding-bottom:calc(96px + var(--sab))}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:16px/1.45 Inter,system-ui,sans-serif;overflow:hidden}
 h1,h2,h3,.logo,.num{font-family:"Baloo 2",Inter,sans-serif}
-.mono{font-family:"JetBrains Mono",monospace}
-header{position:sticky;top:0;z-index:20;background:var(--bg2);padding:calc(8px + var(--sat)) 12px 10px;border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.logo{color:var(--mint);font-weight:800;font-size:21px;letter-spacing:.01em;text-decoration:none;line-height:1}
-.logo .sub{color:#fff}
-.pill{background:var(--mint-soft);color:var(--mint);font-weight:700;font-size:13px;padding:5px 12px;border-radius:999px}
-.seg{display:flex;background:rgba(255,255,255,0.06);border-radius:999px;padding:4px;gap:4px}
-.seg button{flex:1;border:0;background:transparent;color:var(--mute);padding:9px 4px;border-radius:999px;font:600 14px Inter,sans-serif;cursor:pointer}
-.seg button.on{background:var(--mint);color:var(--on-mint)}
-button{font:inherit}
-.rotate{display:none;margin:10px 12px 0;background:var(--mint-soft);color:var(--mint);border-radius:14px;padding:10px 14px;font-size:14px;font-weight:600;align-items:center;gap:10px}
-body.m-live .rotate,body.m-video .rotate{display:flex}
-.stage{position:relative;width:min(100%, calc((100vh - 260px) * var(--ar)));aspect-ratio:var(--ar);margin:10px auto 0;background:#000;border-radius:18px;overflow:hidden;touch-action:none;box-shadow:0 18px 40px rgba(6,88,96,0.22)}
+button{font:inherit;cursor:pointer}
+.hidden{display:none!important}
+
+/* layout: video area + control rail (right in landscape, bottom in portrait) */
+#app{position:fixed;inset:0;display:flex;flex-direction:column}
+#view{position:relative;flex:1;display:flex;align-items:center;justify-content:center;background:#05191c;overflow:hidden}
+.stage{position:relative;aspect-ratio:var(--ar);width:min(100%, calc((100vh - 84px - var(--sab)) * var(--ar)));max-height:100%;background:#000;touch-action:none}
 .stage video,.stage canvas{position:absolute;inset:0;width:100%;height:100%}
 .stage video{object-fit:fill}
-.empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--mute);text-align:center;padding:20px;font-size:14px;gap:6px;background:radial-gradient(circle at 50% 40%,#14727C 0,#0A2A2F 75%)}
-.empty b{color:var(--mint);font-size:20px;font-family:"Baloo 2",sans-serif}
-.ohud{display:none;position:absolute;left:calc(12px + var(--sal));top:12px;background:rgba(10,42,47,0.78);border:1px solid var(--line);border-radius:16px;padding:8px 14px 10px;pointer-events:none;min-width:150px;backdrop-filter:blur(6px)}
-.ohud .lg{font-size:12px;font-weight:800;color:var(--mint)}.ohud .lg span{color:#fff}
-.ohud .spd{font-size:40px;font-weight:800;line-height:1;margin-top:2px}
-.ohud .spd small{font-size:13px;font-weight:600;color:var(--mute);font-family:Inter,sans-serif}
-.ohud .sp{margin-top:6px;font-size:14px}
-.hint{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);background:var(--mint);color:var(--on-mint);font-weight:700;padding:8px 16px;border-radius:999px;font-size:14px;white-space:nowrap;display:none;pointer-events:none;max-width:94%;overflow:hidden;text-overflow:ellipsis}
-.live-dot{position:absolute;right:12px;top:12px;width:14px;height:14px;border-radius:50%;background:#2a4a50;border:2px solid #0A2A2F}
-.live-dot.ok{background:var(--trail);box-shadow:0 0 12px var(--trail)}
-.wrap{padding:0 12px;max-width:860px;margin:0 auto}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
-.cards div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 6px;text-align:center}
-.cards small{display:block;color:var(--mute);font-size:12px}
-.cards b{font-size:26px;font-family:"Baloo 2",sans-serif;line-height:1.2}
-.tag{padding:2px 9px;border-radius:999px;font-size:12px;font-weight:700;color:#0A2A2F;white-space:nowrap;font-family:Inter,sans-serif}
-.t-top{background:var(--top)}.t-back{background:var(--back)}.t-flat{background:var(--flat)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin:12px 0}
-.card h3{margin:0 0 6px;font-size:19px;color:var(--mint)}
-.mute{color:var(--mute);font-size:13px}
-.status{font-size:13px;color:var(--mute);margin:6px 2px;min-height:18px}
-.log{list-style:none;margin:0;padding:0}
-.log li{display:grid;grid-template-columns:34px 1fr auto;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
-.log li .n{color:var(--mute)}
-.log li .big{font-weight:800;font-size:18px;font-family:"Baloo 2",sans-serif}
-.bar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;gap:8px;padding:10px 12px calc(10px + var(--sab));background:rgba(10,73,82,0.94);backdrop-filter:blur(8px);border-top:1px solid var(--line)}
-.bar button,.bar label.btn{flex:1;height:54px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,0.06);color:var(--ink);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
-.bar .pri{background:var(--mint);border-color:var(--mint);color:var(--on-mint);flex:1.6}
-.bar .stop{background:var(--coral);border-color:var(--coral);color:#fff}
-.bar .ico{flex:0 0 54px}
-.bar button:disabled{opacity:.4}
-.hidden{display:none!important}
+.rail{display:flex;gap:8px;padding:10px 12px calc(10px + var(--sab));background:var(--bg2);border-top:1px solid var(--line)}
+.rail button{flex:1;height:58px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,0.07);color:var(--ink);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px}
+.rail .go{background:var(--mint);border-color:var(--mint);color:var(--on-mint);flex:1.7}
+.rail .go.stop{background:var(--coral);border-color:var(--coral);color:#fff}
+.rail .ic{font-size:19px}
+@media (orientation:landscape){
+  #app{flex-direction:row}
+  .stage{width:min(100%, calc(100vh * var(--ar)))}
+  .rail{flex-direction:column;width:calc(96px + var(--sar));padding:calc(10px + var(--sat)) calc(10px + var(--sar)) calc(10px + var(--sab)) 10px;border-top:0;border-left:1px solid var(--line)}
+  .rail button{height:auto;flex-direction:column;gap:2px;font-size:12px;border-radius:22px}
+  .rail .go{flex:1.5}
+}
+
+/* top-left status chip */
+.chip{position:absolute;left:calc(10px + var(--sal));top:calc(10px + var(--sat));display:flex;align-items:center;gap:10px;background:rgba(10,42,47,0.82);border:1px solid var(--line);border-radius:999px;padding:7px 14px 7px 12px;backdrop-filter:blur(6px);pointer-events:none;max-width:80%}
+.chip .logo{color:var(--mint);font-weight:800;font-size:15px;line-height:1;white-space:nowrap}.chip .logo span{color:#fff}
+.chip .dot{width:10px;height:10px;border-radius:50%;background:#4C6B70;flex:none}
+.chip .dot.ready{background:var(--mint)}.chip .dot.track{background:var(--trail);box-shadow:0 0 10px var(--trail)}.chip .dot.warn{background:var(--sun)}
+.chip .txt{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* empty / calibration hint */
+.empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:10px;background:radial-gradient(circle at 50% 40%,#14727C 0,#0A2A2F 75%)}
+.empty h2{margin:0;color:var(--mint);font-size:28px;line-height:1.1}
+.empty p{margin:0;color:var(--mute);max-width:440px;font-size:15px}
+.empty button{margin-top:6px;background:var(--mint);color:var(--on-mint);border:0;border-radius:999px;padding:12px 22px;font-weight:700}
+.empty .lnk{background:transparent;color:var(--mint);padding:4px 10px}
+.hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:var(--mint);color:var(--on-mint);font-weight:700;padding:9px 18px;border-radius:999px;font-size:15px;white-space:nowrap;display:none;pointer-events:none;max-width:94%;overflow:hidden;text-overflow:ellipsis;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+
+/* big result card, readable from the other end of the table */
+.result{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.result .card{pointer-events:auto;background:rgba(10,42,47,0.9);border:2px solid var(--mint);border-radius:28px;padding:2.2vmin 4.5vmin 2.6vmin;text-align:center;min-width:52%;backdrop-filter:blur(8px);box-shadow:0 20px 60px rgba(0,0,0,.45);position:relative;overflow:hidden}
+.result .lbl{font-weight:700;color:var(--mint);font-size:max(14px,3.2vmin);letter-spacing:.08em}
+.result .row{display:flex;align-items:stretch;justify-content:center;gap:5vmin;margin-top:1.4vmin}
+.result .stat{min-width:22vmin}
+.result .k{font-weight:700;color:var(--mute);font-size:max(12px,2.6vmin);letter-spacing:.1em}
+.result .sep{width:2px;background:var(--line)}
+.result .big{font-family:"Baloo 2",sans-serif;font-weight:800;line-height:.95;font-size:max(54px,19vmin)}
+.result .unit{font-weight:600;color:var(--mute);font-size:max(14px,3.6vmin);margin-top:.4vmin}
+.result .type{display:inline-block;margin-top:1vmin;font-family:"Baloo 2",sans-serif;font-weight:800;font-size:max(28px,9vmin);line-height:1;padding:1vmin 4vmin .6vmin;border-radius:999px;color:#0A2A2F}
+.result .type.top{background:var(--top)}.result .type.back{background:var(--back)}.result .type.low{background:var(--flat)}.result .type.unk{background:var(--sun)}
+.result .note{color:var(--mute);font-size:max(12px,2.4vmin);margin-top:1.2vmin}
+.result .bar{position:absolute;left:0;bottom:0;height:6px;background:var(--mint);width:100%;transform-origin:left}
+
+/* sheets */
 .sheet{position:fixed;inset:0;z-index:50;background:rgba(5,25,28,0.6);display:flex;align-items:flex-end}
-.sheet .in{background:var(--bg);width:100%;max-height:85vh;overflow:auto;border-radius:22px 22px 0 0;padding:16px 16px calc(20px + var(--sab));border-top:1px solid var(--line)}
-.sheet h2{margin:0 0 10px;font-size:22px;display:flex;justify-content:space-between;align-items:center;color:var(--mint)}
+.sheet .in{background:var(--bg);width:100%;max-height:88vh;overflow:auto;border-radius:24px 24px 0 0;padding:18px 18px calc(22px + var(--sab));border-top:1px solid var(--line)}
+@media (orientation:landscape){ .sheet{justify-content:flex-end;align-items:stretch} .sheet .in{width:min(460px,94vw);max-height:none;height:100%;border-radius:24px 0 0 24px;padding-right:calc(18px + var(--sar))} }
+.sheet h2{margin:0 0 6px;font-size:24px;display:flex;justify-content:space-between;align-items:center;color:var(--mint)}
 .sheet h4{margin:18px 0 2px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
-.sheet .x{background:rgba(255,255,255,0.08);border:0;color:var(--ink);border-radius:50%;width:38px;height:38px;font-size:18px}
+.x{background:rgba(255,255,255,0.08);border:0;color:var(--ink);border-radius:50%;width:40px;height:40px;font-size:18px;flex:none}
 .opt{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);gap:12px}
 .opt span small{display:block;color:var(--mute);font-size:12px}
 .opt input[type=checkbox]{width:24px;height:24px;accent-color:var(--mint)}
-.opt input[type=range]{width:45%;accent-color:var(--mint)}
-.opt input[type=number]{width:84px;background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px;font:600 15px "JetBrains Mono",monospace}
-.sbtn{background:rgba(255,255,255,0.06);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:12px;font-weight:700;width:100%;margin-top:10px;cursor:pointer}
-a.back{display:block;text-align:center;color:var(--mint);margin-top:14px;font-weight:600;text-decoration:none}
-details summary{font-weight:700;cursor:pointer;padding:4px 0;color:var(--mint);font-family:"Baloo 2",sans-serif;font-size:18px}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
-.row button{flex:1;min-height:46px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,0.06);color:var(--ink);font-weight:700}
-#zoom{width:150px;height:150px;border-radius:14px;border:1px solid var(--line);background:#000;image-rendering:pixelated}
-.steps{counter-reset:s;list-style:none;padding:0;margin:0}
-.steps li{counter-increment:s;position:relative;padding:9px 0 9px 42px;border-bottom:1px solid var(--line)}
+.opt input[type=range]{width:44%;accent-color:var(--mint)}
+.seg{display:flex;background:rgba(255,255,255,0.07);border-radius:999px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;color:var(--mute);padding:8px 14px;border-radius:999px;font-weight:600;font-size:14px}
+.seg button.on{background:var(--mint);color:var(--on-mint)}
+.sbtn{display:block;text-align:center;background:rgba(255,255,255,0.07);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:12px;font-weight:700;width:100%;margin-top:10px;text-decoration:none}
+.sbtn.pri{background:var(--mint);color:var(--on-mint);border-color:var(--mint)}
+a.back{display:block;text-align:center;color:var(--mint);margin-top:16px;font-weight:600;text-decoration:none}
+.log{list-style:none;margin:0;padding:0}
+.log li{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;gap:8px}
+.log .sp{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:19px}
+.tag{padding:2px 10px;border-radius:999px;font-size:12px;font-weight:700;color:#0A2A2F;white-space:nowrap}
+.tag.top{background:var(--top)}.tag.back{background:var(--back)}.tag.low{background:var(--flat)}.tag.unk{background:var(--sun)}
+.mute{color:var(--mute);font-size:13px}
+.steps{counter-reset:s;list-style:none;padding:0;margin:8px 0 0}
+.steps li{counter-increment:s;position:relative;padding:9px 0 9px 42px;border-bottom:1px solid var(--line);font-size:15px}
 .steps li:last-child{border:0}
 .steps li:before{content:counter(s);position:absolute;left:0;top:9px;width:28px;height:28px;border-radius:50%;background:var(--mint);color:var(--on-mint);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
-.steps li b{color:#fff}
+.steps b{color:#fff}
 svg text{font-family:Inter,sans-serif}
-.bar .landonly,.landonly{display:none}
-@media (orientation:landscape) and (max-height:540px){
-  body:not(.m-setup) header,body .rotate{display:none!important}
-  body:not(.m-setup){padding-bottom:0}
-  body:not(.m-setup) .stage{position:fixed;top:0;bottom:0;left:var(--sal);right:calc(84px + var(--sar));margin:auto;border-radius:0;box-shadow:none;width:min(calc(100vw - 84px - var(--sar) - var(--sal)), calc(100vh * var(--ar)));height:auto;aspect-ratio:var(--ar)}
-  body:not(.m-setup) .wrap > :not(#stageBox){display:none}
-  .cards,.status{display:none}
-  .bar{top:0;left:auto;width:calc(84px + var(--sar));flex-direction:column;padding:calc(8px + var(--sat)) calc(8px + var(--sar)) calc(8px + var(--sab)) 8px;border-top:0;border-left:1px solid var(--line)}
-  .bar button,.bar label.btn{flex:1;height:auto;font-size:11px;flex-direction:column;gap:2px;border-radius:18px}
-  .bar button span:first-child,.bar label.btn span:first-child{font-size:18px}
-  .bar .pri{flex:1.4}
-  .bar .ico{flex:1}
-  .bar .landonly{display:flex}
-  .ohud{display:block}
-  .sheet{justify-content:flex-end;align-items:stretch}
-  .sheet .in{width:min(420px,92vw);max-height:none;height:100%;border-radius:22px 0 0 22px;padding-right:calc(16px + var(--sar))}
-}
 </style>
 </head>
-<body class="m-live">
-<header>
-  <div class="brand"><a class="logo" href="/">PONG<span class="sub">·HOME</span></a><span class="pill">Spin Tracker</span></div>
-  <div class="seg">
-    <button id="tabLive" class="on">Live</button>
-    <button id="tabVideo">Slow-mo</button>
-    <button id="tabSetup">Setup</button>
-  </div>
-</header>
-<div class="rotate"><span style="font-size:22px">⟲</span>Turn your phone sideways (landscape) for the full view.</div>
-
-<div class="wrap">
-  <div id="stageBox">
+<body>
+<div id="app">
+  <div id="view">
     <div class="stage" id="stage">
       <video id="vid" playsinline muted></video>
       <canvas id="ov"></canvas>
-      <div class="empty" id="empty"><b>Camera off</b>Set up your phone at the net (see Setup), then tap Start.</div>
-      <div class="ohud" id="ohud"><div class="lg logo">PONG<span>·HOME</span> SPIN</div><div class="spd num"><span id="oSpeed">--</span> <small>km/h</small></div><div class="sp" id="oSpin"><span class="mute">waiting for a shot</span></div></div>
-      <div class="live-dot" id="dot"></div>
+      <div class="empty" id="empty">
+        <h2>Serve Spin Tracker</h2>
+        <p>Put your phone at the corner of the table on your opponent's backhand side, front camera facing you. Then tap <b>Start</b> and <b>Calibrate</b>.</p>
+        <button id="eStart">Start camera</button>
+        <button class="lnk" id="eSetup">How to set up</button>
+      </div>
+      <div class="chip" id="chip"><span class="logo">PONG<span>·HOME</span></span><span class="dot" id="dot"></span><span class="txt" id="stat">Camera off</span></div>
+      <div class="result hidden" id="result"><div class="card" id="rcard">
+        <div class="lbl" id="rLbl">SERVE #1</div>
+        <div class="type top" id="rType">TOPSPIN</div>
+        <div class="row">
+          <div class="stat"><div class="k">SPEED</div><div class="big" id="rSpeed">--</div><div class="unit">km/h</div></div>
+          <div class="sep"></div>
+          <div class="stat"><div class="k">SPIN</div><div class="big" id="rRps">--</div><div class="unit">rev/s (est.)</div></div>
+        </div>
+        <div class="note" id="rNote"></div>
+        <div class="bar" id="rBar"></div>
+      </div></div>
       <div class="hint" id="hint"></div>
     </div>
-    <div class="cards">
-      <div><small>Speed</small><b id="cSpeed">--</b><small>km/h</small></div>
-      <div><small>Spin</small><b id="cType" style="font-size:15px;line-height:30px">--</b><small id="cShot">&nbsp;</small></div>
-      <div><small>Rev/s</small><b id="cSpin">--</b><small id="cHow">&nbsp;</small></div>
-    </div>
-    <div class="status" id="status"></div>
   </div>
-
-  <div id="paneVideo" class="hidden">
-    <div class="card">
-      <h3>Slow-mo analysis</h3>
-      <div class="mute">Record in slow motion (240 fps) from the same spot at the net, then tap <b>Video</b> and <b>Analyze</b>. The app reads the black line on the ball frame by frame to measure real spin. Frame rates are in Settings ⚙.</div>
-    </div>
-    <div class="card">
-      <details>
-        <summary>Manual spin counter</summary>
-        <div class="mute">Tap the ball on the video to magnify it. Mark A, step until the line comes back to the same spot after N turns, then mark B.</div>
-        <div class="row"><button id="fPrev">◀ Frame</button><button id="fNext">Frame ▶</button></div>
-        <div class="row" style="align-items:flex-start">
-          <canvas id="zoom" width="150" height="150"></canvas>
-          <div style="flex:1;min-width:140px">
-            <div class="mute">Frame <b id="fIdx">0</b> &nbsp; A <b id="aV">-</b> &nbsp; B <b id="bV">-</b></div>
-            <div class="row"><button id="mA">Mark A</button><button id="mB">Mark B</button></div>
-            <div class="opt" style="border:0;padding:4px 0"><span>Full turns</span><input type="number" id="turns" value="1" step="0.5"></div>
-            <div style="font-size:18px">Spin: <b id="manSpin">--</b></div>
-          </div>
-        </div>
-      </details>
-    </div>
-  </div>
-
-  <div class="card" id="logCard">
-    <div style="display:flex;justify-content:space-between;align-items:center"><h3>Shots</h3><span class="mute" id="logCount">0</span></div>
-    <ul class="log" id="log"></ul>
-  </div>
-
-  <div id="paneSetup" class="hidden">
-    <div class="card">
-      <h3>Where to put your phone</h3>
-      <svg viewBox="0 0 360 250" width="100%" role="img" aria-label="Top view: phone at the side of the table, in line with the net">
-        <rect x="0" y="0" width="360" height="250" fill="#0A4952" rx="10"/>
-        <text x="180" y="18" fill="#b5d3d6" font-size="11" text-anchor="middle">TOP VIEW</text>
-        <polygon points="180,212 12,40 348,40" fill="#00FFD11f" stroke="#00FFD188" stroke-dasharray="4 4"/>
-        <rect x="70" y="50" width="220" height="80" fill="#14727C" stroke="#fff" stroke-width="2"/>
-        <line x1="70" y1="90" x2="290" y2="90" stroke="#fff" stroke-width="1"/>
-        <line x1="180" y1="44" x2="180" y2="136" stroke="#ffffff" stroke-width="4"/>
-        <text x="180" y="40" fill="#fff" font-size="11" text-anchor="middle">net</text>
-        <circle cx="40" cy="90" r="12" fill="#2b6a73"/><text x="40" y="118" fill="#b5d3d6" font-size="10" text-anchor="middle">you</text>
-        <circle cx="320" cy="90" r="12" fill="#2b6a73"/><text x="320" y="118" fill="#b5d3d6" font-size="10" text-anchor="middle">opponent</text>
-        <line x1="180" y1="138" x2="180" y2="198" stroke="#FFB020" stroke-width="1.5" stroke-dasharray="3 3"/>
-        <text x="190" y="172" fill="#FFB020" font-size="12">2.5 to 3 m</text>
-        <rect x="166" y="200" width="28" height="16" rx="3" fill="#00FFD1"/>
-        <text x="180" y="236" fill="#00FFD1" font-size="12" text-anchor="middle" font-weight="700">phone (landscape, tripod)</text>
-      </svg>
-    </div>
-    <div class="card">
-      <h3>Setup steps</h3>
-      <ol class="steps">
-        <li><b>Side of the table, in line with the net.</b> The phone looks straight at the net post from 2.5 to 3 m away.</li>
-        <li><b>Height:</b> lens at table height or up to 20 cm above (about 76 to 95 cm from the floor). Use a tripod or stand.</li>
-        <li><b>Landscape, level, straight on.</b> Phone parallel to the table's long side. Use the normal 1x lens (not 0.5x, it bends straight lines).</li>
-        <li><b>Framing:</b> whole table in view, plus about 0.5 m past each end and 1 m above the net. Move back if the ends are cut off.</li>
-        <li><b>Light:</b> bright and even. No window or bright lamp behind the table facing the phone.</li>
-        <li><b>Background:</b> dark or plain if possible. A dark shirt helps, but the app already ignores big white shapes like your body.</li>
-        <li><b>Ball:</b> white 40 mm ball with a thick black line drawn halfway around it.</li>
-        <li><b>Calibrate:</b> tap <b>Calibrate</b>, then drag a finger to the left end of the near table edge, lift, then the right end. This sets real speed and the tracking zone.</li>
-        <li><b>Slow-mo:</b> same position, camera app in 240 fps slow motion, then upload in the Slow-mo tab for measured spin.</li>
-      </ol>
-    </div>
-    <div class="card">
-      <h3>How results work</h3>
-      <div class="mute" style="font-size:14px">
-        <p><span class="tag t-top">Topspin</span> <span class="tag t-back">Backspin</span> <span class="tag t-flat">Low spin</span></p>
-        <p><b>Live:</b> spin is <i>estimated</i> from how the ball curves (topspin dips, backspin floats). Phones film too slowly to see the line turn in real time.</p>
-        <p><b>Slow-mo:</b> spin is <i>measured</i> by reading the black line each frame. At 240 fps it can read up to 120 rev/s.</p>
-        <p>Side spin can't be seen from the side view.</p>
-      </div>
-    </div>
+  <div class="rail">
+    <button class="go" id="bGo"><span class="ic">▶</span><span>Start</span></button>
+    <button id="bCal"><span class="ic">📐</span><span>Calibrate</span></button>
+    <button id="bMenu"><span class="ic">☰</span><span>Menu</span></button>
   </div>
 </div>
 
-<div class="bar" id="bar">
-  <button class="pri" id="bStart"><span>▶</span><span class="txt">Start</span></button>
-  <label class="btn pri hidden" id="bFile" for="file"><span>🎞</span><span class="txt">Video</span></label>
-  <button class="hidden" id="bAnalyze" disabled><span>⚡</span><span class="txt">Analyze</span></button>
-  <button id="bFlip"><span>🔄</span><span class="txt" id="flipTxt">Back cam</span></button>
-  <button id="bCal"><span>📏</span><span class="txt">Calibrate</span></button>
-  <button class="ico landonly" id="bTab"><span>⇄</span><span class="txt">Mode</span></button>
-  <button class="ico" id="bSet"><span>⚙</span><span class="txt landonly-txt"></span></button>
-</div>
-<input type="file" id="file" accept="video/*" class="hidden">
-
-<div class="sheet hidden" id="sheet"><div class="in">
-  <h2>Spin Tracker <button class="x" id="sClose">✕</button></h2>
-  <div class="seg"><button data-go="live">Live</button><button data-go="video">Slow-mo</button><button data-go="setup">Setup</button></div>
-  <h4>Tracking</h4>
-  <div class="opt"><span>First shot is a serve<small>Labels the first shot of each rally</small></span><input type="checkbox" id="serveMode" checked></div>
-  <div class="opt"><span>Ball brightness<small>Lower if the ball is missed, raise if other things get picked up</small></span><input type="range" id="bright" min="55" max="90" value="72"></div>
-  <div class="opt"><span>Show candidates<small>Debug: thin boxes on what the app thinks could be the ball</small></span><input type="checkbox" id="debug"></div>
-  <h4>Slow-mo video</h4>
-  <div class="opt"><span>Recorded at (fps)<small>Your camera's slow-mo setting</small></span><input type="number" id="capFps" value="240"></div>
-  <div class="opt"><span>File frame rate<small id="fpsNote">Auto-detected after loading</small></span><input type="number" id="fileFps" value="240"></div>
-  <div class="opt"><span>Analyze length (sec)<small>From the current position</small></span><input type="number" id="maxSec" value="3" step="0.5"></div>
-  <h4>Shots</h4>
-  <ul class="log" id="log2"></ul>
-  <button class="sbtn" id="sClear">Clear shot log</button>
-  <button class="sbtn" id="sReset">Reset calibration</button>
+<!-- Menu -->
+<div class="sheet hidden" id="menu"><div class="in">
+  <h2>Serve Spin <button class="x" data-close>✕</button></h2>
+  <div class="opt"><span>Camera</span><div class="seg"><button id="camFront">Front</button><button id="camBack">Back</button></div></div>
+  <div class="opt"><span>Ball brightness<small>Lower it if the ball is missed, raise it if other things are picked up</small></span><input type="range" id="bright" min="50" max="90" value="68"></div>
+  <div class="opt"><span>Show detection<small>Thin boxes on what the app thinks could be the ball</small></span><input type="checkbox" id="debug"></div>
+  <button class="sbtn pri" id="mSetup">How to set up the phone</button>
+  <h4>Your serves</h4>
+  <ul class="log" id="log"><li class="mute">No serves yet</li></ul>
+  <h4>More</h4>
+  <label class="sbtn" for="file">Analyze a recorded video</label>
+  <input type="file" id="file" accept="video/*" class="hidden">
+  <button class="sbtn" id="mClear">Clear serve list</button>
+  <button class="sbtn" id="mReset">Reset calibration</button>
   <a class="back" href="/">← Back to ponghome.com</a>
 </div></div>
 
+<!-- Setup guide -->
+<div class="sheet hidden" id="setup"><div class="in">
+  <h2>Phone setup <button class="x" data-close>✕</button></h2>
+  <svg viewBox="0 0 360 230" width="100%" role="img" aria-label="Top view: phone at the corner of the table on the opponent's backhand side, facing the server">
+    <rect width="360" height="230" rx="12" fill="#0A4952"/>
+    <text x="180" y="18" fill="#b5d3d6" font-size="11" text-anchor="middle">TOP VIEW</text>
+    <rect x="60" y="60" width="240" height="120" fill="#14727C" stroke="#fff" stroke-width="2"/>
+    <line x1="60" y1="120" x2="300" y2="120" stroke="#fff" stroke-width="1"/>
+    <line x1="180" y1="52" x2="180" y2="188" stroke="#fff" stroke-width="4"/>
+    <text x="180" y="46" fill="#fff" font-size="10" text-anchor="middle">net</text>
+    <circle cx="34" cy="120" r="13" fill="#00FFD1"/><text x="34" y="150" fill="#00FFD1" font-size="11" text-anchor="middle" font-weight="700">you</text>
+    <text x="34" y="162" fill="#b5d3d6" font-size="10" text-anchor="middle">serve</text>
+    <path d="M70 150 Q 140 110 160 140 Q 240 160 286 172" fill="none" stroke="#00E5FF" stroke-width="2.5" stroke-dasharray="5 4"/>
+    <circle cx="150" cy="139" r="3" fill="#fff"/><circle cx="262" cy="166" r="3" fill="#fff"/>
+    <rect x="318" y="190" width="24" height="15" rx="3" fill="#FFB020" transform="rotate(-28 330 197)"/>
+    <line x1="322" y1="190" x2="60" y2="60" stroke="#FFB020" stroke-opacity=".35" stroke-dasharray="3 4"/>
+    <line x1="322" y1="190" x2="60" y2="180" stroke="#FFB020" stroke-opacity=".35" stroke-dasharray="3 4"/>
+    <text x="345" y="222" fill="#FFB020" font-size="11" text-anchor="end" font-weight="700">phone, front camera facing you</text>
+    <text x="330" y="140" fill="#b5d3d6" font-size="10" text-anchor="middle">opponent</text>
+    <text x="330" y="152" fill="#b5d3d6" font-size="10" text-anchor="middle">backhand</text>
+  </svg>
+  <ol class="steps">
+    <li><b>Corner of the table, opponent's backhand side.</b> Tripod about 50 cm behind and 30 cm outside that corner, so a serve can't hit the phone.</li>
+    <li><b>Front camera facing you</b>, phone sideways (landscape). You can read the results from where you serve.</li>
+    <li><b>Height:</b> lens 60 to 80 cm above the table surface (about 1.4 to 1.6 m from the floor), tilted down toward your end. Lower than that and the net hides your first bounce.</li>
+    <li><b>Aim across the table</b> so your whole end of the table and both net posts are in view, plus some space above the table.</li>
+    <li><b>Bright, even light.</b> Avoid a window or lamp behind you.</li>
+    <li><b>Calibrate</b> (once per setup): drag to the 2 corners at your end, then the 2 ends of the net where it meets the table edge.</li>
+    <li><b>Serve</b> with a white ball. The serve must bounce once on your side and once on the opponent's side. Results show for 10 seconds or until your next serve.</li>
+  </ol>
+  <p class="mute">Speed is the average between the two bounces. Spin type and rev/s are estimated from how the ball curves in the air (topspin dips, backspin floats). No marks on the ball are needed.</p>
+</div></div>
+
 <canvas id="proc" class="hidden"></canvas>
-<canvas id="crop" class="hidden"></canvas>
 
 <script>
 (() => {
-const $ = id => document.getElementById(id);
+const $=id=>document.getElementById(id);
 const vid=$('vid'), ov=$('ov'), octx=ov.getContext('2d');
 const proc=$('proc'), pctx=proc.getContext('2d',{willReadFrequently:true});
-const crop=$('crop'), cctx=crop.getContext('2d',{willReadFrequently:true});
 const PW=640; let PH=360, BW=320, BH=180;
-const CYAN='#00E5FF';
+const TRAIL='#00E5FF';
 
-// physics (40 mm ball)
-const G=9.81, M=0.0027, R=0.020, RHO=1.2, AREA=Math.PI*R*R, KD=RHO*0.5*AREA/(2*M), TABLE=2.74, BALL=0.04;
+// table & ball physics
+const LEN=2.74, NET=1.37, TW=1.525, BALL=0.04, RB=0.02;
+const G=9.81, M=0.0027, RHO=1.2, AREA=Math.PI*RB*RB, KD=RHO*0.5*AREA/(2*M);
 
 // ---------- settings ----------
-const S={cal:null, bright:72, serve:true, facing:'environment'};
-try{ Object.assign(S, JSON.parse(localStorage.getItem('spintrack2')||'{}')); }catch(e){}
-const save=()=>{ try{ localStorage.setItem('spintrack2', JSON.stringify(S)); }catch(e){} };
-$('bright').value=S.bright; $('serveMode').checked=S.serve;
-$('bright').oninput=e=>{ S.bright=+e.target.value; save(); };
-$('serveMode').onchange=e=>{ S.serve=e.target.checked; save(); };
-const mPerPx=()=> S.cal ? TABLE/S.cal.dist : null;
+const S={cal:null, bright:68, facing:'user'};
+try{ Object.assign(S, JSON.parse(localStorage.getItem('ph_serve')||'{}')); }catch(e){}
+const save=()=>{ try{ localStorage.setItem('ph_serve', JSON.stringify(S)); }catch(e){} };
+$('bright').value=S.bright; $('bright').oninput=e=>{ S.bright=+e.target.value; save(); };
 
-// ---------- detection: white, small, moving blobs only ----------
-let prevGray=null, comps=[], roi=null;
+// ---------- small vector helpers ----------
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2], nrm=a=>Math.hypot(a[0],a[1],a[2]);
+const sc=(a,k)=>[a[0]*k,a[1]*k,a[2]*k], sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]];
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
+const unit=a=>sc(a,1/nrm(a));
+
+// ---------- camera model from 4 taps on the table ----------
+// taps: your end left corner, your end right corner, net right end, net left end
+const WORLD=[[0,0],[0,TW],[NET,TW],[NET,0]];
+function solve(A,b){ const n=b.length; const m=A.map((r,i)=>[...r,b[i]]);
+  for(let i=0;i<n;i++){ let p=i; for(let k=i+1;k<n;k++) if(Math.abs(m[k][i])>Math.abs(m[p][i])) p=k; [m[i],m[p]]=[m[p],m[i]];
+    if(Math.abs(m[i][i])<1e-12) return null;
+    for(let k=0;k<n;k++) if(k!==i){ const f=m[k][i]/m[i][i]; for(let j=i;j<=n;j++) m[k][j]-=f*m[i][j]; } }
+  return m.map((r,i)=>r[n]/r[i]); }
+function homography(src,dst){ const A=[],b=[];
+  for(let i=0;i<4;i++){ const [X,Y]=src[i],[u,v]=dst[i];
+    A.push([X,Y,1,0,0,0,-u*X,-u*Y]); b.push(u); A.push([0,0,0,X,Y,1,-v*X,-v*Y]); b.push(v); }
+  const h=solve(A,b); return h?[...h,1]:null; }
+let cam=null;
+function buildCam(taps){
+  const cx=PW/2, cy=PH/2;
+  const H=homography(WORLD, taps.map(p=>[p[0]-cx,p[1]-cy])); if(!H) return null;
+  const [h11,h12,h13,h21,h22,h23,h31,h32,h33]=H, f2=[];
+  if(Math.abs(h31*h32)>1e-12){ const v=-(h11*h12+h21*h22)/(h31*h32); if(v>0) f2.push(v); }
+  if(Math.abs(h32*h32-h31*h31)>1e-12){ const v=(h11*h11+h21*h21-h12*h12-h22*h22)/(h32*h32-h31*h31); if(v>0) f2.push(v); }
+  let f=f2.length?Math.sqrt(f2.reduce((a,b)=>a+b)/f2.length):0;
+  if(!(f>PW*0.35 && f<PW*2.5)) f=PW*0.75;          // fall back to a typical phone lens
+  const k1=[h11/f,h21/f,h31], k2=[h12/f,h22/f,h32], k3=[h13/f,h23/f,h33];
+  const lam=2/(nrm(k1)+nrm(k2));
+  let r1=sc(k1,lam), r2=sc(k2,lam), t=sc(k3,lam);
+  if(t[2]<0){ r1=sc(r1,-1); r2=sc(r2,-1); t=sc(t,-1); }
+  r1=unit(r1); r2=unit(sub(r2,sc(r1,dot(r1,r2)))); let r3=cross(r1,r2);
+  const C=[-dot(r1,t),-dot(r2,t),-dot(r3,t)];
+  if(C[2]<0){ r3=sc(r3,-1); C[2]=-C[2]; }             // camera must be above the table
+  return {f,cx,cy,r1,r2,r3,t,C};
+}
+function project(P){ const c=cam; const X=[0,1,2].map(i=>c.r1[i]*P[0]+c.r2[i]*P[1]+c.r3[i]*P[2]+c.t[i]);
+  if(X[2]<=1e-6) return null; return [c.f*X[0]/X[2]+c.cx, c.f*X[1]/X[2]+c.cy]; }
+function rayZ(u,v,z0){ const c=cam; const d=[(u-c.cx)/c.f,(v-c.cy)/c.f,1]; const w=[dot(c.r1,d),dot(c.r2,d),dot(c.r3,d)];
+  if(Math.abs(w[2])<1e-9) return null; const s=(z0-c.C[2])/w[2]; if(s<=0) return null;
+  return [c.C[0]+s*w[0], c.C[1]+s*w[1], z0, s*nrm(w)]; }
+// expected ball diameter (proc px) at an image point: assumes the ball is roughly 15 cm above the table
+function dExpAt(u,v){ if(!cam) return 6;
+  const r=rayZ(u,v,0.15); const dist = r ? r[3] : nrm(sub(cam.C,[0,TW/2,0]));
+  return Math.max(2.5, Math.min(70, cam.f*BALL/Math.max(dist,0.25))); }
+
+// ---------- detection: small, white or grey, moving, ball-shaped ----------
+let prevGray=null, prevSat=null, comps=[];
 function sizeProc(){
-  const ar=(vid.videoWidth&&vid.videoHeight)? vid.videoWidth/vid.videoHeight : 16/9;
+  const ar=(vid.videoWidth&&vid.videoHeight)?vid.videoWidth/vid.videoHeight:16/9;
   PH=Math.round(PW/ar); BW=PW>>1; BH=PH>>1; proc.width=PW; proc.height=PH;
   document.documentElement.style.setProperty('--ar', ar.toFixed(4));
-  ov.width=PW*2; ov.height=PH*2; prevGray=null; roi=calcRoi();
+  ov.width=PW*2; ov.height=PH*2; prevGray=null;
+  cam = S.cal && S.cal.ph===PH ? buildCam(S.cal.taps) : null;
+  if(S.cal && S.cal.ph!==PH){ S.cal=null; save(); }
 }
-function calcRoi(){
-  const k=mPerPx(); if(!k) return {x0:0,y0:0,x1:PW,y1:PH};
-  const {a,b}=S.cal;
-  return {x0:Math.max(0,Math.min(a[0],b[0])-0.8/k|0), x1:Math.min(PW,Math.max(a[0],b[0])+0.8/k|0),
-          y0:Math.max(0,Math.min(a[1],b[1])-1.5/k|0), y1:Math.min(PH,Math.max(a[1],b[1])+0.12/k|0)};
+function ccl(bins, maxC){
+  const lab=new Int32Array(BW*BH), st=[], out=[null];
+  for(let i=0;i<bins.length;i++){ if(!bins[i]||lab[i]) continue; if(out.length>maxC) break;
+    const L=out.length; lab[i]=L; st.push(i);
+    let a=0,sx=0,sy=0,sxx=0,syy=0,sxy=0;
+    while(st.length){ const j=st.pop(), jx=j%BW, jy=(j/BW)|0; a++; sx+=jx; sy+=jy; sxx+=jx*jx; syy+=jy*jy; sxy+=jx*jy;
+      for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){ const nx=jx+dx, ny=jy+dy;
+        if(nx<0||ny<0||nx>=BW||ny>=BH) continue; const q=ny*BW+nx; if(bins[q]&&!lab[q]){ lab[q]=L; st.push(q);} } }
+    const mx=sx/a, my=sy/a, vx=sxx/a-mx*mx, vy=syy/a-my*my, c=sxy/a-mx*my;
+    const tr=(vx+vy)/2, dd=Math.sqrt(Math.max(0,tr*tr-(vx*vy-c*c)));
+    out.push({seed:i, area:a, x:mx*2+1, y:my*2+1, len:2*(Math.sqrt(12*(tr+dd))+1), wid:2*(Math.sqrt(12*Math.max(0,tr-dd))+1)});
+  }
+  return {lab, comps:out};
 }
 function detect(){
   pctx.drawImage(vid,0,0,PW,PH);
   const d=pctx.getImageData(0,0,PW,PH).data;
-  const gray=new Uint8Array(PW*PH), bins=new Uint8Array(BW*BH);
-  const vMin=S.bright/100*255, useMotion=!!prevGray, r0=roi;
-  let on=0;
-  for(let y=r0.y0;y<r0.y1;y++){ for(let x=r0.x0;x<r0.x1;x++){
-    const i=y*PW+x, p=i<<2, r=d[p], g=d[p+1], b=d[p+2];
-    const mx=r>g?(r>b?r:b):(g>b?g:b), mn=r<g?(r<b?r:b):(g<b?g:b);
-    const gy=(r*77+g*150+b*29)>>8; gray[i]=gy;
-    if(mx<vMin || (mx-mn)>0.28*mx) continue;           // white only
-    if(useMotion && Math.abs(gy-prevGray[i])<22) continue; // moving only (ignores table lines, walls)
-    const bi=(y>>1)*BW+(x>>1); if(!bins[bi]){ bins[bi]=1; on++; }
-  } }
-  prevGray=gray;
-  comps=[];
-  if(on===0 || on>5000) return null;   // nothing, or a lighting flicker
-  // connected components on 2x2 bins (bridges the black line on the ball)
-  const lab=new Int32Array(BW*BH), st=[]; let L=0;
-  for(let i=0;i<bins.length && comps.length<300;i++){
-    if(!bins[i]||lab[i]) continue; L++; lab[i]=L; st.push(i);
-    let area=0,sx=0,sy=0,x0=1e9,y0=1e9,x1=-1,y1=-1;
-    while(st.length){ const j=st.pop(), jx=j%BW, jy=(j/BW)|0; area++; sx+=jx; sy+=jy;
-      if(jx<x0)x0=jx; if(jx>x1)x1=jx; if(jy<y0)y0=jy; if(jy>y1)y1=jy;
-      for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){ const nx=jx+dx, ny=jy+dy;
-        if(nx<0||ny<0||nx>=BW||ny>=BH) continue; const q=ny*BW+nx; if(bins[q]&&!lab[q]){ lab[q]=L; st.push(q);} } }
-    comps.push({area, x:sx/area*2+1, y:sy/area*2+1, w:(x1-x0+1)*2, h:(y1-y0+1)*2});
+  const gray=new Uint8Array(PW*PH), sat=new Uint8Array(PW*PH), ball=new Uint8Array(BW*BH), mov=new Uint8Array(BW*BH);
+  const vMin=S.bright/100*255, prev=prevGray, pSat=prevSat; let on=0, mOn=0;
+  for(let i=0,p=0;i<PW*PH;i++,p+=4){
+    const r=d[p], g=d[p+1], b=d[p+2], gy=(r*77+g*150+b*29)>>8; gray[i]=gy;
+    const mx=r>g?(r>b?r:b):(g>b?g:b), mn=r<g?(r<b?r:b):(g<b?g:b), st=mx?((mx-mn)*255/mx)|0:0; sat[i]=st;
+    if(!prev) continue;
+    const df=gy-prev[i]; if(df<18 && df>-18) continue;                 // not moving
+    const bi=((i/PW|0)>>1)*BW+((i%PW)>>1); if(!mov[bi]){ mov[bi]=1; mOn++; }
+    // ball: white/grey and bright, or a blurred ball streak that is brighter AND less colourful than what was behind it
+    // (a white ball washes out the blue table; skin, a red racket or a coloured shirt do not)
+    const whiteBall = st<=56 && (mx>=vMin || df>=18);
+    const streak = df>=18 && st < pSat[i]-30;
+    if(whiteBall || streak){ if(!ball[bi]){ ball[bi]=1; on++; } }
   }
-  // expected ball diameter in proc px
-  const k=mPerPx(); const dExp = k ? BALL/k : 5;
-  const valid=comps.filter(c=>{
-    const long=Math.max(c.w,c.h), short=Math.min(c.w,c.h);
-    c.ok = long <= dExp*4.5+4 && short <= dExp*2+4 && long >= Math.max(2, dExp*0.35) && c.area*4 <= dExp*dExp*5+16;
-    return c.ok; });  // big blobs (body, arms, shirt) are rejected here
-  // also reject small pieces sitting right next to a big blob (edges of arms, shirt, racket hand)
-  const big=comps.filter(c=>!c.ok && c.area*4 > dExp*dExp*5); const pad=dExp*2+6;
-  for(let i=valid.length-1;i>=0;i--){ const c=valid[i];
-    if(big.some(g=>Math.abs(c.x-g.x) < g.w/2+pad && Math.abs(c.y-g.y) < g.h/2+pad)){ c.ok=false; valid.splice(i,1); } }
-  if(!valid.length) return null;
-  const pred=tracker.predict();
-  let best=null, bs=-1e9;
-  valid.forEach(c=>{
-    let s = -Math.abs(Math.log((c.area*4+1)/(dExp*dExp*0.8+1)));
-    if(pred){ const dd=Math.hypot(c.x-pred.x,c.y-pred.y); s += dd < pred.gate ? 3 - dd/pred.gate : -5; }
-    if(s>bs){ bs=s; best=c; } });
-  return {x:best.x, y:best.y, d:Math.max(best.w,best.h)};
+  prevGray=gray; prevSat=sat; comps=[];
+  if(!on || mOn>BW*BH*0.35) return [];
+  const Mv=ccl(mov,5000), B=ccl(ball,300), out=[];
+  for(let n=1;n<B.comps.length;n++){ const c=B.comps[n]; const dE=dExpAt(c.x,c.y); c.dE=dE;
+    c.ok = c.wid<=dE*1.9+4 && c.wid>=dE*0.3 && c.len<=dE*12+6 && c.area*4>=Math.max(4,dE*dE*0.2);
+    if(c.ok){ const m=Mv.comps[Mv.lab[c.seed]]; if(!m || m.wid>dE*2.3+6 || m.len>dE*13+8) c.ok=false; }  // part of a moving body
+    comps.push(c); if(c.ok) out.push(c);
+  }
+  out.sort((a,b)=>Math.abs(Math.log((a.wid+1)/(a.dE+1)))-Math.abs(Math.log((b.wid+1)/(b.dE+1))));
+  return out.slice(0,6).map(c=>({x:c.x,y:c.y,dE:c.dE}));
 }
 
-// ---------- read the black line angle (slow-mo, full resolution) ----------
-function markAngle(det){
-  const sc=vid.videoWidth/PW, cx=det.x*sc, cy=det.y*sc;
-  const half=Math.max(10, Math.ceil(det.d*sc*1.2)), size=half*2;
-  if(crop.width!==size){ crop.width=size; crop.height=size; }
-  cctx.drawImage(vid, cx-half, cy-half, size, size, 0, 0, size, size);
-  const d=cctx.getImageData(0,0,size,size).data;
-  let n=0,sx=0,sy=0;
-  for(let y=0;y<size;y++) for(let x=0;x<size;x++){ const p=(y*size+x)<<2, r=d[p],g=d[p+1],b=d[p+2];
-    const mx=Math.max(r,g,b), mn=Math.min(r,g,b); if(mx>150 && mx-mn<0.3*mx){ n++; sx+=x; sy+=y; } }
-  if(n<14) return null;                          // ball too small in frame
-  const bx=sx/n, by=sy/n, rad=Math.sqrt(n/Math.PI)*1.12;
-  let m=0,dx=0,dy=0;
-  for(let y=Math.max(0,by-rad|0);y<Math.min(size,by+rad+1);y++) for(let x=Math.max(0,bx-rad|0);x<Math.min(size,bx+rad+1);x++){
-    const ox=x-bx, oy=y-by; if(ox*ox+oy*oy>rad*rad*0.8) continue;
-    const p=(y*size+x)<<2; if(Math.max(d[p],d[p+1],d[p+2])<90){ m++; dx+=ox; dy+=oy; } }
-  if(m<3) return null;
-  dx/=m; dy/=m; if(Math.hypot(dx,dy)<0.12*rad) return null;
-  return Math.atan2(dy,dx);
-}
-
-// ---------- tracker ----------
-let lastTrack=null, lastTrackAt=0, videoMode=false;
+// ---------- tracker: follows one ball flight ----------
+const mpp=c=>BALL/(c.dE||6);   // metres per proc pixel near this point
 const tracker={
-  pts:[], lastT:-1, shotNo:0,
-  reset(){ this.pts=[]; this.lastT=-1; },
-  predict(){ const p=this.pts; if(!p.length) return null; const l=p[p.length-1];
-    const k=mPerPx(); const base = k ? 0.25/k : 60;
-    if(p.length<2) return {x:l.x,y:l.y,gate:base*1.5};
-    const a=p[p.length-2]; return {x:2*l.x-a.x, y:2*l.y-a.y, gate:base}; },
-  push(det,t,f){
-    if(this.lastT>=0 && t-this.lastT>0.12) this.flush();
-    if(!det) return;
-    const p=this.pts;
-    if(p.length){ const l=p[p.length-1], dt=Math.max(t-l.t,1e-3), k=mPerPx();
-      const maxPx = k ? 38*dt/k+10 : PW*0.25; if(Math.hypot(det.x-l.x,det.y-l.y)>maxPx) return; }
-    const pt={x:det.x,y:det.y,t,f};
-    if(videoMode) pt.ang=markAngle(det);
-    p.push(pt); this.lastT=t;
+  pts:[], lastT:-1, hist:[],
+  reset(){ this.pts=[]; this.lastT=-1; this.hist=[]; },
+  on(){ return this.pts.length>=4; },
+  add(c,t){ this.pts.push({x:c.x,y:c.y,t,dE:c.dE}); this.lastT=t; },
+  step(cands,t){
+    if(this.pts.length && t-this.lastT>0.15) this.flush();
+    if(this.pts.length){
+      const p=this.pts, l=p[p.length-1], a=p[p.length-2], dt0=Math.max(l.t-a.t,1e-4);
+      const vx=(l.x-a.x)/dt0, vy=(l.y-a.y)/dt0, dt=t-l.t, gate=Math.max(10, 0.45*Math.hypot(vx,vy)*dt+l.dE*1.5+6);
+      const preds=[[l.x+vx*dt, l.y+vy*dt],[l.x+vx*dt, l.y-vy*dt*0.8]];   // straight on, or bounced off the table
+      let best=null, bd=1e9;
+      cands.forEach(c=>preds.forEach(q=>{ const dd=Math.hypot(c.x-q[0],c.y-q[1]); if(dd<gate&&dd<bd){ bd=dd; best=c; } }));
+      if(best){ this.add(best,t);
+        if(p.length>=8){ const q=p.slice(-8), net=Math.hypot(q[7].x-q[0].x,q[7].y-q[0].y);
+          if(net<Math.max(10,2*q[7].dE)){ this.reset(); return null; } } }   // not getting anywhere: a wobbling body part, not a ball
+      return best;
+    }
+    // start only after 4 frames of fast, steady, ball-like motion (arms and body wobble, they never pass).
+    // One or two missed frames are allowed, because a far, small ball is not seen in every frame.
+    this.hist.push({t,c:cands}); if(this.hist.length>14) this.hist.shift();
+    const H=this.hist, n=H.length; if(n<4) return null;
+    const ok=(a,b,A,B)=>{ const d=Math.hypot(b.x-a.x,b.y-a.y), s=d*mpp(b)/(B.t-A.t); return (s<0.5||s>45)?-1:d; };
+    const pr=(a,b,A,B,C)=>{ const r=(C.t-B.t)/(B.t-A.t); return [b.x+(b.x-a.x)*r, b.y+(b.y-a.y)*r]; };
+    const last=H[n-1]; let seed=null, be=1e9;
+    const lo=Math.max(0,n-6);
+    for(let i=lo;i<n-3;i++) for(let j=i+1;j<n-2;j++) for(let k=j+1;k<n-1;k++){
+      const A=H[i],B=H[j],C=H[k],D=last; if(D.t-A.t>0.26) continue;
+      for(const a of A.c) for(const b of B.c){ if(ok(a,b,A,B)<0) continue;
+        for(const c of C.c){ const d2=ok(b,c,B,C); if(d2<0) continue;
+          const q=pr(a,b,A,B,C), e1=Math.hypot(c.x-q[0],c.y-q[1]); if(e1>Math.max(4,0.35*d2)) continue;
+          for(const d of D.c){ const d3=ok(c,d,C,D); if(d3<0) continue;
+            const q2=pr(b,c,B,C,D), e2=Math.hypot(d.x-q2[0],d.y-q2[1]); if(e2>Math.max(4,0.35*d3)) continue;
+            const net=Math.hypot(d.x-a.x,d.y-a.y), path=Math.hypot(b.x-a.x,b.y-a.y)+d2+d3;
+            if(net<Math.max(8,1.5*d.dE) || net<0.75*path) continue;
+            if(e1+e2<be){ be=e1+e2; seed=[[a,A],[b,B],[c,C],[d,D],i]; } } } } }
+    if(!seed) return null;
+    this.pts=[]; seed.slice(0,4).forEach(([c,F])=>this.add(c,F.t));
+    this.backfill(seed[4]); this.hist=[]; this.lastT=t;
+    onFlightStart();
+    return seed[3][0];
   },
-  flush(){ const p=this.pts; this.pts=[]; this.lastT=-1;
-    if(p.length>=6){ lastTrack=p; lastTrackAt=performance.now(); analyzeTrack(p); } }
+  // walk back through earlier frames to recover the start of the flight (the first bounce is often before the seed)
+  backfill(i0){
+    const H=this.hist; let p0=this.pts[0], p1=this.pts[1], miss=0;
+    for(let i=i0-1;i>=0 && miss<3;i--){ const F=H[i], dt0=p1.t-p0.t, dt=F.t-p0.t;
+      const vx=(p1.x-p0.x)/dt0, vy=(p1.y-p0.y)/dt0;
+      const preds=[[p0.x+vx*dt,p0.y+vy*dt],[p0.x+vx*dt,p0.y-vy*dt*0.8]];
+      const gate=Math.max(10,0.5*Math.hypot(vx,vy)*Math.abs(dt)+p0.dE*1.5+6);
+      let best=null,bd=1e9; F.c.forEach(c=>preds.forEach(q=>{ const d=Math.hypot(c.x-q[0],c.y-q[1]); if(d<gate&&d<bd){bd=d;best=c;} }));
+      if(!best){ miss++; continue; } miss=0;
+      const np={x:best.x,y:best.y,t:F.t,dE:best.dE}; this.pts.unshift(np); p1=p0; p0=np; }
+  },
+  flush(){ const p=this.pts; this.reset(); if(p.length>=8) onFlightEnd(p); }
 };
 
-// ---------- analysis ----------
-function quadFit(ts,ys){ let s0=0,s1=0,s2=0,s3=0,s4=0,y0=0,y1=0,y2=0;
-  for(let i=0;i<ts.length;i++){ const t=ts[i],t2=t*t,y=ys[i]; s0++;s1+=t;s2+=t2;s3+=t2*t;s4+=t2*t2;y0+=y;y1+=y*t;y2+=y*t2; }
-  const A=[[s0,s1,s2,y0],[s1,s2,s3,y1],[s2,s3,s4,y2]];
-  for(let i=0;i<3;i++){ let m=i; for(let k=i+1;k<3;k++) if(Math.abs(A[k][i])>Math.abs(A[m][i])) m=k; [A[i],A[m]]=[A[m],A[i]];
-    if(Math.abs(A[i][i])<1e-12) return null;
-    for(let k=0;k<3;k++) if(k!==i){ const f=A[k][i]/A[i][i]; for(let j=i;j<4;j++) A[k][j]-=f*A[i][j]; } }
-  return [A[0][3]/A[0][0], A[1][3]/A[1][1], A[2][3]/A[2][2]]; }
+// ---------- serve analysis ----------
+function polyFit(ts,ys,deg){ // least squares, deg 1 or 2
+  const n=deg+1, A=Array.from({length:n},()=>Array(n).fill(0)), b=Array(n).fill(0);
+  ts.forEach((t,i)=>{ const pw=[1,t,t*t]; for(let r=0;r<n;r++){ b[r]+=pw[r]*ys[i]; for(let c=0;c<n;c++) A[r][c]+=pw[r]*pw[c]; } });
+  return solve(A,b); }
+function curve(pts){ // smooth curve through a few image points: returns position/velocity at any time
+  const t0=pts[0].t, ts=pts.map(q=>q.t-t0), deg=pts.length>=4?2:1;
+  const fx=polyFit(ts,pts.map(q=>q.x),deg), fy=polyFit(ts,pts.map(q=>q.y),deg); if(!fx||!fy) return null;
+  const c=(f,t)=>f[0]+f[1]*t+(deg>1?f[2]*t*t:0), dv=(f,t)=>f[1]+(deg>1?2*f[2]*t:0);
+  return t=>{ const u=t-t0; return {x:c(fx,u), y:c(fy,u), vx:dv(fx,u), vy:dv(fy,u)}; }; }
+// a bounce = the moment where the falling curve and the rising curve meet with a sudden upward kick
+function findBounces(p){
+  const n=p.length, cand=[];
+  for(let i=1;i<n-1;i++){
+    const B=p.slice(Math.max(0,i-4),i+1), A=p.slice(i+1,Math.min(n,i+6)); if(B.length<2||A.length<2) continue;
+    const cb=curve(B), ca=curve(A); if(!cb||!ca) continue;
+    const t0=p[i].t-0.3*(p[i].t-p[i-1].t), t1=p[i+1].t+0.3*(p[i+1].t-p[i].t);
+    let bt=t0, bd=1e9; for(let k=0;k<=16;k++){ const t=t0+(t1-t0)*k/16, u=cb(t), v=ca(t), d=Math.hypot(u.x-v.x,u.y-v.y); if(d<bd){ bd=d; bt=t; } }
+    const u=cb(bt), v=ca(bt), m=mpp(p[i]);
+    cand.push({i, t:bt, kick:(u.vy-v.vy)*m, gap:bd, x:(u.x+v.x)/2, y:(u.y+v.y)/2, cb, ca, dE:p[i].dE});
+  }
+  const out=[];
+  cand.forEach((e,j)=>{ if(e.kick<0.7 || e.gap>Math.max(4,1.5*e.dE)) return;
+    const l=cand[j-1], r=cand[j+1]; if((l&&l.kick>e.kick&&l.gap<=Math.max(4,1.5*l.dE))||(r&&r.kick>=e.kick&&r.gap<=Math.max(4,1.5*r.dE))) return;
+    const w=rayZ(e.x,e.y,RB); if(w) out.push({t:e.t, cb:e.cb, ca:e.ca, X:w[0], Y:w[1], k:e.kick});
+  });
+  return out;
+}
+function lm(f, th, lo, hi){            // tiny Levenberg-Marquardt with numeric derivatives
+  const n=th.length; let r=f(th), cost=r.reduce((s,v)=>s+v*v,0), lam=1e-2;
+  for(let it=0;it<60;it++){
+    const J=[]; for(let j=0;j<n;j++){ const h=Math.max(1e-4,Math.abs(th[j])*1e-4), t2=th.slice(); t2[j]+=h; const r2=f(t2); J.push(r2.map((v,i)=>(v-r[i])/h)); }
+    const A=Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>J[i].reduce((s,v,k)=>s+v*J[j][k],0)));
+    const g=Array.from({length:n},(_,i)=>-J[i].reduce((s,v,k)=>s+v*r[k],0));
+    let improved=false;
+    for(let tries=0;tries<6;tries++){
+      const Ad=A.map((row,i)=>row.map((v,j)=>i===j?v*(1+lam)+1e-9:v)); const d=solve(Ad,g); if(!d) { lam*=10; continue; }
+      const t2=th.map((v,i)=>Math.min(hi[i],Math.max(lo[i],v+d[i]))); const r2=f(t2), c2=r2.reduce((s,v)=>s+v*v,0);
+      if(c2<cost){ th=t2; r=r2; const gain=cost-c2; cost=c2; lam=Math.max(1e-7,lam/3); improved=gain>1e-6*cost; break; } lam*=4; }
+    if(!improved) break; }
+  return {th, cost}; }
+function analyzeServe(p){
+  if(!cam) return {err:'Calibrate first'};
+  const bs=findBounces(p).filter(b=>b.X>-0.15 && b.X<LEN+0.2 && b.Y>-0.3 && b.Y<TW+0.3);
+  const b1=bs.find(b=>b.X<NET+0.2); if(!b1) return {err:'First bounce not seen'};
+  const b2=bs.find(b=>b.t>b1.t+0.1 && b.t-b1.t<1.3 && b.X>NET-0.1);
+  const dtF=(p[p.length-1].t-p[0].t)/(p.length-1);
+  // where a bounce was, if it happened o seconds later/earlier than first estimated (frames are coarse)
+  const at=(b,o)=>{ const t=b.t+o, q=(o<=0?b.cb:b.ca)(t), w=rayZ(q.x,q.y,RB);
+    return w?{t,X:w[0],Y:w[1]}:{t,X:b.X,Y:b.Y}; };
+  // height arc between the bounces with vertical acceleration a: bigger than gravity = pushed down (topspin),
+  // smaller = floats (backspin). Along the table the ball slows a little from air drag.
+  const arc=(B1,a,vo,psi,wo,tau,T)=>{ const d=Math.log(1+KD*vo*tau)/KD; return [B1.X+d*Math.cos(psi), B1.Y+d*Math.sin(psi), RB+wo*tau-0.5*a*tau*tau]; };
+  let best=null;
+  const offs=[-1/3,0,1/3].map(k=>k*dtF);
+  if(b2){
+    // both bounces seen: the two spots and times fix speed and direction; only the arc height (a) is fitted
+    const mid=p.filter(q=>q.t>b1.t+dtF*0.4 && q.t<b2.t-dtF*0.4);
+    for(const o1 of offs) for(const o2 of offs){
+      const B1=at(b1,o1), B2=at(b2,o2), T=B2.t-B1.t; if(T<0.08) continue;
+      const D=Math.hypot(B2.X-B1.X,B2.Y-B1.Y), psi=Math.atan2(B2.Y-B1.Y,B2.X-B1.X);
+      // speed right after bounce 1 so that drag still brings the ball to B2 at time T
+      let vo=D/T; for(let i=0;i<30;i++){ const d=Math.log(1+KD*vo*T)/KD; vo*=D/Math.max(d,1e-6); }
+      const err=a=>{ const wo=a*T/2; let e=0; for(const q of mid){ const s=project(arc(B1,a,vo,psi,wo,q.t-B1.t,T)); if(!s) return 1e12; e+=(s[0]-q.x)**2+(s[1]-q.y)**2; } return e; };
+      let lo=-15, hi=60; const g=0.618; let x1=hi-g*(hi-lo), x2=lo+g*(hi-lo), f1=err(x1), f2=err(x2);
+      for(let i=0;i<45;i++){ if(f1<f2){ hi=x2; x2=x1; f2=f1; x1=hi-g*(hi-lo); f1=err(x1); } else { lo=x1; x1=x2; f1=f2; x2=lo+g*(hi-lo); f2=err(x2); } }
+      const a=(lo+hi)/2, e=err(a);
+      if(!best||e<best.e) best={a, e, T, wo:a*T/2, n:mid.length};
+    }
+    const sp=Math.hypot(b2.X-b1.X,b2.Y-b1.Y)/(b2.t-b1.t);          // speed straight from the two bounces
+    if(!best || best.n<2) return {speed:sp, type:'unk', rps:null, note:'Too few frames to read the spin'};
+    best.speed=sp;
+  } else {
+    // second bounce out of view: follow the arc after bounce 1 and work out where it lands
+    const post=p.filter(q=>q.t>b1.t+dtF*0.3); if(post.length<4) return {err:'Second bounce not seen'};
+    for(const o1 of offs){
+      const B1=at(b1,o1), L=post[post.length-1], Lw=rayZ(L.x,L.y,0.1)||[B1.X+1.5,B1.Y,0.1];
+      let th=[Math.atan2(Lw[1]-B1.Y,Lw[0]-B1.X), Math.max(1.5,Math.hypot(Lw[0]-B1.X,Lw[1]-B1.Y)/(L.t-B1.t)), 1.2, G];
+      const lo=[-7,0.5,0.05,-20], hi=[7,40,8,60]; let used=post, fit=null, T2=null;
+      for(let round=0;round<4;round++){
+        const f=t=>{ const r=[]; for(const q of used){ const s=project(arc(B1,t[3],t[1],t[0],t[2],q.t-B1.t)); if(!s){ r.push(200,200); continue; } r.push(s[0]-q.x,s[1]-q.y); } return r; };
+        fit=lm(f,th,lo,hi); th=fit.th; T2=th[3]>0.5?2*th[2]/th[3]:null; if(!T2) break;
+        const nu=post.filter(q=>q.t-B1.t<=T2+dtF*0.5); if(nu.length===used.length||nu.length<4) break; used=nu; }
+      if(!T2||used.length<4) continue;
+      const P2=arc(B1,th[3],th[1],th[0],th[2],T2); if(P2[0]<NET-0.15) continue;
+      const d=Math.log(1+KD*th[1]*T2)/KD;
+      if(!best||fit.cost<best.e) best={a:th[3], e:fit.cost, T:T2, speed:d/T2, wo:th[2], n:used.length};
+    }
+    if(!best) return {err:'Could not follow the ball to the second bounce'};
+  }
+  const rms=Math.sqrt(best.e/Math.max(1,best.n));
+  const magnus=best.a-G;                                  // + pushes down (topspin), - lifts (backspin)
+  // note: even a no-spin serve picks up a little topspin from the first bounce, so the bands are not centred on 0
+  const type = magnus>1.8 ? 'top' : magnus<-0.6 ? 'back' : 'low';
+  const vm=Math.hypot(best.speed, best.wo*0.5), CL=Math.min(2*M*Math.abs(magnus)/(RHO*AREA*vm*vm),0.33);
+  const rps=Math.min(150,(CL/(1-2*CL))*vm/RB/(2*Math.PI));
+  const shaky = rms>6 || best.n<3;
+  return {speed:best.speed, type, rps, a:best.a, rms, n:best.n, seenB2:!!b2, note: shaky?'Ball was hard to see, numbers may be off':''};
+}
 
-function analyzeTrack(p){
-  const k=mPerPx()||TABLE/(PW*0.65);
-  const pts=p.map(q=>({x:q.x*k, y:-q.y*k, t:q.t, f:q.f, ang:q.ang}));
-  const segs=[]; let cur=[pts[0]];
-  for(let i=1;i<pts.length;i++){ cur.push(pts[i]);
-    if(i<pts.length-1){ const a=pts[i-1],b=pts[i],c=pts[i+1];
-      const dxa=b.x-a.x, dxb=c.x-b.x, dya=b.y-a.y, dyb=c.y-b.y;
-      const hit=Math.sign(dxa)!==Math.sign(dxb) && Math.abs(dxa)>0.004 && Math.abs(dxb)>0.004;
-      const bounce=dya<0 && dyb>0 && (dyb-dya)/(c.t-a.t)>1.5;
-      if(hit||bounce){ cur.end=hit?'hit':'bounce'; segs.push(cur); cur=[b]; } } }
-  segs.push(cur);
-  const shots=[]; let sh=[]; segs.forEach(s=>{ sh.push(s); if(s.end==='hit'){ shots.push(sh); sh=[]; } }); if(sh.length) shots.push(sh);
-  let first=true;
-  shots.forEach(shot=>{
-    const seg=shot.find(s=>s.length>=5 && Math.abs(s[s.length-1].x-s[0].x)/(s[s.length-1].t-s[0].t+1e-6)>1);
-    if(!seg) return;
-    const r=fitSegment(seg); if(!r) return;
-    tracker.shotNo++;
-    report(tracker.shotNo, (first&&S.serve)?'Serve':'Shot', r, !mPerPx());
-    first=false; });
+// ---------- results ----------
+let serveNo=0, hideTimer=null, barAnim=null;
+const NAMES={top:'TOPSPIN',back:'BACKSPIN',low:'LOW SPIN',unk:'SPIN ?'};
+function onFlightStart(){ setStat('Tracking…','track'); }
+function onFlightEnd(p){
+  lastPath=p; lastPathAt=performance.now();
+  const r=analyzeServe(p);
+  if(r.err){ setStat(r.err==='Calibrate first'?'Calibrate first':r.err+', try again','warn'); setTimeout(()=>ready(),2500); return; }
+  serveNo++; showResult(r); addLog(r); ready();
 }
-function fitSegment(seg){
-  const t0=seg[0].t, ts=seg.map(q=>q.t-t0);
-  const fx=quadFit(ts,seg.map(q=>q.x)), fy=quadFit(ts,seg.map(q=>q.y)); if(!fx||!fy) return null;
-  const tm=ts[ts.length-1]/2, vx0=fx[1], vy0=fy[1];
-  const vxm=fx[1]+2*fx[2]*tm, vym=fy[1]+2*fy[2]*tm, vm=Math.hypot(vxm,vym);
-  const magY=2*fy[2]+G+KD*vm*vym;               // remove gravity and drag, Magnus is what's left
-  let type='flat'; if(magY<-1.5) type='top'; else if(magY>1.5) type='back';
-  let CL=Math.min(2*M*Math.abs(magY)/(RHO*AREA*vm*vm),0.33);
-  let rps=Math.min(150,(CL/(1-2*CL))*vm/R/(2*Math.PI)), measured=false;
-  // measured spin from the black line (slow-mo)
-  const ds=[];
-  for(let i=1;i<seg.length;i++){ const a=seg[i-1], b=seg[i];
-    if(a.ang!=null && b.ang!=null && b.f-a.f===1){ let dd=b.ang-a.ang; while(dd>Math.PI) dd-=2*Math.PI; while(dd<-Math.PI) dd+=2*Math.PI; ds.push(dd); } }
-  if(ds.length>=3){
-    ds.sort((a,b)=>a-b); const med=ds[ds.length>>1];
-    const same=ds.filter(v=>Math.sign(v)===Math.sign(med)).length/ds.length;
-    if(same>=0.7){ const fps=+$('capFps').value||240; rps=Math.abs(med)/(2*Math.PI)*fps; measured=true;
-      // on screen y points down: clockwise turn while moving right = topspin
-      type = rps<3 ? 'flat' : (Math.sign(med)===Math.sign(vx0) ? 'top' : 'back'); } }
-  return {speed:Math.hypot(vx0,vy0), type, rps, measured, n:seg.length};
+function showResult(r){
+  $('rLbl').textContent=`SERVE #${serveNo}`;
+  $('rSpeed').textContent=Math.round(r.speed*3.6);
+  $('rRps').textContent = r.rps==null ? '?' : r.type==='low' ? '<'+Math.max(10,Math.round(r.rps)) : Math.round(r.rps);
+  const t=$('rType'); t.textContent=NAMES[r.type]; t.className='type '+r.type;
+  $('rNote').textContent=r.note||'';
+  $('result').classList.remove('hidden');
+  const bar=$('rBar'); if(barAnim) barAnim.cancel();
+  try{ barAnim=bar.animate([{transform:'scaleX(1)'},{transform:'scaleX(0)'}],{duration:10000,easing:'linear',fill:'forwards'}); }catch(e){}
+  clearTimeout(hideTimer); if(!fileMode) hideTimer=setTimeout(hideResult,10000);
 }
-const NAMES={top:'Topspin',back:'Backspin',flat:'Low spin'};
-function report(no,label,r,uncal){
-  const kmh=Math.round(r.speed*3.6)+(uncal?'*':'');
-  const spin = r.type==='flat' ? 'low' : (r.measured?'':'~')+Math.round(r.rps);
-  const how = r.measured ? 'measured' : 'estimated';
-  $('oSpeed').textContent=kmh; $('cSpeed').textContent=kmh;
-  $('oSpin').innerHTML=`<span class="tag t-${r.type}">${NAMES[r.type]}</span> ${spin} <span class="mute">rev/s</span>`;
-  $('cType').innerHTML=`<span class="tag t-${r.type}">${NAMES[r.type]}</span>`;
-  $('cSpin').textContent=spin; $('cHow').textContent=how; $('cShot').textContent=`${label} #${no}`;
+function hideResult(){ $('result').classList.add('hidden'); clearTimeout(hideTimer); }
+$('rcard').onclick=hideResult;
+function addLog(r){
+  const ul=$('log'); if(serveNo===1) ul.innerHTML='';
   const li=document.createElement('li');
-  li.innerHTML=`<span class="n">#${no}</span><span><span class="big">${kmh} km/h</span> <span class="mute">${label}</span><br><span class="tag t-${r.type}">${NAMES[r.type]}</span> <span class="mute">${spin} rev/s, ${how}</span></span><span class="mute">${r.n} pts</span>`;
-  $('log').prepend(li); $('log2').prepend(li.cloneNode(true)); $('logCount').textContent=tracker.shotNo;
+  li.innerHTML=`<span class="mute">#${serveNo}</span><span class="sp">${Math.round(r.speed*3.6)} km/h</span><span class="tag ${r.type}">${NAMES[r.type]}</span><span>${r.rps==null?'?':(r.type==='low'?'low':'~'+Math.round(r.rps))} rev/s</span>`;
+  ul.prepend(li);
 }
+$('mClear').onclick=()=>{ serveNo=0; $('log').innerHTML='<li class="mute">No serves yet</li>'; };
 
 // ---------- drawing ----------
-let lastDet=null, tapMode=null, calPts=[], drag=null;
-function path(pts,alpha){
-  if(pts.length<2) return; const sx=ov.width/PW, sy=ov.height/PH;
-  octx.save(); octx.globalAlpha=alpha; octx.strokeStyle=CYAN; octx.lineWidth=6; octx.lineJoin='round'; octx.lineCap='round';
-  octx.shadowColor=CYAN; octx.shadowBlur=14; octx.beginPath();
-  pts.forEach((q,i)=> i?octx.lineTo(q.x*sx,q.y*sy):octx.moveTo(q.x*sx,q.y*sy)); octx.stroke(); octx.restore();
-}
+let lastPath=null, lastPathAt=0, calMode=false, calTaps=[], drag=null, debug=false;
+$('debug').onchange=e=>{ debug=e.target.checked; };
+const CAL_STEPS=['Your end: LEFT corner','Your end: RIGHT corner','Net: RIGHT end (at the table edge)','Net: LEFT end (at the table edge)'];
+function line(pts,color,w,alpha){ if(pts.length<2) return; const sx=ov.width/PW, sy=ov.height/PH;
+  octx.save(); octx.globalAlpha=alpha??1; octx.strokeStyle=color; octx.lineWidth=w; octx.lineJoin='round'; octx.lineCap='round';
+  if(color===TRAIL){ octx.shadowColor=TRAIL; octx.shadowBlur=14; }
+  octx.beginPath(); pts.forEach((q,i)=>i?octx.lineTo(q.x*sx,q.y*sy):octx.moveTo(q.x*sx,q.y*sy)); octx.stroke(); octx.restore(); }
 function draw(){
-  const sx=ov.width/PW, sy=ov.height/PH;
-  octx.clearRect(0,0,ov.width,ov.height);
-  if(S.cal){ const {a,b}=S.cal; octx.strokeStyle='#ffffff55'; octx.setLineDash([10,8]); octx.lineWidth=2;
-    octx.beginPath(); octx.moveTo(a[0]*sx,a[1]*sy); octx.lineTo(b[0]*sx,b[1]*sy); octx.stroke(); octx.setLineDash([]); }
-  if($('debug').checked){ if(roi){ octx.strokeStyle='#ffd23f55'; octx.strokeRect(roi.x0*sx,roi.y0*sy,(roi.x1-roi.x0)*sx,(roi.y1-roi.y0)*sy); }
-    comps.forEach(c=>{ octx.strokeStyle=c.ok?'#9be27a':'#ff5d5d55'; octx.lineWidth=1; octx.strokeRect((c.x-c.w/2)*sx,(c.y-c.h/2)*sy,c.w*sx,c.h*sy); }); }
-  if(videoMode){ if(lastTrack) path(lastTrack,1); path(tracker.pts,1); }
-  else { const p=tracker.pts; if(p.length){ const tEnd=p[p.length-1].t; path(p.filter(q=>tEnd-q.t<=0.6),1); } }
-  $('dot').classList.toggle('ok', !!lastDet);
-  // calibration points + loupe
-  calPts.forEach(p=>cross(p[0]*sx,p[1]*sy));
-  if(drag){ cross(drag[0]*sx,drag[1]*sy);
-    const L=200, lx=Math.min(ov.width-L-10, Math.max(10, drag[0]*sx-L/2)), ly=Math.max(10, drag[1]*sy-L-60);
+  const sx=ov.width/PW, sy=ov.height/PH; octx.clearRect(0,0,ov.width,ov.height);
+  // table outline after calibration (only while calibrating or debugging, keeps the screen clean)
+  if(cam && (calMode||debug)){ const ring=[[0,0,0],[0,TW,0],[LEN,TW,0],[LEN,0,0],[0,0,0]].map(project).filter(Boolean).map(q=>({x:q[0],y:q[1]}));
+    line(ring,'rgba(0,255,209,0.55)',2); const n=[[NET,0,0],[NET,TW,0]].map(project).filter(Boolean).map(q=>({x:q[0],y:q[1]})); line(n,'rgba(255,255,255,0.6)',2); }
+  if(debug) comps.forEach(c=>{ octx.strokeStyle=c.ok?'#9be27a':'rgba(255,93,93,0.4)'; octx.lineWidth=1; const r=Math.max(c.len,c.wid)/2;
+    octx.strokeRect((c.x-r)*sx,(c.y-r)*sy,2*r*sx,2*r*sy); });
+  // cyan ball path: only while the ball is flying, gone right after
+  if(tracker.on()){ const p=tracker.pts, te=p[p.length-1].t; line(p.filter(q=>te-q.t<=0.7),TRAIL,6); }
+  else if(lastPath && performance.now()-lastPathAt<400) line(lastPath,TRAIL,6,1-(performance.now()-lastPathAt)/400);
+  // calibration marks + magnifier
+  calTaps.forEach(p=>mark(p[0]*sx,p[1]*sy));
+  if(drag){ mark(drag[0]*sx,drag[1]*sy);
+    const L=220, lx=Math.min(ov.width-L-10,Math.max(10,drag[0]*sx-L/2)), ly=drag[1]*sy-L-70>10 ? drag[1]*sy-L-70 : Math.min(ov.height-L-10, drag[1]*sy+70);
     const vw=vid.videoWidth, vh=vid.videoHeight, zw=vw/12;
     octx.save(); octx.beginPath(); octx.arc(lx+L/2,ly+L/2,L/2,0,7); octx.clip();
-    octx.drawImage(vid, drag[0]/PW*vw-zw/2, drag[1]/PH*vh-zw/2, zw, zw, lx, ly, L, L);
-    octx.restore(); octx.strokeStyle=CYAN; octx.lineWidth=3; octx.beginPath(); octx.arc(lx+L/2,ly+L/2,L/2,0,7); octx.stroke();
-    octx.beginPath(); octx.moveTo(lx+L/2-14,ly+L/2); octx.lineTo(lx+L/2+14,ly+L/2); octx.moveTo(lx+L/2,ly+L/2-14); octx.lineTo(lx+L/2,ly+L/2+14); octx.stroke(); }
+    octx.drawImage(vid,drag[0]/PW*vw-zw/2,drag[1]/PH*vh-zw/2,zw,zw,lx,ly,L,L); octx.restore();
+    octx.strokeStyle='#00FFD1'; octx.lineWidth=3; octx.beginPath(); octx.arc(lx+L/2,ly+L/2,L/2,0,7); octx.stroke();
+    octx.beginPath(); octx.moveTo(lx+L/2-16,ly+L/2); octx.lineTo(lx+L/2+16,ly+L/2); octx.moveTo(lx+L/2,ly+L/2-16); octx.lineTo(lx+L/2,ly+L/2+16); octx.stroke(); }
 }
-function cross(x,y){ octx.strokeStyle='#FFB020'; octx.lineWidth=3; octx.beginPath(); octx.moveTo(x-16,y); octx.lineTo(x+16,y); octx.moveTo(x,y-16); octx.lineTo(x,y+16); octx.stroke(); }
+function mark(x,y){ octx.strokeStyle='#FFB020'; octx.lineWidth=3; octx.beginPath(); octx.moveTo(x-18,y); octx.lineTo(x+18,y); octx.moveTo(x,y-18); octx.lineTo(x,y+18); octx.stroke(); }
 function hint(t){ const h=$('hint'); h.textContent=t||''; h.style.display=t?'block':'none'; }
-function status(t){ $('status').textContent=t||''; }
-function calStatus(){ status(S.cal ? `Calibrated. Tracking zone set around the table.` : 'Not calibrated yet: tap Calibrate for real speed and a tighter tracking zone.'); }
-calStatus();
+function setStat(t,cls){ $('stat').textContent=t; $('dot').className='dot '+(cls||''); }
+function ready(){ if(!running && !fileMode){ setStat('Camera off'); return; }
+  if(!cam) setStat('Tap Calibrate to mark the table','warn'); else setStat('Ready, serve when you like','ready'); }
 
-// pointer: calibration (drag with loupe) and slow-mo zoom
-const toProc=e=>{ const rc=ov.getBoundingClientRect(); return [(e.clientX-rc.left)/rc.width*PW, (e.clientY-rc.top)/rc.height*PH]; };
-ov.addEventListener('pointerdown',e=>{ if(tapMode==='cal'){ drag=toProc(e); ov.setPointerCapture(e.pointerId); draw(); } });
-ov.addEventListener('pointermove',e=>{ if(drag){ drag=toProc(e); if(!running) draw(); } });
-ov.addEventListener('pointerup',e=>{
-  if(drag){ calPts.push(drag); drag=null;
-    if(calPts.length===1) hint('Now the RIGHT end of the near table edge');
-    else { const [a,b]=calPts; const dist=Math.hypot(b[0]-a[0],b[1]-a[1]);
-      if(dist>PW*0.2){ S.cal={a,b,dist}; save(); roi=calcRoi(); prevGray=null; hint(); calStatus(); }
-      else hint('Points too close, tap Calibrate and try again');
-      calPts=[]; tapMode=null; setTimeout(()=>hint(),2500); }
-    draw(); return; }
-  if(mode==='video'){ zoomPt=toProc(e); drawZoom(); }
-});
-$('bCal').onclick=()=>{ if(!vid.videoWidth){ hint('Start the camera or load a video first'); setTimeout(()=>hint(),2000); return; }
-  tapMode='cal'; calPts=[]; hint('Drag to the LEFT end of the near table edge'); draw(); };
+// ---------- calibration ----------
+const toProc=e=>{ const r=ov.getBoundingClientRect(); return [(e.clientX-r.left)/r.width*PW,(e.clientY-r.top)/r.height*PH]; };
+$('bCal').onclick=()=>{ if(!vid.videoWidth){ hint('Start the camera first'); setTimeout(()=>hint(),2000); return; }
+  hideResult(); calMode=true; calTaps=[]; hint('1/4  '+CAL_STEPS[0]); };
+ov.addEventListener('pointerdown',e=>{ if(!calMode) return; drag=toProc(e); ov.setPointerCapture(e.pointerId); });
+ov.addEventListener('pointermove',e=>{ if(drag) drag=toProc(e); });
+ov.addEventListener('pointerup',()=>{ if(!drag) return; calTaps.push(drag); drag=null;
+  if(calTaps.length<4){ hint(`${calTaps.length+1}/4  `+CAL_STEPS[calTaps.length]); return; }
+  const c=buildCam(calTaps);
+  if(!c || c.C[2]<0.05){ hint('That did not look right, tap Calibrate and try again'); calTaps=[]; calMode=false; setTimeout(()=>hint(),3500); return; }
+  S.cal={taps:calTaps.slice(), ph:PH}; save(); cam=c; calTaps=[];
+  hint(`Done. Camera is about ${Math.round(c.C[2]*100)} cm above the table`); setTimeout(()=>{ hint(); calMode=false; },2500); ready(); });
+$('mReset').onclick=()=>{ S.cal=null; cam=null; save(); ready(); closeSheets(); };
 
-// ---------- tabs ----------
-let mode='live';
-function setTab(t){
-  mode=t; document.body.className='m-'+t; $('sheet').classList.add('hidden');
-  document.querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('on',b.dataset.go===t));
-  [['Live','live'],['Video','video'],['Setup','setup']].forEach(([n,m])=>$('tab'+n).classList.toggle('on',m===t));
-  $('paneVideo').classList.toggle('hidden',t!=='video');
-  $('paneSetup').classList.toggle('hidden',t!=='setup');
-  $('stageBox').classList.toggle('hidden',t==='setup');
-  $('logCard').classList.toggle('hidden',t==='setup');
-  $('bar').classList.toggle('hidden',t==='setup');
-  $('bStart').classList.toggle('hidden',t!=='live');
-  $('bFlip').classList.toggle('hidden',t!=='live');
-  $('bFile').classList.toggle('hidden',t!=='video');
-  $('bAnalyze').classList.toggle('hidden',t!=='video');
-  videoMode = t==='video';
-  if(t!=='live') stopCam();
-  if(t==='live'){ vid.removeAttribute('src'); vid.load(); }
-  $('empty').classList.toggle('hidden', !!vid.videoWidth && t==='video');
-  $('empty').innerHTML = t==='video' ? '<b>No video yet</b>Tap Video to load a 240 fps slow-mo clip filmed from the net.' : '<b>Camera off</b>Set up your phone at the net (see Setup), then tap Start.';
-  window.scrollTo(0,0);
-}
-$('tabLive').onclick=()=>setTab('live'); $('tabVideo').onclick=()=>setTab('video'); $('tabSetup').onclick=()=>setTab('setup');
-document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>setTab(b.dataset.go));
-$('bTab').onclick=()=>setTab(mode==='live'?'video':'live');
-
-// settings sheet
-$('bSet').onclick=()=>$('sheet').classList.remove('hidden');
-$('sClose').onclick=()=>$('sheet').classList.add('hidden');
-$('sheet').onclick=e=>{ if(e.target.id==='sheet') $('sheet').classList.add('hidden'); };
-$('sClear').onclick=()=>{ $('log').innerHTML=''; $('log2').innerHTML=''; tracker.shotNo=0; $('logCount').textContent='0'; lastTrack=null; draw(); };
-$('sReset').onclick=()=>{ S.cal=null; save(); roi=calcRoi(); calStatus(); draw(); };
-$('debug').onchange=draw;
-
-// ---------- live camera ----------
-let stream=null, running=false, wake=null;
+// ---------- camera ----------
+let stream=null, running=false, fileMode=false, wake=null;
+function camButtons(){ $('camFront').classList.toggle('on',S.facing==='user'); $('camBack').classList.toggle('on',S.facing!=='user'); }
+camButtons();
+const setFacing=f=>async()=>{ S.facing=f; save(); camButtons(); if(running){ stopCam(); await startCam(); } };
+$('camFront').onclick=setFacing('user'); $('camBack').onclick=setFacing('environment');
 async function startCam(){
-  try{ stream=await navigator.mediaDevices.getUserMedia({audio:false, video:{facingMode:S.facing, width:{ideal:1280}, height:{ideal:720}, frameRate:{ideal:120,min:30}}}); }
-  catch(err){ status('Camera blocked: '+err.message+'. Open this page over https and allow the camera.'); return; }
-  try{ if(matchMedia('(pointer:coarse)').matches && document.documentElement.requestFullscreen){ await document.documentElement.requestFullscreen(); await screen.orientation.lock('landscape'); } }catch(e){}
-  vid.srcObject=stream; await vid.play(); sizeProc(); tracker.reset(); $('empty').classList.add('hidden');
-  const s=stream.getVideoTracks()[0].getSettings();
-  status(`Camera ${s.width}x${s.height} at ${Math.round(s.frameRate||0)} fps. ${S.cal?'Calibrated.':'Tap Calibrate.'}`);
+  fileMode=false; vid.removeAttribute('src');
+  try{ stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:S.facing,width:{ideal:1280},height:{ideal:720},frameRate:{ideal:60}}}); }
+  catch(err){ setStat('Camera blocked, allow it in the browser','warn'); return; }
+  vid.srcObject=stream; await vid.play(); sizeProc(); tracker.reset();
+  try{ const tr=stream.getVideoTracks()[0], c=tr.getCapabilities?tr.getCapabilities():{};   // shorter shutter = less blur (Android)
+    if(c.exposureTime && c.exposureMode && c.exposureMode.includes('manual'))
+      await tr.applyConstraints({advanced:[{exposureMode:'manual',exposureTime:Math.max(c.exposureTime.min,Math.min(c.exposureTime.max,20))}]}); }catch(e){}
   try{ wake=await navigator.wakeLock.request('screen'); }catch(e){}
-  running=true; setStartBtn(); loop();
+  $('empty').classList.add('hidden'); running=true; goBtn(); ready(); loop();
 }
-function stopCam(){ running=false; if(stream){ tracker.flush(); stream.getTracks().forEach(t=>t.stop()); stream=null; vid.srcObject=null; }
-  try{ wake&&wake.release(); }catch(e){} wake=null; setStartBtn(); }
-function setStartBtn(){ const b=$('bStart'); b.classList.toggle('stop',running);
-  b.innerHTML = running ? '<span>■</span><span class="txt">Stop</span>' : '<span>▶</span><span class="txt">Start</span>'; }
+function stopCam(){ running=false; if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; vid.srcObject=null; }
+  try{ wake&&wake.release(); }catch(e){} wake=null; tracker.reset(); goBtn(); ready(); draw(); }
+function goBtn(){ const b=$('bGo'); b.classList.toggle('stop',running); b.innerHTML=running?'<span class="ic">■</span><span>Stop</span>':'<span class="ic">▶</span><span>Start</span>'; }
 function loop(){ if(!running) return;
   const step=(now,meta)=>{ if(!running) return;
-    const tt = meta && (meta.captureTime||meta.expectedDisplayTime); const t=(tt||performance.now())/1000;
-    lastDet=detect(); tracker.push(lastDet,t); draw(); loop(); };
+    const tt=meta&&(meta.captureTime||meta.expectedDisplayTime);
+    tracker.step(detect(),(tt||performance.now())/1000); draw(); loop(); };
   if(vid.requestVideoFrameCallback) vid.requestVideoFrameCallback(step); else requestAnimationFrame(n=>step(n,null)); }
-$('bStart').onclick=()=> running ? stopCam() : startCam();
-function flipLabel(){ $('flipTxt').textContent = S.facing==='user' ? 'Front cam' : 'Back cam'; }
-flipLabel();
-$('bFlip').onclick=async()=>{ S.facing = S.facing==='user' ? 'environment' : 'user'; save(); flipLabel();
-  if(running){ running=false; if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; } tracker.reset(); prevGray=null; await startCam(); }
-  else { hint(S.facing==='user'?'Front camera selected':'Back camera selected'); setTimeout(()=>hint(),1500); } };
+$('bGo').onclick=()=>running?stopCam():startCam();
+$('eStart').onclick=startCam;
 
-// ---------- slow-mo video ----------
-let frameIdx=0, markA=null, markB=null, zoomPt=null;
-$('file').onchange=async e=>{
-  const f=e.target.files[0]; if(!f) return; stopCam();
-  vid.srcObject=null; vid.src=URL.createObjectURL(f);
-  await new Promise(r=>vid.onloadedmetadata=r); sizeProc(); $('empty').classList.add('hidden');
-  await seek(0); draw();
-  $('bAnalyze').disabled=false; frameIdx=0; markA=markB=null; updMarks(); detectFps();
-};
-async function detectFps(){
-  if(!vid.requestVideoFrameCallback){ $('fpsNote').textContent='Enter manually'; return; }
-  $('fpsNote').textContent='Detecting...';
-  const times=[]; vid.playbackRate=0.25;
-  const cb=(n,m)=>{ times.push(m.mediaTime); if(times.length<40 && !vid.paused) vid.requestVideoFrameCallback(cb); };
-  vid.requestVideoFrameCallback(cb); try{ await vid.play(); }catch(e){}
-  await new Promise(r=>setTimeout(r,1600)); vid.pause(); vid.playbackRate=1; await seek(0);
-  const ds=[]; for(let i=1;i<times.length;i++){ const d=times[i]-times[i-1]; if(d>0.0005) ds.push(d); }
-  if(ds.length>3){ ds.sort((a,b)=>a-b); const raw=1/ds[ds.length>>2]; const fps=[24,25,30,50,60,100,120,240,480,960].reduce((a,b)=>Math.abs(b-raw)<Math.abs(a-raw)?b:a); $('fileFps').value=fps; $('fpsNote').textContent=`Detected about ${fps} fps`; }
-  else $('fpsNote').textContent='Could not detect, enter manually';
-}
+// ---------- recorded video (frame by frame) ----------
 function seek(t){ return new Promise(r=>{ const done=()=>{ vid.removeEventListener('seeked',done); requestAnimationFrame(()=>r()); };
-  vid.addEventListener('seeked',done); vid.currentTime=Math.max(0,Math.min(t,vid.duration||t)); }); }
-const fileStep=()=>1/(+$('fileFps').value||30), realStep=()=>1/(+$('capFps').value||240);
-$('bAnalyze').onclick=async()=>{
-  vid.pause(); tracker.reset(); prevGray=null; lastTrack=null;
-  const start=vid.currentTime, maxF=Math.round((+$('maxSec').value||3)/fileStep()), before=tracker.shotNo;
-  $('bAnalyze').disabled=true;
-  for(let k=0;k<maxF;k++){ const t=start+k*fileStep(); if(t>vid.duration) break;
-    await seek(t); lastDet=detect(); tracker.push(lastDet,k*realStep(),k); draw();
-    if(k%10===0) status(`Analyzing frame ${k} of ${maxF}...`); }
-  tracker.flush(); draw();
-  const found=tracker.shotNo-before;
-  status(found ? `Found ${found} shot(s).` : 'No clear shot found. Check lighting, or lower Ball brightness in settings.');
-  $('bAnalyze').disabled=false;
+  vid.addEventListener('seeked',done); vid.currentTime=t; }); }
+async function fileFps(){
+  if(!vid.requestVideoFrameCallback) return 30;
+  const ts=[]; vid.playbackRate=0.25; const cb=(n,m)=>{ ts.push(m.mediaTime); if(ts.length<30&&!vid.paused) vid.requestVideoFrameCallback(cb); };
+  vid.requestVideoFrameCallback(cb); try{ await vid.play(); }catch(e){} await new Promise(r=>setTimeout(r,1500)); vid.pause(); vid.playbackRate=1;
+  const ds=[]; for(let i=1;i<ts.length;i++){ const d=ts[i]-ts[i-1]; if(d>0.0005) ds.push(d); }
+  if(ds.length<3) return 30; ds.sort((a,b)=>a-b); const raw=1/ds[ds.length>>2];
+  return [24,25,30,50,60,120,240].reduce((a,b)=>Math.abs(b-raw)<Math.abs(a-raw)?b:a); }
+$('file').onchange=async e=>{
+  const f=e.target.files[0]; if(!f) return; closeSheets(); stopCam(); fileMode=true;
+  vid.srcObject=null; vid.src=URL.createObjectURL(f); await new Promise(r=>vid.onloadedmetadata=r);
+  const keep=S.cal; sizeProc(); if(!S.cal && keep && keep.ph===PH){ S.cal=keep; cam=buildCam(keep.taps); }
+  $('empty').classList.add('hidden'); setStat('Reading video…','track');
+  const fps=await fileFps(); tracker.reset(); prevGray=null; const serveNo0=serveNo;
+  const n=Math.floor(vid.duration*fps);
+  for(let k=0;k<n;k++){ await seek((k+0.5)/fps); tracker.step(detect(),k/fps); draw(); }
+  const before=serveNo0; tracker.flush(); draw(); fileMode=false;
+  const found=serveNo-before;
+  if(found) setStat(`Video done: ${found} serve${found>1?'s':''} found`,'ready');
+  else setStat(cam?'Video done: no serve found':'Calibrate on this video, then load it again','warn');
 };
-function updMarks(){ $('fIdx').textContent=frameIdx; $('aV').textContent=markA??'-'; $('bV').textContent=markB??'-';
-  if(markA!=null&&markB!=null&&markA!==markB){ const rps=(+$('turns').value||1)*(+$('capFps').value)/Math.abs(markB-markA);
-    $('manSpin').textContent=`${rps.toFixed(1)} rev/s`; } else $('manSpin').textContent='--'; }
-async function stepF(d){ vid.pause(); frameIdx=Math.max(0,frameIdx+d); await seek(frameIdx*fileStep()); drawZoom(); updMarks(); }
-$('fPrev').onclick=()=>stepF(-1); $('fNext').onclick=()=>stepF(1);
-$('mA').onclick=()=>{ markA=frameIdx; updMarks(); }; $('mB').onclick=()=>{ markB=frameIdx; updMarks(); };
-$('turns').oninput=updMarks; $('capFps').oninput=updMarks;
-function drawZoom(){ if(!zoomPt||!vid.videoWidth) return; const z=$('zoom').getContext('2d');
-  const w=vid.videoWidth/14, cx=zoomPt[0]/PW*vid.videoWidth, cy=zoomPt[1]/PH*vid.videoHeight;
-  z.imageSmoothingEnabled=false; z.clearRect(0,0,150,150); z.drawImage(vid,cx-w/2,cy-w/2,w,w,0,0,150,150); }
 
-setTab('live'); draw();
+// ---------- sheets ----------
+function closeSheets(){ $('menu').classList.add('hidden'); $('setup').classList.add('hidden'); }
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeSheets);
+document.querySelectorAll('.sheet').forEach(s=>s.addEventListener('click',e=>{ if(e.target===s) closeSheets(); }));
+$('bMenu').onclick=()=>$('menu').classList.remove('hidden');
+$('mSetup').onclick=()=>{ $('menu').classList.add('hidden'); $('setup').classList.remove('hidden'); };
+$('eSetup').onclick=()=>$('setup').classList.remove('hidden');
+
+// keep drawing during calibration even when idle
+(function idle(){ if(!running && (calMode||drag)) draw(); requestAnimationFrame(idle); })();
+ready();
 })();
 </script>
 </body>
