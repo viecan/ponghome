@@ -215,6 +215,7 @@ svg text{font-family:Inter,sans-serif}
   <button class="pri" id="bStart"><span>▶</span><span class="txt">Start</span></button>
   <label class="btn pri hidden" id="bFile" for="file"><span>🎞</span><span class="txt">Video</span></label>
   <button class="hidden" id="bAnalyze" disabled><span>⚡</span><span class="txt">Analyze</span></button>
+  <button id="bFlip"><span>🔄</span><span class="txt" id="flipTxt">Back cam</span></button>
   <button id="bCal"><span>📏</span><span class="txt">Calibrate</span></button>
   <button class="ico landonly" id="bTab"><span>⇄</span><span class="txt">Mode</span></button>
   <button class="ico" id="bSet"><span>⚙</span><span class="txt landonly-txt"></span></button>
@@ -228,7 +229,6 @@ svg text{font-family:Inter,sans-serif}
   <div class="opt"><span>First shot is a serve<small>Labels the first shot of each rally</small></span><input type="checkbox" id="serveMode" checked></div>
   <div class="opt"><span>Ball brightness<small>Lower if the ball is missed, raise if other things get picked up</small></span><input type="range" id="bright" min="55" max="90" value="72"></div>
   <div class="opt"><span>Show candidates<small>Debug: thin boxes on what the app thinks could be the ball</small></span><input type="checkbox" id="debug"></div>
-  <div class="opt"><span>Keep last path on screen<small>Seconds the cyan path stays after a rally</small></span><input type="number" id="keep" value="4"></div>
   <h4>Slow-mo video</h4>
   <div class="opt"><span>Recorded at (fps)<small>Your camera's slow-mo setting</small></span><input type="number" id="capFps" value="240"></div>
   <div class="opt"><span>File frame rate<small id="fpsNote">Auto-detected after loading</small></span><input type="number" id="fileFps" value="240"></div>
@@ -256,13 +256,12 @@ const CYAN='#00E5FF';
 const G=9.81, M=0.0027, R=0.020, RHO=1.2, AREA=Math.PI*R*R, KD=RHO*0.5*AREA/(2*M), TABLE=2.74, BALL=0.04;
 
 // ---------- settings ----------
-const S={cal:null, bright:72, serve:true, keep:4};
+const S={cal:null, bright:72, serve:true, facing:'environment'};
 try{ Object.assign(S, JSON.parse(localStorage.getItem('spintrack2')||'{}')); }catch(e){}
 const save=()=>{ try{ localStorage.setItem('spintrack2', JSON.stringify(S)); }catch(e){} };
-$('bright').value=S.bright; $('serveMode').checked=S.serve; $('keep').value=S.keep;
+$('bright').value=S.bright; $('serveMode').checked=S.serve;
 $('bright').oninput=e=>{ S.bright=+e.target.value; save(); };
 $('serveMode').onchange=e=>{ S.serve=e.target.checked; save(); };
-$('keep').oninput=e=>{ S.keep=+e.target.value||4; save(); };
 const mPerPx=()=> S.cal ? TABLE/S.cal.dist : null;
 
 // ---------- detection: white, small, moving blobs only ----------
@@ -451,10 +450,8 @@ function draw(){
     octx.beginPath(); octx.moveTo(a[0]*sx,a[1]*sy); octx.lineTo(b[0]*sx,b[1]*sy); octx.stroke(); octx.setLineDash([]); }
   if($('debug').checked){ if(roi){ octx.strokeStyle='#ffd23f55'; octx.strokeRect(roi.x0*sx,roi.y0*sy,(roi.x1-roi.x0)*sx,(roi.y1-roi.y0)*sy); }
     comps.forEach(c=>{ octx.strokeStyle=c.ok?'#9be27a':'#ff5d5d55'; octx.lineWidth=1; octx.strokeRect((c.x-c.w/2)*sx,(c.y-c.h/2)*sy,c.w*sx,c.h*sy); }); }
-  if(lastTrack){ const age=(performance.now()-lastTrackAt)/1000, keep=S.keep;
-    if(videoMode) path(lastTrack,1); else if(age<keep) path(lastTrack, Math.max(0.15,1-age/keep)); else lastTrack=null; }
-  path(tracker.pts,1);
-  if(lastDet){ octx.strokeStyle=CYAN; octx.lineWidth=3; octx.beginPath(); octx.arc(lastDet.x*sx,lastDet.y*sy,Math.max(12,lastDet.d*sx),0,7); octx.stroke(); }
+  if(videoMode){ if(lastTrack) path(lastTrack,1); path(tracker.pts,1); }
+  else { const p=tracker.pts; if(p.length){ const tEnd=p[p.length-1].t; path(p.filter(q=>tEnd-q.t<=0.6),1); } }
   $('dot').classList.toggle('ok', !!lastDet);
   // calibration points + loupe
   calPts.forEach(p=>cross(p[0]*sx,p[1]*sy));
@@ -501,6 +498,7 @@ function setTab(t){
   $('logCard').classList.toggle('hidden',t==='setup');
   $('bar').classList.toggle('hidden',t==='setup');
   $('bStart').classList.toggle('hidden',t!=='live');
+  $('bFlip').classList.toggle('hidden',t!=='live');
   $('bFile').classList.toggle('hidden',t!=='video');
   $('bAnalyze').classList.toggle('hidden',t!=='video');
   videoMode = t==='video';
@@ -525,7 +523,7 @@ $('debug').onchange=draw;
 // ---------- live camera ----------
 let stream=null, running=false, wake=null;
 async function startCam(){
-  try{ stream=await navigator.mediaDevices.getUserMedia({audio:false, video:{facingMode:'environment', width:{ideal:1280}, height:{ideal:720}, frameRate:{ideal:120,min:30}}}); }
+  try{ stream=await navigator.mediaDevices.getUserMedia({audio:false, video:{facingMode:S.facing, width:{ideal:1280}, height:{ideal:720}, frameRate:{ideal:120,min:30}}}); }
   catch(err){ status('Camera blocked: '+err.message+'. Open this page over https and allow the camera.'); return; }
   try{ if(matchMedia('(pointer:coarse)').matches && document.documentElement.requestFullscreen){ await document.documentElement.requestFullscreen(); await screen.orientation.lock('landscape'); } }catch(e){}
   vid.srcObject=stream; await vid.play(); sizeProc(); tracker.reset(); $('empty').classList.add('hidden');
@@ -544,6 +542,11 @@ function loop(){ if(!running) return;
     lastDet=detect(); tracker.push(lastDet,t); draw(); loop(); };
   if(vid.requestVideoFrameCallback) vid.requestVideoFrameCallback(step); else requestAnimationFrame(n=>step(n,null)); }
 $('bStart').onclick=()=> running ? stopCam() : startCam();
+function flipLabel(){ $('flipTxt').textContent = S.facing==='user' ? 'Front cam' : 'Back cam'; }
+flipLabel();
+$('bFlip').onclick=async()=>{ S.facing = S.facing==='user' ? 'environment' : 'user'; save(); flipLabel();
+  if(running){ running=false; if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; } tracker.reset(); prevGray=null; await startCam(); }
+  else { hint(S.facing==='user'?'Front camera selected':'Back camera selected'); setTimeout(()=>hint(),1500); } };
 
 // ---------- slow-mo video ----------
 let frameIdx=0, markA=null, markB=null, zoomPt=null;
