@@ -504,7 +504,8 @@ canvas.chart{background:var(--panel2)}
 .cw-title{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1.2rem;line-height:1.2;color:#B4231F}
 .camwarn p{margin:6px 0 10px;font-size:14px;line-height:1.5;color:#5A1F2A}
 .camwarn p b{color:#B4231F}
-.cw-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.cw-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.camwarn p.cw-len{margin:0 0 12px;font-size:13.5px}
 .cw-list span{font-size:12.5px;font-weight:600;background:#fff;border:1px solid #FFC2CC;color:#6A2632;padding:5px 10px;border-radius:999px}
 .camwarn .cw-btn{background:#FF6B6B;color:#fff;box-shadow:0 10px 22px rgba(255,107,107,.3);font-weight:800}
 body:has(#stageWrap:not(.hidden)) #camWarn{display:none}
@@ -521,6 +522,17 @@ body:has(#stageWrap:not(.hidden)) #camWarn{display:none}
 .keyfield select:focus{outline:3px solid rgba(0,201,167,.35)}
 .kf-note{font-size:11.5px;color:#6A2632;margin-top:6px;line-height:1.4}
 .sum-hand{display:inline-block;background:#DDFBF2;border:1.5px solid #00C9A7;color:#0B5E54;font-weight:800;padding:1px 8px;border-radius:999px;margin:2px 4px 2px 0}
+
+/* ===== Rallies only toggle ===== */
+.rallyopt{display:flex!important;align-items:center;gap:10px;margin:10px 0 0!important;padding:9px 12px;background:#fff;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;color:var(--ink)!important;font-size:13px!important}
+.rallyopt input{position:absolute;opacity:0;width:0;height:0}
+.ro-sw{flex:0 0 auto;width:38px;height:22px;border-radius:999px;background:#CFE0DC;position:relative;transition:background .2s}
+.ro-sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s}
+.rallyopt input:checked + .ro-sw{background:var(--mint-dim)}
+.rallyopt input:checked + .ro-sw::after{left:19px}
+.rallyopt:has(input:checked){border-color:var(--mint-dim);background:var(--mint-soft)}
+.ro-sub{color:var(--ink-soft);font-weight:400}
+.rallyopt input:focus-visible + .ro-sw{outline:2px solid var(--mint-dim);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -667,6 +679,7 @@ body:has(#stageWrap:not(.hidden)) #camWarn{display:none}
         <div class="cw-title">Important</div>
         <p>AI Coach only works when your phone camera is placed at the <b>right angle</b>. If the camera setup is wrong, the AI cannot track you and the analysis <b>will not work</b>.</p>
         <div class="cw-list"><span>📍 Behind you or 45° diagonal</span><span>📏 3 to 4 m away</span><span>📱 Chest height, level</span><span>🧍 Head to feet in frame</span></div>
+        <p class="cw-len"><b>Video length:</b> best between <b>30 seconds and 2 minutes</b>, maximum <b>10 minutes</b>. Do not upload very long or very heavy videos, the processing will take a long time.</p>
         <button class="cw-btn" data-guide>📷 Read the camera setup guide</button>
       </div>
     </div>
@@ -726,6 +739,10 @@ body:has(#stageWrap:not(.hidden)) #camWarn{display:none}
           <button class="ghost" id="fullBtn" title="Select the whole video"><span class="ml">↺ Full video</span><span class="dl">↺ Full</span></button>
           <button class="ghost" id="cutBtn" title="Download just the selected part as a new video"><span class="ml">✂ Download cut clip</span><span class="dl">✂ Cut clip</span></button>
         </div>
+        <label class="rallyopt" title="Optional. A quick scan listens for ball sounds and checks player movement to find the rallies, then only those parts are analyzed.">
+          <input type="checkbox" id="ralliesOnly"><span class="ro-sw"></span>
+          <span class="ro-txt"><b>⚡ Rallies only</b> <span class="ro-sub">(optional) finds rallies from ball sounds and movement, and skips the pauses between points to cut the wait time</span></span>
+        </label>
         <div class="hint" style="font-size:12px;color:var(--muted);margin-top:6px">Drag the handles or play the video and press "Set start / end here". Choosing yourself happens on the start frame.</div>
       </div>
       <div class="picker" id="picker">
@@ -1001,6 +1018,7 @@ const video = $('#video'), overlay = $('#overlay'), octx = overlay.getContext('2
 let landmarker = null, loadedModel = null, frames = [], report = null, analyzing = false;
 let vfmt = '916', tsClock = 0, candidates = [], me = null; // me = {hip:{x,y}, t, box}
 let mode = 'me', opp = null, P = { me: null, opp: null }, view = 'me', markTarget = 'me';
+let curFile = null, audioCache = null;
 let stopReq = false, rangeA = 0, rangeB = 0, previewing = false;
 let cropLm = null, cropModel = null, marking = null, manualBox = null, exporting = false;
 const cropCv = document.createElement('canvas'), cropCtx = cropCv.getContext('2d');
@@ -1165,6 +1183,7 @@ $('#analyzeBtn').onclick = analyze;
 $('#vidBtn2').onclick = () => openVidChooser();
 
 function loadVideo(f) {
+  curFile = f; audioCache = null;
   videoFps.v = 0;
   leaveWorkspace(); opp = null; P = { me: null, opp: null }; view = 'me'; $('#pSwitch').classList.add('hidden');
   frames = []; report = null; me = null; candidates = []; $('#results').classList.add('hidden'); $('#live').classList.remove('on');
@@ -1174,7 +1193,10 @@ function loadVideo(f) {
   video.onloadedmetadata = () => {
     overlay.width = video.videoWidth; overlay.height = video.videoHeight;
     applyLayout(); setBar(0); setTimeout(() => scrollToEl($('#videoCard')), 150);
-    rangeA = 0; rangeB = video.duration; updRange();
+    rangeA = 0; rangeB = Math.min(video.duration, 600); updRange();
+    const mb = f.size / 1e6;
+    if (video.duration > 600) setTimeout(() => setStatus(`This video is ${fmt2(video.duration)} long. Only the first 10 minutes can be analyzed, so the selection was set to 0:00 to 10:00. Shorter clips (30 s to 2 min) work best.`), 1200);
+    else if (video.duration > 180 || mb > 400) setTimeout(() => setStatus(`Long video (${fmt2(video.duration)}, ${mb.toFixed(0)} MB): processing will take a while. Select a shorter part or turn on "Rallies only" to save time.`), 1200);
     $('#vinfo').textContent = `${f.name} · ${video.videoWidth}×${video.videoHeight} · ${video.duration.toFixed(1)}s`;
   };
   video.onloadeddata = () => detectPlayers(0);
@@ -1339,6 +1361,85 @@ async function confirmMark() {
   finally { $('#markOk').disabled = false; }
 }
 
+/* ---------------- Ball sound detection ----------------
+   Decodes the video's sound track and finds short, sharp "tok" sounds (ball on racket or table):
+   high frequency energy that jumps well above the local background and dies away within ~40 ms. */
+async function ballSoundHits(file) {
+  if (audioCache && audioCache.file === file) return audioCache.hits;
+  let hits = null;
+  try {
+    if (!file || file.size > 350e6) throw new Error('skip');
+    const SR = 22050, ac = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, 1, SR);
+    const ab = await ac.decodeAudioData(await file.arrayBuffer());
+    const n = ab.length, x = new Float32Array(n);
+    for (let ch = 0; ch < ab.numberOfChannels; ch++) { const d = ab.getChannelData(ch); for (let i = 0; i < n; i++) x[i] += d[i] / ab.numberOfChannels; }
+    // high-pass (second difference) then energy in 5 ms frames
+    const hop = Math.round(SR * 0.005), nf = Math.floor(n / hop), E = new Float32Array(nf);
+    for (let f = 0; f < nf; f++) { let e = 0; for (let i = f * hop + 2; i < (f + 1) * hop; i++) { const y = x[i] - 2 * x[i - 1] + x[i - 2]; e += y * y; } E[f] = e; }
+    const sorted = Float32Array.from(E).sort(), floor = sorted[Math.floor(nf * 0.3)] * 3 + 1e-9;
+    // local background: median over +/- 0.5 s, sampled every 50 ms for speed
+    const W = 100, bgStep = 10, bg = new Float32Array(Math.ceil(nf / bgStep) + 1);
+    for (let k = 0; k < bg.length; k++) { const c = k * bgStep, seg = Array.from(E.subarray(Math.max(0, c - W), Math.min(nf, c + W))).sort((a, b) => a - b); bg[k] = seg.length ? seg[seg.length >> 1] : 0; }
+    hits = []; let last = -1;
+    for (let f = 8; f < nf - 8; f++) {
+      const e = E[f], b = bg[Math.round(f / bgStep)] || 0;
+      if (e < floor || e < b * 6) continue;
+      let peak = true; for (let k = -8; k <= 8; k++) if (k && E[f + k] > e) { peak = false; break; }   // local max within +/-40 ms
+      if (!peak) continue;
+      if ((E[f + 6] + E[f + 7] + E[f + 8]) / 3 > e * 0.4) continue;                                     // must decay fast (sharp "tok")
+      const t = f * hop / SR; if (t - last < 0.12) continue;
+      hits.push(t); last = t;
+    }
+  } catch (e) { hits = null; }
+  audioCache = { file, hits };
+  return hits;
+}
+
+/* ---------------- Rallies only: quick motion scan ----------------
+   Samples the video 3 times a second around the selected players and measures how much they move.
+   Rallies show sustained fast movement; pauses between points are calmer. Only rally windows are
+   then analyzed by the pose AI, which cuts the wait time on match videos. */
+async function findRallies(t0, t1, boxes) {
+  setStatus('⚡ Listening for ball sounds...');
+  const hitsAll = await ballSoundHits(curFile), hits = hitsAll ? hitsAll.filter(h => h >= t0 - 1 && h <= t1 + 1) : null;
+  const W = 160, H = Math.max(60, Math.round(160 * (video.videoHeight || 9) / (video.videoWidth || 16)));
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; const c = cv.getContext('2d', { willReadFrequently: true });
+  const regs = boxes.map(b => { const e = expandBox(b, 1.7, 1.3); return [Math.floor(e[0] * W), Math.floor(e[1] * H), Math.ceil(e[2] * W), Math.ceil(e[3] * H)]; });
+  const step = 1 / 3, E = []; let prev = null;
+  for (let t = t0; t < t1; t += step) {
+    if (stopReq) return null;
+    await seek(t); c.drawImage(video, 0, 0, W, H);
+    const d = c.getImageData(0, 0, W, H).data, g = new Uint8Array(W * H);
+    for (let i = 0, j = 0; j < g.length; i += 4, j++) g[j] = (d[i] * 77 + d[i + 1] * 150 + d[i + 2] * 29) >> 8;
+    if (prev) {
+      let sum = 0, n = 0;
+      regs.forEach(([x0, y0, x1, y1]) => { for (let y = Math.max(0, y0); y < Math.min(H, y1); y++) for (let x = Math.max(0, x0); x < Math.min(W, x1); x++) { const j = y * W + x; const v = Math.abs(g[j] - prev[j]); sum += v > 12 ? v : 0; n++; } });
+      E.push({ t, e: sum / Math.max(1, n) });
+    }
+    prev = g;
+    const p = (t - t0) / Math.max(0.1, t1 - t0); setBar(p); setStatus(`⚡ Finding rallies... ${(p * 100).toFixed(0)}%`);
+  }
+  if (E.length < 6) return null;
+  const sm = E.map((q, i) => avg(E.slice(Math.max(0, i - 1), i + 2).map(z => z.e)));
+  const sorted = [...sm].sort((a, b) => a - b), med = sorted[sorted.length >> 1], p90 = sorted[Math.floor(sorted.length * .9)];
+  const thr = med + (p90 - med) * 0.35, mn = v => Math.max(0, Math.min(1, (v - med) / Math.max(1e-6, p90 - med)));
+  // ball sounds: how many hits within +/- 1 s of each sample (a rally has a "tok" every 0.3 to 0.8 s)
+  const useAudio = !!(hits && hits.length >= 6);
+  const dens = t => { let c = 0; for (const h of hits) { if (h > t + 1) break; if (h >= t - 1) c++; } return c; };
+  const active = (v, t) => {
+    if (!useAudio) return v >= thr;
+    const d = dens(t), m = mn(v);
+    return (d >= 3 && m > 0.1) || (d >= 2 && m > 0.45);    // a burst of ball sounds AND movement: other tables' isolated balls or walking alone do not count
+  };
+  let segs = [];
+  sm.forEach((v, i) => { const t = E[i].t; if (!active(v, t)) return; const l = segs[segs.length - 1]; if (l && t - l[1] <= 2.0) l[1] = t; else segs.push([t, t]); });
+  segs = segs.filter(([a, b]) => b - a >= 1.5).map(([a, b]) => [Math.max(t0, a - 1.2), Math.min(t1, b + 1.0)]);
+  // merge overlaps after padding
+  const out = []; segs.forEach(sg => { const l = out[out.length - 1]; if (l && sg[0] <= l[1]) l[1] = Math.max(l[1], sg[1]); else out.push([...sg]); });
+  const cover = out.reduce((a, [x, y]) => a + y - x, 0) / Math.max(0.1, t1 - t0);
+  return { segs: out, cover, audio: useAudio, hits: hits ? hits.length : 0 };
+}
+
 /* ---------------- Player picker ---------------- */
 async function detectPlayers(at) {
   if (analyzing || exporting) return;
@@ -1457,7 +1558,7 @@ async function analyze() {
     setStatus('Loading tracking model...');
     const clm = await getCropLandmarker(s.model);
     const fps = { lite: 10, full: 15, heavy: 20 }[s.model];
-    const maxDur = Math.min(rangeB, me.t + 300);
+    const maxDur = Math.min(rangeB, me.t + 600);
     const step = 1 / fps; video.pause();
     const tStart = me.t, t0 = performance.now();
     const mkTrack = (c, hand) => ({ prevHip: { ...c.hip }, lastSeen: c.t, box: expandBox(c.box), frames: [], hand });
@@ -1465,8 +1566,22 @@ async function analyze() {
     if (mode === 'both' && opp) tracks.push(mkTrack(opp, s.oppHand));
     frames = tracks[0].frames; P = { me: null, opp: null }; view = 'me';
     let tEnd = tStart;
-    for (let t = tStart; t < maxDur; t += step) {
+    // which times to analyze: the whole selection, or only rally windows
+    let windows = [[tStart, maxDur]], rallyNote = '';
+    if ($('#ralliesOnly').checked) {
+      const fr = await findRallies(tStart, maxDur, tracks.map(tr => tr.box));
+      if (fr && fr.segs.length && fr.cover < 0.85) {
+        windows = fr.segs; rallyNote = ` Rallies only: ${fr.segs.length} rallies found using ${fr.audio ? 'ball sounds and movement' : 'movement (no clear ball sounds)'}, ${Math.round(fr.cover * 100)}% of the video analyzed.`;
+      } else if (fr) rallyNote = ' Rallies only: no clear pauses found, so the whole selection was analyzed.';
+    }
+    const times = []; windows.forEach(([a, b]) => { for (let t = a; t < b; t += step) times.push(t); });
+    const activeDur = windows.reduce((acc, [a, b]) => acc + (b - a), 0);
+    let lastT = -1;
+    for (let ti = 0; ti < times.length; ti++) {
+      const t = times[ti];
       if (stopReq) break;
+      if (t - lastT > step * 3) tracks.forEach(tr => { tr.lastSeen = Math.min(tr.lastSeen, t - 2); });   // jumped over a pause: search wider
+      lastT = t;
       tEnd = t;
       await seek(t);
       let full = null; const getFull = () => full || (full = lm.detectForVideo(video, nextTs(step * 1000)));
@@ -1487,12 +1602,13 @@ async function analyze() {
           tr.box = clampBox([tr.prevHip.x - w / 2, tr.prevHip.y - h * 0.55, tr.prevHip.x + w / 2, tr.prevHip.y + h * 0.45]);
         }
       });
-      const p = (t - tStart) / (maxDur - tStart || 1); setBar(p);
+      const p = (ti + 1) / times.length; setBar(p);
       const eta = ((performance.now() - t0) / 1000) * (1 - p) / Math.max(p, 0.01);
       setStatus(`${tracks.length > 1 ? 'Analyzing both players' : 'Analyzing you only'}... ${(p * 100).toFixed(0)}% · ${frames.length} poses tracked · ~${eta.toFixed(0)}s left`);
     }
     setBar(1);
     if (frames.length < fps * 2) throw new Error(stopReq ? 'Stopped too early. Let it analyze at least a few seconds of play.' : 'Could not detect a player clearly. Try a clip with the full body visible and better lighting.');
+    s.activeDur = activeDur;
     report = buildReport(frames, s, fps); report.who = 'me';
     if ($('#preciseSpd').checked && report.strokes.length && !stopReq) await refineSpeeds(report, clm, frames, s.hand);
     P.me = { frames, report, hand: s.hand };
@@ -1511,7 +1627,7 @@ async function analyze() {
     setTimeout(() => scrollToEl($('#results')), 200);
     enterWorkspace();
     $('#exportVidBtn').disabled = false; $('#pdfBtn').disabled = false;
-    setStatus(`Done${stopReq ? ' (stopped early)' : ''}. Analyzed ${fmt2(tStart)} to ${fmt2(tEnd)}: you ${P.me.report.strokes.length} strokes${P.opp ? `, opponent ${P.opp.report.strokes.length} strokes` : ''}.${oppNote}`);
+    setStatus(`Done${stopReq ? ' (stopped early)' : ''}. Analyzed ${fmt2(tStart)} to ${fmt2(tEnd)}: you ${P.me.report.strokes.length} strokes${P.opp ? `, opponent ${P.opp.report.strokes.length} strokes` : ''}.${oppNote}${rallyNote}`);
     video.currentTime = tStart;
   } catch (e) {
     console.error(e); setStatus('⚠ ' + (e.message || 'Analysis failed. Check your internet connection for the first model load.'));
@@ -2085,7 +2201,7 @@ function buildReport(F, s, fps) {
     st.grade = st.score >= 85 ? 'A' : st.score >= 72 ? 'B' : st.score >= 58 ? 'C' : 'D';
   });
 
-  const dur = per[per.length - 1].t - per[0].t || 1;
+  const span = per[per.length - 1].t - per[0].t || 1, dur = s.activeDur ? Math.min(span, s.activeDur) : span;
   const fh = strokes.filter(s => s.side === 'FH'), bh = strokes.filter(s => s.side === 'BH');
   const knees = per.map(p => p.knee).filter(x => x != null);
   const m = {
@@ -2143,9 +2259,9 @@ function buildReport(F, s, fps) {
     const mins = Math.max(dur / 60, 1 / 6);
     m.stepsPerMin = steps.length / mins;
     // share of 1 second windows that contain at least one step ("feet alive")
-    const nWin = Math.max(1, Math.floor(dur)); let act = 0;
-    for (let k = 0; k < nWin; k++) { const a = per[0].t + k, b = a + 1; if (steps.some(q => q.t >= a && q.t < b)) act++; }
-    m.activeShare = act / nWin;
+    let nWin = 0, act = 0;   // only 1 second windows that were actually analyzed
+    for (let a = per[0].t; a < per[per.length - 1].t; a += 1) { const b = a + 1; if (!per.some(q => q.t >= a && q.t < b)) continue; nWin++; if (steps.some(q => q.t >= a && q.t < b)) act++; }
+    m.activeShare = nWin ? act / nWin : 0;
     // court coverage: 5th to 95th percentile of hip position (left/right and in/out)
     const hp = H.filter(Boolean), pct = (arr, q) => { const a = [...arr].sort((x, y) => x - y); return a.length ? a[Math.min(a.length - 1, Math.floor(q * a.length))] : 0; };
     const hxs = hp.map(q => q[0]), hys = hp.map(q => q[1]);
